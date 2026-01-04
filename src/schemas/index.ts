@@ -1,5 +1,26 @@
-// Base schemas
+// Auth schemas
 
+export type {
+  ForgotPasswordSchema,
+  LoginSchema,
+  RegisterSchema,
+  ResetPasswordSchema,
+  UpdatePasswordSchema,
+  VerifyOtpSchema,
+} from './auth.schema';
+export {
+  emailSchema,
+  forgotPasswordSchema,
+  loginSchema,
+  passwordSchema,
+  registerSchema,
+  resetPasswordSchema,
+  strongPasswordSchema,
+  updatePasswordSchema,
+  verifyOtpSchema,
+} from './auth.schema';
+
+// Base schemas
 export type {
   BaseEntitySchema,
   BuildingEntitySchema,
@@ -19,12 +40,19 @@ export {
   userEntitySchema,
   uuidSchema,
 } from './base.schema';
-export type { DateRangeParamsSchema, DateRangeWithValidationSchema } from './date-range.schema';
+
 // Date range schemas
+export type { DateRangeParamsSchema, DateRangeWithValidationSchema } from './date-range.schema';
 export { dateRangeParamsSchema, dateRangeWithValidationSchema } from './date-range.schema';
-export type { PaginatedResponseSchema, PaginationParamsSchema } from './pagination.schema';
+
+// Entity schemas
+export * from './entities';
+
 // Pagination schemas
+export type { PaginatedResponseSchema, PaginationParamsSchema } from './pagination.schema';
 export { paginatedResponseSchema, paginationParamsSchema } from './pagination.schema';
+
+// Status schemas
 export type {
   ApprovalStatusSchemaType,
   CommonStatusSchemaType,
@@ -32,7 +60,6 @@ export type {
   MaintenanceStatusSchemaType,
   PrioritySchemaType,
 } from './status.schema';
-// Status schemas
 export {
   ApprovalStatusSchema,
   approvalStatusOptions,

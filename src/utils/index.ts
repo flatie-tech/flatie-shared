@@ -2,14 +2,24 @@
  * Shared Utility Functions
  *
  * Common utilities for use across frontend, mobile, and backend.
- *
- * TODO: Add utility functions from other repos:
- * - Permission mapping utilities (from backend)
- * - Storage path generation (from backend)
- * - Pagination normalization (from mobile)
- * - Date formatting utilities
- * - Currency formatting
  */
+
+// Pagination utilities
+export {
+  calculatePaginationMeta,
+  extractPaginatedItems,
+  normalizePaginatedResponse,
+} from './pagination';
+// Permission utilities
+export {
+  convertToNewFormat,
+  getNewPermissionName,
+  hasAllPermissions,
+  hasAnyPermission,
+  hasPermission,
+  isOldPermissionFormat,
+  PERMISSION_MAPPING,
+} from './permissions';
 
 /**
  * Format a snake_case or SCREAMING_SNAKE_CASE string to Title Case

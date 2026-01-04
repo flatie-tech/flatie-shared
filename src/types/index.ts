@@ -30,6 +30,19 @@ export type {
   FailureReportWithCreator,
   UpdateFailureReportRequest,
 } from './failure-report.types';
+// Financial types
+export type {
+  BuildingFund,
+  CreateRecurringTemplateRequest,
+  CreateTransactionRequest,
+  FinancialGraphData,
+  FinancialSummary,
+  RecurringTemplate,
+  Transaction,
+  UpdateFundRequest,
+  UpdateRecurringTemplateRequest,
+  UpdateTransactionRequest,
+} from './financial.types';
 // Maintenance log types
 export type {
   CreateMaintenanceLogRequest,

@@ -42,20 +42,23 @@ import { Permission, Building, paginationParamsSchema } from '@flatie/shared';
 ### Importing by Category
 
 ```typescript
+// Constants (Query keys for React Query)
+import { queryKeys, noticeKeys, pollKeys } from '@flatie/shared/constants';
+
 // Enums only
 import { Permission, BuildingRole, PollType } from '@flatie/shared/enums';
 
 // Types only
-import { Building, User, Notice } from '@flatie/shared/types';
+import { Building, User, Notice, Transaction } from '@flatie/shared/types';
 
 // Schemas only
-import { paginationParamsSchema, baseEntitySchema } from '@flatie/shared/schemas';
+import { loginSchema, createNoticeSchema, paginationParamsSchema } from '@flatie/shared/schemas';
 
 // API Routes
 import { API_ROUTES } from '@flatie/shared/urls';
 
 // Utilities
-import { formatCurrency, formatText } from '@flatie/shared/utils';
+import { formatCurrency, hasPermission, normalizePaginatedResponse } from '@flatie/shared/utils';
 ```
 
 ## API Reference
@@ -161,6 +164,55 @@ uuidSchema.parse('550e8400-e29b-41d4-a716-446655440000');
 paginationParamsSchema.parse({ offset: 0, limit: 10 });
 ```
 
+#### Auth Schemas
+
+```typescript
+import {
+  loginSchema,
+  registerSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  verifyOtpSchema,
+} from '@flatie/shared/schemas';
+
+// Validate login form
+loginSchema.parse({ email: 'user@example.com', password: 'Password123' });
+
+// Validate registration with password strength
+registerSchema.parse({
+  name: 'John Doe',
+  email: 'user@example.com',
+  password: 'SecurePass123',
+  passwordConfirmation: 'SecurePass123',
+  agreedToTermsAndConditions: true,
+});
+```
+
+#### Entity Schemas
+
+```typescript
+import {
+  createNoticeSchema,
+  createPollSchema,
+  createEventSchema,
+  createBuildingSchema,
+  POLL_LIMITS,
+  EVENT_TYPES,
+  EVENT_TYPE_COLOR_MAP,
+} from '@flatie/shared/schemas';
+
+// Validate notice creation
+createNoticeSchema.parse({
+  buildingId: '550e8400-e29b-41d4-a716-446655440000',
+  title: 'Building Maintenance Notice',
+  content: 'The elevator will be under maintenance...',
+});
+
+// Use validation constants
+console.log(POLL_LIMITS.QUESTION_MAX); // 250
+console.log(EVENT_TYPES); // ['service', 'inspection', 'maintenance', ...]
+```
+
 #### Status Schemas
 
 ```typescript
@@ -190,10 +242,38 @@ API_ROUTES.NOTICES('building-id')           // '/buildings/building-id/notices'
 API_ROUTES.POLL('building-id', 'poll-id')   // '/buildings/building-id/polls/poll-id'
 ```
 
+### Constants (Query Keys)
+
+```typescript
+import { queryKeys, noticeKeys, pollKeys, buildingKeys } from '@flatie/shared/constants';
+
+// Use in React Query
+useQuery({
+  queryKey: noticeKeys.list({ buildingId: '123' }),
+  queryFn: () => fetchNotices({ buildingId: '123' }),
+});
+
+// Invalidate queries
+queryClient.invalidateQueries({ queryKey: noticeKeys.all });
+queryClient.invalidateQueries({ queryKey: pollKeys.detail('poll-id') });
+
+// All keys available via queryKeys object
+queryKeys.notice.list({ buildingId: '123' });
+queryKeys.building.users('building-id');
+queryKeys.funds.summary('building-id');
+```
+
 ### Utilities
 
 ```typescript
-import { formatText, formatCurrency, getDateRange, debounce } from '@flatie/shared/utils';
+import {
+  formatText,
+  formatCurrency,
+  getDateRange,
+  hasPermission,
+  hasAnyPermission,
+  normalizePaginatedResponse,
+} from '@flatie/shared/utils';
 
 // Format snake_case to Title Case
 formatText('CAN_EDIT_BUILDING');  // 'Can Edit Building'
@@ -206,10 +286,18 @@ formatCurrency(1234.56, 'en-US', 'USD');  // '$1,234.56'
 getDateRange('today');    // { fromDate: '2025-01-04', toDate: '2025-01-04' }
 getDateRange('week');     // { fromDate: '2024-12-28', toDate: '2025-01-04' }
 
-// Debounce function
-const debouncedSearch = debounce((query: string) => {
-  console.log('Searching:', query);
-}, 300);
+// Permission checking
+import { Permission } from '@flatie/shared/enums';
+
+const userPermissions = ['notice:create', 'notice:read'];
+hasPermission(userPermissions, Permission.NOTICE_CREATE);  // true
+hasAnyPermission(userPermissions, [Permission.POLL_CREATE, Permission.NOTICE_CREATE]);  // true
+
+// Normalize various paginated response formats
+const response = await fetch('/api/notices');
+const data = await response.json();
+const normalized = normalizePaginatedResponse(data);
+// { data: [...], count: 100, page: 1, limit: 10, totalPages: 10, ... }
 ```
 
 ## Development
@@ -244,25 +332,34 @@ pnpm format
 
 ```
 src/
-├── index.ts           # Main entry point
-├── enums/             # TypeScript enums
+├── index.ts              # Main entry point
+├── constants/            # Query keys for React Query
+│   └── query-keys.ts
+├── enums/                # TypeScript enums
 │   ├── permission.enum.ts
 │   ├── building-role.enum.ts
 │   ├── status.enum.ts
 │   └── ...
-├── types/             # TypeScript interfaces
+├── types/                # TypeScript interfaces
 │   ├── user.types.ts
 │   ├── building.types.ts
-│   ├── notice.types.ts
+│   ├── financial.types.ts
 │   └── ...
-├── schemas/           # Zod validation schemas
+├── schemas/              # Zod validation schemas
+│   ├── auth.schema.ts
 │   ├── base.schema.ts
-│   ├── pagination.schema.ts
+│   ├── entities/
+│   │   ├── notice.schema.ts
+│   │   ├── poll.schema.ts
+│   │   ├── event.schema.ts
+│   │   └── ...
 │   └── ...
-├── urls/              # API route constants
+├── urls/                 # API route constants
 │   └── index.ts
-└── utils/             # Utility functions
-    └── index.ts
+└── utils/                # Utility functions
+    ├── index.ts
+    ├── permissions.ts
+    └── pagination.ts
 ```
 
 ### Building
