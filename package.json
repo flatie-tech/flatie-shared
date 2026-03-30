@@ -91,6 +91,7 @@
     "format": "biome format --write .",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf dist",
+    "prepare": "tsup",
     "prepublishOnly": "pnpm run build"
   },
   "peerDependencies": {
