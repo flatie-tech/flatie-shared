@@ -1,71 +1,171 @@
-export enum Permission {
-  // Notice permissions
-  NOTICE_CREATE = 'notice:create',
-  NOTICE_READ = 'notice:read',
-  NOTICE_UPDATE = 'notice:update',
-  NOTICE_DELETE = 'notice:delete',
-  NOTICE_APPROVE = 'notice:approve',
+// ─── Scoped Domain Definitions ──────────────────────────────────────
 
-  // Poll permissions
-  POLL_CREATE = 'poll:create',
-  POLL_READ = 'poll:read',
-  POLL_UPDATE = 'poll:update',
-  POLL_DELETE = 'poll:delete',
-  POLL_VOTE = 'poll:vote',
-  POLL_FINALIZE = 'poll:finalize',
+export const SCOPED_DOMAINS = [
+  'notice',
+  'event',
+  'poll',
+  'failure_report',
+  'document',
+  'maintenance_log',
+] as const;
 
-  // Building permissions
-  BUILDING_CREATE = 'building:create',
-  BUILDING_READ = 'building:read',
-  BUILDING_UPDATE = 'building:update',
-  BUILDING_DELETE = 'building:delete',
-  BUILDING_MANAGE_USERS = 'building:manage_users',
-  BUILDING_ASSIGN_ROLES = 'building:assign_roles',
-  BUILDING_REMOVE_USERS = 'building:remove_users',
-  BUILDING_GENERATE_OTP = 'building:generate_otp',
+export type ScopedDomain = (typeof SCOPED_DOMAINS)[number];
+export type ScopedAction = 'update' | 'delete';
 
-  // User permissions
-  USER_CREATE = 'user:create',
-  USER_READ = 'user:read',
-  USER_UPDATE = 'user:update',
-  USER_DELETE = 'user:delete',
-  USER_MANAGE = 'user:manage',
+// ─── Permission Levels ──────────────────────────────────────────────
 
-  // Event permissions
-  EVENT_CREATE = 'event:create',
-  EVENT_READ = 'event:read',
-  EVENT_UPDATE = 'event:update',
-  EVENT_DELETE = 'event:delete',
-
-  // Failure Report permissions
-  FAILURE_REPORT_CREATE = 'failure_report:create',
-  FAILURE_REPORT_READ = 'failure_report:read',
-  FAILURE_REPORT_UPDATE = 'failure_report:update',
-  FAILURE_REPORT_DELETE = 'failure_report:delete',
-  FAILURE_REPORT_APPROVE = 'failure_report:approve',
-
-  // Maintenance Log permissions
-  MAINTENANCE_LOG_CREATE = 'maintenance_log:create',
-  MAINTENANCE_LOG_READ = 'maintenance_log:read',
-  MAINTENANCE_LOG_UPDATE = 'maintenance_log:update',
-  MAINTENANCE_LOG_DELETE = 'maintenance_log:delete',
-
-  // Financial permissions
-  FINANCIAL_CREATE = 'financial:create',
-  FINANCIAL_READ = 'financial:read',
-  FINANCIAL_UPDATE = 'financial:update',
-  FINANCIAL_DELETE = 'financial:delete',
-
-  // Building Role permissions
-  BUILDING_ROLE_ASSIGN = 'building_role:assign',
-  BUILDING_ROLE_UPDATE = 'building_role:update',
-  BUILDING_ROLE_REMOVE = 'building_role:remove',
-
-  // Voting permissions
-  CAN_VOTE = 'vote:cast',
-  VOTE_WEIGHT_BASED = 'vote:weight_based',
-
-  // System permissions
-  SYSTEM_ADMIN = 'system:admin',
-  SYSTEM_MANAGE = 'system:manage',
+/**
+ * Generate permission strings for a domain at a given access level.
+ *   'read'   → [domain:read]
+ *   'own'    → [domain:read, domain:create, domain:update:own, domain:delete:own]
+ *   'manage' → own + [domain:update:any, domain:delete:any]
+ */
+export function domainPermissions(domain: string, level: 'read' | 'own' | 'manage'): string[] {
+  if (level === 'read') return [`${domain}:read`];
+  if (level === 'own') {
+    return [`${domain}:read`, `${domain}:create`, `${domain}:update:own`, `${domain}:delete:own`];
+  }
+  return [
+    `${domain}:read`,
+    `${domain}:create`,
+    `${domain}:update:own`,
+    `${domain}:update:any`,
+    `${domain}:delete:own`,
+    `${domain}:delete:any`,
+  ];
 }
+
+// ─── Permission Object ──────────────────────────────────────────────
+
+export const Permission = {
+  // Building
+  BUILDING_CREATE: 'building:create',
+  BUILDING_READ: 'building:read',
+  BUILDING_UPDATE: 'building:update',
+  BUILDING_DELETE: 'building:delete',
+  BUILDING_MANAGE: 'building:manage',
+  BUILDING_GENERATE_OTP: 'building:generate_otp',
+
+  // User
+  USER_CREATE: 'user:create',
+  USER_READ: 'user:read',
+  USER_UPDATE: 'user:update',
+  USER_DELETE_OWN: 'user:delete:own',
+  USER_DELETE_ANY: 'user:delete:any',
+  USER_KICK: 'user:kick',
+
+  // Building Role
+  BUILDING_ROLE_ASSIGN: 'building_role:assign',
+  BUILDING_ROLE_UPDATE: 'building_role:update',
+  BUILDING_ROLE_REMOVE: 'building_role:remove',
+
+  // Notice
+  NOTICE_CREATE: 'notice:create',
+  NOTICE_READ: 'notice:read',
+  NOTICE_UPDATE_OWN: 'notice:update:own',
+  NOTICE_UPDATE_ANY: 'notice:update:any',
+  NOTICE_DELETE_OWN: 'notice:delete:own',
+  NOTICE_DELETE_ANY: 'notice:delete:any',
+  NOTICE_APPROVE: 'notice:approve',
+  NOTICE_PIN: 'notice:pin',
+
+  // Event
+  EVENT_CREATE: 'event:create',
+  EVENT_READ: 'event:read',
+  EVENT_UPDATE_OWN: 'event:update:own',
+  EVENT_UPDATE_ANY: 'event:update:any',
+  EVENT_DELETE_OWN: 'event:delete:own',
+  EVENT_DELETE_ANY: 'event:delete:any',
+  EVENT_APPROVE: 'event:approve',
+
+  // Poll
+  POLL_CREATE: 'poll:create',
+  POLL_READ: 'poll:read',
+  POLL_UPDATE_OWN: 'poll:update:own',
+  POLL_UPDATE_ANY: 'poll:update:any',
+  POLL_DELETE_OWN: 'poll:delete:own',
+  POLL_DELETE_ANY: 'poll:delete:any',
+  POLL_APPROVE: 'poll:approve',
+  POLL_VOTE: 'poll:vote',
+  POLL_FINALIZE: 'poll:finalize',
+  POLL_DELETE_AFTER_VOTE: 'poll:delete_after_vote',
+
+  // Failure Report
+  FAILURE_REPORT_CREATE: 'failure_report:create',
+  FAILURE_REPORT_READ: 'failure_report:read',
+  FAILURE_REPORT_UPDATE_OWN: 'failure_report:update:own',
+  FAILURE_REPORT_UPDATE_ANY: 'failure_report:update:any',
+  FAILURE_REPORT_DELETE_OWN: 'failure_report:delete:own',
+  FAILURE_REPORT_DELETE_ANY: 'failure_report:delete:any',
+  FAILURE_REPORT_APPROVE: 'failure_report:approve',
+
+  // Maintenance Log
+  MAINTENANCE_LOG_CREATE: 'maintenance_log:create',
+  MAINTENANCE_LOG_READ: 'maintenance_log:read',
+  MAINTENANCE_LOG_UPDATE_OWN: 'maintenance_log:update:own',
+  MAINTENANCE_LOG_UPDATE_ANY: 'maintenance_log:update:any',
+  MAINTENANCE_LOG_DELETE_OWN: 'maintenance_log:delete:own',
+  MAINTENANCE_LOG_DELETE_ANY: 'maintenance_log:delete:any',
+
+  // Financial (flat, no :own/:any)
+  FINANCIAL_CREATE: 'financial:create',
+  FINANCIAL_READ: 'financial:read',
+  FINANCIAL_UPDATE: 'financial:update',
+  FINANCIAL_DELETE: 'financial:delete',
+
+  // Document
+  DOCUMENT_CREATE: 'document:create',
+  DOCUMENT_READ: 'document:read',
+  DOCUMENT_UPDATE_OWN: 'document:update:own',
+  DOCUMENT_UPDATE_ANY: 'document:update:any',
+  DOCUMENT_DELETE_OWN: 'document:delete:own',
+  DOCUMENT_DELETE_ANY: 'document:delete:any',
+
+  // Apartment (flat, no :own/:any)
+  APARTMENT_CREATE: 'apartment:create',
+  APARTMENT_READ: 'apartment:read',
+  APARTMENT_UPDATE: 'apartment:update',
+  APARTMENT_DELETE: 'apartment:delete',
+  APARTMENT_MANAGE_USERS: 'apartment:manage_users',
+
+  // House Rules
+  HOUSE_RULES_READ: 'house_rules:read',
+  HOUSE_RULES_MANAGE: 'house_rules:manage',
+
+  // FAQ
+  FAQ_READ: 'faq:read',
+  FAQ_MANAGE_REPRESENTATIVE: 'faq:manage:representative',
+  FAQ_MANAGE_MANAGER: 'faq:manage:manager',
+
+  // Building Settings
+  BUILDING_SETTINGS_MANAGE: 'building_settings:manage',
+
+  // Voting
+  VOTE_CAST: 'vote:cast',
+  VOTE_WEIGHT_BASED: 'vote:weight_based',
+
+  // System
+  SYSTEM_ADMIN: 'system:admin',
+  SYSTEM_MANAGE: 'system:manage',
+
+  // Organization (org-scoped)
+  ORG_MANAGE_MEMBERS: 'org:manage_members',
+  ORG_MANAGE_ROLES: 'org:manage_roles',
+  ORG_ASSIGN_BUILDINGS: 'org:assign_buildings',
+  ORG_ASSIGN_REFERENTS: 'org:assign_referents',
+  ORG_MANAGE_SETTINGS: 'org:manage_settings',
+  ORG_VIEW_ANALYTICS: 'org:view_analytics',
+  ORG_MANAGE_CONTRACTS: 'org:manage_contracts',
+  ORG_VIEW_BUILDINGS: 'org:view_buildings',
+
+  // Platform (global scope)
+  PLATFORM_APPROVE_BUILDINGS: 'platform:approve_buildings',
+  PLATFORM_MANAGE_USERS: 'platform:manage_users',
+  PLATFORM_MANAGE_ORGS: 'platform:manage_orgs',
+  PLATFORM_VIEW_ANALYTICS: 'platform:view_analytics',
+  PLATFORM_MODERATE_CONTENT: 'platform:moderate_content',
+  PLATFORM_MANAGE_SETTINGS: 'platform:manage_settings',
+  PLATFORM_MANAGE_OPERATIVES: 'platform:manage_operatives',
+} as const;
+
+export type Permission = (typeof Permission)[keyof typeof Permission];

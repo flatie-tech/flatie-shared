@@ -1,5 +1,5 @@
-import type { BuildingRole } from '../enums/building-role.enum';
 import type { BuildingType } from '../enums/building-type.enum';
+import type { BuildingRole } from '../enums/role.enum';
 import type { BaseEntity, UserCreatedEntity } from './base-entity.types';
 
 /**

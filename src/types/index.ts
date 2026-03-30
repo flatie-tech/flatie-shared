@@ -61,6 +61,8 @@ export type {
 // Pagination types
 export type { DateRangeParams, PaginatedResponse, PaginationParams } from './pagination.types';
 export { createPaginatedResponse } from './pagination.types';
+// Permission types
+export type { PermissionScope, PermissionsResponse } from './permissions.types';
 // Poll types
 export type {
   CreatePollRequest,

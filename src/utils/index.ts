@@ -11,15 +11,7 @@ export {
   normalizePaginatedResponse,
 } from './pagination';
 // Permission utilities
-export {
-  convertToNewFormat,
-  getNewPermissionName,
-  hasAllPermissions,
-  hasAnyPermission,
-  hasPermission,
-  isOldPermissionFormat,
-  PERMISSION_MAPPING,
-} from './permissions';
+export { hasAllPermissions, hasAnyPermission, hasPermission } from './permissions';
 
 /**
  * Format a snake_case or SCREAMING_SNAKE_CASE string to Title Case
