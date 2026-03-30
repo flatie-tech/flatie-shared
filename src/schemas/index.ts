@@ -47,10 +47,12 @@ export { dateRangeParamsSchema, dateRangeWithValidationSchema } from './date-ran
 
 // Entity schemas
 export * from './entities';
-
 // Pagination schemas
 export type { PaginatedResponseSchema, PaginationParamsSchema } from './pagination.schema';
 export { paginatedResponseSchema, paginationParamsSchema } from './pagination.schema';
+// Permission schemas
+export type { PermissionsResponseSchema } from './permissions.schema';
+export { permissionsResponseSchema, roleTypeSchema } from './permissions.schema';
 
 // Status schemas
 export type {
