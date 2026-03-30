@@ -162,6 +162,7 @@ export const Permission = {
   PLATFORM_APPROVE_BUILDINGS: 'platform:approve_buildings',
   PLATFORM_MANAGE_USERS: 'platform:manage_users',
   PLATFORM_MANAGE_ORGS: 'platform:manage_orgs',
+  PLATFORM_VIEW_ORGS: 'platform:view_orgs',
   PLATFORM_VIEW_ANALYTICS: 'platform:view_analytics',
   PLATFORM_MODERATE_CONTENT: 'platform:moderate_content',
   PLATFORM_MANAGE_SETTINGS: 'platform:manage_settings',

@@ -1,413 +1,191 @@
 # @flatie/shared
 
-Shared types, schemas, enums, and utilities for Flatie applications.
+Shared types, enums, schemas, and utilities for Flatie applications.
 
-## Overview
-
-This package provides common code shared across the Flatie ecosystem:
-
-- **flatie-backend** - NestJS API server
-- **flatie-frontend** - Next.js web application
-- **flatie-mobile** - React Native mobile app
+Used by:
+- **flatie-backend** (NestJS API)
+- **flatie-frontend** (Next.js web app)
+- **flatie-mobile** (React Native mobile app)
 
 ## Installation
 
-```bash
-# Using pnpm (recommended)
-pnpm add @flatie/shared
-
-# Using npm
-npm install @flatie/shared
-
-# Using yarn
-yarn add @flatie/shared
-```
-
-### Peer Dependencies
-
-This package requires `zod` as a peer dependency:
+This package is distributed as a GitHub dependency (not published to npm):
 
 ```bash
-pnpm add zod
+# Production / CI
+pnpm add github:flatie-tech/flatie-shared#v0.2.0
+
+# Local development (recommended)
+pnpm add file:../flatie-shared
 ```
 
-## Usage
+**Peer dependency:** Requires `zod@^3.23.0`.
 
-### Importing Everything
+> **Do not use `pnpm link`** for local development. It creates symlinks that break Next.js/Turbopack module resolution. Use `file:` protocol instead.
+
+## What's Included
+
+### Permissions
+
+90+ granular permissions for multi-layered RBAC:
 
 ```typescript
-import { Permission, Building, paginationParamsSchema } from '@flatie/shared';
+import { Permission, domainPermissions, SCOPED_DOMAINS } from '@flatie/shared';
+
+// Flat permissions
+Permission.BUILDING_CREATE       // 'building:create'
+Permission.PLATFORM_VIEW_ORGS    // 'platform:view_orgs'
+Permission.ORG_MANAGE_MEMBERS    // 'org:manage_members'
+
+// Scoped domain permissions (notice, event, poll, failure_report, document, maintenance_log)
+Permission.NOTICE_UPDATE_OWN     // 'notice:update:own'
+Permission.NOTICE_UPDATE_ANY     // 'notice:update:any'
+
+// Generate permission sets for a domain at a given access level
+domainPermissions('notice', 'read');    // ['notice:read']
+domainPermissions('notice', 'own');     // ['notice:read', 'notice:create', 'notice:update:own', 'notice:delete:own']
+domainPermissions('notice', 'manage');  // [...own, 'notice:update:any', 'notice:delete:any']
 ```
 
-### Importing by Category
+### Roles
 
 ```typescript
-// Constants (Query keys for React Query)
-import { queryKeys, noticeKeys, pollKeys } from '@flatie/shared/constants';
+import {
+  BuildingRole,    // CO_OWNER, DEPUTY_REPRESENTATIVE, OWNER_REPRESENTATIVE
+  OrgRole,         // OPERATIVE, REFERENT, SUPERVISOR, ORG_ADMIN
+  PlatformRole,    // PLATFORM_OPERATIVE, PLATFORM_SUPPORT, PLATFORM_MODERATOR, PLATFORM_ADMIN
+  Role,            // USER, ADMIN
+} from '@flatie/shared';
 
-// Enums only
-import { Permission, BuildingRole, PollType } from '@flatie/shared/enums';
+// Role assignment rules (rank-based: can only assign roles at or below your rank)
+import { canAssignRole, canAssignOrgRole, canAssignPlatformRole } from '@flatie/shared';
 
-// Types only
-import { Building, User, Notice, Transaction } from '@flatie/shared/types';
-
-// Schemas only
-import { loginSchema, createNoticeSchema, paginationParamsSchema } from '@flatie/shared/schemas';
-
-// API Routes
-import { API_ROUTES } from '@flatie/shared/urls';
-
-// Utilities
-import { formatCurrency, hasPermission, normalizePaginatedResponse } from '@flatie/shared/utils';
+canAssignOrgRole(OrgRole.SUPERVISOR, OrgRole.REFERENT);    // true
+canAssignOrgRole(OrgRole.REFERENT, OrgRole.SUPERVISOR);    // false
 ```
-
-## API Reference
 
 ### Enums
 
-#### Permission
-
-71 granular permissions for access control:
-
-```typescript
-import { Permission } from '@flatie/shared/enums';
-
-// Notice permissions
-Permission.NOTICE_CREATE    // 'notice:create'
-Permission.NOTICE_READ      // 'notice:read'
-Permission.NOTICE_UPDATE    // 'notice:update'
-Permission.NOTICE_DELETE    // 'notice:delete'
-Permission.NOTICE_APPROVE   // 'notice:approve'
-
-// Poll permissions
-Permission.POLL_CREATE
-Permission.POLL_VOTE
-Permission.POLL_FINALIZE
-// ... and more
-```
-
-#### BuildingRole
-
-```typescript
-import { BuildingRole } from '@flatie/shared/enums';
-
-BuildingRole.BUILDING_MANAGER
-BuildingRole.OWNER_REPRESENTATIVE
-BuildingRole.DEPUTY_REPRESENTATIVE
-BuildingRole.CO_OWNER
-```
-
-#### Status Enums
-
 ```typescript
 import {
-  CommonStatus,        // active, completed, cancelled
-  ApprovalStatus,      // pending, approved, rejected
-  MaintenanceStatus,   // pending, in_progress, completed, cancelled
-  FailureStatus,       // pending, in_progress, resolved, cancelled
-  Priority,            // low, medium, high, urgent
-  TransactionType,     // income, expense
-  Frequency,           // daily, weekly, monthly, quarterly, yearly
-} from '@flatie/shared/enums';
+  BuildingType,       // RESIDENTIAL, COMMERCIAL, RESIDENTIAL_COMMERCIAL
+  PollType,           // STANDARD, WEIGHTED
+  CommonStatus,       // ACTIVE, COMPLETED, CANCELLED
+  ApprovalStatus,     // PENDING, APPROVED, REJECTED
+  MaintenanceStatus,  // PENDING, IN_PROGRESS, COMPLETED, CANCELLED
+  FailureStatus,      // PENDING, IN_PROGRESS, RESOLVED, CANCELLED
+  Priority,           // LOW, MEDIUM, HIGH, URGENT
+  // ... and more
+} from '@flatie/shared';
 ```
+
+### Schemas (Zod 3)
+
+Validation schemas for auth, entities, and API payloads:
+
+```typescript
+import { loginSchema, registerSchema, createNoticeSchema } from '@flatie/shared/schemas';
+import { permissionsResponseSchema } from '@flatie/shared/schemas';
+```
+
+> **Note:** These schemas use Zod 3. If your consumer uses Zod 4 (like the Next.js frontend), you cannot import them directly. Instead, derive Zod enums from the exported const objects.
 
 ### Types
 
-#### Entity Types
+TypeScript type definitions for entities, requests, and responses:
 
 ```typescript
-import type {
-  // Base types
-  BaseEntity,
-  BuildingEntity,
-  UserCreatedEntity,
-  PermissionFields,
-
-  // Domain types
-  User,
-  Building,
-  BuildingWithRole,
-  Notice,
-  Poll,
-  Event,
-  FailureReport,
-  MaintenanceLog,
-
-  // Request types
-  CreateNoticeRequest,
-  CreatePollRequest,
-  VoteRequest,
-
-  // Pagination
-  PaginationParams,
-  PaginatedResponse,
-} from '@flatie/shared/types';
+import type { Building, User, Notice, PaginatedResponse } from '@flatie/shared/types';
 ```
 
-### Schemas (Zod)
-
-#### Base Schemas
-
-```typescript
-import {
-  uuidSchema,
-  dateTimeSchema,
-  baseEntitySchema,
-  buildingEntitySchema,
-  permissionFieldsSchema,
-} from '@flatie/shared/schemas';
-
-// Validate a UUID
-uuidSchema.parse('550e8400-e29b-41d4-a716-446655440000');
-
-// Validate pagination params
-paginationParamsSchema.parse({ offset: 0, limit: 10 });
-```
-
-#### Auth Schemas
-
-```typescript
-import {
-  loginSchema,
-  registerSchema,
-  forgotPasswordSchema,
-  resetPasswordSchema,
-  verifyOtpSchema,
-} from '@flatie/shared/schemas';
-
-// Validate login form
-loginSchema.parse({ email: 'user@example.com', password: 'Password123' });
-
-// Validate registration with password strength
-registerSchema.parse({
-  name: 'John Doe',
-  email: 'user@example.com',
-  password: 'SecurePass123',
-  passwordConfirmation: 'SecurePass123',
-  agreedToTermsAndConditions: true,
-});
-```
-
-#### Entity Schemas
-
-```typescript
-import {
-  createNoticeSchema,
-  createPollSchema,
-  createEventSchema,
-  createBuildingSchema,
-  POLL_LIMITS,
-  EVENT_TYPES,
-  EVENT_TYPE_COLOR_MAP,
-} from '@flatie/shared/schemas';
-
-// Validate notice creation
-createNoticeSchema.parse({
-  buildingId: '550e8400-e29b-41d4-a716-446655440000',
-  title: 'Building Maintenance Notice',
-  content: 'The elevator will be under maintenance...',
-});
-
-// Use validation constants
-console.log(POLL_LIMITS.QUESTION_MAX); // 250
-console.log(EVENT_TYPES); // ['service', 'inspection', 'maintenance', ...]
-```
-
-#### Status Schemas
-
-```typescript
-import {
-  CommonStatusSchema,
-  ApprovalStatusSchema,
-  PrioritySchema,
-} from '@flatie/shared/schemas';
-
-CommonStatusSchema.parse('active'); // OK
-CommonStatusSchema.parse('invalid'); // Throws ZodError
-```
-
-### URLs (API Routes)
+### URL Constants
 
 ```typescript
 import { API_ROUTES } from '@flatie/shared/urls';
 
-// Static routes
-API_ROUTES.AUTH.LOGIN           // '/auth/login'
-API_ROUTES.USERS.ME             // '/users/me'
-API_ROUTES.BUILDINGS.BASE       // '/buildings'
-
-// Dynamic routes
-API_ROUTES.BUILDINGS.BY_ID('123')           // '/buildings/123'
-API_ROUTES.NOTICES('building-id')           // '/buildings/building-id/notices'
-API_ROUTES.POLL('building-id', 'poll-id')   // '/buildings/building-id/polls/poll-id'
-```
-
-### Constants (Query Keys)
-
-```typescript
-import { queryKeys, noticeKeys, pollKeys, buildingKeys } from '@flatie/shared/constants';
-
-// Use in React Query
-useQuery({
-  queryKey: noticeKeys.list({ buildingId: '123' }),
-  queryFn: () => fetchNotices({ buildingId: '123' }),
-});
-
-// Invalidate queries
-queryClient.invalidateQueries({ queryKey: noticeKeys.all });
-queryClient.invalidateQueries({ queryKey: pollKeys.detail('poll-id') });
-
-// All keys available via queryKeys object
-queryKeys.notice.list({ buildingId: '123' });
-queryKeys.building.users('building-id');
-queryKeys.funds.summary('building-id');
+API_ROUTES.AUTH.LOGIN                    // '/auth/login'
+API_ROUTES.BUILDINGS.BY_ID('123')        // '/buildings/123'
+API_ROUTES.NOTICES('building-id')        // '/buildings/building-id/notices'
 ```
 
 ### Utilities
 
 ```typescript
-import {
-  formatText,
-  formatCurrency,
-  getDateRange,
-  hasPermission,
-  hasAnyPermission,
-  normalizePaginatedResponse,
-} from '@flatie/shared/utils';
+import { hasPermission, hasAnyPermission, hasAllPermissions } from '@flatie/shared/utils';
+import { formatCurrency, formatText, getDateRange } from '@flatie/shared/utils';
+import { normalizePaginatedResponse } from '@flatie/shared/utils';
+```
 
-// Format snake_case to Title Case
-formatText('CAN_EDIT_BUILDING');  // 'Can Edit Building'
+## Sub-path Imports
 
-// Format currency
-formatCurrency(1234.56);           // '€1,234.56'
-formatCurrency(1234.56, 'en-US', 'USD');  // '$1,234.56'
+Import by category to reduce bundle size:
 
-// Get date ranges for filters
-getDateRange('today');    // { fromDate: '2025-01-04', toDate: '2025-01-04' }
-getDateRange('week');     // { fromDate: '2024-12-28', toDate: '2025-01-04' }
-
-// Permission checking
+```typescript
 import { Permission } from '@flatie/shared/enums';
+import { loginSchema } from '@flatie/shared/schemas';
+import type { Building } from '@flatie/shared/types';
+import { API_ROUTES } from '@flatie/shared/urls';
+import { hasPermission } from '@flatie/shared/utils';
+import { queryKeys } from '@flatie/shared/constants';
+```
 
-const userPermissions = ['notice:create', 'notice:read'];
-hasPermission(userPermissions, Permission.NOTICE_CREATE);  // true
-hasAnyPermission(userPermissions, [Permission.POLL_CREATE, Permission.NOTICE_CREATE]);  // true
+Or import everything from the main entry:
 
-// Normalize various paginated response formats
-const response = await fetch('/api/notices');
-const data = await response.json();
-const normalized = normalizePaginatedResponse(data);
-// { data: [...], count: 100, page: 1, limit: 10, totalPages: 10, ... }
+```typescript
+import { Permission, BuildingRole, hasPermission } from '@flatie/shared';
 ```
 
 ## Development
 
-### Prerequisites
-
-- Node.js >= 20.0.0
-- pnpm >= 9.0.0
-
-### Setup
-
 ```bash
-# Install dependencies
-pnpm install
-
-# Build the package
-pnpm build
-
-# Run in watch mode
-pnpm dev
-
-# Run tests
-pnpm test
-
-# Lint and format
-pnpm lint
-pnpm lint:fix
-pnpm format
+pnpm install     # Install dependencies
+pnpm build       # Build (ESM + CJS + DTS via tsup)
+pnpm dev         # Build in watch mode
+pnpm test        # Run tests (Vitest)
+pnpm test:watch  # Tests in watch mode
+pnpm lint        # Biome check
+pnpm type-check  # TypeScript check
 ```
 
 ### Project Structure
 
 ```
 src/
-├── index.ts              # Main entry point
+├── index.ts              # Main barrel export
+├── enums/                # Const object enums (Permission, roles, statuses)
+│   ├── permission.enum.ts   # Permission + domainPermissions() + SCOPED_DOMAINS
+│   └── role.enum.ts         # BuildingRole, OrgRole, PlatformRole + canAssign*()
+├── schemas/              # Zod 3 validation schemas
+├── types/                # TypeScript type definitions
 ├── constants/            # Query keys for React Query
-│   └── query-keys.ts
-├── enums/                # TypeScript enums
-│   ├── permission.enum.ts
-│   ├── building-role.enum.ts
-│   ├── status.enum.ts
-│   └── ...
-├── types/                # TypeScript interfaces
-│   ├── user.types.ts
-│   ├── building.types.ts
-│   ├── financial.types.ts
-│   └── ...
-├── schemas/              # Zod validation schemas
-│   ├── auth.schema.ts
-│   ├── base.schema.ts
-│   ├── entities/
-│   │   ├── notice.schema.ts
-│   │   ├── poll.schema.ts
-│   │   ├── event.schema.ts
-│   │   └── ...
-│   └── ...
 ├── urls/                 # API route constants
-│   └── index.ts
-└── utils/                # Utility functions
-    ├── index.ts
-    ├── permissions.ts
-    └── pagination.ts
+└── utils/                # Permission helpers, formatting, pagination
+tests/
+├── enums/                # Permission + role tests
+└── utils/                # Utility tests
 ```
 
-### Building
+### Build Output
 
-The package is built using [tsup](https://tsup.egoist.dev/) and outputs:
+Built with [tsup](https://tsup.egoist.dev/):
+- ESM (`.js`) for modern bundlers
+- CJS (`.cjs`) for Node.js
+- Type declarations (`.d.ts` + `.d.cts`)
 
-- ESM (`.js`) - Modern ES modules
-- CJS (`.cjs`) - CommonJS for Node.js
-- Type declarations (`.d.ts`)
+The `prepare` script runs `tsup` automatically on `pnpm install`, so git dependency consumers get a built package without a separate build step.
 
-```bash
-pnpm build
-```
+## Releasing
 
-### Testing
+1. Make changes in `src/`, run `pnpm build && pnpm test`
+2. Bump version in `package.json`
+3. Commit, tag (`git tag v0.x.0`), push with tags
+4. Update consumer `package.json` references to the new tag
 
-Tests are written using [Vitest](https://vitest.dev/):
+## Design Decisions
 
-```bash
-# Run tests once
-pnpm test
-
-# Watch mode
-pnpm test:watch
-```
-
-### Linting
-
-Code quality is enforced with [Biome](https://biomejs.dev/):
-
-```bash
-# Check for issues
-pnpm lint
-
-# Auto-fix issues
-pnpm lint:fix
-
-# Format code
-pnpm format
-```
-
-## Contributing
-
-1. Make changes in the `src/` directory
-2. Run `pnpm lint:fix` to fix linting issues
-3. Run `pnpm test` to ensure tests pass
-4. Run `pnpm build` to verify the build
-5. Commit your changes
+- **Const objects over TypeScript enums**: Permissions and roles use `as const` objects for structural compatibility across package boundaries (TS enums create nominal types that break when consumed across separate builds).
+- **Zod 3 as peer dependency**: The backend uses Zod 3 directly. The frontend (Zod 4) derives its own enums from the exported const objects rather than importing Zod schemas.
+- **Permission mappings in the backend**: This package defines the Permission enum and helpers. The role-to-permission mapping constants live in the backend since they're a deployment concern.
 
 ## License
 
