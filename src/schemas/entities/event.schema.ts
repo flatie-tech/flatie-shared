@@ -60,8 +60,8 @@ export const createEventSchema = z.object({
   type: eventTypeSchema,
   title: z.string().min(1, 'Title is required').max(100, 'Title must be at most 100 characters'),
   description: z.string().max(2000, 'Description must be at most 2000 characters').optional(),
-  startDate: z.coerce.date({ required_error: 'Start date is required' }),
-  endDate: z.coerce.date({ required_error: 'End date is required' }),
+  startDate: z.coerce.date({ error: 'Start date is required' }),
+  endDate: z.coerce.date({ error: 'End date is required' }),
   color: eventColorSchema,
 });
 

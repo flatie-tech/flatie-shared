@@ -1,3 +1,17 @@
+// Apartment schemas
+export type {
+  Apartment,
+  ApartmentRole,
+  ApartmentUser,
+  PaginatedApartmentsResponse,
+} from './apartment.schema';
+export {
+  apartmentRoleSchema,
+  apartmentSchema,
+  apartmentUserSchema,
+  paginatedApartmentsResponseSchema,
+} from './apartment.schema';
+
 // Building schemas
 
 export type {
@@ -45,6 +59,9 @@ export {
   createFailureReportSchema,
   updateFailureReportSchema,
 } from './failure-report.schema';
+// Garage schemas
+export type { Garage, GarageRole, GarageUser } from './garage.schema';
+export { garageRoleSchema, garageSchema, garageUserSchema } from './garage.schema';
 export type {
   CreateMaintenanceLogSchema,
   MaintenanceFinancedByOption,
@@ -86,3 +103,11 @@ export {
   pollTypeSchema,
   votePollSchema,
 } from './poll.schema';
+
+// Storage unit schemas
+export type { StorageUnit, StorageUnitRole, StorageUnitUser } from './storage-unit.schema';
+export {
+  storageUnitRoleSchema,
+  storageUnitSchema,
+  storageUnitUserSchema,
+} from './storage-unit.schema';

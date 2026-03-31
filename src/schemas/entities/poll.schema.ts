@@ -43,7 +43,7 @@ export const createPollSchema = z
       .array(z.string().max(POLL_LIMITS.OPTION_MAX, 'Option must be at most 100 characters'))
       .min(1, 'At least one option is required'),
     pollType: pollTypeSchema,
-    deadline: z.coerce.date({ required_error: 'Deadline is required' }),
+    deadline: z.coerce.date({ error: 'Deadline is required' }),
     requiredConsensusPercentage: z.coerce
       .number()
       .min(POLL_LIMITS.CONSENSUS_PERCENTAGE_MIN)
