@@ -33,8 +33,11 @@ export type Apartment = z.infer<typeof apartmentSchema>;
 
 export const paginatedApartmentsResponseSchema = z.looseObject({
   data: z.array(apartmentSchema),
+  count: z.number().optional(),
+  page: z.number().optional(),
   totalPages: z.number(),
-  currentPage: z.number(),
   limit: z.number(),
+  hasNextPage: z.boolean().optional(),
+  hasPreviousPage: z.boolean().optional(),
 });
 export type PaginatedApartmentsResponse = z.infer<typeof paginatedApartmentsResponseSchema>;

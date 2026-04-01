@@ -6,7 +6,7 @@ Shared types, enums, schemas, and utilities for Flatie applications (backend, fr
 
 - **Runtime**: Node.js 20+, pnpm
 - **Build**: tsup (ESM + CJS dual output)
-- **Validation**: Zod 3 (peer dependency)
+- **Validation**: Zod 4 (peer dependency)
 - **Testing**: Vitest
 - **Linting/Formatting**: Biome
 - **Git Hooks**: Lefthook
@@ -73,5 +73,5 @@ Run `pnpm dev` (tsup --watch) to rebuild on changes. Consumers need to run `pnpm
 ## Key Design Decisions
 
 - **Const objects over TypeScript enums**: Permissions, roles, etc. use `as const` objects for structural compatibility across packages (TypeScript enums create nominal types that break across package boundaries).
-- **Zod 3 as peer dependency**: The backend uses Zod 3 directly. The frontend (Zod 4) cannot import Zod schemas from this package — it derives its own Zod enums from the exported const objects instead.
+- **Zod 4 as peer dependency**: Both the backend and frontend use Zod 4. Zod schemas from this package can be imported directly by consumers.
 - **Permission mappings live in the backend**: This package defines the Permission enum and helper functions (`domainPermissions`, `canAssignRole`). The role-to-permission mapping constants live in the backend (`permission-mappings.ts`) since they're a deployment concern, not a shared contract.
