@@ -1,6 +1,6 @@
 'use strict';
 
-var chunk6LJECS3P_cjs = require('./chunk-6LJECS3P.cjs');
+var chunkW5GNM4ML_cjs = require('./chunk-W5GNM4ML.cjs');
 var zod = require('zod');
 
 var emailSchema = zod.z.string().email("Invalid email address");
@@ -392,10 +392,10 @@ var paginatedResponseSchema = (itemSchema) => zod.z.object({
   hasPreviousPage: zod.z.boolean()
 });
 var roleTypeSchema = zod.z.enum([
-  ...Object.values(chunk6LJECS3P_cjs.Role),
-  ...Object.values(chunk6LJECS3P_cjs.BuildingRole),
-  ...Object.values(chunk6LJECS3P_cjs.OrgRole),
-  ...Object.values(chunk6LJECS3P_cjs.PlatformRole)
+  ...Object.values(chunkW5GNM4ML_cjs.Role),
+  ...Object.values(chunkW5GNM4ML_cjs.BuildingRole),
+  ...Object.values(chunkW5GNM4ML_cjs.OrgRole),
+  ...Object.values(chunkW5GNM4ML_cjs.PlatformRole)
 ]);
 var permissionsResponseSchema = zod.z.object({
   scope: zod.z.enum(["building", "organization", "platform"]),
@@ -497,5 +497,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-RBDZHSEY.cjs.map
-//# sourceMappingURL=chunk-RBDZHSEY.cjs.map
+//# sourceMappingURL=chunk-IRF6XR6N.cjs.map
+//# sourceMappingURL=chunk-IRF6XR6N.cjs.map

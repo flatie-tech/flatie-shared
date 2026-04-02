@@ -87,6 +87,8 @@ declare const Permission: {
     readonly VOTE_WEIGHT_BASED: "vote:weight_based";
     readonly SYSTEM_ADMIN: "system:admin";
     readonly SYSTEM_MANAGE: "system:manage";
+    readonly SYSTEM_DELETE_USER: "system:delete_user";
+    readonly SYSTEM_CREATE_ORGANIZATION: "system:create_organization";
     readonly ORG_MANAGE_MEMBERS: "org:manage_members";
     readonly ORG_MANAGE_ROLES: "org:manage_roles";
     readonly ORG_ASSIGN_BUILDINGS: "org:assign_buildings";

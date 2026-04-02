@@ -124,6 +124,8 @@ var Permission = {
   // System
   SYSTEM_ADMIN: "system:admin",
   SYSTEM_MANAGE: "system:manage",
+  SYSTEM_DELETE_USER: "system:delete_user",
+  SYSTEM_CREATE_ORGANIZATION: "system:create_organization",
   // Organization (org-scoped)
   ORG_MANAGE_MEMBERS: "org:manage_members",
   ORG_MANAGE_ROLES: "org:manage_roles",
@@ -279,5 +281,5 @@ var FileCategory = /* @__PURE__ */ ((FileCategory2) => {
 })(FileCategory || {});
 
 export { ApprovalStatus, BUILDING_ROLE_RANK, BuildingRole, BuildingType, CommonStatus, FailureStatus, FailureType, FileCategory, Frequency, MaintenanceStatus, MaintenanceType, ORG_ROLE_RANK, OrgRole, PLATFORM_ROLE_RANK, Permission, PlatformRole, PollType, Priority, Role, SCOPED_DOMAINS, TransactionCategory, TransactionType, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions };
-//# sourceMappingURL=chunk-PXUSTK6R.js.map
-//# sourceMappingURL=chunk-PXUSTK6R.js.map
+//# sourceMappingURL=chunk-BDA6A6TE.js.map
+//# sourceMappingURL=chunk-BDA6A6TE.js.map

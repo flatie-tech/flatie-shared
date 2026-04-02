@@ -147,6 +147,8 @@ export const Permission = {
   // System
   SYSTEM_ADMIN: 'system:admin',
   SYSTEM_MANAGE: 'system:manage',
+  SYSTEM_DELETE_USER: 'system:delete_user',
+  SYSTEM_CREATE_ORGANIZATION: 'system:create_organization',
 
   // Organization (org-scoped)
   ORG_MANAGE_MEMBERS: 'org:manage_members',

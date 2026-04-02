@@ -126,6 +126,8 @@ var Permission = {
   // System
   SYSTEM_ADMIN: "system:admin",
   SYSTEM_MANAGE: "system:manage",
+  SYSTEM_DELETE_USER: "system:delete_user",
+  SYSTEM_CREATE_ORGANIZATION: "system:create_organization",
   // Organization (org-scoped)
   ORG_MANAGE_MEMBERS: "org:manage_members",
   ORG_MANAGE_ROLES: "org:manage_roles",
@@ -306,5 +308,5 @@ exports.canAssignOrgRole = canAssignOrgRole;
 exports.canAssignPlatformRole = canAssignPlatformRole;
 exports.canAssignRole = canAssignRole;
 exports.domainPermissions = domainPermissions;
-//# sourceMappingURL=chunk-6LJECS3P.cjs.map
-//# sourceMappingURL=chunk-6LJECS3P.cjs.map
+//# sourceMappingURL=chunk-W5GNM4ML.cjs.map
+//# sourceMappingURL=chunk-W5GNM4ML.cjs.map

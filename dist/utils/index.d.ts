@@ -1,5 +1,5 @@
 import { P as PaginatedResponse } from '../pagination.types-CKR9lS7u.js';
-import { P as Permission } from '../permission.enum-kFexC4fy.js';
+import { P as Permission } from '../permission.enum-Dv9yar8a.js';
 
 /**
  * Normalize various paginated response formats to a consistent structure
