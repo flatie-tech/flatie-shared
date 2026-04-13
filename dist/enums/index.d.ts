@@ -1,4 +1,4 @@
-export { P as Permission, S as SCOPED_DOMAINS, a as ScopedAction, b as ScopedDomain, d as domainPermissions } from '../permission.enum-Dv9yar8a.js';
+export { P as Permission, S as SCOPED_DOMAINS, a as ScopedAction, b as ScopedDomain, d as domainPermissions } from '../permission.enum-CIZ7gCeI.js';
 
 declare enum BuildingType {
     RESIDENTIAL = "RESIDENTIAL",

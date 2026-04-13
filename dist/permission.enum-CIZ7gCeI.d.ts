@@ -105,6 +105,7 @@ declare const Permission: {
     readonly PLATFORM_MODERATE_CONTENT: "platform:moderate_content";
     readonly PLATFORM_MANAGE_SETTINGS: "platform:manage_settings";
     readonly PLATFORM_MANAGE_OPERATIVES: "platform:manage_operatives";
+    readonly PLATFORM_PURGE: "platform:purge";
 };
 type Permission = (typeof Permission)[keyof typeof Permission];
 

@@ -1,6 +1,6 @@
 import { BuildingType, BuildingRole, FailureStatus, TransactionType, TransactionCategory, PollType, CommonStatus, Role } from '../enums/index.cjs';
 export { D as DateRangeParams, P as PaginatedResponse, a as PaginationParams, c as createPaginatedResponse } from '../pagination.types-CKR9lS7u.cjs';
-import { P as Permission } from '../permission.enum-Dv9yar8a.cjs';
+import { P as Permission } from '../permission.enum-CIZ7gCeI.cjs';
 
 /**
  * Base entity with common fields for all database entities

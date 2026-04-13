@@ -143,7 +143,8 @@ var Permission = {
   PLATFORM_VIEW_ANALYTICS: "platform:view_analytics",
   PLATFORM_MODERATE_CONTENT: "platform:moderate_content",
   PLATFORM_MANAGE_SETTINGS: "platform:manage_settings",
-  PLATFORM_MANAGE_OPERATIVES: "platform:manage_operatives"
+  PLATFORM_MANAGE_OPERATIVES: "platform:manage_operatives",
+  PLATFORM_PURGE: "platform:purge"
 };
 
 // src/enums/poll-type.enum.ts
@@ -281,5 +282,5 @@ var FileCategory = /* @__PURE__ */ ((FileCategory2) => {
 })(FileCategory || {});
 
 export { ApprovalStatus, BUILDING_ROLE_RANK, BuildingRole, BuildingType, CommonStatus, FailureStatus, FailureType, FileCategory, Frequency, MaintenanceStatus, MaintenanceType, ORG_ROLE_RANK, OrgRole, PLATFORM_ROLE_RANK, Permission, PlatformRole, PollType, Priority, Role, SCOPED_DOMAINS, TransactionCategory, TransactionType, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions };
-//# sourceMappingURL=chunk-BDA6A6TE.js.map
-//# sourceMappingURL=chunk-BDA6A6TE.js.map
+//# sourceMappingURL=chunk-KVY53M6L.js.map
+//# sourceMappingURL=chunk-KVY53M6L.js.map

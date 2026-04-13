@@ -145,7 +145,8 @@ var Permission = {
   PLATFORM_VIEW_ANALYTICS: "platform:view_analytics",
   PLATFORM_MODERATE_CONTENT: "platform:moderate_content",
   PLATFORM_MANAGE_SETTINGS: "platform:manage_settings",
-  PLATFORM_MANAGE_OPERATIVES: "platform:manage_operatives"
+  PLATFORM_MANAGE_OPERATIVES: "platform:manage_operatives",
+  PLATFORM_PURGE: "platform:purge"
 };
 
 // src/enums/poll-type.enum.ts
@@ -308,5 +309,5 @@ exports.canAssignOrgRole = canAssignOrgRole;
 exports.canAssignPlatformRole = canAssignPlatformRole;
 exports.canAssignRole = canAssignRole;
 exports.domainPermissions = domainPermissions;
-//# sourceMappingURL=chunk-W5GNM4ML.cjs.map
-//# sourceMappingURL=chunk-W5GNM4ML.cjs.map
+//# sourceMappingURL=chunk-NOIJETIN.cjs.map
+//# sourceMappingURL=chunk-NOIJETIN.cjs.map
