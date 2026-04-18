@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { uuidSchema } from '../base.schema';
+import { multipartArray } from '../multipart.schema';
 
 /**
  * Poll type options
@@ -27,11 +28,12 @@ export const POLL_LIMITS = {
 } as const;
 
 /**
- * Create poll request schema
+ * Create poll request schema — matches flatie-backend's
+ * `POST /buildings/:buildingId/polls` multipart/form-data payload.
+ * buildingId comes from the URL, not the body.
  */
 export const createPollSchema = z
   .object({
-    buildingId: uuidSchema,
     question: z
       .string()
       .min(POLL_LIMITS.QUESTION_MIN, 'Question must be at least 5 characters')
@@ -39,17 +41,19 @@ export const createPollSchema = z
         POLL_LIMITS.QUESTION_MAX,
         `Question must be at most ${POLL_LIMITS.QUESTION_MAX} characters`,
       ),
-    options: z
-      .array(z.string().max(POLL_LIMITS.OPTION_MAX, 'Option must be at most 100 characters'))
-      .min(1, 'At least one option is required'),
+    options: multipartArray(z.string().max(POLL_LIMITS.OPTION_MAX)).pipe(
+      z.array(z.string().min(1).max(POLL_LIMITS.OPTION_MAX)),
+    ),
     pollType: pollTypeSchema,
-    deadline: z.coerce.date({ error: 'Deadline is required' }),
+    deadline: z.coerce.date().optional(),
     requiredConsensusPercentage: z.coerce
       .number()
       .min(POLL_LIMITS.CONSENSUS_PERCENTAGE_MIN)
       .max(POLL_LIMITS.CONSENSUS_PERCENTAGE_MAX)
       .optional(),
-    fileIds: z.array(uuidSchema).optional().default([]),
+    scopedUnitIds: multipartArray(uuidSchema).optional(),
+    scopedUserIds: multipartArray(uuidSchema).optional(),
+    fileIds: multipartArray(uuidSchema).optional().default([]),
   })
   .refine(
     (data) => {
@@ -87,6 +91,28 @@ export const createPollSchema = z
   );
 
 /**
+ * Update poll request schema — all fields optional; the extra
+ * `status` discriminant (`active` / `inactive` / `ended`) and the
+ * `removeChildFileIds` list matches the legacy `UpdatePollDto`.
+ */
+export const updatePollSchema = z.object({
+  question: z.string().min(1).max(POLL_LIMITS.QUESTION_MAX).optional(),
+  options: multipartArray(z.string().max(POLL_LIMITS.OPTION_MAX)).optional(),
+  pollType: pollTypeSchema.optional(),
+  deadline: z.coerce.date().optional(),
+  requiredConsensusPercentage: z.coerce
+    .number()
+    .min(POLL_LIMITS.CONSENSUS_PERCENTAGE_MIN)
+    .max(POLL_LIMITS.CONSENSUS_PERCENTAGE_MAX)
+    .optional(),
+  status: z.enum(['active', 'inactive', 'ended']).optional(),
+  scopedUnitIds: multipartArray(uuidSchema).optional(),
+  scopedUserIds: multipartArray(uuidSchema).optional(),
+  fileIds: multipartArray(uuidSchema).optional(),
+  removeChildFileIds: multipartArray(uuidSchema).optional(),
+});
+
+/**
  * Vote on poll request schema
  *
  * Backend stores poll options as a JSON array and votes reference the
@@ -109,5 +135,6 @@ export const finalizePollSchema = z.object({
 
 // Inferred types
 export type CreatePollSchema = z.infer<typeof createPollSchema>;
+export type UpdatePollSchema = z.infer<typeof updatePollSchema>;
 export type VotePollSchema = z.infer<typeof votePollSchema>;
 export type FinalizePollSchema = z.infer<typeof finalizePollSchema>;

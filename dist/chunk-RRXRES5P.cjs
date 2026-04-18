@@ -420,6 +420,33 @@ var updateNoticeSchema = zod.z.object({
 var approveNoticeSchema = zod.z.object({
   approved: zod.z.boolean()
 });
+function multipartArray(itemSchema) {
+  return zod.z.preprocess((value) => {
+    if (Array.isArray(value)) return value;
+    if (typeof value !== "string") return value;
+    const trimmed = value.trim();
+    if (trimmed === "") return [];
+    if (trimmed.startsWith("[")) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        return Array.isArray(parsed) ? parsed : [value];
+      } catch {
+        return [value];
+      }
+    }
+    return [value];
+  }, zod.z.array(itemSchema));
+}
+function multipartBoolean() {
+  return zod.z.preprocess((value) => {
+    if (typeof value === "boolean") return value;
+    if (value === "true") return true;
+    if (value === "false" || value === "" || value == null) return false;
+    return value;
+  }, zod.z.boolean());
+}
+
+// src/schemas/entities/poll.schema.ts
 var POLL_TYPES = ["CONSENSUS", "COMMUNITY"];
 var pollTypeSchema = zod.z.enum(POLL_TYPES);
 var POLL_LIMITS = {
@@ -433,16 +460,19 @@ var POLL_LIMITS = {
   CONSENSUS_PERCENTAGE_MAX: 100
 };
 var createPollSchema = zod.z.object({
-  buildingId: uuidSchema,
   question: zod.z.string().min(POLL_LIMITS.QUESTION_MIN, "Question must be at least 5 characters").max(
     POLL_LIMITS.QUESTION_MAX,
     `Question must be at most ${POLL_LIMITS.QUESTION_MAX} characters`
   ),
-  options: zod.z.array(zod.z.string().max(POLL_LIMITS.OPTION_MAX, "Option must be at most 100 characters")).min(1, "At least one option is required"),
+  options: multipartArray(zod.z.string().max(POLL_LIMITS.OPTION_MAX)).pipe(
+    zod.z.array(zod.z.string().min(1).max(POLL_LIMITS.OPTION_MAX))
+  ),
   pollType: pollTypeSchema,
-  deadline: zod.z.coerce.date({ error: "Deadline is required" }),
+  deadline: zod.z.coerce.date().optional(),
   requiredConsensusPercentage: zod.z.coerce.number().min(POLL_LIMITS.CONSENSUS_PERCENTAGE_MIN).max(POLL_LIMITS.CONSENSUS_PERCENTAGE_MAX).optional(),
-  fileIds: zod.z.array(uuidSchema).optional().default([])
+  scopedUnitIds: multipartArray(uuidSchema).optional(),
+  scopedUserIds: multipartArray(uuidSchema).optional(),
+  fileIds: multipartArray(uuidSchema).optional().default([])
 }).refine(
   (data) => {
     if (data.pollType === "COMMUNITY") {
@@ -469,6 +499,18 @@ var createPollSchema = zod.z.object({
     path: ["requiredConsensusPercentage"]
   }
 );
+var updatePollSchema = zod.z.object({
+  question: zod.z.string().min(1).max(POLL_LIMITS.QUESTION_MAX).optional(),
+  options: multipartArray(zod.z.string().max(POLL_LIMITS.OPTION_MAX)).optional(),
+  pollType: pollTypeSchema.optional(),
+  deadline: zod.z.coerce.date().optional(),
+  requiredConsensusPercentage: zod.z.coerce.number().min(POLL_LIMITS.CONSENSUS_PERCENTAGE_MIN).max(POLL_LIMITS.CONSENSUS_PERCENTAGE_MAX).optional(),
+  status: zod.z.enum(["active", "inactive", "ended"]).optional(),
+  scopedUnitIds: multipartArray(uuidSchema).optional(),
+  scopedUserIds: multipartArray(uuidSchema).optional(),
+  fileIds: multipartArray(uuidSchema).optional(),
+  removeChildFileIds: multipartArray(uuidSchema).optional()
+});
 var votePollSchema = zod.z.object({
   selectedOptionIndex: zod.z.number().int().min(0)
 });
@@ -626,6 +668,8 @@ exports.joinBuildingWithOtpSchema = joinBuildingWithOtpSchema;
 exports.loginSchema = loginSchema;
 exports.maintenanceFinancedBySchema = maintenanceFinancedBySchema;
 exports.maintenanceStatusOptions = maintenanceStatusOptions;
+exports.multipartArray = multipartArray;
+exports.multipartBoolean = multipartBoolean;
 exports.noticeEventSchema = noticeEventSchema;
 exports.optionalDateTimeSchema = optionalDateTimeSchema;
 exports.paginatedApartmentsResponseSchema = paginatedApartmentsResponseSchema;
@@ -657,11 +701,12 @@ exports.updateNoticeSchema = updateNoticeSchema;
 exports.updateOrgMemberRoleSchema = updateOrgMemberRoleSchema;
 exports.updateOrganizationSchema = updateOrganizationSchema;
 exports.updatePasswordSchema = updatePasswordSchema;
+exports.updatePollSchema = updatePollSchema;
 exports.updateTransactionCategorySchema = updateTransactionCategorySchema;
 exports.updateUserBuildingRoleSchema = updateUserBuildingRoleSchema;
 exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-IQIJKJNN.cjs.map
-//# sourceMappingURL=chunk-IQIJKJNN.cjs.map
+//# sourceMappingURL=chunk-RRXRES5P.cjs.map
+//# sourceMappingURL=chunk-RRXRES5P.cjs.map

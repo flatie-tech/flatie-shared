@@ -418,6 +418,33 @@ var updateNoticeSchema = z.object({
 var approveNoticeSchema = z.object({
   approved: z.boolean()
 });
+function multipartArray(itemSchema) {
+  return z.preprocess((value) => {
+    if (Array.isArray(value)) return value;
+    if (typeof value !== "string") return value;
+    const trimmed = value.trim();
+    if (trimmed === "") return [];
+    if (trimmed.startsWith("[")) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        return Array.isArray(parsed) ? parsed : [value];
+      } catch {
+        return [value];
+      }
+    }
+    return [value];
+  }, z.array(itemSchema));
+}
+function multipartBoolean() {
+  return z.preprocess((value) => {
+    if (typeof value === "boolean") return value;
+    if (value === "true") return true;
+    if (value === "false" || value === "" || value == null) return false;
+    return value;
+  }, z.boolean());
+}
+
+// src/schemas/entities/poll.schema.ts
 var POLL_TYPES = ["CONSENSUS", "COMMUNITY"];
 var pollTypeSchema = z.enum(POLL_TYPES);
 var POLL_LIMITS = {
@@ -431,16 +458,19 @@ var POLL_LIMITS = {
   CONSENSUS_PERCENTAGE_MAX: 100
 };
 var createPollSchema = z.object({
-  buildingId: uuidSchema,
   question: z.string().min(POLL_LIMITS.QUESTION_MIN, "Question must be at least 5 characters").max(
     POLL_LIMITS.QUESTION_MAX,
     `Question must be at most ${POLL_LIMITS.QUESTION_MAX} characters`
   ),
-  options: z.array(z.string().max(POLL_LIMITS.OPTION_MAX, "Option must be at most 100 characters")).min(1, "At least one option is required"),
+  options: multipartArray(z.string().max(POLL_LIMITS.OPTION_MAX)).pipe(
+    z.array(z.string().min(1).max(POLL_LIMITS.OPTION_MAX))
+  ),
   pollType: pollTypeSchema,
-  deadline: z.coerce.date({ error: "Deadline is required" }),
+  deadline: z.coerce.date().optional(),
   requiredConsensusPercentage: z.coerce.number().min(POLL_LIMITS.CONSENSUS_PERCENTAGE_MIN).max(POLL_LIMITS.CONSENSUS_PERCENTAGE_MAX).optional(),
-  fileIds: z.array(uuidSchema).optional().default([])
+  scopedUnitIds: multipartArray(uuidSchema).optional(),
+  scopedUserIds: multipartArray(uuidSchema).optional(),
+  fileIds: multipartArray(uuidSchema).optional().default([])
 }).refine(
   (data) => {
     if (data.pollType === "COMMUNITY") {
@@ -467,6 +497,18 @@ var createPollSchema = z.object({
     path: ["requiredConsensusPercentage"]
   }
 );
+var updatePollSchema = z.object({
+  question: z.string().min(1).max(POLL_LIMITS.QUESTION_MAX).optional(),
+  options: multipartArray(z.string().max(POLL_LIMITS.OPTION_MAX)).optional(),
+  pollType: pollTypeSchema.optional(),
+  deadline: z.coerce.date().optional(),
+  requiredConsensusPercentage: z.coerce.number().min(POLL_LIMITS.CONSENSUS_PERCENTAGE_MIN).max(POLL_LIMITS.CONSENSUS_PERCENTAGE_MAX).optional(),
+  status: z.enum(["active", "inactive", "ended"]).optional(),
+  scopedUnitIds: multipartArray(uuidSchema).optional(),
+  scopedUserIds: multipartArray(uuidSchema).optional(),
+  fileIds: multipartArray(uuidSchema).optional(),
+  removeChildFileIds: multipartArray(uuidSchema).optional()
+});
 var votePollSchema = z.object({
   selectedOptionIndex: z.number().int().min(0)
 });
@@ -558,6 +600,6 @@ var MaintenanceStatusSchema = z.enum(maintenanceStatusOptions);
 var FailureStatusSchema = z.enum(failureStatusOptions);
 var PrioritySchema = z.enum(priorityOptions);
 
-export { ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, baseEntitySchema, buildingEntitySchema, buildingTypeSchema, buildingUserEntitySchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventTypeSchema, failureStatusOptions, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, loginSchema, maintenanceFinancedBySchema, maintenanceStatusOptions, noticeEventSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollTypeSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updatePasswordSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-S24XASII.js.map
-//# sourceMappingURL=chunk-S24XASII.js.map
+export { ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, baseEntitySchema, buildingEntitySchema, buildingTypeSchema, buildingUserEntitySchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventTypeSchema, failureStatusOptions, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, loginSchema, maintenanceFinancedBySchema, maintenanceStatusOptions, multipartArray, multipartBoolean, noticeEventSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollTypeSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updatePasswordSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
+//# sourceMappingURL=chunk-6LPJRQ4G.js.map
+//# sourceMappingURL=chunk-6LPJRQ4G.js.map

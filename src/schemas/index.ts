@@ -48,6 +48,8 @@ export { dateRangeParamsSchema, dateRangeWithValidationSchema } from './date-ran
 
 // Entity schemas
 export * from './entities';
+// Multipart/form-data helpers (Zod preprocessors)
+export { multipartArray, multipartBoolean } from './multipart.schema';
 // Pagination schemas
 export type { PaginatedResponseSchema, PaginationParamsSchema } from './pagination.schema';
 export { paginatedResponseSchema, paginationParamsSchema } from './pagination.schema';

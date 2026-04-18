@@ -145,6 +145,7 @@ export type {
   CreatePollSchema,
   FinalizePollSchema,
   PollTypeOption,
+  UpdatePollSchema,
   VotePollSchema,
 } from './poll.schema';
 // Poll schemas
@@ -154,6 +155,7 @@ export {
   POLL_LIMITS,
   POLL_TYPES,
   pollTypeSchema,
+  updatePollSchema,
   votePollSchema,
 } from './poll.schema';
 
