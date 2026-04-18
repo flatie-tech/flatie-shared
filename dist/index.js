@@ -5,5 +5,19 @@ import './chunk-4LSFAAZW.js';
 export { API_ROUTES, API_VERSION } from './chunk-7JCMB6BU.js';
 export { calculatePaginationMeta, debounce, extractPaginatedItems, formatCurrency, formatText, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, normalizePaginatedResponse } from './chunk-UG5DTFGQ.js';
 export { createPaginatedResponse } from './chunk-W3SU22LA.js';
+
+// src/test-ids/auth.ts
+var LoginTestIds = {
+  emailInput: "login-email-input",
+  passwordInput: "login-password-input",
+  passwordToggle: "login-password-toggle",
+  googleButton: "login-google-button",
+  submitButton: "login-submit-button",
+  forgotPasswordLink: "login-forgot-password-link",
+  rememberMe: "login-remember-me-checkbox",
+  registerLink: "login-register-link"
+};
+
+export { LoginTestIds };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

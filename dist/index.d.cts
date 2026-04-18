@@ -7,3 +7,16 @@ export { D as DateRangeParams, P as PaginatedResponse, a as PaginationParams, c 
 export { API_ROUTES, API_VERSION } from './urls/index.cjs';
 export { calculatePaginationMeta, debounce, extractPaginatedItems, formatCurrency, formatText, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, normalizePaginatedResponse } from './utils/index.cjs';
 import 'zod';
+
+declare const LoginTestIds: {
+    readonly emailInput: "login-email-input";
+    readonly passwordInput: "login-password-input";
+    readonly passwordToggle: "login-password-toggle";
+    readonly googleButton: "login-google-button";
+    readonly submitButton: "login-submit-button";
+    readonly forgotPasswordLink: "login-forgot-password-link";
+    readonly rememberMe: "login-remember-me-checkbox";
+    readonly registerLink: "login-register-link";
+};
+
+export { LoginTestIds };

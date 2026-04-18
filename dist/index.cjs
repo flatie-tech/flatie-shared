@@ -8,7 +8,17 @@ var chunkJV743BPB_cjs = require('./chunk-JV743BPB.cjs');
 var chunkRY3UP4NL_cjs = require('./chunk-RY3UP4NL.cjs');
 var chunkIGBERUWL_cjs = require('./chunk-IGBERUWL.cjs');
 
-
+// src/test-ids/auth.ts
+var LoginTestIds = {
+  emailInput: "login-email-input",
+  passwordInput: "login-password-input",
+  passwordToggle: "login-password-toggle",
+  googleButton: "login-google-button",
+  submitButton: "login-submit-button",
+  forgotPasswordLink: "login-forgot-password-link",
+  rememberMe: "login-remember-me-checkbox",
+  registerLink: "login-register-link"
+};
 
 Object.defineProperty(exports, "adminKeys", {
   enumerable: true,
@@ -522,5 +532,6 @@ Object.defineProperty(exports, "createPaginatedResponse", {
   enumerable: true,
   get: function () { return chunkIGBERUWL_cjs.createPaginatedResponse; }
 });
+exports.LoginTestIds = LoginTestIds;
 //# sourceMappingURL=index.cjs.map
 //# sourceMappingURL=index.cjs.map
