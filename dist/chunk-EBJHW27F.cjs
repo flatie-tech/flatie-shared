@@ -239,42 +239,89 @@ var getOrgMembersQuerySchema = zod.z.object({
   sortBy: zod.z.enum(["userName", "orgRole", "createdAt"]).optional(),
   sortOrder: zod.z.enum(["asc", "desc"]).optional()
 });
-var BUILDING_TYPES = ["residential", "commercial"];
+function multipartArray(itemSchema) {
+  return zod.z.preprocess((value) => {
+    if (Array.isArray(value)) return value;
+    if (typeof value !== "string") return value;
+    const trimmed = value.trim();
+    if (trimmed === "") return [];
+    if (trimmed.startsWith("[")) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        return Array.isArray(parsed) ? parsed : [value];
+      } catch {
+        return [value];
+      }
+    }
+    return [value];
+  }, zod.z.array(itemSchema));
+}
+function multipartBoolean() {
+  return zod.z.preprocess((value) => {
+    if (typeof value === "boolean") return value;
+    if (value === "true") return true;
+    if (value === "false" || value === "" || value == null) return false;
+    return value;
+  }, zod.z.boolean());
+}
+
+// src/schemas/entities/building.schema.ts
+var BUILDING_TYPES = ["RESIDENTIAL", "COMMERCIAL", "RESIDENTIAL_COMMERCIAL"];
 var buildingTypeSchema = zod.z.enum(BUILDING_TYPES);
 var BUILDING_LIMITS = {
   NAME_MIN: 1,
   NAME_MAX: 100,
   ADDRESS_MIN: 1,
   ADDRESS_MAX: 200,
+  HOUSE_NUMBER_MIN: 1,
+  HOUSE_NUMBER_MAX: 20,
+  OTP_LENGTH: 6,
   UNITS_MIN: 1,
   UNITS_MAX: 1e4
 };
 var createBuildingSchema = zod.z.object({
   name: zod.z.string().min(BUILDING_LIMITS.NAME_MIN, "Name is required").max(BUILDING_LIMITS.NAME_MAX, `Name must be at most ${BUILDING_LIMITS.NAME_MAX} characters`),
-  type: buildingTypeSchema,
   address: zod.z.string().min(BUILDING_LIMITS.ADDRESS_MIN, "Address is required").max(
     BUILDING_LIMITS.ADDRESS_MAX,
     `Address must be at most ${BUILDING_LIMITS.ADDRESS_MAX} characters`
   ),
-  totalUnits: zod.z.coerce.number().min(BUILDING_LIMITS.UNITS_MIN, "Building must have at least 1 unit").max(
+  streetId: uuidSchema,
+  houseNumber: zod.z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN, "House number is required").max(BUILDING_LIMITS.HOUSE_NUMBER_MAX),
+  type: buildingTypeSchema,
+  totalUnits: zod.z.coerce.number().int().min(BUILDING_LIMITS.UNITS_MIN, "Building must have at least 1 unit").max(
     BUILDING_LIMITS.UNITS_MAX,
     `Building cannot have more than ${BUILDING_LIMITS.UNITS_MAX} units`
-  )
+  ),
+  isStratified: multipartBoolean().optional(),
+  role: zod.z.enum([
+    chunk5UBJHQVX_cjs.BuildingRole.OWNER_REPRESENTATIVE,
+    chunk5UBJHQVX_cjs.BuildingRole.DEPUTY_REPRESENTATIVE,
+    chunk5UBJHQVX_cjs.BuildingRole.CO_OWNER
+  ]).optional()
 });
 var updateBuildingSchema = zod.z.object({
-  name: zod.z.string().min(1).max(BUILDING_LIMITS.NAME_MAX).optional(),
+  name: zod.z.string().min(BUILDING_LIMITS.NAME_MIN).max(BUILDING_LIMITS.NAME_MAX).optional(),
+  address: zod.z.string().min(BUILDING_LIMITS.ADDRESS_MIN).max(BUILDING_LIMITS.ADDRESS_MAX).optional(),
   type: buildingTypeSchema.optional(),
-  address: zod.z.string().min(1).max(BUILDING_LIMITS.ADDRESS_MAX).optional(),
-  totalUnits: zod.z.coerce.number().min(1).max(BUILDING_LIMITS.UNITS_MAX).optional()
+  totalUnits: zod.z.coerce.number().int().min(BUILDING_LIMITS.UNITS_MIN).max(BUILDING_LIMITS.UNITS_MAX).optional(),
+  isStratified: multipartBoolean().optional(),
+  removeHouseRulesFile: multipartBoolean().optional()
 });
 var joinBuildingWithOtpSchema = zod.z.object({
-  otp: zod.z.string().min(1, "OTP is required"),
-  buildingId: uuidSchema
+  code: zod.z.string().length(
+    BUILDING_LIMITS.OTP_LENGTH,
+    `OTP must be a ${BUILDING_LIMITS.OTP_LENGTH}-character code`
+  ).regex(/^[A-Z0-9]{6}$/, "OTP must be a 6-character alphanumeric code")
 });
 var updateUserBuildingRoleSchema = zod.z.object({
   userId: uuidSchema,
-  roleType: zod.z.string().min(1, "Role is required"),
-  buildingSurfacePercentage: zod.z.coerce.number().min(0).max(100).optional()
+  roleType: zod.z.enum([
+    chunk5UBJHQVX_cjs.BuildingRole.OWNER_REPRESENTATIVE,
+    chunk5UBJHQVX_cjs.BuildingRole.DEPUTY_REPRESENTATIVE,
+    chunk5UBJHQVX_cjs.BuildingRole.CO_OWNER
+  ]).optional(),
+  buildingSurfacePercentage: zod.z.coerce.number().min(0).max(100).optional(),
+  chatVisibleToCoOwners: zod.z.boolean().optional()
 });
 var EVENT_TYPES = [
   "service",
@@ -318,33 +365,6 @@ var updateEventSchema = zod.z.object({
   endDate: zod.z.coerce.date().optional(),
   color: eventColorSchema.optional()
 });
-function multipartArray(itemSchema) {
-  return zod.z.preprocess((value) => {
-    if (Array.isArray(value)) return value;
-    if (typeof value !== "string") return value;
-    const trimmed = value.trim();
-    if (trimmed === "") return [];
-    if (trimmed.startsWith("[")) {
-      try {
-        const parsed = JSON.parse(trimmed);
-        return Array.isArray(parsed) ? parsed : [value];
-      } catch {
-        return [value];
-      }
-    }
-    return [value];
-  }, zod.z.array(itemSchema));
-}
-function multipartBoolean() {
-  return zod.z.preprocess((value) => {
-    if (typeof value === "boolean") return value;
-    if (value === "true") return true;
-    if (value === "false" || value === "" || value == null) return false;
-    return value;
-  }, zod.z.boolean());
-}
-
-// src/schemas/entities/failure-report.schema.ts
 var FAILURE_REPORT_LIMITS = {
   TITLE_MIN: 1,
   TITLE_MAX: 100,
@@ -815,5 +835,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-KLN5P4CU.cjs.map
-//# sourceMappingURL=chunk-KLN5P4CU.cjs.map
+//# sourceMappingURL=chunk-EBJHW27F.cjs.map
+//# sourceMappingURL=chunk-EBJHW27F.cjs.map

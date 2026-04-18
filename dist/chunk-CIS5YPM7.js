@@ -1,4 +1,4 @@
-import { ApartmentRole, OrgRole, OrgType, FailureUnitType, FailureLocationType, Priority, TransactionType, Role, BuildingRole, PlatformRole } from './chunk-P25WSM2I.js';
+import { ApartmentRole, OrgRole, OrgType, BuildingRole, FailureUnitType, FailureLocationType, Priority, TransactionType, Role, PlatformRole } from './chunk-P25WSM2I.js';
 import { z } from 'zod';
 
 var apiErrorSchema = z.object({
@@ -237,42 +237,89 @@ var getOrgMembersQuerySchema = z.object({
   sortBy: z.enum(["userName", "orgRole", "createdAt"]).optional(),
   sortOrder: z.enum(["asc", "desc"]).optional()
 });
-var BUILDING_TYPES = ["residential", "commercial"];
+function multipartArray(itemSchema) {
+  return z.preprocess((value) => {
+    if (Array.isArray(value)) return value;
+    if (typeof value !== "string") return value;
+    const trimmed = value.trim();
+    if (trimmed === "") return [];
+    if (trimmed.startsWith("[")) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        return Array.isArray(parsed) ? parsed : [value];
+      } catch {
+        return [value];
+      }
+    }
+    return [value];
+  }, z.array(itemSchema));
+}
+function multipartBoolean() {
+  return z.preprocess((value) => {
+    if (typeof value === "boolean") return value;
+    if (value === "true") return true;
+    if (value === "false" || value === "" || value == null) return false;
+    return value;
+  }, z.boolean());
+}
+
+// src/schemas/entities/building.schema.ts
+var BUILDING_TYPES = ["RESIDENTIAL", "COMMERCIAL", "RESIDENTIAL_COMMERCIAL"];
 var buildingTypeSchema = z.enum(BUILDING_TYPES);
 var BUILDING_LIMITS = {
   NAME_MIN: 1,
   NAME_MAX: 100,
   ADDRESS_MIN: 1,
   ADDRESS_MAX: 200,
+  HOUSE_NUMBER_MIN: 1,
+  HOUSE_NUMBER_MAX: 20,
+  OTP_LENGTH: 6,
   UNITS_MIN: 1,
   UNITS_MAX: 1e4
 };
 var createBuildingSchema = z.object({
   name: z.string().min(BUILDING_LIMITS.NAME_MIN, "Name is required").max(BUILDING_LIMITS.NAME_MAX, `Name must be at most ${BUILDING_LIMITS.NAME_MAX} characters`),
-  type: buildingTypeSchema,
   address: z.string().min(BUILDING_LIMITS.ADDRESS_MIN, "Address is required").max(
     BUILDING_LIMITS.ADDRESS_MAX,
     `Address must be at most ${BUILDING_LIMITS.ADDRESS_MAX} characters`
   ),
-  totalUnits: z.coerce.number().min(BUILDING_LIMITS.UNITS_MIN, "Building must have at least 1 unit").max(
+  streetId: uuidSchema,
+  houseNumber: z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN, "House number is required").max(BUILDING_LIMITS.HOUSE_NUMBER_MAX),
+  type: buildingTypeSchema,
+  totalUnits: z.coerce.number().int().min(BUILDING_LIMITS.UNITS_MIN, "Building must have at least 1 unit").max(
     BUILDING_LIMITS.UNITS_MAX,
     `Building cannot have more than ${BUILDING_LIMITS.UNITS_MAX} units`
-  )
+  ),
+  isStratified: multipartBoolean().optional(),
+  role: z.enum([
+    BuildingRole.OWNER_REPRESENTATIVE,
+    BuildingRole.DEPUTY_REPRESENTATIVE,
+    BuildingRole.CO_OWNER
+  ]).optional()
 });
 var updateBuildingSchema = z.object({
-  name: z.string().min(1).max(BUILDING_LIMITS.NAME_MAX).optional(),
+  name: z.string().min(BUILDING_LIMITS.NAME_MIN).max(BUILDING_LIMITS.NAME_MAX).optional(),
+  address: z.string().min(BUILDING_LIMITS.ADDRESS_MIN).max(BUILDING_LIMITS.ADDRESS_MAX).optional(),
   type: buildingTypeSchema.optional(),
-  address: z.string().min(1).max(BUILDING_LIMITS.ADDRESS_MAX).optional(),
-  totalUnits: z.coerce.number().min(1).max(BUILDING_LIMITS.UNITS_MAX).optional()
+  totalUnits: z.coerce.number().int().min(BUILDING_LIMITS.UNITS_MIN).max(BUILDING_LIMITS.UNITS_MAX).optional(),
+  isStratified: multipartBoolean().optional(),
+  removeHouseRulesFile: multipartBoolean().optional()
 });
 var joinBuildingWithOtpSchema = z.object({
-  otp: z.string().min(1, "OTP is required"),
-  buildingId: uuidSchema
+  code: z.string().length(
+    BUILDING_LIMITS.OTP_LENGTH,
+    `OTP must be a ${BUILDING_LIMITS.OTP_LENGTH}-character code`
+  ).regex(/^[A-Z0-9]{6}$/, "OTP must be a 6-character alphanumeric code")
 });
 var updateUserBuildingRoleSchema = z.object({
   userId: uuidSchema,
-  roleType: z.string().min(1, "Role is required"),
-  buildingSurfacePercentage: z.coerce.number().min(0).max(100).optional()
+  roleType: z.enum([
+    BuildingRole.OWNER_REPRESENTATIVE,
+    BuildingRole.DEPUTY_REPRESENTATIVE,
+    BuildingRole.CO_OWNER
+  ]).optional(),
+  buildingSurfacePercentage: z.coerce.number().min(0).max(100).optional(),
+  chatVisibleToCoOwners: z.boolean().optional()
 });
 var EVENT_TYPES = [
   "service",
@@ -316,33 +363,6 @@ var updateEventSchema = z.object({
   endDate: z.coerce.date().optional(),
   color: eventColorSchema.optional()
 });
-function multipartArray(itemSchema) {
-  return z.preprocess((value) => {
-    if (Array.isArray(value)) return value;
-    if (typeof value !== "string") return value;
-    const trimmed = value.trim();
-    if (trimmed === "") return [];
-    if (trimmed.startsWith("[")) {
-      try {
-        const parsed = JSON.parse(trimmed);
-        return Array.isArray(parsed) ? parsed : [value];
-      } catch {
-        return [value];
-      }
-    }
-    return [value];
-  }, z.array(itemSchema));
-}
-function multipartBoolean() {
-  return z.preprocess((value) => {
-    if (typeof value === "boolean") return value;
-    if (value === "true") return true;
-    if (value === "false" || value === "" || value == null) return false;
-    return value;
-  }, z.boolean());
-}
-
-// src/schemas/entities/failure-report.schema.ts
 var FAILURE_REPORT_LIMITS = {
   TITLE_MIN: 1,
   TITLE_MAX: 100,
@@ -704,5 +724,5 @@ var FailureStatusSchema = z.enum(failureStatusOptions);
 var PrioritySchema = z.enum(priorityOptions);
 
 export { ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, baseEntitySchema, buildingEntitySchema, buildingTypeSchema, buildingUserEntitySchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventTypeSchema, failureReportEventSchema, failureStatusOptions, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceStatusOptions, multipartArray, multipartBoolean, noticeEventSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollTypeSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updatePasswordSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-QJX6HJYR.js.map
-//# sourceMappingURL=chunk-QJX6HJYR.js.map
+//# sourceMappingURL=chunk-CIS5YPM7.js.map
+//# sourceMappingURL=chunk-CIS5YPM7.js.map

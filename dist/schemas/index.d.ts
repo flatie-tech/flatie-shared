@@ -464,16 +464,19 @@ type GetOrgBuildingsQuerySchema = z.infer<typeof getOrgBuildingsQuerySchema>;
 type GetOrgMembersQuerySchema = z.infer<typeof getOrgMembersQuerySchema>;
 
 /**
- * Building type options
+ * Building type options — uppercase to match the backend pgEnum.
+ * Frontend callers that use lowercase internally (form state)
+ * must `toUpperCase()` before submitting.
  */
-declare const BUILDING_TYPES: readonly ["residential", "commercial"];
+declare const BUILDING_TYPES: readonly ["RESIDENTIAL", "COMMERCIAL", "RESIDENTIAL_COMMERCIAL"];
 type BuildingTypeOption = (typeof BUILDING_TYPES)[number];
 /**
  * Building type schema
  */
 declare const buildingTypeSchema: z.ZodEnum<{
-    residential: "residential";
-    commercial: "commercial";
+    RESIDENTIAL: "RESIDENTIAL";
+    COMMERCIAL: "COMMERCIAL";
+    RESIDENTIAL_COMMERCIAL: "RESIDENTIAL_COMMERCIAL";
 }>;
 /**
  * Validation constants for buildings
@@ -483,47 +486,74 @@ declare const BUILDING_LIMITS: {
     readonly NAME_MAX: 100;
     readonly ADDRESS_MIN: 1;
     readonly ADDRESS_MAX: 200;
+    readonly HOUSE_NUMBER_MIN: 1;
+    readonly HOUSE_NUMBER_MAX: 20;
+    readonly OTP_LENGTH: 6;
     readonly UNITS_MIN: 1;
     readonly UNITS_MAX: 10000;
 };
 /**
- * Create building request schema
+ * Create building request schema — matches flatie-backend's
+ * `POST /buildings` multipart/form-data payload. `coverImage` and
+ * `houseRulesFile` files are uploaded separately via the multipart
+ * interceptor and merged in the controller after validation.
  */
 declare const createBuildingSchema: z.ZodObject<{
     name: z.ZodString;
-    type: z.ZodEnum<{
-        residential: "residential";
-        commercial: "commercial";
-    }>;
     address: z.ZodString;
+    streetId: z.ZodString;
+    houseNumber: z.ZodString;
+    type: z.ZodEnum<{
+        RESIDENTIAL: "RESIDENTIAL";
+        COMMERCIAL: "COMMERCIAL";
+        RESIDENTIAL_COMMERCIAL: "RESIDENTIAL_COMMERCIAL";
+    }>;
     totalUnits: z.ZodCoercedNumber<unknown>;
+    isStratified: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
+    role: z.ZodOptional<z.ZodEnum<{
+        CO_OWNER: "CO_OWNER";
+        OWNER_REPRESENTATIVE: "OWNER_REPRESENTATIVE";
+        DEPUTY_REPRESENTATIVE: "DEPUTY_REPRESENTATIVE";
+    }>>;
 }, z.core.$strip>;
 /**
- * Update building request schema
+ * Update building request schema — all top-level fields optional.
+ * `coverImage` and `houseRulesFile` upload files via multipart;
+ * `removeHouseRulesFile` is an explicit opt-in to clear the
+ * existing house-rules attachment.
  */
 declare const updateBuildingSchema: z.ZodObject<{
     name: z.ZodOptional<z.ZodString>;
-    type: z.ZodOptional<z.ZodEnum<{
-        residential: "residential";
-        commercial: "commercial";
-    }>>;
     address: z.ZodOptional<z.ZodString>;
+    type: z.ZodOptional<z.ZodEnum<{
+        RESIDENTIAL: "RESIDENTIAL";
+        COMMERCIAL: "COMMERCIAL";
+        RESIDENTIAL_COMMERCIAL: "RESIDENTIAL_COMMERCIAL";
+    }>>;
     totalUnits: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    isStratified: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
+    removeHouseRulesFile: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
 }, z.core.$strip>;
 /**
- * Join building with OTP schema
+ * Join building with OTP — backend wire shape is
+ * `POST /buildings/:buildingId/join-with-otp { code: string }`.
+ * buildingId comes from the URL, not the body.
  */
 declare const joinBuildingWithOtpSchema: z.ZodObject<{
-    otp: z.ZodString;
-    buildingId: z.ZodString;
+    code: z.ZodString;
 }, z.core.$strip>;
 /**
- * Update user building role schema
+ * Update user building role schema (admin endpoint)
  */
 declare const updateUserBuildingRoleSchema: z.ZodObject<{
     userId: z.ZodString;
-    roleType: z.ZodString;
+    roleType: z.ZodOptional<z.ZodEnum<{
+        CO_OWNER: "CO_OWNER";
+        OWNER_REPRESENTATIVE: "OWNER_REPRESENTATIVE";
+        DEPUTY_REPRESENTATIVE: "DEPUTY_REPRESENTATIVE";
+    }>>;
     buildingSurfacePercentage: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    chatVisibleToCoOwners: z.ZodOptional<z.ZodBoolean>;
 }, z.core.$strip>;
 type CreateBuildingSchema = z.infer<typeof createBuildingSchema>;
 type UpdateBuildingSchema = z.infer<typeof updateBuildingSchema>;
