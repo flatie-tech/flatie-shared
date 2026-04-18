@@ -470,10 +470,10 @@ var createPollSchema = zod.z.object({
   }
 );
 var votePollSchema = zod.z.object({
-  optionId: uuidSchema
+  selectedOptionIndex: zod.z.number().int().min(0)
 });
 var finalizePollSchema = zod.z.object({
-  result: zod.z.string().optional()
+  finalize: zod.z.boolean()
 });
 var storageUnitRoleSchema = zod.z.enum(["OWNER", "TENANT"]);
 var storageUnitUserSchema = zod.z.looseObject({
@@ -663,5 +663,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-UU55AKQT.cjs.map
-//# sourceMappingURL=chunk-UU55AKQT.cjs.map
+//# sourceMappingURL=chunk-IQIJKJNN.cjs.map
+//# sourceMappingURL=chunk-IQIJKJNN.cjs.map

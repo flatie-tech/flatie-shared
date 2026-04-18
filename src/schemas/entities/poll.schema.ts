@@ -88,16 +88,23 @@ export const createPollSchema = z
 
 /**
  * Vote on poll request schema
+ *
+ * Backend stores poll options as a JSON array and votes reference the
+ * 0-based index, not the option's row id — that's what the controller
+ * expects on the wire.
  */
 export const votePollSchema = z.object({
-  optionId: uuidSchema,
+  selectedOptionIndex: z.number().int().min(0),
 });
 
 /**
  * Finalize poll request schema
+ *
+ * A boolean toggle — `true` seals the poll, `false` is a no-op the
+ * controller still accepts to match the existing API shape.
  */
 export const finalizePollSchema = z.object({
-  result: z.string().optional(),
+  finalize: z.boolean(),
 });
 
 // Inferred types

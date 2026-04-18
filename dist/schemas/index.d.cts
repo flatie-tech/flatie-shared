@@ -854,15 +854,22 @@ declare const createPollSchema: z.ZodObject<{
 }, z.core.$strip>;
 /**
  * Vote on poll request schema
+ *
+ * Backend stores poll options as a JSON array and votes reference the
+ * 0-based index, not the option's row id — that's what the controller
+ * expects on the wire.
  */
 declare const votePollSchema: z.ZodObject<{
-    optionId: z.ZodString;
+    selectedOptionIndex: z.ZodNumber;
 }, z.core.$strip>;
 /**
  * Finalize poll request schema
+ *
+ * A boolean toggle — `true` seals the poll, `false` is a no-op the
+ * controller still accepts to match the existing API shape.
  */
 declare const finalizePollSchema: z.ZodObject<{
-    result: z.ZodOptional<z.ZodString>;
+    finalize: z.ZodBoolean;
 }, z.core.$strip>;
 type CreatePollSchema = z.infer<typeof createPollSchema>;
 type VotePollSchema = z.infer<typeof votePollSchema>;
