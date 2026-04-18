@@ -8,6 +8,11 @@ export { API_ROUTES, API_VERSION } from './urls/index.cjs';
 export { calculatePaginationMeta, debounce, extractPaginatedItems, formatCurrency, formatText, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, normalizePaginatedResponse } from './utils/index.cjs';
 import 'zod';
 
+declare const ApartmentsTestIds: {
+    readonly screen: "apartments-screen";
+    readonly searchInput: "apartments-search-input";
+};
+
 declare const LoginTestIds: {
     readonly emailInput: "login-email-input";
     readonly passwordInput: "login-password-input";
@@ -17,6 +22,10 @@ declare const LoginTestIds: {
     readonly forgotPasswordLink: "login-forgot-password-link";
     readonly rememberMe: "login-remember-me-checkbox";
     readonly registerLink: "login-register-link";
+};
+
+declare const BuildingInfoTestIds: {
+    readonly screen: "building-info-screen";
 };
 
 declare const BuildingOverviewTestIds: {
@@ -36,10 +45,20 @@ declare const CalendarTestIds: {
     readonly addButton: "calendar-add-button";
 };
 
+declare const DocumentsTestIds: {
+    readonly screen: "documents-screen";
+    readonly searchInput: "documents-search-input";
+    readonly addButton: "documents-add-button";
+};
+
 declare const FailureReportsTestIds: {
     readonly screen: "failure-reports-screen";
     readonly searchInput: "failure-reports-search-input";
     readonly addButton: "failure-reports-add-button";
+};
+
+declare const FundsTestIds: {
+    readonly screen: "funds-screen";
 };
 
 declare const MaintenanceLogsTestIds: {
@@ -60,4 +79,9 @@ declare const PollsTestIds: {
     readonly addButton: "polls-add-button";
 };
 
-export { BuildingOverviewTestIds, CalendarTestIds, FailureReportsTestIds, LoginTestIds, MaintenanceLogsTestIds, NoticeBoardTestIds, PollsTestIds };
+declare const SettingsTestIds: {
+    readonly screen: "settings-screen";
+    readonly logoutButton: "settings-logout-button";
+};
+
+export { ApartmentsTestIds, BuildingInfoTestIds, BuildingOverviewTestIds, CalendarTestIds, DocumentsTestIds, FailureReportsTestIds, FundsTestIds, LoginTestIds, MaintenanceLogsTestIds, NoticeBoardTestIds, PollsTestIds, SettingsTestIds };

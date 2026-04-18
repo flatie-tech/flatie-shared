@@ -6,6 +6,12 @@ export { API_ROUTES, API_VERSION } from './chunk-7JCMB6BU.js';
 export { calculatePaginationMeta, debounce, extractPaginatedItems, formatCurrency, formatText, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, normalizePaginatedResponse } from './chunk-UG5DTFGQ.js';
 export { createPaginatedResponse } from './chunk-W3SU22LA.js';
 
+// src/test-ids/apartments.ts
+var ApartmentsTestIds = {
+  screen: "apartments-screen",
+  searchInput: "apartments-search-input"
+};
+
 // src/test-ids/auth.ts
 var LoginTestIds = {
   emailInput: "login-email-input",
@@ -16,6 +22,11 @@ var LoginTestIds = {
   forgotPasswordLink: "login-forgot-password-link",
   rememberMe: "login-remember-me-checkbox",
   registerLink: "login-register-link"
+};
+
+// src/test-ids/building-info.ts
+var BuildingInfoTestIds = {
+  screen: "building-info-screen"
 };
 
 // src/test-ids/building-overview.ts
@@ -37,11 +48,23 @@ var CalendarTestIds = {
   addButton: "calendar-add-button"
 };
 
+// src/test-ids/documents.ts
+var DocumentsTestIds = {
+  screen: "documents-screen",
+  searchInput: "documents-search-input",
+  addButton: "documents-add-button"
+};
+
 // src/test-ids/failure-reports.ts
 var FailureReportsTestIds = {
   screen: "failure-reports-screen",
   searchInput: "failure-reports-search-input",
   addButton: "failure-reports-add-button"
+};
+
+// src/test-ids/funds.ts
+var FundsTestIds = {
+  screen: "funds-screen"
 };
 
 // src/test-ids/maintenance-logs.ts
@@ -65,6 +88,12 @@ var PollsTestIds = {
   addButton: "polls-add-button"
 };
 
-export { BuildingOverviewTestIds, CalendarTestIds, FailureReportsTestIds, LoginTestIds, MaintenanceLogsTestIds, NoticeBoardTestIds, PollsTestIds };
+// src/test-ids/settings.ts
+var SettingsTestIds = {
+  screen: "settings-screen",
+  logoutButton: "settings-logout-button"
+};
+
+export { ApartmentsTestIds, BuildingInfoTestIds, BuildingOverviewTestIds, CalendarTestIds, DocumentsTestIds, FailureReportsTestIds, FundsTestIds, LoginTestIds, MaintenanceLogsTestIds, NoticeBoardTestIds, PollsTestIds, SettingsTestIds };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

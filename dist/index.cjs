@@ -8,6 +8,12 @@ var chunkJV743BPB_cjs = require('./chunk-JV743BPB.cjs');
 var chunkRY3UP4NL_cjs = require('./chunk-RY3UP4NL.cjs');
 var chunkIGBERUWL_cjs = require('./chunk-IGBERUWL.cjs');
 
+// src/test-ids/apartments.ts
+var ApartmentsTestIds = {
+  screen: "apartments-screen",
+  searchInput: "apartments-search-input"
+};
+
 // src/test-ids/auth.ts
 var LoginTestIds = {
   emailInput: "login-email-input",
@@ -18,6 +24,11 @@ var LoginTestIds = {
   forgotPasswordLink: "login-forgot-password-link",
   rememberMe: "login-remember-me-checkbox",
   registerLink: "login-register-link"
+};
+
+// src/test-ids/building-info.ts
+var BuildingInfoTestIds = {
+  screen: "building-info-screen"
 };
 
 // src/test-ids/building-overview.ts
@@ -39,11 +50,23 @@ var CalendarTestIds = {
   addButton: "calendar-add-button"
 };
 
+// src/test-ids/documents.ts
+var DocumentsTestIds = {
+  screen: "documents-screen",
+  searchInput: "documents-search-input",
+  addButton: "documents-add-button"
+};
+
 // src/test-ids/failure-reports.ts
 var FailureReportsTestIds = {
   screen: "failure-reports-screen",
   searchInput: "failure-reports-search-input",
   addButton: "failure-reports-add-button"
+};
+
+// src/test-ids/funds.ts
+var FundsTestIds = {
+  screen: "funds-screen"
 };
 
 // src/test-ids/maintenance-logs.ts
@@ -65,6 +88,12 @@ var PollsTestIds = {
   screen: "polls-screen",
   searchInput: "polls-search-input",
   addButton: "polls-add-button"
+};
+
+// src/test-ids/settings.ts
+var SettingsTestIds = {
+  screen: "settings-screen",
+  logoutButton: "settings-logout-button"
 };
 
 Object.defineProperty(exports, "adminKeys", {
@@ -579,12 +608,17 @@ Object.defineProperty(exports, "createPaginatedResponse", {
   enumerable: true,
   get: function () { return chunkIGBERUWL_cjs.createPaginatedResponse; }
 });
+exports.ApartmentsTestIds = ApartmentsTestIds;
+exports.BuildingInfoTestIds = BuildingInfoTestIds;
 exports.BuildingOverviewTestIds = BuildingOverviewTestIds;
 exports.CalendarTestIds = CalendarTestIds;
+exports.DocumentsTestIds = DocumentsTestIds;
 exports.FailureReportsTestIds = FailureReportsTestIds;
+exports.FundsTestIds = FundsTestIds;
 exports.LoginTestIds = LoginTestIds;
 exports.MaintenanceLogsTestIds = MaintenanceLogsTestIds;
 exports.NoticeBoardTestIds = NoticeBoardTestIds;
 exports.PollsTestIds = PollsTestIds;
+exports.SettingsTestIds = SettingsTestIds;
 //# sourceMappingURL=index.cjs.map
 //# sourceMappingURL=index.cjs.map
