@@ -104,12 +104,15 @@ export {
 export type {
   ApproveFailureReportSchema,
   CreateFailureReportSchema,
+  FailureReportEventSchema,
   UpdateFailureReportSchema,
 } from './failure-report.schema';
 // Failure report schemas
 export {
   approveFailureReportSchema,
   createFailureReportSchema,
+  FAILURE_REPORT_LIMITS,
+  failureReportEventSchema,
   updateFailureReportSchema,
 } from './failure-report.schema';
 // Garage schemas
@@ -118,13 +121,16 @@ export { garageRoleSchema, garageSchema, garageUserSchema } from './garage.schem
 export type {
   CreateMaintenanceLogSchema,
   MaintenanceFinancedByOption,
+  MaintenanceLogEventSchema,
   UpdateMaintenanceLogSchema,
 } from './maintenance-log.schema';
 // Maintenance log schemas
 export {
   createMaintenanceLogSchema,
   MAINTENANCE_FINANCED_BY,
+  MAINTENANCE_LOG_LIMITS,
   maintenanceFinancedBySchema,
+  maintenanceLogEventSchema,
   updateMaintenanceLogSchema,
 } from './maintenance-log.schema';
 export type {

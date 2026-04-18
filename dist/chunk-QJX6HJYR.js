@@ -1,4 +1,4 @@
-import { ApartmentRole, OrgRole, OrgType, TransactionType, Role, BuildingRole, PlatformRole } from './chunk-P25WSM2I.js';
+import { ApartmentRole, OrgRole, OrgType, FailureUnitType, FailureLocationType, Priority, TransactionType, Role, BuildingRole, PlatformRole } from './chunk-P25WSM2I.js';
 import { z } from 'zod';
 
 var apiErrorSchema = z.object({
@@ -316,108 +316,6 @@ var updateEventSchema = z.object({
   endDate: z.coerce.date().optional(),
   color: eventColorSchema.optional()
 });
-var createFailureReportSchema = z.object({
-  buildingId: uuidSchema,
-  title: z.string().min(1, "Title is required").max(100, "Title must be at most 100 characters"),
-  description: z.string().max(2e3, "Description must be at most 2000 characters").optional(),
-  fileIds: z.array(uuidSchema).optional().default([]),
-  maintenanceLogIds: z.array(uuidSchema).optional().default([])
-});
-var updateFailureReportSchema = z.object({
-  title: z.string().min(1).max(100).optional(),
-  description: z.string().max(2e3).optional(),
-  fileIds: z.array(uuidSchema).optional(),
-  maintenanceLogIds: z.array(uuidSchema).optional()
-});
-var approveFailureReportSchema = z.object({
-  approved: z.boolean()
-});
-var garageRoleSchema = z.enum(["OWNER", "TENANT"]);
-var garageUserSchema = z.looseObject({
-  id: z.string(),
-  name: z.string(),
-  email: z.string(),
-  image: z.string().nullable().optional(),
-  roleType: garageRoleSchema,
-  joinedAt: z.string(),
-  ownershipPercentage: z.number().nullable().optional()
-});
-var garageSchema = z.looseObject({
-  id: z.string(),
-  buildingId: z.string(),
-  title: z.string(),
-  floor: z.string().nullable().optional(),
-  area: z.number().nullable().optional(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-  users: z.array(garageUserSchema)
-});
-var MAINTENANCE_FINANCED_BY = ["building_funds", "insurance", "co_owner"];
-var maintenanceFinancedBySchema = z.enum(MAINTENANCE_FINANCED_BY);
-var createMaintenanceLogSchema = z.object({
-  buildingId: uuidSchema,
-  title: z.string().min(1, "Title is required").max(100, "Title must be at most 100 characters"),
-  description: z.string().max(2e3, "Description must be at most 2000 characters").optional(),
-  cost: z.coerce.number().min(0, "Cost must be a positive number").optional(),
-  financedBy: maintenanceFinancedBySchema.optional(),
-  hasWarranty: z.boolean().optional().default(false),
-  warrantyExpiresAt: z.coerce.date().optional(),
-  fileIds: z.array(uuidSchema).optional().default([]),
-  failureReportIds: z.array(uuidSchema).optional().default([]),
-  pollIds: z.array(uuidSchema).optional().default([])
-});
-var updateMaintenanceLogSchema = z.object({
-  title: z.string().min(1).max(100).optional(),
-  description: z.string().max(2e3).optional(),
-  cost: z.coerce.number().min(0).optional(),
-  financedBy: maintenanceFinancedBySchema.optional(),
-  hasWarranty: z.boolean().optional(),
-  warrantyExpiresAt: z.coerce.date().optional().nullable(),
-  fileIds: z.array(uuidSchema).optional(),
-  failureReportIds: z.array(uuidSchema).optional(),
-  pollIds: z.array(uuidSchema).optional()
-});
-var NOTICE_LIMITS = {
-  TITLE_MIN: 1,
-  TITLE_MAX: 100,
-  CONTENT_MIN: 1,
-  CONTENT_MAX: 2e3
-};
-var noticeEventSchema = z.object({
-  startDate: z.coerce.date(),
-  endDate: z.coerce.date(),
-  title: z.string().max(100, "Event title must be at most 100 characters").optional()
-});
-var createNoticeSchema = z.object({
-  buildingId: uuidSchema,
-  title: z.string().min(NOTICE_LIMITS.TITLE_MIN, "Title is required").max(NOTICE_LIMITS.TITLE_MAX, `Title must be at most ${NOTICE_LIMITS.TITLE_MAX} characters`),
-  content: z.string().min(NOTICE_LIMITS.CONTENT_MIN, "Content is required").max(
-    NOTICE_LIMITS.CONTENT_MAX,
-    `Content must be at most ${NOTICE_LIMITS.CONTENT_MAX} characters`
-  ),
-  events: z.array(noticeEventSchema).optional().default([]),
-  fileIds: z.array(uuidSchema).optional().default([])
-}).refine(
-  (data) => {
-    if (data.events && data.events.length > 0) {
-      return data.events.every((event) => event.startDate && event.endDate);
-    }
-    return true;
-  },
-  {
-    message: "Each event must have both start and end dates",
-    path: ["events"]
-  }
-);
-var updateNoticeSchema = z.object({
-  title: z.string().min(NOTICE_LIMITS.TITLE_MIN).max(NOTICE_LIMITS.TITLE_MAX).optional(),
-  content: z.string().min(NOTICE_LIMITS.CONTENT_MIN).max(NOTICE_LIMITS.CONTENT_MAX).optional(),
-  events: z.array(noticeEventSchema).optional(),
-  fileIds: z.array(uuidSchema).optional()
-});
-var approveNoticeSchema = z.object({
-  approved: z.boolean()
-});
 function multipartArray(itemSchema) {
   return z.preprocess((value) => {
     if (Array.isArray(value)) return value;
@@ -444,7 +342,212 @@ function multipartBoolean() {
   }, z.boolean());
 }
 
-// src/schemas/entities/poll.schema.ts
+// src/schemas/entities/failure-report.schema.ts
+var FAILURE_REPORT_LIMITS = {
+  TITLE_MIN: 1,
+  TITLE_MAX: 100,
+  DESCRIPTION_MAX: 2e3,
+  COMMON_AREA_DESCRIPTION_MAX: 500
+};
+var failureReportEventSchema = z.object({
+  startDate: z.coerce.date(),
+  endDate: z.coerce.date(),
+  title: z.string().optional(),
+  description: z.string().optional()
+});
+function refineLocation(schema) {
+  return schema.superRefine((data, ctx) => {
+    if (data.locationType === FailureLocationType.COMMON_AREA) {
+      if (!data.commonAreaDescription || data.commonAreaDescription.trim() === "") {
+        ctx.addIssue({
+          code: "custom",
+          message: "commonAreaDescription is required when locationType is common_area",
+          path: ["commonAreaDescription"]
+        });
+      }
+    }
+    if (data.locationType === FailureLocationType.OWN_UNIT) {
+      if (!data.unitType) {
+        ctx.addIssue({
+          code: "custom",
+          message: "unitType is required when locationType is own_unit",
+          path: ["unitType"]
+        });
+      }
+      if (!data.unitId) {
+        ctx.addIssue({
+          code: "custom",
+          message: "unitId is required when locationType is own_unit",
+          path: ["unitId"]
+        });
+      }
+    }
+  });
+}
+var createFailureReportSchema = refineLocation(
+  z.object({
+    title: z.string().min(FAILURE_REPORT_LIMITS.TITLE_MIN, "Title is required").max(
+      FAILURE_REPORT_LIMITS.TITLE_MAX,
+      `Title must be at most ${FAILURE_REPORT_LIMITS.TITLE_MAX} characters`
+    ),
+    description: z.string().min(1, "Description is required").max(
+      FAILURE_REPORT_LIMITS.DESCRIPTION_MAX,
+      `Description must be at most ${FAILURE_REPORT_LIMITS.DESCRIPTION_MAX} characters`
+    ),
+    isAnonymous: multipartBoolean().optional(),
+    priority: z.enum([Priority.NORMAL, Priority.URGENT]).optional(),
+    locationType: z.enum([FailureLocationType.COMMON_AREA, FailureLocationType.OWN_UNIT]).optional(),
+    commonAreaDescription: z.string().max(FAILURE_REPORT_LIMITS.COMMON_AREA_DESCRIPTION_MAX).optional(),
+    unitType: z.enum([FailureUnitType.APARTMENT, FailureUnitType.GARAGE, FailureUnitType.STORAGE_UNIT]).optional(),
+    unitId: uuidSchema.optional(),
+    fileIds: multipartArray(uuidSchema).optional(),
+    maintenanceLogIds: multipartArray(uuidSchema).optional(),
+    events: multipartArray(failureReportEventSchema).optional()
+  })
+);
+var updateFailureReportSchema = refineLocation(
+  z.object({
+    title: z.string().min(FAILURE_REPORT_LIMITS.TITLE_MIN).max(FAILURE_REPORT_LIMITS.TITLE_MAX).optional(),
+    description: z.string().min(1).max(FAILURE_REPORT_LIMITS.DESCRIPTION_MAX).optional(),
+    status: z.enum(["pending", "inProgress", "resolved"]).optional(),
+    priority: z.enum([Priority.NORMAL, Priority.URGENT]).optional(),
+    locationType: z.enum([FailureLocationType.COMMON_AREA, FailureLocationType.OWN_UNIT]).optional(),
+    commonAreaDescription: z.string().max(FAILURE_REPORT_LIMITS.COMMON_AREA_DESCRIPTION_MAX).optional(),
+    unitType: z.enum([FailureUnitType.APARTMENT, FailureUnitType.GARAGE, FailureUnitType.STORAGE_UNIT]).optional(),
+    unitId: uuidSchema.optional(),
+    fileIds: multipartArray(uuidSchema).optional(),
+    removeChildFileIds: multipartArray(uuidSchema).optional(),
+    maintenanceLogIds: multipartArray(uuidSchema).optional(),
+    events: multipartArray(failureReportEventSchema).optional()
+  })
+);
+var approveFailureReportSchema = z.object({
+  approved: z.boolean()
+});
+var garageRoleSchema = z.enum(["OWNER", "TENANT"]);
+var garageUserSchema = z.looseObject({
+  id: z.string(),
+  name: z.string(),
+  email: z.string(),
+  image: z.string().nullable().optional(),
+  roleType: garageRoleSchema,
+  joinedAt: z.string(),
+  ownershipPercentage: z.number().nullable().optional()
+});
+var garageSchema = z.looseObject({
+  id: z.string(),
+  buildingId: z.string(),
+  title: z.string(),
+  floor: z.string().nullable().optional(),
+  area: z.number().nullable().optional(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  users: z.array(garageUserSchema)
+});
+var MAINTENANCE_FINANCED_BY = ["building_funds", "insurance", "co_owner"];
+var maintenanceFinancedBySchema = z.enum(MAINTENANCE_FINANCED_BY);
+var MAINTENANCE_LOG_LIMITS = {
+  TITLE_MIN: 1,
+  TITLE_MAX: 100,
+  DESCRIPTION_MAX: 2e3,
+  CONTRACTOR_MIN: 1,
+  EVENTS_MIN: 1
+};
+var costSchema = z.preprocess(
+  (value) => {
+    if (typeof value === "number") return value.toString();
+    if (typeof value === "string") return value.trim();
+    return value;
+  },
+  z.string().regex(/^-?\d+(\.\d{1,2})?$/, "Cost must be a decimal with at most 2 decimal places")
+);
+var maintenanceLogEventSchema = z.object({
+  id: uuidSchema.optional(),
+  startDate: z.coerce.date(),
+  endDate: z.coerce.date(),
+  title: z.string().optional(),
+  description: z.string().optional()
+});
+var createMaintenanceLogSchema = z.object({
+  title: z.string().min(MAINTENANCE_LOG_LIMITS.TITLE_MIN, "Title is required").max(
+    MAINTENANCE_LOG_LIMITS.TITLE_MAX,
+    `Title must be at most ${MAINTENANCE_LOG_LIMITS.TITLE_MAX} characters`
+  ),
+  description: z.string().max(MAINTENANCE_LOG_LIMITS.DESCRIPTION_MAX).optional(),
+  categoryId: uuidSchema.optional(),
+  contractor: z.string().min(MAINTENANCE_LOG_LIMITS.CONTRACTOR_MIN, "Contractor is required"),
+  cost: costSchema,
+  financedBy: maintenanceFinancedBySchema.optional(),
+  warranty: multipartBoolean().optional(),
+  events: multipartArray(maintenanceLogEventSchema).refine(
+    (events) => events.length >= MAINTENANCE_LOG_LIMITS.EVENTS_MIN,
+    { message: "At least one event is required" }
+  ),
+  fileIds: multipartArray(uuidSchema).optional(),
+  pollId: uuidSchema.optional(),
+  pollIds: multipartArray(uuidSchema).optional()
+});
+var updateMaintenanceLogSchema = z.object({
+  title: z.string().min(MAINTENANCE_LOG_LIMITS.TITLE_MIN).max(MAINTENANCE_LOG_LIMITS.TITLE_MAX).optional(),
+  description: z.string().max(MAINTENANCE_LOG_LIMITS.DESCRIPTION_MAX).optional(),
+  categoryId: uuidSchema.optional(),
+  contractor: z.string().min(MAINTENANCE_LOG_LIMITS.CONTRACTOR_MIN).optional(),
+  cost: costSchema.optional(),
+  financedBy: maintenanceFinancedBySchema.optional(),
+  warranty: multipartBoolean().optional(),
+  events: multipartArray(maintenanceLogEventSchema).optional(),
+  fileIds: multipartArray(uuidSchema).optional(),
+  removeChildFileIds: multipartArray(uuidSchema).optional(),
+  pollId: uuidSchema.optional(),
+  pollIds: multipartArray(uuidSchema).optional()
+});
+var NOTICE_LIMITS = {
+  TITLE_MIN: 1,
+  TITLE_MAX: 100,
+  CONTENT_MIN: 1,
+  CONTENT_MAX: 2e3,
+  EVENT_TITLE_MAX: 100
+};
+var noticeEventSchema = z.object({
+  id: uuidSchema.optional(),
+  startDate: z.coerce.date(),
+  endDate: z.coerce.date(),
+  title: z.string().max(NOTICE_LIMITS.EVENT_TITLE_MAX, "Event title must be at most 100 characters").optional(),
+  description: z.string().optional()
+});
+var createNoticeSchema = z.object({
+  title: z.string().min(NOTICE_LIMITS.TITLE_MIN, "Title is required").max(NOTICE_LIMITS.TITLE_MAX, `Title must be at most ${NOTICE_LIMITS.TITLE_MAX} characters`),
+  content: z.string().min(NOTICE_LIMITS.CONTENT_MIN, "Content is required").max(
+    NOTICE_LIMITS.CONTENT_MAX,
+    `Content must be at most ${NOTICE_LIMITS.CONTENT_MAX} characters`
+  ),
+  isAnonymous: multipartBoolean().optional(),
+  pinned: multipartBoolean().optional(),
+  events: multipartArray(noticeEventSchema).optional().default([]),
+  fileIds: multipartArray(uuidSchema).optional().default([])
+}).refine(
+  (data) => {
+    if (data.events && data.events.length > 0) {
+      return data.events.every((event) => event.startDate && event.endDate);
+    }
+    return true;
+  },
+  {
+    message: "Each event must have both start and end dates",
+    path: ["events"]
+  }
+);
+var updateNoticeSchema = z.object({
+  title: z.string().min(NOTICE_LIMITS.TITLE_MIN).max(NOTICE_LIMITS.TITLE_MAX).optional(),
+  content: z.string().min(NOTICE_LIMITS.CONTENT_MIN).max(NOTICE_LIMITS.CONTENT_MAX).optional(),
+  pinned: multipartBoolean().optional(),
+  events: multipartArray(noticeEventSchema).optional(),
+  fileIds: multipartArray(uuidSchema).optional(),
+  removeChildFileIds: multipartArray(uuidSchema).optional()
+});
+var approveNoticeSchema = z.object({
+  approved: z.boolean()
+});
 var POLL_TYPES = ["CONSENSUS", "COMMUNITY"];
 var pollTypeSchema = z.enum(POLL_TYPES);
 var POLL_LIMITS = {
@@ -600,6 +703,6 @@ var MaintenanceStatusSchema = z.enum(maintenanceStatusOptions);
 var FailureStatusSchema = z.enum(failureStatusOptions);
 var PrioritySchema = z.enum(priorityOptions);
 
-export { ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, baseEntitySchema, buildingEntitySchema, buildingTypeSchema, buildingUserEntitySchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventTypeSchema, failureStatusOptions, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, loginSchema, maintenanceFinancedBySchema, maintenanceStatusOptions, multipartArray, multipartBoolean, noticeEventSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollTypeSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updatePasswordSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-6LPJRQ4G.js.map
-//# sourceMappingURL=chunk-6LPJRQ4G.js.map
+export { ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, baseEntitySchema, buildingEntitySchema, buildingTypeSchema, buildingUserEntitySchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventTypeSchema, failureReportEventSchema, failureStatusOptions, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceStatusOptions, multipartArray, multipartBoolean, noticeEventSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollTypeSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updatePasswordSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
+//# sourceMappingURL=chunk-QJX6HJYR.js.map
+//# sourceMappingURL=chunk-QJX6HJYR.js.map
