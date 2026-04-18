@@ -32,6 +32,13 @@ var BuildingOverviewTestIds = {
   recentItemsViewAll: "overview-recent-items-view-all"
 };
 
+// src/test-ids/notice-board.ts
+var NoticeBoardTestIds = {
+  screen: "notices-screen",
+  searchInput: "notices-search-input",
+  addButton: "notices-add-button"
+};
+
 Object.defineProperty(exports, "adminKeys", {
   enumerable: true,
   get: function () { return chunkGCY5CQ43_cjs.adminKeys; }
@@ -546,5 +553,6 @@ Object.defineProperty(exports, "createPaginatedResponse", {
 });
 exports.BuildingOverviewTestIds = BuildingOverviewTestIds;
 exports.LoginTestIds = LoginTestIds;
+exports.NoticeBoardTestIds = NoticeBoardTestIds;
 //# sourceMappingURL=index.cjs.map
 //# sourceMappingURL=index.cjs.map

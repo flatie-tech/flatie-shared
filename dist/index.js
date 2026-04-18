@@ -30,6 +30,13 @@ var BuildingOverviewTestIds = {
   recentItemsViewAll: "overview-recent-items-view-all"
 };
 
-export { BuildingOverviewTestIds, LoginTestIds };
+// src/test-ids/notice-board.ts
+var NoticeBoardTestIds = {
+  screen: "notices-screen",
+  searchInput: "notices-search-input",
+  addButton: "notices-add-button"
+};
+
+export { BuildingOverviewTestIds, LoginTestIds, NoticeBoardTestIds };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

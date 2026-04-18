@@ -30,4 +30,10 @@ declare const BuildingOverviewTestIds: {
     readonly recentItemsViewAll: "overview-recent-items-view-all";
 };
 
-export { BuildingOverviewTestIds, LoginTestIds };
+declare const NoticeBoardTestIds: {
+    readonly screen: "notices-screen";
+    readonly searchInput: "notices-search-input";
+    readonly addButton: "notices-add-button";
+};
+
+export { BuildingOverviewTestIds, LoginTestIds, NoticeBoardTestIds };
