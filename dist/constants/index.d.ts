@@ -1,3 +1,15 @@
+import { P as Permission, B as BuildingRole, O as OrgRole, a as PlatformRole } from '../role.enum-Cr_Ex5DH.js';
+
+/**
+ * Default pagination page size used across the stack.
+ *
+ * Backend clamps requests to `[1, 100]`. Clients that don't specify a limit
+ * default to this value so list responses stay predictable.
+ */
+declare const DEFAULT_PAGINATION_LIMIT = 10;
+/** Maximum pagination page size the backend accepts. */
+declare const MAX_PAGINATION_LIMIT = 100;
+
 /**
  * React Query Key Factory
  *
@@ -253,4 +265,14 @@ declare const queryKeys: {
     };
 };
 
-export { adminKeys, buildingKeys, documentKeys, eventKeys, failureReportKeys, fundsKeys, maintenanceLogKeys, noticeKeys, permissionKeys, pollKeys, queryKeys, recentKeys, userKeys };
+declare const BUILDING_ROLE_PERMISSIONS: Record<BuildingRole, Permission[]>;
+declare const ORG_ROLE_PERMISSIONS: Record<OrgRole, Permission[]>;
+declare const PLATFORM_ROLE_PERMISSIONS: Record<PlatformRole, Permission[]>;
+/** All permissions — used for system admin building-scope resolution. */
+declare const ALL_PERMISSIONS: Permission[];
+/** Admin org-scope permissions — same as ORG_ADMIN. */
+declare const ADMIN_ORG_PERMISSIONS: Permission[];
+/** Admin platform-scope permissions — same as PLATFORM_ADMIN. */
+declare const ADMIN_PLATFORM_PERMISSIONS: Permission[];
+
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminKeys, buildingKeys, documentKeys, eventKeys, failureReportKeys, fundsKeys, maintenanceLogKeys, noticeKeys, permissionKeys, pollKeys, queryKeys, recentKeys, userKeys };

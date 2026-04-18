@@ -10,8 +10,27 @@ export {
   extractPaginatedItems,
   normalizePaginatedResponse,
 } from './pagination';
+// Permission evaluator (pure, cross-package)
+export type { ActionFlags } from './permission-evaluator';
+export {
+  canDo,
+  canDoOnResource,
+  computeActionFlags,
+  getContextUserId,
+  isAdminContext,
+} from './permission-evaluator';
 // Permission utilities
 export { hasAllPermissions, hasAnyPermission, hasPermission } from './permissions';
+// Role helpers
+export {
+  isManagerialRole,
+  MANAGERIAL_BUILDING_ROLES,
+  ROLE_DESCRIPTION_KEYS,
+  ROLE_TRANSLATION_KEYS,
+} from './role-helpers';
+// Status variants (semantic design-system mappers)
+export type { StatusVariant } from './status-variants';
+export { failureStatusVariant, priorityVariant } from './status-variants';
 
 /**
  * Format a snake_case or SCREAMING_SNAKE_CASE string to Title Case

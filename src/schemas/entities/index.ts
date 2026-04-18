@@ -7,6 +7,35 @@ export {
   paginatedApartmentsResponseSchema,
 } from './apartment.schema';
 
+// Chat schemas
+export type {
+  ConversationType,
+  CreateConversationSchema,
+  SendMessageSchema,
+  UpdateConversationSchema,
+} from './chat.schema';
+export {
+  CHAT_LIMITS,
+  createConversationSchema,
+  sendMessageSchema,
+  updateConversationSchema,
+} from './chat.schema';
+
+// FAQ schemas
+export type { CreateFaqSchema, UpdateFaqSchema } from './faq.schema';
+export { createFaqSchema, FAQ_LIMITS, updateFaqSchema } from './faq.schema';
+
+// Organization schemas
+export type {
+  CreateOrganizationSchema,
+  UpdateOrganizationSchema,
+} from './organization.schema';
+export {
+  createOrganizationSchema,
+  ORGANIZATION_LIMITS,
+  updateOrganizationSchema,
+} from './organization.schema';
+
 // Building schemas
 
 export type {

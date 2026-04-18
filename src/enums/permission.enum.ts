@@ -173,3 +173,40 @@ export const Permission = {
 } as const;
 
 export type Permission = (typeof Permission)[keyof typeof Permission];
+
+// ─── Scoped Permission Lookup ───────────────────────────────────────
+//
+// Type-safe lookup for :own/:any permissions. Generated from SCOPED_DOMAINS.
+
+function buildScopedPermissions(): Record<
+  ScopedDomain,
+  Record<ScopedAction, { own: Permission; any: Permission }>
+> {
+  const result = {} as Record<
+    ScopedDomain,
+    Record<ScopedAction, { own: Permission; any: Permission }>
+  >;
+  for (const domain of SCOPED_DOMAINS) {
+    result[domain] = {
+      update: {
+        own: `${domain}:update:own` as Permission,
+        any: `${domain}:update:any` as Permission,
+      },
+      delete: {
+        own: `${domain}:delete:own` as Permission,
+        any: `${domain}:delete:any` as Permission,
+      },
+    };
+  }
+  return result;
+}
+
+export const SCOPED_PERMISSIONS = buildScopedPermissions();
+
+/** Approve permissions per domain (not all domains have approve). */
+export const APPROVE_PERMISSIONS: Partial<Record<ScopedDomain, Permission>> = {
+  notice: 'notice:approve' as Permission,
+  event: 'event:approve' as Permission,
+  poll: 'poll:approve' as Permission,
+  failure_report: 'failure_report:approve' as Permission,
+};

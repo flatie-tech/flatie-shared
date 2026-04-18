@@ -61,6 +61,13 @@ export type {
 // Pagination types
 export type { DateRangeParams, PaginatedResponse, PaginationParams } from './pagination.types';
 export { createPaginatedResponse } from './pagination.types';
+// Permission context (used by the pure evaluator in utils)
+export type {
+  BuildingContextFromOrg,
+  BuildingContextFromRole,
+  BuildingPermissionContext,
+  PermissionContext,
+} from './permission-context';
 // Permission types
 export type { PermissionScope, PermissionsResponse } from './permissions.types';
 // Poll types

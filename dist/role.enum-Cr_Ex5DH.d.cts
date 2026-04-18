@@ -108,5 +108,43 @@ declare const Permission: {
     readonly PLATFORM_PURGE: "platform:purge";
 };
 type Permission = (typeof Permission)[keyof typeof Permission];
+declare const SCOPED_PERMISSIONS: Record<"notice" | "poll" | "event" | "document" | "failure_report" | "maintenance_log", Record<ScopedAction, {
+    own: Permission;
+    any: Permission;
+}>>;
+/** Approve permissions per domain (not all domains have approve). */
+declare const APPROVE_PERMISSIONS: Partial<Record<ScopedDomain, Permission>>;
 
-export { Permission as P, SCOPED_DOMAINS as S, type ScopedAction as a, type ScopedDomain as b, domainPermissions as d };
+declare const Role: {
+    readonly USER: "USER";
+    readonly ADMIN: "ADMIN";
+};
+type Role = (typeof Role)[keyof typeof Role];
+declare const BuildingRole: {
+    readonly OWNER_REPRESENTATIVE: "OWNER_REPRESENTATIVE";
+    readonly DEPUTY_REPRESENTATIVE: "DEPUTY_REPRESENTATIVE";
+    readonly CO_OWNER: "CO_OWNER";
+};
+type BuildingRole = (typeof BuildingRole)[keyof typeof BuildingRole];
+declare const BUILDING_ROLE_RANK: Record<BuildingRole, number>;
+declare function canAssignRole(assignerRole: BuildingRole, targetRole: BuildingRole): boolean;
+declare const OrgRole: {
+    readonly ORG_ADMIN: "ORG_ADMIN";
+    readonly SUPERVISOR: "SUPERVISOR";
+    readonly REFERENT: "REFERENT";
+    readonly OPERATIVE: "OPERATIVE";
+};
+type OrgRole = (typeof OrgRole)[keyof typeof OrgRole];
+declare const ORG_ROLE_RANK: Record<OrgRole, number>;
+declare function canAssignOrgRole(assignerRole: OrgRole, targetRole: OrgRole): boolean;
+declare const PlatformRole: {
+    readonly PLATFORM_ADMIN: "PLATFORM_ADMIN";
+    readonly PLATFORM_MODERATOR: "PLATFORM_MODERATOR";
+    readonly PLATFORM_SUPPORT: "PLATFORM_SUPPORT";
+    readonly PLATFORM_OPERATIVE: "PLATFORM_OPERATIVE";
+};
+type PlatformRole = (typeof PlatformRole)[keyof typeof PlatformRole];
+declare const PLATFORM_ROLE_RANK: Record<PlatformRole, number>;
+declare function canAssignPlatformRole(assignerRole: PlatformRole, targetRole: PlatformRole): boolean;
+
+export { APPROVE_PERMISSIONS as A, BuildingRole as B, OrgRole as O, Permission as P, Role as R, type ScopedDomain as S, PlatformRole as a, type ScopedAction as b, SCOPED_DOMAINS as c, domainPermissions as d, SCOPED_PERMISSIONS as e, BUILDING_ROLE_RANK as f, canAssignOrgRole as g, canAssignPlatformRole as h, canAssignRole as i, ORG_ROLE_RANK as j, PLATFORM_ROLE_RANK as k };

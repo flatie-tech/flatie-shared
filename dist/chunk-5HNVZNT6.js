@@ -1,3 +1,4 @@
+import { BuildingRole, PlatformRole, OrgRole, SCOPED_PERMISSIONS, APPROVE_PERMISSIONS, FailureStatus, Priority } from './chunk-P25WSM2I.js';
 import { createPaginatedResponse } from './chunk-W3SU22LA.js';
 
 // src/utils/pagination.ts
@@ -46,6 +47,34 @@ function calculatePaginationMeta(total, offset, limit) {
   };
 }
 
+// src/utils/permission-evaluator.ts
+function canDo(ctx, permission) {
+  if (ctx.kind === "admin") return true;
+  return ctx.permissions.includes(permission);
+}
+function canDoOnResource(ctx, domain, action, resourceOwnerId) {
+  if (ctx.kind === "admin") return true;
+  const scopedPerms = SCOPED_PERMISSIONS[domain]?.[action];
+  if (!scopedPerms) return false;
+  if (ctx.permissions.includes(scopedPerms.any)) return true;
+  return ctx.permissions.includes(scopedPerms.own) && resourceOwnerId === ctx.userId;
+}
+function computeActionFlags(ctx, domain, resourceOwnerId) {
+  const approvePermission = APPROVE_PERMISSIONS[domain];
+  return {
+    canEdit: canDoOnResource(ctx, domain, "update", resourceOwnerId),
+    canDelete: canDoOnResource(ctx, domain, "delete", resourceOwnerId),
+    canApprove: approvePermission ? canDo(ctx, approvePermission) : false
+  };
+}
+function isAdminContext(ctx) {
+  return ctx.kind === "admin";
+}
+function getContextUserId(ctx) {
+  if (ctx.kind === "admin") return null;
+  return ctx.userId;
+}
+
 // src/utils/permissions.ts
 function hasPermission(userPermissions, permission) {
   return userPermissions.includes(permission);
@@ -55,6 +84,68 @@ function hasAnyPermission(userPermissions, permissions) {
 }
 function hasAllPermissions(userPermissions, permissions) {
   return permissions.every((p) => userPermissions.includes(p));
+}
+
+// src/utils/role-helpers.ts
+var MANAGERIAL_BUILDING_ROLES = [
+  BuildingRole.OWNER_REPRESENTATIVE,
+  BuildingRole.DEPUTY_REPRESENTATIVE
+];
+function isManagerialRole(role) {
+  return MANAGERIAL_BUILDING_ROLES.includes(role);
+}
+var ROLE_TRANSLATION_KEYS = {
+  // Building roles
+  [BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
+  [BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
+  [BuildingRole.CO_OWNER]: "roles.CO_OWNER",
+  // Org roles
+  [OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
+  [OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
+  [OrgRole.REFERENT]: "roles.REFERENT",
+  [OrgRole.OPERATIVE]: "roles.OPERATIVE",
+  // Platform roles
+  [PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
+  [PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
+  [PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
+  [PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
+};
+var ROLE_DESCRIPTION_KEYS = {
+  [BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
+  [BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
+  [BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
+  [OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
+  [OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
+  [OrgRole.REFERENT]: "roles.REFERENT_DESC",
+  [OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
+  [PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
+  [PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
+  [PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
+  [PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
+};
+
+// src/utils/status-variants.ts
+function failureStatusVariant(status) {
+  switch (status) {
+    case FailureStatus.PENDING:
+      return "info";
+    case FailureStatus.IN_PROGRESS:
+      return "warning";
+    case FailureStatus.RESOLVED:
+      return "success";
+    default:
+      return "neutral";
+  }
+}
+function priorityVariant(priority) {
+  switch (priority) {
+    case Priority.URGENT:
+      return "danger";
+    case Priority.NORMAL:
+      return "neutral";
+    default:
+      return "neutral";
+  }
 }
 
 // src/utils/index.ts
@@ -112,6 +203,6 @@ function debounce(func, delay) {
   };
 }
 
-export { calculatePaginationMeta, debounce, extractPaginatedItems, formatCurrency, formatText, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, normalizePaginatedResponse };
-//# sourceMappingURL=chunk-UG5DTFGQ.js.map
-//# sourceMappingURL=chunk-UG5DTFGQ.js.map
+export { MANAGERIAL_BUILDING_ROLES, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatText, getContextUserId, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isAdminContext, isManagerialRole, normalizePaginatedResponse, priorityVariant };
+//# sourceMappingURL=chunk-5HNVZNT6.js.map
+//# sourceMappingURL=chunk-5HNVZNT6.js.map

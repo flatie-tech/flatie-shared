@@ -5,16 +5,21 @@ export { FailureLocationType, FailureUnitType } from './failure-location.enum';
 export { MaintenanceLogFinancedBy } from './maintenance-log.enum';
 export {
   DevicePlatform,
+  NOTIFICATION_TYPE_CATEGORY,
   NotificationCategory,
   NotificationChannel,
   NotificationDeliveryStatus,
   NotificationType,
+  UNIMPLEMENTED_NOTIFICATION_TYPES,
+  WASTE_SUBTYPE_NOTIFICATION_MAP,
 } from './notification.enum';
 export { OrgType } from './org-type.enum';
 export {
+  APPROVE_PERMISSIONS,
   domainPermissions,
   Permission,
   SCOPED_DOMAINS,
+  SCOPED_PERMISSIONS,
   type ScopedAction,
   type ScopedDomain,
 } from './permission.enum';

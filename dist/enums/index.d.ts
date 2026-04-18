@@ -1,5 +1,6 @@
-export { A as ApprovalStatus, a as BUILDING_ROLE_RANK, b as BuildingRole, B as BuildingType, C as CommonStatus, F as FailureStatus, i as FailureType, j as FileCategory, k as Frequency, M as MaintenanceStatus, l as MaintenanceType, O as ORG_ROLE_RANK, f as OrgRole, g as PLATFORM_ROLE_RANK, h as PlatformRole, P as PollType, m as Priority, R as Role, T as TransactionCategory, n as TransactionType, c as canAssignOrgRole, d as canAssignPlatformRole, e as canAssignRole } from '../status.enum-BcrMnTPn.js';
-export { P as Permission, S as SCOPED_DOMAINS, a as ScopedAction, b as ScopedDomain, d as domainPermissions } from '../permission.enum-CIZ7gCeI.js';
+export { B as BuildingType, P as PollType } from '../poll-type.enum-Cz_42Pj9.js';
+export { A as APPROVE_PERMISSIONS, f as BUILDING_ROLE_RANK, B as BuildingRole, j as ORG_ROLE_RANK, O as OrgRole, k as PLATFORM_ROLE_RANK, P as Permission, a as PlatformRole, R as Role, c as SCOPED_DOMAINS, e as SCOPED_PERMISSIONS, b as ScopedAction, S as ScopedDomain, g as canAssignOrgRole, h as canAssignPlatformRole, i as canAssignRole, d as domainPermissions } from '../role.enum-Cr_Ex5DH.js';
+export { A as ApprovalStatus, C as CommonStatus, F as FailureStatus, a as FailureType, b as FileCategory, c as Frequency, M as MaintenanceStatus, d as MaintenanceType, P as Priority, T as TransactionCategory, e as TransactionType } from '../status.enum-D4pAcU1b.js';
 
 declare const ApartmentRole: {
     readonly OWNER: "OWNER";
@@ -105,6 +106,24 @@ declare const DevicePlatform: {
     readonly WEB: "web";
 };
 type DevicePlatform = (typeof DevicePlatform)[keyof typeof DevicePlatform];
+/**
+ * Maps each notification type to its category.
+ *
+ * Used by client UIs to group notification preferences and by the backend to
+ * route notifications to the right delivery channels per category.
+ */
+declare const NOTIFICATION_TYPE_CATEGORY: Record<NotificationType, NotificationCategory>;
+/**
+ * Notification types not yet implemented (no emit calls in the codebase).
+ * UI layers hide these from user preferences until their triggers are built.
+ */
+declare const UNIMPLEMENTED_NOTIFICATION_TYPES: ReadonlySet<NotificationType>;
+/**
+ * Maps waste-collection subtype keys to the corresponding notification type.
+ * Used by the backend scheduler; exposed here so clients can match
+ * incoming events to UI strings.
+ */
+declare const WASTE_SUBTYPE_NOTIFICATION_MAP: Record<string, NotificationType>;
 
 declare const OrgType: {
     readonly MANAGEMENT_FIRM: "MANAGEMENT_FIRM";
@@ -119,4 +138,4 @@ declare const PollStatus: {
 };
 type PollStatus = (typeof PollStatus)[keyof typeof PollStatus];
 
-export { ApartmentRole, BuildingStatus, DevicePlatform, FailureLocationType, FailureUnitType, MaintenanceLogFinancedBy, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, OrgStatus, OrgType, PollStatus };
+export { ApartmentRole, BuildingStatus, DevicePlatform, FailureLocationType, FailureUnitType, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, OrgStatus, OrgType, PollStatus, UNIMPLEMENTED_NOTIFICATION_TYPES, WASTE_SUBTYPE_NOTIFICATION_MAP };

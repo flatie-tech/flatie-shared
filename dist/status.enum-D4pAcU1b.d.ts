@@ -1,48 +1,3 @@
-declare const BuildingType: {
-    readonly RESIDENTIAL: "RESIDENTIAL";
-    readonly COMMERCIAL: "COMMERCIAL";
-    readonly RESIDENTIAL_COMMERCIAL: "RESIDENTIAL_COMMERCIAL";
-};
-type BuildingType = (typeof BuildingType)[keyof typeof BuildingType];
-
-declare const PollType: {
-    readonly CONSENSUS: "CONSENSUS";
-    readonly COMMUNITY: "COMMUNITY";
-};
-type PollType = (typeof PollType)[keyof typeof PollType];
-
-declare const Role: {
-    readonly USER: "USER";
-    readonly ADMIN: "ADMIN";
-};
-type Role = (typeof Role)[keyof typeof Role];
-declare const BuildingRole: {
-    readonly OWNER_REPRESENTATIVE: "OWNER_REPRESENTATIVE";
-    readonly DEPUTY_REPRESENTATIVE: "DEPUTY_REPRESENTATIVE";
-    readonly CO_OWNER: "CO_OWNER";
-};
-type BuildingRole = (typeof BuildingRole)[keyof typeof BuildingRole];
-declare const BUILDING_ROLE_RANK: Record<BuildingRole, number>;
-declare function canAssignRole(assignerRole: BuildingRole, targetRole: BuildingRole): boolean;
-declare const OrgRole: {
-    readonly ORG_ADMIN: "ORG_ADMIN";
-    readonly SUPERVISOR: "SUPERVISOR";
-    readonly REFERENT: "REFERENT";
-    readonly OPERATIVE: "OPERATIVE";
-};
-type OrgRole = (typeof OrgRole)[keyof typeof OrgRole];
-declare const ORG_ROLE_RANK: Record<OrgRole, number>;
-declare function canAssignOrgRole(assignerRole: OrgRole, targetRole: OrgRole): boolean;
-declare const PlatformRole: {
-    readonly PLATFORM_ADMIN: "PLATFORM_ADMIN";
-    readonly PLATFORM_MODERATOR: "PLATFORM_MODERATOR";
-    readonly PLATFORM_SUPPORT: "PLATFORM_SUPPORT";
-    readonly PLATFORM_OPERATIVE: "PLATFORM_OPERATIVE";
-};
-type PlatformRole = (typeof PlatformRole)[keyof typeof PlatformRole];
-declare const PLATFORM_ROLE_RANK: Record<PlatformRole, number>;
-declare function canAssignPlatformRole(assignerRole: PlatformRole, targetRole: PlatformRole): boolean;
-
 declare const CommonStatus: {
     readonly ACTIVE: "active";
     readonly COMPLETED: "completed";
@@ -117,4 +72,4 @@ declare const FileCategory: {
 };
 type FileCategory = (typeof FileCategory)[keyof typeof FileCategory];
 
-export { ApprovalStatus as A, BuildingType as B, CommonStatus as C, FailureStatus as F, MaintenanceStatus as M, ORG_ROLE_RANK as O, PollType as P, Role as R, TransactionCategory as T, BUILDING_ROLE_RANK as a, BuildingRole as b, canAssignOrgRole as c, canAssignPlatformRole as d, canAssignRole as e, OrgRole as f, PLATFORM_ROLE_RANK as g, PlatformRole as h, FailureType as i, FileCategory as j, Frequency as k, MaintenanceType as l, Priority as m, TransactionType as n };
+export { ApprovalStatus as A, CommonStatus as C, FailureStatus as F, MaintenanceStatus as M, Priority as P, TransactionCategory as T, FailureType as a, FileCategory as b, Frequency as c, MaintenanceType as d, TransactionType as e };

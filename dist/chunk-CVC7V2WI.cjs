@@ -1,8 +1,14 @@
 'use strict';
 
-var chunkFNIEFAJD_cjs = require('./chunk-FNIEFAJD.cjs');
+var chunk5UBJHQVX_cjs = require('./chunk-5UBJHQVX.cjs');
 var zod = require('zod');
 
+var apiErrorSchema = zod.z.object({
+  statusCode: zod.z.number(),
+  message: zod.z.union([zod.z.string(), zod.z.array(zod.z.string())]),
+  timestamp: zod.z.string(),
+  path: zod.z.string()
+});
 var emailSchema = zod.z.string().email("Invalid email address");
 var passwordSchema = zod.z.string().min(8, "Password must be at least 8 characters long").max(100, "Password must not exceed 100 characters");
 var strongPasswordSchema = passwordSchema.regex(/[A-Z]/, "Password must contain at least one uppercase letter").regex(/[a-z]/, "Password must contain at least one lowercase letter").regex(/[0-9]/, "Password must contain at least one number");
@@ -88,7 +94,7 @@ var dateRangeWithValidationSchema = zod.z.object({
     path: ["fromDate"]
   }
 );
-var apartmentRoleSchema = zod.z.enum([chunkFNIEFAJD_cjs.ApartmentRole.OWNER, chunkFNIEFAJD_cjs.ApartmentRole.TENANT]);
+var apartmentRoleSchema = zod.z.enum([chunk5UBJHQVX_cjs.ApartmentRole.OWNER, chunk5UBJHQVX_cjs.ApartmentRole.TENANT]);
 var apartmentUserSchema = zod.z.looseObject({
   id: zod.z.string(),
   name: zod.z.string(),
@@ -121,6 +127,65 @@ var paginatedApartmentsResponseSchema = zod.z.looseObject({
   limit: zod.z.number(),
   hasNextPage: zod.z.boolean().optional(),
   hasPreviousPage: zod.z.boolean().optional()
+});
+var CHAT_LIMITS = {
+  MESSAGE_MIN: 1,
+  MESSAGE_MAX: 5e3,
+  GROUP_NAME_MAX: 100,
+  PARTICIPANTS_MIN: 1,
+  PARTICIPANTS_MAX: 50
+};
+var ConversationType = {
+  DIRECT: "direct",
+  GROUP: "group"
+};
+var sendMessageSchema = zod.z.object({
+  content: zod.z.string().min(CHAT_LIMITS.MESSAGE_MIN, "Message is required").max(CHAT_LIMITS.MESSAGE_MAX, `Message must be at most ${CHAT_LIMITS.MESSAGE_MAX} characters`)
+});
+var createConversationSchema = zod.z.object({
+  type: zod.z.enum([ConversationType.DIRECT, ConversationType.GROUP]),
+  participantIds: zod.z.array(uuidSchema).min(CHAT_LIMITS.PARTICIPANTS_MIN, "At least one participant is required").max(CHAT_LIMITS.PARTICIPANTS_MAX, `Maximum ${CHAT_LIMITS.PARTICIPANTS_MAX} participants`),
+  name: zod.z.string().max(CHAT_LIMITS.GROUP_NAME_MAX).optional()
+});
+var updateConversationSchema = zod.z.object({
+  name: zod.z.string().max(CHAT_LIMITS.GROUP_NAME_MAX).optional(),
+  addParticipantIds: zod.z.array(uuidSchema).max(CHAT_LIMITS.PARTICIPANTS_MAX).optional(),
+  removeParticipantIds: zod.z.array(uuidSchema).max(CHAT_LIMITS.PARTICIPANTS_MAX).optional()
+});
+var FAQ_LIMITS = {
+  QUESTION_MIN: 1,
+  QUESTION_MAX: 500,
+  ANSWER_MIN: 1,
+  ANSWER_MAX: 2e3
+};
+var createFaqSchema = zod.z.object({
+  question: zod.z.string().min(FAQ_LIMITS.QUESTION_MIN, "Question is required").max(FAQ_LIMITS.QUESTION_MAX, `Question must be at most ${FAQ_LIMITS.QUESTION_MAX} characters`),
+  answer: zod.z.string().min(FAQ_LIMITS.ANSWER_MIN, "Answer is required").max(FAQ_LIMITS.ANSWER_MAX, `Answer must be at most ${FAQ_LIMITS.ANSWER_MAX} characters`)
+});
+var updateFaqSchema = zod.z.object({
+  question: zod.z.string().min(FAQ_LIMITS.QUESTION_MIN).max(FAQ_LIMITS.QUESTION_MAX).optional(),
+  answer: zod.z.string().min(FAQ_LIMITS.ANSWER_MIN).max(FAQ_LIMITS.ANSWER_MAX).optional()
+});
+var ORGANIZATION_LIMITS = {
+  NAME_MIN: 1,
+  NAME_MAX: 200,
+  OIB_LENGTH: 11
+};
+var createOrganizationSchema = zod.z.object({
+  name: zod.z.string().min(ORGANIZATION_LIMITS.NAME_MIN, "Name is required").max(
+    ORGANIZATION_LIMITS.NAME_MAX,
+    `Name must be at most ${ORGANIZATION_LIMITS.NAME_MAX} characters`
+  ),
+  type: zod.z.enum([chunk5UBJHQVX_cjs.OrgType.MANAGEMENT_FIRM, chunk5UBJHQVX_cjs.OrgType.PLATFORM]),
+  oib: zod.z.string().max(ORGANIZATION_LIMITS.OIB_LENGTH, `OIB must be ${ORGANIZATION_LIMITS.OIB_LENGTH} characters`).optional(),
+  contactEmail: zod.z.string().email("Invalid email").optional(),
+  contactPhone: zod.z.string().optional()
+});
+var updateOrganizationSchema = zod.z.object({
+  name: zod.z.string().min(ORGANIZATION_LIMITS.NAME_MIN).max(ORGANIZATION_LIMITS.NAME_MAX).optional(),
+  contactEmail: zod.z.string().email("Invalid email").optional(),
+  contactPhone: zod.z.string().optional(),
+  oib: zod.z.string().max(ORGANIZATION_LIMITS.OIB_LENGTH).optional()
 });
 var BUILDING_TYPES = ["residential", "commercial"];
 var buildingTypeSchema = zod.z.enum(BUILDING_TYPES);
@@ -392,10 +457,10 @@ var paginatedResponseSchema = (itemSchema) => zod.z.object({
   hasPreviousPage: zod.z.boolean()
 });
 var roleTypeSchema = zod.z.enum([
-  ...Object.values(chunkFNIEFAJD_cjs.Role),
-  ...Object.values(chunkFNIEFAJD_cjs.BuildingRole),
-  ...Object.values(chunkFNIEFAJD_cjs.OrgRole),
-  ...Object.values(chunkFNIEFAJD_cjs.PlatformRole)
+  ...Object.values(chunk5UBJHQVX_cjs.Role),
+  ...Object.values(chunk5UBJHQVX_cjs.BuildingRole),
+  ...Object.values(chunk5UBJHQVX_cjs.OrgRole),
+  ...Object.values(chunk5UBJHQVX_cjs.PlatformRole)
 ]);
 var permissionsResponseSchema = zod.z.object({
   scope: zod.z.enum(["building", "organization", "platform"]),
@@ -424,20 +489,24 @@ var PrioritySchema = zod.z.enum(priorityOptions);
 exports.ApprovalStatusSchema = ApprovalStatusSchema;
 exports.BUILDING_LIMITS = BUILDING_LIMITS;
 exports.BUILDING_TYPES = BUILDING_TYPES;
+exports.CHAT_LIMITS = CHAT_LIMITS;
 exports.CommonStatusSchema = CommonStatusSchema;
 exports.EVENT_COLORS = EVENT_COLORS;
 exports.EVENT_TYPES = EVENT_TYPES;
 exports.EVENT_TYPE_COLOR_MAP = EVENT_TYPE_COLOR_MAP;
+exports.FAQ_LIMITS = FAQ_LIMITS;
 exports.FailureStatusSchema = FailureStatusSchema;
 exports.MAINTENANCE_FINANCED_BY = MAINTENANCE_FINANCED_BY;
 exports.MaintenanceStatusSchema = MaintenanceStatusSchema;
 exports.NOTICE_LIMITS = NOTICE_LIMITS;
+exports.ORGANIZATION_LIMITS = ORGANIZATION_LIMITS;
 exports.POLL_LIMITS = POLL_LIMITS;
 exports.POLL_TYPES = POLL_TYPES;
 exports.PrioritySchema = PrioritySchema;
 exports.apartmentRoleSchema = apartmentRoleSchema;
 exports.apartmentSchema = apartmentSchema;
 exports.apartmentUserSchema = apartmentUserSchema;
+exports.apiErrorSchema = apiErrorSchema;
 exports.approvalStatusOptions = approvalStatusOptions;
 exports.approveFailureReportSchema = approveFailureReportSchema;
 exports.approveNoticeSchema = approveNoticeSchema;
@@ -447,10 +516,13 @@ exports.buildingTypeSchema = buildingTypeSchema;
 exports.buildingUserEntitySchema = buildingUserEntitySchema;
 exports.commonStatusOptions = commonStatusOptions;
 exports.createBuildingSchema = createBuildingSchema;
+exports.createConversationSchema = createConversationSchema;
 exports.createEventSchema = createEventSchema;
 exports.createFailureReportSchema = createFailureReportSchema;
+exports.createFaqSchema = createFaqSchema;
 exports.createMaintenanceLogSchema = createMaintenanceLogSchema;
 exports.createNoticeSchema = createNoticeSchema;
+exports.createOrganizationSchema = createOrganizationSchema;
 exports.createPollSchema = createPollSchema;
 exports.dateRangeParamsSchema = dateRangeParamsSchema;
 exports.dateRangeWithValidationSchema = dateRangeWithValidationSchema;
@@ -481,21 +553,25 @@ exports.priorityOptions = priorityOptions;
 exports.registerSchema = registerSchema;
 exports.resetPasswordSchema = resetPasswordSchema;
 exports.roleTypeSchema = roleTypeSchema;
+exports.sendMessageSchema = sendMessageSchema;
 exports.storageUnitRoleSchema = storageUnitRoleSchema;
 exports.storageUnitSchema = storageUnitSchema;
 exports.storageUnitUserSchema = storageUnitUserSchema;
 exports.strongPasswordSchema = strongPasswordSchema;
 exports.timeSchema = timeSchema;
 exports.updateBuildingSchema = updateBuildingSchema;
+exports.updateConversationSchema = updateConversationSchema;
 exports.updateEventSchema = updateEventSchema;
 exports.updateFailureReportSchema = updateFailureReportSchema;
+exports.updateFaqSchema = updateFaqSchema;
 exports.updateMaintenanceLogSchema = updateMaintenanceLogSchema;
 exports.updateNoticeSchema = updateNoticeSchema;
+exports.updateOrganizationSchema = updateOrganizationSchema;
 exports.updatePasswordSchema = updatePasswordSchema;
 exports.updateUserBuildingRoleSchema = updateUserBuildingRoleSchema;
 exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-2GAGJPEO.cjs.map
-//# sourceMappingURL=chunk-2GAGJPEO.cjs.map
+//# sourceMappingURL=chunk-CVC7V2WI.cjs.map
+//# sourceMappingURL=chunk-CVC7V2WI.cjs.map

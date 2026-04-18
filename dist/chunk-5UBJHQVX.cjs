@@ -105,6 +105,55 @@ var DevicePlatform = {
   ANDROID: "android",
   WEB: "web"
 };
+var NOTIFICATION_TYPE_CATEGORY = {
+  [NotificationType.NOTICE_CREATED]: NotificationCategory.NOTICES,
+  [NotificationType.NOTICE_APPROVED]: NotificationCategory.NOTICES,
+  [NotificationType.NOTICE_REJECTED]: NotificationCategory.NOTICES,
+  [NotificationType.POLL_CREATED]: NotificationCategory.POLLS,
+  [NotificationType.POLL_DEADLINE_24H]: NotificationCategory.POLLS,
+  [NotificationType.POLL_DEADLINE_1H]: NotificationCategory.POLLS,
+  [NotificationType.POLL_FINALIZED]: NotificationCategory.POLLS,
+  [NotificationType.EVENT_CREATED]: NotificationCategory.EVENTS,
+  [NotificationType.EVENT_REMINDER_24H]: NotificationCategory.EVENTS,
+  [NotificationType.EVENT_REMINDER_1H]: NotificationCategory.EVENTS,
+  [NotificationType.EVENT_UPDATED]: NotificationCategory.EVENTS,
+  [NotificationType.EVENT_CANCELLED]: NotificationCategory.EVENTS,
+  [NotificationType.WASTE_REMINDER_MIXED]: NotificationCategory.WASTE,
+  [NotificationType.WASTE_REMINDER_BIO]: NotificationCategory.WASTE,
+  [NotificationType.WASTE_REMINDER_PLASTIC_METAL]: NotificationCategory.WASTE,
+  [NotificationType.WASTE_REMINDER_PAPER_CARDBOARD]: NotificationCategory.WASTE,
+  [NotificationType.FAILURE_REPORT_CREATED]: NotificationCategory.MAINTENANCE,
+  [NotificationType.FAILURE_REPORT_STATUS_CHANGED]: NotificationCategory.MAINTENANCE,
+  [NotificationType.FAILURE_REPORT_RESOLVED]: NotificationCategory.MAINTENANCE,
+  [NotificationType.MAINTENANCE_LOG_CREATED]: NotificationCategory.MAINTENANCE,
+  [NotificationType.PAYMENT_DUE]: NotificationCategory.FINANCIAL,
+  [NotificationType.PAYMENT_RECEIVED]: NotificationCategory.FINANCIAL,
+  [NotificationType.CHAT_MESSAGE]: NotificationCategory.CHAT,
+  [NotificationType.BUILDING_JOIN_REQUEST_RECEIVED]: NotificationCategory.SYSTEM,
+  [NotificationType.BUILDING_JOIN_REQUEST_APPROVED]: NotificationCategory.SYSTEM,
+  [NotificationType.BUILDING_JOIN_REQUEST_REJECTED]: NotificationCategory.SYSTEM,
+  [NotificationType.BUILDING_MEMBER_JOINED]: NotificationCategory.SYSTEM,
+  [NotificationType.BUILDING_ROLE_CHANGED]: NotificationCategory.SYSTEM,
+  [NotificationType.BUILDING_PENDING_APPROVAL]: NotificationCategory.SYSTEM,
+  [NotificationType.BUILDING_APPROVED]: NotificationCategory.SYSTEM,
+  [NotificationType.BUILDING_REJECTED]: NotificationCategory.SYSTEM,
+  [NotificationType.SYSTEM_ANNOUNCEMENT]: NotificationCategory.SYSTEM
+};
+var UNIMPLEMENTED_NOTIFICATION_TYPES = /* @__PURE__ */ new Set([
+  NotificationType.POLL_DEADLINE_24H,
+  NotificationType.POLL_DEADLINE_1H,
+  NotificationType.EVENT_REMINDER_24H,
+  NotificationType.EVENT_REMINDER_1H,
+  NotificationType.PAYMENT_DUE,
+  NotificationType.PAYMENT_RECEIVED,
+  NotificationType.SYSTEM_ANNOUNCEMENT
+]);
+var WASTE_SUBTYPE_NOTIFICATION_MAP = {
+  mixed: NotificationType.WASTE_REMINDER_MIXED,
+  bio: NotificationType.WASTE_REMINDER_BIO,
+  plastic_metal: NotificationType.WASTE_REMINDER_PLASTIC_METAL,
+  paper_cardboard: NotificationType.WASTE_REMINDER_PAPER_CARDBOARD
+};
 
 // src/enums/org-type.enum.ts
 var OrgType = {
@@ -252,6 +301,29 @@ var Permission = {
   PLATFORM_MANAGE_OPERATIVES: "platform:manage_operatives",
   PLATFORM_PURGE: "platform:purge"
 };
+function buildScopedPermissions() {
+  const result = {};
+  for (const domain of SCOPED_DOMAINS) {
+    result[domain] = {
+      update: {
+        own: `${domain}:update:own`,
+        any: `${domain}:update:any`
+      },
+      delete: {
+        own: `${domain}:delete:own`,
+        any: `${domain}:delete:any`
+      }
+    };
+  }
+  return result;
+}
+var SCOPED_PERMISSIONS = buildScopedPermissions();
+var APPROVE_PERMISSIONS = {
+  notice: "notice:approve",
+  event: "event:approve",
+  poll: "poll:approve",
+  failure_report: "failure_report:approve"
+};
 
 // src/enums/poll-status.enum.ts
 var PollStatus = {
@@ -379,6 +451,7 @@ var FileCategory = {
   OTHER: "other"
 };
 
+exports.APPROVE_PERMISSIONS = APPROVE_PERMISSIONS;
 exports.ApartmentRole = ApartmentRole;
 exports.ApprovalStatus = ApprovalStatus;
 exports.BUILDING_ROLE_RANK = BUILDING_ROLE_RANK;
@@ -396,6 +469,7 @@ exports.Frequency = Frequency;
 exports.MaintenanceLogFinancedBy = MaintenanceLogFinancedBy;
 exports.MaintenanceStatus = MaintenanceStatus;
 exports.MaintenanceType = MaintenanceType;
+exports.NOTIFICATION_TYPE_CATEGORY = NOTIFICATION_TYPE_CATEGORY;
 exports.NotificationCategory = NotificationCategory;
 exports.NotificationChannel = NotificationChannel;
 exports.NotificationDeliveryStatus = NotificationDeliveryStatus;
@@ -412,11 +486,14 @@ exports.PollType = PollType;
 exports.Priority = Priority;
 exports.Role = Role;
 exports.SCOPED_DOMAINS = SCOPED_DOMAINS;
+exports.SCOPED_PERMISSIONS = SCOPED_PERMISSIONS;
 exports.TransactionCategory = TransactionCategory;
 exports.TransactionType = TransactionType;
+exports.UNIMPLEMENTED_NOTIFICATION_TYPES = UNIMPLEMENTED_NOTIFICATION_TYPES;
+exports.WASTE_SUBTYPE_NOTIFICATION_MAP = WASTE_SUBTYPE_NOTIFICATION_MAP;
 exports.canAssignOrgRole = canAssignOrgRole;
 exports.canAssignPlatformRole = canAssignPlatformRole;
 exports.canAssignRole = canAssignRole;
 exports.domainPermissions = domainPermissions;
-//# sourceMappingURL=chunk-FNIEFAJD.cjs.map
-//# sourceMappingURL=chunk-FNIEFAJD.cjs.map
+//# sourceMappingURL=chunk-5UBJHQVX.cjs.map
+//# sourceMappingURL=chunk-5UBJHQVX.cjs.map

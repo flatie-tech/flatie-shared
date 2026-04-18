@@ -103,6 +103,55 @@ var DevicePlatform = {
   ANDROID: "android",
   WEB: "web"
 };
+var NOTIFICATION_TYPE_CATEGORY = {
+  [NotificationType.NOTICE_CREATED]: NotificationCategory.NOTICES,
+  [NotificationType.NOTICE_APPROVED]: NotificationCategory.NOTICES,
+  [NotificationType.NOTICE_REJECTED]: NotificationCategory.NOTICES,
+  [NotificationType.POLL_CREATED]: NotificationCategory.POLLS,
+  [NotificationType.POLL_DEADLINE_24H]: NotificationCategory.POLLS,
+  [NotificationType.POLL_DEADLINE_1H]: NotificationCategory.POLLS,
+  [NotificationType.POLL_FINALIZED]: NotificationCategory.POLLS,
+  [NotificationType.EVENT_CREATED]: NotificationCategory.EVENTS,
+  [NotificationType.EVENT_REMINDER_24H]: NotificationCategory.EVENTS,
+  [NotificationType.EVENT_REMINDER_1H]: NotificationCategory.EVENTS,
+  [NotificationType.EVENT_UPDATED]: NotificationCategory.EVENTS,
+  [NotificationType.EVENT_CANCELLED]: NotificationCategory.EVENTS,
+  [NotificationType.WASTE_REMINDER_MIXED]: NotificationCategory.WASTE,
+  [NotificationType.WASTE_REMINDER_BIO]: NotificationCategory.WASTE,
+  [NotificationType.WASTE_REMINDER_PLASTIC_METAL]: NotificationCategory.WASTE,
+  [NotificationType.WASTE_REMINDER_PAPER_CARDBOARD]: NotificationCategory.WASTE,
+  [NotificationType.FAILURE_REPORT_CREATED]: NotificationCategory.MAINTENANCE,
+  [NotificationType.FAILURE_REPORT_STATUS_CHANGED]: NotificationCategory.MAINTENANCE,
+  [NotificationType.FAILURE_REPORT_RESOLVED]: NotificationCategory.MAINTENANCE,
+  [NotificationType.MAINTENANCE_LOG_CREATED]: NotificationCategory.MAINTENANCE,
+  [NotificationType.PAYMENT_DUE]: NotificationCategory.FINANCIAL,
+  [NotificationType.PAYMENT_RECEIVED]: NotificationCategory.FINANCIAL,
+  [NotificationType.CHAT_MESSAGE]: NotificationCategory.CHAT,
+  [NotificationType.BUILDING_JOIN_REQUEST_RECEIVED]: NotificationCategory.SYSTEM,
+  [NotificationType.BUILDING_JOIN_REQUEST_APPROVED]: NotificationCategory.SYSTEM,
+  [NotificationType.BUILDING_JOIN_REQUEST_REJECTED]: NotificationCategory.SYSTEM,
+  [NotificationType.BUILDING_MEMBER_JOINED]: NotificationCategory.SYSTEM,
+  [NotificationType.BUILDING_ROLE_CHANGED]: NotificationCategory.SYSTEM,
+  [NotificationType.BUILDING_PENDING_APPROVAL]: NotificationCategory.SYSTEM,
+  [NotificationType.BUILDING_APPROVED]: NotificationCategory.SYSTEM,
+  [NotificationType.BUILDING_REJECTED]: NotificationCategory.SYSTEM,
+  [NotificationType.SYSTEM_ANNOUNCEMENT]: NotificationCategory.SYSTEM
+};
+var UNIMPLEMENTED_NOTIFICATION_TYPES = /* @__PURE__ */ new Set([
+  NotificationType.POLL_DEADLINE_24H,
+  NotificationType.POLL_DEADLINE_1H,
+  NotificationType.EVENT_REMINDER_24H,
+  NotificationType.EVENT_REMINDER_1H,
+  NotificationType.PAYMENT_DUE,
+  NotificationType.PAYMENT_RECEIVED,
+  NotificationType.SYSTEM_ANNOUNCEMENT
+]);
+var WASTE_SUBTYPE_NOTIFICATION_MAP = {
+  mixed: NotificationType.WASTE_REMINDER_MIXED,
+  bio: NotificationType.WASTE_REMINDER_BIO,
+  plastic_metal: NotificationType.WASTE_REMINDER_PLASTIC_METAL,
+  paper_cardboard: NotificationType.WASTE_REMINDER_PAPER_CARDBOARD
+};
 
 // src/enums/org-type.enum.ts
 var OrgType = {
@@ -250,6 +299,29 @@ var Permission = {
   PLATFORM_MANAGE_OPERATIVES: "platform:manage_operatives",
   PLATFORM_PURGE: "platform:purge"
 };
+function buildScopedPermissions() {
+  const result = {};
+  for (const domain of SCOPED_DOMAINS) {
+    result[domain] = {
+      update: {
+        own: `${domain}:update:own`,
+        any: `${domain}:update:any`
+      },
+      delete: {
+        own: `${domain}:delete:own`,
+        any: `${domain}:delete:any`
+      }
+    };
+  }
+  return result;
+}
+var SCOPED_PERMISSIONS = buildScopedPermissions();
+var APPROVE_PERMISSIONS = {
+  notice: "notice:approve",
+  event: "event:approve",
+  poll: "poll:approve",
+  failure_report: "failure_report:approve"
+};
 
 // src/enums/poll-status.enum.ts
 var PollStatus = {
@@ -377,6 +449,6 @@ var FileCategory = {
   OTHER: "other"
 };
 
-export { ApartmentRole, ApprovalStatus, BUILDING_ROLE_RANK, BuildingRole, BuildingStatus, BuildingType, CommonStatus, DevicePlatform, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_ROLE_RANK, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, Permission, PlatformRole, PollStatus, PollType, Priority, Role, SCOPED_DOMAINS, TransactionCategory, TransactionType, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions };
-//# sourceMappingURL=chunk-7YDPHE2Q.js.map
-//# sourceMappingURL=chunk-7YDPHE2Q.js.map
+export { APPROVE_PERMISSIONS, ApartmentRole, ApprovalStatus, BUILDING_ROLE_RANK, BuildingRole, BuildingStatus, BuildingType, CommonStatus, DevicePlatform, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_ROLE_RANK, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, Permission, PlatformRole, PollStatus, PollType, Priority, Role, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions };
+//# sourceMappingURL=chunk-P25WSM2I.js.map
+//# sourceMappingURL=chunk-P25WSM2I.js.map

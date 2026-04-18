@@ -1,6 +1,12 @@
-import { ApartmentRole, Role, BuildingRole, OrgRole, PlatformRole } from './chunk-7YDPHE2Q.js';
+import { ApartmentRole, OrgType, Role, BuildingRole, OrgRole, PlatformRole } from './chunk-P25WSM2I.js';
 import { z } from 'zod';
 
+var apiErrorSchema = z.object({
+  statusCode: z.number(),
+  message: z.union([z.string(), z.array(z.string())]),
+  timestamp: z.string(),
+  path: z.string()
+});
 var emailSchema = z.string().email("Invalid email address");
 var passwordSchema = z.string().min(8, "Password must be at least 8 characters long").max(100, "Password must not exceed 100 characters");
 var strongPasswordSchema = passwordSchema.regex(/[A-Z]/, "Password must contain at least one uppercase letter").regex(/[a-z]/, "Password must contain at least one lowercase letter").regex(/[0-9]/, "Password must contain at least one number");
@@ -119,6 +125,65 @@ var paginatedApartmentsResponseSchema = z.looseObject({
   limit: z.number(),
   hasNextPage: z.boolean().optional(),
   hasPreviousPage: z.boolean().optional()
+});
+var CHAT_LIMITS = {
+  MESSAGE_MIN: 1,
+  MESSAGE_MAX: 5e3,
+  GROUP_NAME_MAX: 100,
+  PARTICIPANTS_MIN: 1,
+  PARTICIPANTS_MAX: 50
+};
+var ConversationType = {
+  DIRECT: "direct",
+  GROUP: "group"
+};
+var sendMessageSchema = z.object({
+  content: z.string().min(CHAT_LIMITS.MESSAGE_MIN, "Message is required").max(CHAT_LIMITS.MESSAGE_MAX, `Message must be at most ${CHAT_LIMITS.MESSAGE_MAX} characters`)
+});
+var createConversationSchema = z.object({
+  type: z.enum([ConversationType.DIRECT, ConversationType.GROUP]),
+  participantIds: z.array(uuidSchema).min(CHAT_LIMITS.PARTICIPANTS_MIN, "At least one participant is required").max(CHAT_LIMITS.PARTICIPANTS_MAX, `Maximum ${CHAT_LIMITS.PARTICIPANTS_MAX} participants`),
+  name: z.string().max(CHAT_LIMITS.GROUP_NAME_MAX).optional()
+});
+var updateConversationSchema = z.object({
+  name: z.string().max(CHAT_LIMITS.GROUP_NAME_MAX).optional(),
+  addParticipantIds: z.array(uuidSchema).max(CHAT_LIMITS.PARTICIPANTS_MAX).optional(),
+  removeParticipantIds: z.array(uuidSchema).max(CHAT_LIMITS.PARTICIPANTS_MAX).optional()
+});
+var FAQ_LIMITS = {
+  QUESTION_MIN: 1,
+  QUESTION_MAX: 500,
+  ANSWER_MIN: 1,
+  ANSWER_MAX: 2e3
+};
+var createFaqSchema = z.object({
+  question: z.string().min(FAQ_LIMITS.QUESTION_MIN, "Question is required").max(FAQ_LIMITS.QUESTION_MAX, `Question must be at most ${FAQ_LIMITS.QUESTION_MAX} characters`),
+  answer: z.string().min(FAQ_LIMITS.ANSWER_MIN, "Answer is required").max(FAQ_LIMITS.ANSWER_MAX, `Answer must be at most ${FAQ_LIMITS.ANSWER_MAX} characters`)
+});
+var updateFaqSchema = z.object({
+  question: z.string().min(FAQ_LIMITS.QUESTION_MIN).max(FAQ_LIMITS.QUESTION_MAX).optional(),
+  answer: z.string().min(FAQ_LIMITS.ANSWER_MIN).max(FAQ_LIMITS.ANSWER_MAX).optional()
+});
+var ORGANIZATION_LIMITS = {
+  NAME_MIN: 1,
+  NAME_MAX: 200,
+  OIB_LENGTH: 11
+};
+var createOrganizationSchema = z.object({
+  name: z.string().min(ORGANIZATION_LIMITS.NAME_MIN, "Name is required").max(
+    ORGANIZATION_LIMITS.NAME_MAX,
+    `Name must be at most ${ORGANIZATION_LIMITS.NAME_MAX} characters`
+  ),
+  type: z.enum([OrgType.MANAGEMENT_FIRM, OrgType.PLATFORM]),
+  oib: z.string().max(ORGANIZATION_LIMITS.OIB_LENGTH, `OIB must be ${ORGANIZATION_LIMITS.OIB_LENGTH} characters`).optional(),
+  contactEmail: z.string().email("Invalid email").optional(),
+  contactPhone: z.string().optional()
+});
+var updateOrganizationSchema = z.object({
+  name: z.string().min(ORGANIZATION_LIMITS.NAME_MIN).max(ORGANIZATION_LIMITS.NAME_MAX).optional(),
+  contactEmail: z.string().email("Invalid email").optional(),
+  contactPhone: z.string().optional(),
+  oib: z.string().max(ORGANIZATION_LIMITS.OIB_LENGTH).optional()
 });
 var BUILDING_TYPES = ["residential", "commercial"];
 var buildingTypeSchema = z.enum(BUILDING_TYPES);
@@ -419,6 +484,6 @@ var MaintenanceStatusSchema = z.enum(maintenanceStatusOptions);
 var FailureStatusSchema = z.enum(failureStatusOptions);
 var PrioritySchema = z.enum(priorityOptions);
 
-export { ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MaintenanceStatusSchema, NOTICE_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, baseEntitySchema, buildingEntitySchema, buildingTypeSchema, buildingUserEntitySchema, commonStatusOptions, createBuildingSchema, createEventSchema, createFailureReportSchema, createMaintenanceLogSchema, createNoticeSchema, createPollSchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventTypeSchema, failureStatusOptions, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, joinBuildingWithOtpSchema, loginSchema, maintenanceFinancedBySchema, maintenanceStatusOptions, noticeEventSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollTypeSchema, priorityOptions, registerSchema, resetPasswordSchema, roleTypeSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateEventSchema, updateFailureReportSchema, updateMaintenanceLogSchema, updateNoticeSchema, updatePasswordSchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-AR7ZWZKK.js.map
-//# sourceMappingURL=chunk-AR7ZWZKK.js.map
+export { ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, baseEntitySchema, buildingEntitySchema, buildingTypeSchema, buildingUserEntitySchema, commonStatusOptions, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventTypeSchema, failureStatusOptions, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, joinBuildingWithOtpSchema, loginSchema, maintenanceFinancedBySchema, maintenanceStatusOptions, noticeEventSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollTypeSchema, priorityOptions, registerSchema, resetPasswordSchema, roleTypeSchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogSchema, updateNoticeSchema, updateOrganizationSchema, updatePasswordSchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
+//# sourceMappingURL=chunk-RTNDRC55.js.map
+//# sourceMappingURL=chunk-RTNDRC55.js.map

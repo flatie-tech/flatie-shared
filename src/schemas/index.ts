@@ -1,5 +1,8 @@
 // Auth schemas
 
+// API error envelope
+export type { ApiError } from './api-error.schema';
+export { apiErrorSchema } from './api-error.schema';
 export type {
   ForgotPasswordSchema,
   LoginSchema,
@@ -19,7 +22,6 @@ export {
   updatePasswordSchema,
   verifyOtpSchema,
 } from './auth.schema';
-
 // Base schemas
 export type {
   BaseEntitySchema,
@@ -40,7 +42,6 @@ export {
   userEntitySchema,
   uuidSchema,
 } from './base.schema';
-
 // Date range schemas
 export type { DateRangeParamsSchema, DateRangeWithValidationSchema } from './date-range.schema';
 export { dateRangeParamsSchema, dateRangeWithValidationSchema } from './date-range.schema';
