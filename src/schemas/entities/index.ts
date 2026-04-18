@@ -40,13 +40,29 @@ export {
 
 // Organization schemas
 export type {
+  AddOrgMemberSchema,
+  AssignOrgBuildingSchema,
+  AssignOrgMemberBuildingSchema,
   CreateOrganizationSchema,
+  GetOrgBuildingsQuerySchema,
+  GetOrgMembersQuerySchema,
+  InviteOrgMemberSchema,
+  SearchUsersQuerySchema,
   UpdateOrganizationSchema,
+  UpdateOrgMemberRoleSchema,
 } from './organization.schema';
 export {
+  addOrgMemberSchema,
+  assignOrgBuildingSchema,
+  assignOrgMemberBuildingSchema,
   createOrganizationSchema,
+  getOrgBuildingsQuerySchema,
+  getOrgMembersQuerySchema,
+  inviteOrgMemberSchema,
   ORGANIZATION_LIMITS,
+  searchUsersQuerySchema,
   updateOrganizationSchema,
+  updateOrgMemberRoleSchema,
 } from './organization.schema';
 
 // Building schemas

@@ -180,6 +180,12 @@ var ORGANIZATION_LIMITS = {
   NAME_MAX: 200,
   OIB_LENGTH: 11
 };
+var orgRoleSchema = zod.z.enum([
+  chunk5UBJHQVX_cjs.OrgRole.ORG_ADMIN,
+  chunk5UBJHQVX_cjs.OrgRole.SUPERVISOR,
+  chunk5UBJHQVX_cjs.OrgRole.REFERENT,
+  chunk5UBJHQVX_cjs.OrgRole.OPERATIVE
+]);
 var createOrganizationSchema = zod.z.object({
   name: zod.z.string().min(ORGANIZATION_LIMITS.NAME_MIN, "Name is required").max(
     ORGANIZATION_LIMITS.NAME_MAX,
@@ -195,6 +201,43 @@ var updateOrganizationSchema = zod.z.object({
   contactEmail: zod.z.string().email("Invalid email").optional(),
   contactPhone: zod.z.string().optional(),
   oib: zod.z.string().max(ORGANIZATION_LIMITS.OIB_LENGTH).optional()
+});
+var addOrgMemberSchema = zod.z.object({
+  userId: uuidSchema,
+  orgRole: orgRoleSchema
+});
+var updateOrgMemberRoleSchema = zod.z.object({
+  orgRole: orgRoleSchema
+});
+var inviteOrgMemberSchema = zod.z.object({
+  email: zod.z.string().email("Invalid email"),
+  orgRole: orgRoleSchema,
+  message: zod.z.string().optional()
+});
+var assignOrgBuildingSchema = zod.z.object({
+  buildingId: uuidSchema,
+  contractStart: zod.z.string().optional(),
+  contractEnd: zod.z.string().optional()
+});
+var assignOrgMemberBuildingSchema = zod.z.object({
+  buildingId: uuidSchema
+});
+var searchUsersQuerySchema = zod.z.object({
+  search: zod.z.string().optional()
+});
+var getOrgBuildingsQuerySchema = zod.z.object({
+  offset: zod.z.coerce.number().min(0).optional().default(0),
+  limit: zod.z.coerce.number().min(1).optional().default(10),
+  search: zod.z.string().optional(),
+  sortBy: zod.z.enum(["name", "address", "createdAt"]).optional(),
+  sortOrder: zod.z.enum(["asc", "desc"]).optional()
+});
+var getOrgMembersQuerySchema = zod.z.object({
+  offset: zod.z.coerce.number().min(0).optional().default(0),
+  limit: zod.z.coerce.number().min(1).optional().default(10),
+  search: zod.z.string().optional(),
+  sortBy: zod.z.enum(["userName", "orgRole", "createdAt"]).optional(),
+  sortOrder: zod.z.enum(["asc", "desc"]).optional()
 });
 var BUILDING_TYPES = ["residential", "commercial"];
 var buildingTypeSchema = zod.z.enum(BUILDING_TYPES);
@@ -535,6 +578,7 @@ exports.POLL_LIMITS = POLL_LIMITS;
 exports.POLL_TYPES = POLL_TYPES;
 exports.PrioritySchema = PrioritySchema;
 exports.TRANSACTION_CATEGORY_LIMITS = TRANSACTION_CATEGORY_LIMITS;
+exports.addOrgMemberSchema = addOrgMemberSchema;
 exports.apartmentRoleSchema = apartmentRoleSchema;
 exports.apartmentSchema = apartmentSchema;
 exports.apartmentUserSchema = apartmentUserSchema;
@@ -542,6 +586,8 @@ exports.apiErrorSchema = apiErrorSchema;
 exports.approvalStatusOptions = approvalStatusOptions;
 exports.approveFailureReportSchema = approveFailureReportSchema;
 exports.approveNoticeSchema = approveNoticeSchema;
+exports.assignOrgBuildingSchema = assignOrgBuildingSchema;
+exports.assignOrgMemberBuildingSchema = assignOrgMemberBuildingSchema;
 exports.baseEntitySchema = baseEntitySchema;
 exports.buildingEntitySchema = buildingEntitySchema;
 exports.buildingTypeSchema = buildingTypeSchema;
@@ -572,7 +618,10 @@ exports.forgotPasswordSchema = forgotPasswordSchema;
 exports.garageRoleSchema = garageRoleSchema;
 exports.garageSchema = garageSchema;
 exports.garageUserSchema = garageUserSchema;
+exports.getOrgBuildingsQuerySchema = getOrgBuildingsQuerySchema;
+exports.getOrgMembersQuerySchema = getOrgMembersQuerySchema;
 exports.getTransactionCategoriesQuerySchema = getTransactionCategoriesQuerySchema;
+exports.inviteOrgMemberSchema = inviteOrgMemberSchema;
 exports.joinBuildingWithOtpSchema = joinBuildingWithOtpSchema;
 exports.loginSchema = loginSchema;
 exports.maintenanceFinancedBySchema = maintenanceFinancedBySchema;
@@ -591,6 +640,7 @@ exports.registerSchema = registerSchema;
 exports.reorderFaqsSchema = reorderFaqsSchema;
 exports.resetPasswordSchema = resetPasswordSchema;
 exports.roleTypeSchema = roleTypeSchema;
+exports.searchUsersQuerySchema = searchUsersQuerySchema;
 exports.sendMessageSchema = sendMessageSchema;
 exports.storageUnitRoleSchema = storageUnitRoleSchema;
 exports.storageUnitSchema = storageUnitSchema;
@@ -604,6 +654,7 @@ exports.updateFailureReportSchema = updateFailureReportSchema;
 exports.updateFaqSchema = updateFaqSchema;
 exports.updateMaintenanceLogSchema = updateMaintenanceLogSchema;
 exports.updateNoticeSchema = updateNoticeSchema;
+exports.updateOrgMemberRoleSchema = updateOrgMemberRoleSchema;
 exports.updateOrganizationSchema = updateOrganizationSchema;
 exports.updatePasswordSchema = updatePasswordSchema;
 exports.updateTransactionCategorySchema = updateTransactionCategorySchema;
@@ -612,5 +663,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-HV6FC2UQ.cjs.map
-//# sourceMappingURL=chunk-HV6FC2UQ.cjs.map
+//# sourceMappingURL=chunk-UU55AKQT.cjs.map
+//# sourceMappingURL=chunk-UU55AKQT.cjs.map
