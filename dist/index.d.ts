@@ -19,4 +19,15 @@ declare const LoginTestIds: {
     readonly registerLink: "login-register-link";
 };
 
-export { LoginTestIds };
+declare const BuildingOverviewTestIds: {
+    readonly screen: "overview-screen";
+    readonly buildingInfoBanner: "overview-building-info-banner";
+    readonly noticesWidget: "overview-notices-widget";
+    readonly noticesViewAll: "overview-notices-view-all";
+    readonly pollsWidget: "overview-polls-widget";
+    readonly pollsViewAll: "overview-polls-view-all";
+    readonly recentItemsWidget: "overview-recent-items-widget";
+    readonly recentItemsViewAll: "overview-recent-items-view-all";
+};
+
+export { BuildingOverviewTestIds, LoginTestIds };

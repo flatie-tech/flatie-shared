@@ -20,6 +20,18 @@ var LoginTestIds = {
   registerLink: "login-register-link"
 };
 
+// src/test-ids/building-overview.ts
+var BuildingOverviewTestIds = {
+  screen: "overview-screen",
+  buildingInfoBanner: "overview-building-info-banner",
+  noticesWidget: "overview-notices-widget",
+  noticesViewAll: "overview-notices-view-all",
+  pollsWidget: "overview-polls-widget",
+  pollsViewAll: "overview-polls-view-all",
+  recentItemsWidget: "overview-recent-items-widget",
+  recentItemsViewAll: "overview-recent-items-view-all"
+};
+
 Object.defineProperty(exports, "adminKeys", {
   enumerable: true,
   get: function () { return chunkGCY5CQ43_cjs.adminKeys; }
@@ -532,6 +544,7 @@ Object.defineProperty(exports, "createPaginatedResponse", {
   enumerable: true,
   get: function () { return chunkIGBERUWL_cjs.createPaginatedResponse; }
 });
+exports.BuildingOverviewTestIds = BuildingOverviewTestIds;
 exports.LoginTestIds = LoginTestIds;
 //# sourceMappingURL=index.cjs.map
 //# sourceMappingURL=index.cjs.map
