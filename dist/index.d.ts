@@ -36,6 +36,18 @@ declare const CalendarTestIds: {
     readonly addButton: "calendar-add-button";
 };
 
+declare const FailureReportsTestIds: {
+    readonly screen: "failure-reports-screen";
+    readonly searchInput: "failure-reports-search-input";
+    readonly addButton: "failure-reports-add-button";
+};
+
+declare const MaintenanceLogsTestIds: {
+    readonly screen: "maintenance-logs-screen";
+    readonly searchInput: "maintenance-logs-search-input";
+    readonly addButton: "maintenance-logs-add-button";
+};
+
 declare const NoticeBoardTestIds: {
     readonly screen: "notices-screen";
     readonly searchInput: "notices-search-input";
@@ -48,4 +60,4 @@ declare const PollsTestIds: {
     readonly addButton: "polls-add-button";
 };
 
-export { BuildingOverviewTestIds, CalendarTestIds, LoginTestIds, NoticeBoardTestIds, PollsTestIds };
+export { BuildingOverviewTestIds, CalendarTestIds, FailureReportsTestIds, LoginTestIds, MaintenanceLogsTestIds, NoticeBoardTestIds, PollsTestIds };

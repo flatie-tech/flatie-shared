@@ -39,6 +39,20 @@ var CalendarTestIds = {
   addButton: "calendar-add-button"
 };
 
+// src/test-ids/failure-reports.ts
+var FailureReportsTestIds = {
+  screen: "failure-reports-screen",
+  searchInput: "failure-reports-search-input",
+  addButton: "failure-reports-add-button"
+};
+
+// src/test-ids/maintenance-logs.ts
+var MaintenanceLogsTestIds = {
+  screen: "maintenance-logs-screen",
+  searchInput: "maintenance-logs-search-input",
+  addButton: "maintenance-logs-add-button"
+};
+
 // src/test-ids/notice-board.ts
 var NoticeBoardTestIds = {
   screen: "notices-screen",
@@ -567,7 +581,9 @@ Object.defineProperty(exports, "createPaginatedResponse", {
 });
 exports.BuildingOverviewTestIds = BuildingOverviewTestIds;
 exports.CalendarTestIds = CalendarTestIds;
+exports.FailureReportsTestIds = FailureReportsTestIds;
 exports.LoginTestIds = LoginTestIds;
+exports.MaintenanceLogsTestIds = MaintenanceLogsTestIds;
 exports.NoticeBoardTestIds = NoticeBoardTestIds;
 exports.PollsTestIds = PollsTestIds;
 //# sourceMappingURL=index.cjs.map
