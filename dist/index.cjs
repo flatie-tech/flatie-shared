@@ -32,6 +32,13 @@ var BuildingOverviewTestIds = {
   recentItemsViewAll: "overview-recent-items-view-all"
 };
 
+// src/test-ids/calendar.ts
+var CalendarTestIds = {
+  screen: "calendar-screen",
+  searchInput: "calendar-search-input",
+  addButton: "calendar-add-button"
+};
+
 // src/test-ids/notice-board.ts
 var NoticeBoardTestIds = {
   screen: "notices-screen",
@@ -559,6 +566,7 @@ Object.defineProperty(exports, "createPaginatedResponse", {
   get: function () { return chunkIGBERUWL_cjs.createPaginatedResponse; }
 });
 exports.BuildingOverviewTestIds = BuildingOverviewTestIds;
+exports.CalendarTestIds = CalendarTestIds;
 exports.LoginTestIds = LoginTestIds;
 exports.NoticeBoardTestIds = NoticeBoardTestIds;
 exports.PollsTestIds = PollsTestIds;

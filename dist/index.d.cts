@@ -30,6 +30,12 @@ declare const BuildingOverviewTestIds: {
     readonly recentItemsViewAll: "overview-recent-items-view-all";
 };
 
+declare const CalendarTestIds: {
+    readonly screen: "calendar-screen";
+    readonly searchInput: "calendar-search-input";
+    readonly addButton: "calendar-add-button";
+};
+
 declare const NoticeBoardTestIds: {
     readonly screen: "notices-screen";
     readonly searchInput: "notices-search-input";
@@ -42,4 +48,4 @@ declare const PollsTestIds: {
     readonly addButton: "polls-add-button";
 };
 
-export { BuildingOverviewTestIds, LoginTestIds, NoticeBoardTestIds, PollsTestIds };
+export { BuildingOverviewTestIds, CalendarTestIds, LoginTestIds, NoticeBoardTestIds, PollsTestIds };

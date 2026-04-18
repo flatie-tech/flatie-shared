@@ -30,6 +30,13 @@ var BuildingOverviewTestIds = {
   recentItemsViewAll: "overview-recent-items-view-all"
 };
 
+// src/test-ids/calendar.ts
+var CalendarTestIds = {
+  screen: "calendar-screen",
+  searchInput: "calendar-search-input",
+  addButton: "calendar-add-button"
+};
+
 // src/test-ids/notice-board.ts
 var NoticeBoardTestIds = {
   screen: "notices-screen",
@@ -44,6 +51,6 @@ var PollsTestIds = {
   addButton: "polls-add-button"
 };
 
-export { BuildingOverviewTestIds, LoginTestIds, NoticeBoardTestIds, PollsTestIds };
+export { BuildingOverviewTestIds, CalendarTestIds, LoginTestIds, NoticeBoardTestIds, PollsTestIds };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map
