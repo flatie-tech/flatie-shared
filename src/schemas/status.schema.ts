@@ -23,12 +23,12 @@ export const maintenanceStatusOptions = [
 /**
  * Failure status options
  */
-export const failureStatusOptions = ['pending', 'in_progress', 'resolved', 'cancelled'] as const;
+export const failureStatusOptions = ['pending', 'inProgress', 'resolved'] as const;
 
 /**
  * Priority options
  */
-export const priorityOptions = ['low', 'medium', 'high', 'urgent'] as const;
+export const priorityOptions = ['normal', 'urgent'] as const;
 
 // Zod enums
 export const CommonStatusSchema = z.enum(commonStatusOptions);

@@ -1,4 +1,4 @@
-import { Role, BuildingRole, OrgRole, PlatformRole } from './chunk-KVY53M6L.js';
+import { ApartmentRole, Role, BuildingRole, OrgRole, PlatformRole } from './chunk-7YDPHE2Q.js';
 import { z } from 'zod';
 
 var emailSchema = z.string().email("Invalid email address");
@@ -86,7 +86,7 @@ var dateRangeWithValidationSchema = z.object({
     path: ["fromDate"]
   }
 );
-var apartmentRoleSchema = z.enum(["OWNER", "TENANT"]);
+var apartmentRoleSchema = z.enum([ApartmentRole.OWNER, ApartmentRole.TENANT]);
 var apartmentUserSchema = z.looseObject({
   id: z.string(),
   name: z.string(),
@@ -411,8 +411,8 @@ var maintenanceStatusOptions = [
   "completed",
   "cancelled"
 ];
-var failureStatusOptions = ["pending", "in_progress", "resolved", "cancelled"];
-var priorityOptions = ["low", "medium", "high", "urgent"];
+var failureStatusOptions = ["pending", "inProgress", "resolved"];
+var priorityOptions = ["normal", "urgent"];
 var CommonStatusSchema = z.enum(commonStatusOptions);
 var ApprovalStatusSchema = z.enum(approvalStatusOptions);
 var MaintenanceStatusSchema = z.enum(maintenanceStatusOptions);
@@ -420,5 +420,5 @@ var FailureStatusSchema = z.enum(failureStatusOptions);
 var PrioritySchema = z.enum(priorityOptions);
 
 export { ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MaintenanceStatusSchema, NOTICE_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, baseEntitySchema, buildingEntitySchema, buildingTypeSchema, buildingUserEntitySchema, commonStatusOptions, createBuildingSchema, createEventSchema, createFailureReportSchema, createMaintenanceLogSchema, createNoticeSchema, createPollSchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventTypeSchema, failureStatusOptions, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, joinBuildingWithOtpSchema, loginSchema, maintenanceFinancedBySchema, maintenanceStatusOptions, noticeEventSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollTypeSchema, priorityOptions, registerSchema, resetPasswordSchema, roleTypeSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateEventSchema, updateFailureReportSchema, updateMaintenanceLogSchema, updateNoticeSchema, updatePasswordSchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-FFWDHZTL.js.map
-//# sourceMappingURL=chunk-FFWDHZTL.js.map
+//# sourceMappingURL=chunk-AR7ZWZKK.js.map
+//# sourceMappingURL=chunk-AR7ZWZKK.js.map

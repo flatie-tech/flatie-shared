@@ -1,10 +1,5 @@
 // Apartment schemas
-export type {
-  Apartment,
-  ApartmentRole,
-  ApartmentUser,
-  PaginatedApartmentsResponse,
-} from './apartment.schema';
+export type { Apartment, ApartmentUser, PaginatedApartmentsResponse } from './apartment.schema';
 export {
   apartmentRoleSchema,
   apartmentSchema,

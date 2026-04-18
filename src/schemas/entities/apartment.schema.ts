@@ -1,7 +1,7 @@
 import { z } from 'zod';
+import { ApartmentRole } from '../../enums/apartment-role.enum';
 
-export const apartmentRoleSchema = z.enum(['OWNER', 'TENANT']);
-export type ApartmentRole = z.infer<typeof apartmentRoleSchema>;
+export const apartmentRoleSchema = z.enum([ApartmentRole.OWNER, ApartmentRole.TENANT]);
 
 export const apartmentUserSchema = z.looseObject({
   id: z.string(),

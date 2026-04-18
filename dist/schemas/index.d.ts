@@ -145,7 +145,6 @@ declare const apartmentRoleSchema: z.ZodEnum<{
     OWNER: "OWNER";
     TENANT: "TENANT";
 }>;
-type ApartmentRole = z.infer<typeof apartmentRoleSchema>;
 declare const apartmentUserSchema: z.ZodObject<{
     id: z.ZodString;
     name: z.ZodString;
@@ -307,8 +306,8 @@ declare const EVENT_TYPE_COLOR_MAP: Record<EventTypeOption, EventColorOption>;
  * Event type schema
  */
 declare const eventTypeSchema: z.ZodEnum<{
-    other: "other";
     maintenance: "maintenance";
+    other: "other";
     service: "service";
     inspection: "inspection";
     meeting: "meeting";
@@ -340,8 +339,8 @@ declare const timeSchema: z.ZodObject<{
 declare const createEventSchema: z.ZodObject<{
     buildingId: z.ZodString;
     type: z.ZodEnum<{
-        other: "other";
         maintenance: "maintenance";
+        other: "other";
         service: "service";
         inspection: "inspection";
         meeting: "meeting";
@@ -367,8 +366,8 @@ declare const createEventSchema: z.ZodObject<{
  */
 declare const updateEventSchema: z.ZodObject<{
     type: z.ZodOptional<z.ZodEnum<{
-        other: "other";
         maintenance: "maintenance";
+        other: "other";
         service: "service";
         inspection: "inspection";
         meeting: "meeting";
@@ -472,8 +471,8 @@ type MaintenanceFinancedByOption = (typeof MAINTENANCE_FINANCED_BY)[number];
  * Maintenance financed by schema
  */
 declare const maintenanceFinancedBySchema: z.ZodEnum<{
-    insurance: "insurance";
     building_funds: "building_funds";
+    insurance: "insurance";
     co_owner: "co_owner";
 }>;
 /**
@@ -485,8 +484,8 @@ declare const createMaintenanceLogSchema: z.ZodObject<{
     description: z.ZodOptional<z.ZodString>;
     cost: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
     financedBy: z.ZodOptional<z.ZodEnum<{
-        insurance: "insurance";
         building_funds: "building_funds";
+        insurance: "insurance";
         co_owner: "co_owner";
     }>>;
     hasWarranty: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
@@ -503,8 +502,8 @@ declare const updateMaintenanceLogSchema: z.ZodObject<{
     description: z.ZodOptional<z.ZodString>;
     cost: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
     financedBy: z.ZodOptional<z.ZodEnum<{
-        insurance: "insurance";
         building_funds: "building_funds";
+        insurance: "insurance";
         co_owner: "co_owner";
     }>>;
     hasWarranty: z.ZodOptional<z.ZodBoolean>;
@@ -735,11 +734,11 @@ declare const maintenanceStatusOptions: readonly ["pending", "in_progress", "com
 /**
  * Failure status options
  */
-declare const failureStatusOptions: readonly ["pending", "in_progress", "resolved", "cancelled"];
+declare const failureStatusOptions: readonly ["pending", "inProgress", "resolved"];
 /**
  * Priority options
  */
-declare const priorityOptions: readonly ["low", "medium", "high", "urgent"];
+declare const priorityOptions: readonly ["normal", "urgent"];
 declare const CommonStatusSchema: z.ZodEnum<{
     active: "active";
     completed: "completed";
@@ -751,21 +750,18 @@ declare const ApprovalStatusSchema: z.ZodEnum<{
     rejected: "rejected";
 }>;
 declare const MaintenanceStatusSchema: z.ZodEnum<{
+    pending: "pending";
     completed: "completed";
     cancelled: "cancelled";
-    pending: "pending";
     in_progress: "in_progress";
 }>;
 declare const FailureStatusSchema: z.ZodEnum<{
-    cancelled: "cancelled";
     pending: "pending";
-    in_progress: "in_progress";
+    inProgress: "inProgress";
     resolved: "resolved";
 }>;
 declare const PrioritySchema: z.ZodEnum<{
-    low: "low";
-    medium: "medium";
-    high: "high";
+    normal: "normal";
     urgent: "urgent";
 }>;
 type CommonStatusSchemaType = z.infer<typeof CommonStatusSchema>;
@@ -774,4 +770,4 @@ type MaintenanceStatusSchemaType = z.infer<typeof MaintenanceStatusSchema>;
 type FailureStatusSchemaType = z.infer<typeof FailureStatusSchema>;
 type PrioritySchemaType = z.infer<typeof PrioritySchema>;
 
-export { type Apartment, type ApartmentRole, type ApartmentUser, ApprovalStatusSchema, type ApprovalStatusSchemaType, type ApproveFailureReportSchema, type ApproveNoticeSchema, BUILDING_LIMITS, BUILDING_TYPES, type BaseEntitySchema, type BuildingEntitySchema, type BuildingTypeOption, type BuildingUserEntitySchema, CommonStatusSchema, type CommonStatusSchemaType, type CreateBuildingSchema, type CreateEventSchema, type CreateFailureReportSchema, type CreateMaintenanceLogSchema, type CreateNoticeSchema, type CreatePollSchema, type DateRangeParamsSchema, type DateRangeWithValidationSchema, type DateTimeSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, type EventColorOption, type EventTypeOption, FailureStatusSchema, type FailureStatusSchemaType, type FinalizePollSchema, type ForgotPasswordSchema, type Garage, type GarageRole, type GarageUser, type JoinBuildingWithOtpSchema, type LoginSchema, MAINTENANCE_FINANCED_BY, type MaintenanceFinancedByOption, MaintenanceStatusSchema, type MaintenanceStatusSchemaType, NOTICE_LIMITS, type NoticeEventSchema, POLL_LIMITS, POLL_TYPES, type PaginatedApartmentsResponse, type PaginatedResponseSchema, type PaginationParamsSchema, type PermissionFieldsSchema, type PermissionsResponseSchema, type PollTypeOption, PrioritySchema, type PrioritySchemaType, type RegisterSchema, type ResetPasswordSchema, type StorageUnit, type StorageUnitRole, type StorageUnitUser, type TimeSchema, type UpdateBuildingSchema, type UpdateEventSchema, type UpdateFailureReportSchema, type UpdateMaintenanceLogSchema, type UpdateNoticeSchema, type UpdatePasswordSchema, type UpdateUserBuildingRoleSchema, type UserEntitySchema, type UuidSchema, type VerifyOtpSchema, type VotePollSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, baseEntitySchema, buildingEntitySchema, buildingTypeSchema, buildingUserEntitySchema, commonStatusOptions, createBuildingSchema, createEventSchema, createFailureReportSchema, createMaintenanceLogSchema, createNoticeSchema, createPollSchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventTypeSchema, failureStatusOptions, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, joinBuildingWithOtpSchema, loginSchema, maintenanceFinancedBySchema, maintenanceStatusOptions, noticeEventSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollTypeSchema, priorityOptions, registerSchema, resetPasswordSchema, roleTypeSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateEventSchema, updateFailureReportSchema, updateMaintenanceLogSchema, updateNoticeSchema, updatePasswordSchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
+export { type Apartment, type ApartmentUser, ApprovalStatusSchema, type ApprovalStatusSchemaType, type ApproveFailureReportSchema, type ApproveNoticeSchema, BUILDING_LIMITS, BUILDING_TYPES, type BaseEntitySchema, type BuildingEntitySchema, type BuildingTypeOption, type BuildingUserEntitySchema, CommonStatusSchema, type CommonStatusSchemaType, type CreateBuildingSchema, type CreateEventSchema, type CreateFailureReportSchema, type CreateMaintenanceLogSchema, type CreateNoticeSchema, type CreatePollSchema, type DateRangeParamsSchema, type DateRangeWithValidationSchema, type DateTimeSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, type EventColorOption, type EventTypeOption, FailureStatusSchema, type FailureStatusSchemaType, type FinalizePollSchema, type ForgotPasswordSchema, type Garage, type GarageRole, type GarageUser, type JoinBuildingWithOtpSchema, type LoginSchema, MAINTENANCE_FINANCED_BY, type MaintenanceFinancedByOption, MaintenanceStatusSchema, type MaintenanceStatusSchemaType, NOTICE_LIMITS, type NoticeEventSchema, POLL_LIMITS, POLL_TYPES, type PaginatedApartmentsResponse, type PaginatedResponseSchema, type PaginationParamsSchema, type PermissionFieldsSchema, type PermissionsResponseSchema, type PollTypeOption, PrioritySchema, type PrioritySchemaType, type RegisterSchema, type ResetPasswordSchema, type StorageUnit, type StorageUnitRole, type StorageUnitUser, type TimeSchema, type UpdateBuildingSchema, type UpdateEventSchema, type UpdateFailureReportSchema, type UpdateMaintenanceLogSchema, type UpdateNoticeSchema, type UpdatePasswordSchema, type UpdateUserBuildingRoleSchema, type UserEntitySchema, type UuidSchema, type VerifyOtpSchema, type VotePollSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, baseEntitySchema, buildingEntitySchema, buildingTypeSchema, buildingUserEntitySchema, commonStatusOptions, createBuildingSchema, createEventSchema, createFailureReportSchema, createMaintenanceLogSchema, createNoticeSchema, createPollSchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventTypeSchema, failureStatusOptions, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, joinBuildingWithOtpSchema, loginSchema, maintenanceFinancedBySchema, maintenanceStatusOptions, noticeEventSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollTypeSchema, priorityOptions, registerSchema, resetPasswordSchema, roleTypeSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateEventSchema, updateFailureReportSchema, updateMaintenanceLogSchema, updateNoticeSchema, updatePasswordSchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };

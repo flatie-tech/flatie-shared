@@ -1,10 +1,116 @@
+'use strict';
+
+// src/enums/apartment-role.enum.ts
+var ApartmentRole = {
+  OWNER: "OWNER",
+  TENANT: "TENANT"
+};
+
+// src/enums/building-status.enum.ts
+var BuildingStatus = {
+  PENDING_APPROVAL: "PENDING_APPROVAL",
+  ACTIVE: "ACTIVE",
+  REJECTED: "REJECTED"
+};
+var OrgStatus = {
+  PENDING_APPROVAL: "PENDING_APPROVAL",
+  ACTIVE: "ACTIVE",
+  REJECTED: "REJECTED"
+};
+
 // src/enums/building-type.enum.ts
-var BuildingType = /* @__PURE__ */ ((BuildingType2) => {
-  BuildingType2["RESIDENTIAL"] = "RESIDENTIAL";
-  BuildingType2["COMMERCIAL"] = "COMMERCIAL";
-  BuildingType2["RESIDENTIAL_COMMERCIAL"] = "RESIDENTIAL_COMMERCIAL";
-  return BuildingType2;
-})(BuildingType || {});
+var BuildingType = {
+  RESIDENTIAL: "RESIDENTIAL",
+  COMMERCIAL: "COMMERCIAL",
+  RESIDENTIAL_COMMERCIAL: "RESIDENTIAL_COMMERCIAL"
+};
+
+// src/enums/failure-location.enum.ts
+var FailureLocationType = {
+  COMMON_AREA: "common_area",
+  OWN_UNIT: "own_unit"
+};
+var FailureUnitType = {
+  APARTMENT: "apartment",
+  GARAGE: "garage",
+  STORAGE_UNIT: "storage_unit"
+};
+
+// src/enums/maintenance-log.enum.ts
+var MaintenanceLogFinancedBy = {
+  BUILDING_FUNDS: "building_funds",
+  INSURANCE: "insurance",
+  CO_OWNER: "co_owner"
+};
+
+// src/enums/notification.enum.ts
+var NotificationType = {
+  NOTICE_CREATED: "notice_created",
+  NOTICE_APPROVED: "notice_approved",
+  NOTICE_REJECTED: "notice_rejected",
+  POLL_CREATED: "poll_created",
+  POLL_DEADLINE_24H: "poll_deadline_24h",
+  POLL_DEADLINE_1H: "poll_deadline_1h",
+  POLL_FINALIZED: "poll_finalized",
+  EVENT_CREATED: "event_created",
+  EVENT_REMINDER_24H: "event_reminder_24h",
+  EVENT_REMINDER_1H: "event_reminder_1h",
+  EVENT_UPDATED: "event_updated",
+  EVENT_CANCELLED: "event_cancelled",
+  WASTE_REMINDER_MIXED: "waste_reminder_mixed",
+  WASTE_REMINDER_BIO: "waste_reminder_bio",
+  WASTE_REMINDER_PLASTIC_METAL: "waste_reminder_plastic_metal",
+  WASTE_REMINDER_PAPER_CARDBOARD: "waste_reminder_paper_cardboard",
+  FAILURE_REPORT_CREATED: "failure_report_created",
+  FAILURE_REPORT_STATUS_CHANGED: "failure_report_status_changed",
+  FAILURE_REPORT_RESOLVED: "failure_report_resolved",
+  MAINTENANCE_LOG_CREATED: "maintenance_log_created",
+  PAYMENT_DUE: "payment_due",
+  PAYMENT_RECEIVED: "payment_received",
+  BUILDING_JOIN_REQUEST_RECEIVED: "building_join_request_received",
+  BUILDING_JOIN_REQUEST_APPROVED: "building_join_request_approved",
+  BUILDING_JOIN_REQUEST_REJECTED: "building_join_request_rejected",
+  BUILDING_MEMBER_JOINED: "building_member_joined",
+  BUILDING_ROLE_CHANGED: "building_role_changed",
+  BUILDING_PENDING_APPROVAL: "building_pending_approval",
+  BUILDING_APPROVED: "building_approved",
+  BUILDING_REJECTED: "building_rejected",
+  CHAT_MESSAGE: "chat_message",
+  SYSTEM_ANNOUNCEMENT: "system_announcement"
+};
+var NotificationCategory = {
+  NOTICES: "notices",
+  POLLS: "polls",
+  EVENTS: "events",
+  WASTE: "waste",
+  MAINTENANCE: "maintenance",
+  FINANCIAL: "financial",
+  CHAT: "chat",
+  SYSTEM: "system"
+};
+var NotificationChannel = {
+  IN_APP: "in_app",
+  PUSH: "push",
+  EMAIL: "email",
+  SMS: "sms"
+};
+var NotificationDeliveryStatus = {
+  PENDING: "pending",
+  SENT: "sent",
+  DELIVERED: "delivered",
+  FAILED: "failed"
+};
+var DevicePlatform = {
+  IOS: "ios",
+  ANDROID: "android",
+  WEB: "web"
+};
+
+// src/enums/org-type.enum.ts
+var OrgType = {
+  MANAGEMENT_FIRM: "MANAGEMENT_FIRM",
+  PLATFORM: "PLATFORM"
+};
 
 // src/enums/permission.enum.ts
 var SCOPED_DOMAINS = [
@@ -147,12 +253,18 @@ var Permission = {
   PLATFORM_PURGE: "platform:purge"
 };
 
+// src/enums/poll-status.enum.ts
+var PollStatus = {
+  ACTIVE: "active",
+  COMPLETED: "completed",
+  CANCELLED: "cancelled"
+};
+
 // src/enums/poll-type.enum.ts
-var PollType = /* @__PURE__ */ ((PollType2) => {
-  PollType2["CONSENSUS"] = "CONSENSUS";
-  PollType2["COMMUNITY"] = "COMMUNITY";
-  return PollType2;
-})(PollType || {});
+var PollType = {
+  CONSENSUS: "CONSENSUS",
+  COMMUNITY: "COMMUNITY"
+};
 
 // src/enums/role.enum.ts
 var Role = {
@@ -204,83 +316,107 @@ function canAssignPlatformRole(assignerRole, targetRole) {
 }
 
 // src/enums/status.enum.ts
-var CommonStatus = /* @__PURE__ */ ((CommonStatus2) => {
-  CommonStatus2["ACTIVE"] = "active";
-  CommonStatus2["COMPLETED"] = "completed";
-  CommonStatus2["CANCELLED"] = "cancelled";
-  return CommonStatus2;
-})(CommonStatus || {});
-var ApprovalStatus = /* @__PURE__ */ ((ApprovalStatus2) => {
-  ApprovalStatus2["PENDING"] = "pending";
-  ApprovalStatus2["APPROVED"] = "approved";
-  ApprovalStatus2["REJECTED"] = "rejected";
-  return ApprovalStatus2;
-})(ApprovalStatus || {});
-var MaintenanceStatus = /* @__PURE__ */ ((MaintenanceStatus2) => {
-  MaintenanceStatus2["PENDING"] = "pending";
-  MaintenanceStatus2["IN_PROGRESS"] = "in_progress";
-  MaintenanceStatus2["COMPLETED"] = "completed";
-  MaintenanceStatus2["CANCELLED"] = "cancelled";
-  return MaintenanceStatus2;
-})(MaintenanceStatus || {});
-var FailureStatus = /* @__PURE__ */ ((FailureStatus2) => {
-  FailureStatus2["PENDING"] = "pending";
-  FailureStatus2["IN_PROGRESS"] = "in_progress";
-  FailureStatus2["RESOLVED"] = "resolved";
-  FailureStatus2["CANCELLED"] = "cancelled";
-  return FailureStatus2;
-})(FailureStatus || {});
-var MaintenanceType = /* @__PURE__ */ ((MaintenanceType2) => {
-  MaintenanceType2["PREVENTIVE"] = "preventive";
-  MaintenanceType2["CORRECTIVE"] = "corrective";
-  MaintenanceType2["EMERGENCY"] = "emergency";
-  return MaintenanceType2;
-})(MaintenanceType || {});
-var FailureType = /* @__PURE__ */ ((FailureType2) => {
-  FailureType2["EQUIPMENT"] = "equipment";
-  FailureType2["STRUCTURAL"] = "structural";
-  FailureType2["UTILITY"] = "utility";
-  FailureType2["OTHER"] = "other";
-  return FailureType2;
-})(FailureType || {});
-var Priority = /* @__PURE__ */ ((Priority2) => {
-  Priority2["LOW"] = "low";
-  Priority2["MEDIUM"] = "medium";
-  Priority2["HIGH"] = "high";
-  Priority2["URGENT"] = "urgent";
-  return Priority2;
-})(Priority || {});
-var TransactionType = /* @__PURE__ */ ((TransactionType2) => {
-  TransactionType2["INCOME"] = "income";
-  TransactionType2["EXPENSE"] = "expense";
-  return TransactionType2;
-})(TransactionType || {});
-var TransactionCategory = /* @__PURE__ */ ((TransactionCategory2) => {
-  TransactionCategory2["RENT"] = "rent";
-  TransactionCategory2["MAINTENANCE"] = "maintenance";
-  TransactionCategory2["UTILITIES"] = "utilities";
-  TransactionCategory2["INSURANCE"] = "insurance";
-  TransactionCategory2["TAXES"] = "taxes";
-  TransactionCategory2["OTHER"] = "other";
-  return TransactionCategory2;
-})(TransactionCategory || {});
-var Frequency = /* @__PURE__ */ ((Frequency2) => {
-  Frequency2["DAILY"] = "daily";
-  Frequency2["WEEKLY"] = "weekly";
-  Frequency2["MONTHLY"] = "monthly";
-  Frequency2["QUARTERLY"] = "quarterly";
-  Frequency2["YEARLY"] = "yearly";
-  return Frequency2;
-})(Frequency || {});
-var FileCategory = /* @__PURE__ */ ((FileCategory2) => {
-  FileCategory2["FINANCIAL"] = "financial";
-  FileCategory2["LEGAL"] = "legal";
-  FileCategory2["MAINTENANCE"] = "maintenance";
-  FileCategory2["GENERAL"] = "general";
-  FileCategory2["OTHER"] = "other";
-  return FileCategory2;
-})(FileCategory || {});
+var CommonStatus = {
+  ACTIVE: "active",
+  COMPLETED: "completed",
+  CANCELLED: "cancelled"
+};
+var ApprovalStatus = {
+  PENDING: "pending",
+  APPROVED: "approved",
+  REJECTED: "rejected"
+};
+var MaintenanceStatus = {
+  PENDING: "pending",
+  IN_PROGRESS: "in_progress",
+  COMPLETED: "completed",
+  CANCELLED: "cancelled"
+};
+var FailureStatus = {
+  PENDING: "pending",
+  IN_PROGRESS: "inProgress",
+  RESOLVED: "resolved"
+};
+var MaintenanceType = {
+  PREVENTIVE: "preventive",
+  CORRECTIVE: "corrective",
+  EMERGENCY: "emergency"
+};
+var FailureType = {
+  EQUIPMENT: "equipment",
+  STRUCTURAL: "structural",
+  UTILITY: "utility",
+  OTHER: "other"
+};
+var Priority = {
+  NORMAL: "normal",
+  URGENT: "urgent"
+};
+var TransactionType = {
+  INCOME: "income",
+  EXPENSE: "expense"
+};
+var TransactionCategory = {
+  RENT: "rent",
+  MAINTENANCE: "maintenance",
+  UTILITIES: "utilities",
+  INSURANCE: "insurance",
+  TAXES: "taxes",
+  OTHER: "other"
+};
+var Frequency = {
+  DAILY: "daily",
+  WEEKLY: "weekly",
+  MONTHLY: "monthly",
+  QUARTERLY: "quarterly",
+  YEARLY: "yearly"
+};
+var FileCategory = {
+  FINANCIAL: "financial",
+  LEGAL: "legal",
+  MAINTENANCE: "maintenance",
+  GENERAL: "general",
+  OTHER: "other"
+};
 
-export { ApprovalStatus, BUILDING_ROLE_RANK, BuildingRole, BuildingType, CommonStatus, FailureStatus, FailureType, FileCategory, Frequency, MaintenanceStatus, MaintenanceType, ORG_ROLE_RANK, OrgRole, PLATFORM_ROLE_RANK, Permission, PlatformRole, PollType, Priority, Role, SCOPED_DOMAINS, TransactionCategory, TransactionType, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions };
-//# sourceMappingURL=chunk-KVY53M6L.js.map
-//# sourceMappingURL=chunk-KVY53M6L.js.map
+exports.ApartmentRole = ApartmentRole;
+exports.ApprovalStatus = ApprovalStatus;
+exports.BUILDING_ROLE_RANK = BUILDING_ROLE_RANK;
+exports.BuildingRole = BuildingRole;
+exports.BuildingStatus = BuildingStatus;
+exports.BuildingType = BuildingType;
+exports.CommonStatus = CommonStatus;
+exports.DevicePlatform = DevicePlatform;
+exports.FailureLocationType = FailureLocationType;
+exports.FailureStatus = FailureStatus;
+exports.FailureType = FailureType;
+exports.FailureUnitType = FailureUnitType;
+exports.FileCategory = FileCategory;
+exports.Frequency = Frequency;
+exports.MaintenanceLogFinancedBy = MaintenanceLogFinancedBy;
+exports.MaintenanceStatus = MaintenanceStatus;
+exports.MaintenanceType = MaintenanceType;
+exports.NotificationCategory = NotificationCategory;
+exports.NotificationChannel = NotificationChannel;
+exports.NotificationDeliveryStatus = NotificationDeliveryStatus;
+exports.NotificationType = NotificationType;
+exports.ORG_ROLE_RANK = ORG_ROLE_RANK;
+exports.OrgRole = OrgRole;
+exports.OrgStatus = OrgStatus;
+exports.OrgType = OrgType;
+exports.PLATFORM_ROLE_RANK = PLATFORM_ROLE_RANK;
+exports.Permission = Permission;
+exports.PlatformRole = PlatformRole;
+exports.PollStatus = PollStatus;
+exports.PollType = PollType;
+exports.Priority = Priority;
+exports.Role = Role;
+exports.SCOPED_DOMAINS = SCOPED_DOMAINS;
+exports.TransactionCategory = TransactionCategory;
+exports.TransactionType = TransactionType;
+exports.canAssignOrgRole = canAssignOrgRole;
+exports.canAssignPlatformRole = canAssignPlatformRole;
+exports.canAssignRole = canAssignRole;
+exports.domainPermissions = domainPermissions;
+//# sourceMappingURL=chunk-FNIEFAJD.cjs.map
+//# sourceMappingURL=chunk-FNIEFAJD.cjs.map

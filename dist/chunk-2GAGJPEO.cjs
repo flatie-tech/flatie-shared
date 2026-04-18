@@ -1,6 +1,6 @@
 'use strict';
 
-var chunkNOIJETIN_cjs = require('./chunk-NOIJETIN.cjs');
+var chunkFNIEFAJD_cjs = require('./chunk-FNIEFAJD.cjs');
 var zod = require('zod');
 
 var emailSchema = zod.z.string().email("Invalid email address");
@@ -88,7 +88,7 @@ var dateRangeWithValidationSchema = zod.z.object({
     path: ["fromDate"]
   }
 );
-var apartmentRoleSchema = zod.z.enum(["OWNER", "TENANT"]);
+var apartmentRoleSchema = zod.z.enum([chunkFNIEFAJD_cjs.ApartmentRole.OWNER, chunkFNIEFAJD_cjs.ApartmentRole.TENANT]);
 var apartmentUserSchema = zod.z.looseObject({
   id: zod.z.string(),
   name: zod.z.string(),
@@ -392,10 +392,10 @@ var paginatedResponseSchema = (itemSchema) => zod.z.object({
   hasPreviousPage: zod.z.boolean()
 });
 var roleTypeSchema = zod.z.enum([
-  ...Object.values(chunkNOIJETIN_cjs.Role),
-  ...Object.values(chunkNOIJETIN_cjs.BuildingRole),
-  ...Object.values(chunkNOIJETIN_cjs.OrgRole),
-  ...Object.values(chunkNOIJETIN_cjs.PlatformRole)
+  ...Object.values(chunkFNIEFAJD_cjs.Role),
+  ...Object.values(chunkFNIEFAJD_cjs.BuildingRole),
+  ...Object.values(chunkFNIEFAJD_cjs.OrgRole),
+  ...Object.values(chunkFNIEFAJD_cjs.PlatformRole)
 ]);
 var permissionsResponseSchema = zod.z.object({
   scope: zod.z.enum(["building", "organization", "platform"]),
@@ -413,8 +413,8 @@ var maintenanceStatusOptions = [
   "completed",
   "cancelled"
 ];
-var failureStatusOptions = ["pending", "in_progress", "resolved", "cancelled"];
-var priorityOptions = ["low", "medium", "high", "urgent"];
+var failureStatusOptions = ["pending", "inProgress", "resolved"];
+var priorityOptions = ["normal", "urgent"];
 var CommonStatusSchema = zod.z.enum(commonStatusOptions);
 var ApprovalStatusSchema = zod.z.enum(approvalStatusOptions);
 var MaintenanceStatusSchema = zod.z.enum(maintenanceStatusOptions);
@@ -497,5 +497,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-2FBIZO6B.cjs.map
-//# sourceMappingURL=chunk-2FBIZO6B.cjs.map
+//# sourceMappingURL=chunk-2GAGJPEO.cjs.map
+//# sourceMappingURL=chunk-2GAGJPEO.cjs.map

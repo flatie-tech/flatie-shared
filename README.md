@@ -69,15 +69,38 @@ canAssignOrgRole(OrgRole.REFERENT, OrgRole.SUPERVISOR);    // false
 ```typescript
 import {
   BuildingType,       // RESIDENTIAL, COMMERCIAL, RESIDENTIAL_COMMERCIAL
-  PollType,           // STANDARD, WEIGHTED
+  PollType,           // CONSENSUS, COMMUNITY
   CommonStatus,       // ACTIVE, COMPLETED, CANCELLED
   ApprovalStatus,     // PENDING, APPROVED, REJECTED
-  MaintenanceStatus,  // PENDING, IN_PROGRESS, COMPLETED, CANCELLED
-  FailureStatus,      // PENDING, IN_PROGRESS, RESOLVED, CANCELLED
-  Priority,           // LOW, MEDIUM, HIGH, URGENT
+  FailureStatus,      // PENDING, IN_PROGRESS ('inProgress'), RESOLVED
+  Priority,           // NORMAL, URGENT
+  BuildingStatus,     // PENDING_APPROVAL, ACTIVE, REJECTED
+  OrgStatus,          // PENDING_APPROVAL, ACTIVE, REJECTED
+  OrgType,            // MANAGEMENT_FIRM, PLATFORM
+  ApartmentRole,      // OWNER, TENANT (apartment-scoped — distinct from BuildingRole)
+  PollStatus,         // active, completed, cancelled
+  FailureLocationType,// common_area, own_unit
+  FailureUnitType,    // apartment, garage, storage_unit
+  MaintenanceLogFinancedBy,  // building_funds, insurance, co_owner
+  NotificationType,   // 32 notification event names
+  NotificationCategory,
+  NotificationChannel,
+  NotificationDeliveryStatus,
+  DevicePlatform,     // ios, android, web
   // ... and more
 } from '@flatie/shared';
 ```
+
+### Enum Rules
+
+Shared exports **only** string sets that the backend enforces via `pgEnum()`. The backend (Drizzle) is the canonical source — if a value isn't in a backend `pgEnum`, it isn't a shared enum.
+
+| Rule | Why |
+|---|---|
+| Every `pgEnum()` in `flatie-backend/src/db/schema/` has a matching const object here. The backend schema imports it instead of inlining the string array. | Single source of truth. Mobile/frontend can't drift if there's only one definition. |
+| App-level conventions that **aren't** persisted with a DB constraint (e.g. `MaintenanceStatus`, `Frequency`, `FileCategory`, `NoticeType`) stay in consumer packages. They're intentionally NOT in shared. | A shared enum promises backend validation. Inventing values here that backend doesn't check creates false confidence. |
+| When adding a new `pgEnum` to the backend, you **must** also add it to `@flatie/shared/enums` and import it in the Drizzle schema. | Keeps the invariant above. |
+| Use `const` objects (`as const`) with a same-named type — **never** TypeScript `enum`. | TS enums create nominal types that break across package boundaries; const objects are structural and work with string literals. |
 
 ### Schemas (Zod 3)
 
