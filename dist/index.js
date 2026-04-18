@@ -37,6 +37,13 @@ var NoticeBoardTestIds = {
   addButton: "notices-add-button"
 };
 
-export { BuildingOverviewTestIds, LoginTestIds, NoticeBoardTestIds };
+// src/test-ids/polls.ts
+var PollsTestIds = {
+  screen: "polls-screen",
+  searchInput: "polls-search-input",
+  addButton: "polls-add-button"
+};
+
+export { BuildingOverviewTestIds, LoginTestIds, NoticeBoardTestIds, PollsTestIds };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

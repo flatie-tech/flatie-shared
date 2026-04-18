@@ -36,4 +36,10 @@ declare const NoticeBoardTestIds: {
     readonly addButton: "notices-add-button";
 };
 
-export { BuildingOverviewTestIds, LoginTestIds, NoticeBoardTestIds };
+declare const PollsTestIds: {
+    readonly screen: "polls-screen";
+    readonly searchInput: "polls-search-input";
+    readonly addButton: "polls-add-button";
+};
+
+export { BuildingOverviewTestIds, LoginTestIds, NoticeBoardTestIds, PollsTestIds };

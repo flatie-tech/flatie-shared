@@ -39,6 +39,13 @@ var NoticeBoardTestIds = {
   addButton: "notices-add-button"
 };
 
+// src/test-ids/polls.ts
+var PollsTestIds = {
+  screen: "polls-screen",
+  searchInput: "polls-search-input",
+  addButton: "polls-add-button"
+};
+
 Object.defineProperty(exports, "adminKeys", {
   enumerable: true,
   get: function () { return chunkGCY5CQ43_cjs.adminKeys; }
@@ -554,5 +561,6 @@ Object.defineProperty(exports, "createPaginatedResponse", {
 exports.BuildingOverviewTestIds = BuildingOverviewTestIds;
 exports.LoginTestIds = LoginTestIds;
 exports.NoticeBoardTestIds = NoticeBoardTestIds;
+exports.PollsTestIds = PollsTestIds;
 //# sourceMappingURL=index.cjs.map
 //# sourceMappingURL=index.cjs.map
