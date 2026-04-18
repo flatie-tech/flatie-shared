@@ -53,7 +53,15 @@ export const updateConversationSchema = z.object({
   removeParticipantIds: z.array(uuidSchema).max(CHAT_LIMITS.PARTICIPANTS_MAX).optional(),
 });
 
+/**
+ * Cursor-based pagination query schema (conversations / messages)
+ */
+export const cursorQuerySchema = z.object({
+  cursor: z.string().optional(),
+});
+
 // Inferred types
 export type SendMessageSchema = z.infer<typeof sendMessageSchema>;
 export type CreateConversationSchema = z.infer<typeof createConversationSchema>;
 export type UpdateConversationSchema = z.infer<typeof updateConversationSchema>;
+export type CursorQuerySchema = z.infer<typeof cursorQuerySchema>;

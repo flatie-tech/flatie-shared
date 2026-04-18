@@ -152,6 +152,9 @@ var updateConversationSchema = zod.z.object({
   addParticipantIds: zod.z.array(uuidSchema).max(CHAT_LIMITS.PARTICIPANTS_MAX).optional(),
   removeParticipantIds: zod.z.array(uuidSchema).max(CHAT_LIMITS.PARTICIPANTS_MAX).optional()
 });
+var cursorQuerySchema = zod.z.object({
+  cursor: zod.z.string().optional()
+});
 var FAQ_LIMITS = {
   QUESTION_MIN: 1,
   QUESTION_MAX: 500,
@@ -165,6 +168,12 @@ var createFaqSchema = zod.z.object({
 var updateFaqSchema = zod.z.object({
   question: zod.z.string().min(FAQ_LIMITS.QUESTION_MIN).max(FAQ_LIMITS.QUESTION_MAX).optional(),
   answer: zod.z.string().min(FAQ_LIMITS.ANSWER_MIN).max(FAQ_LIMITS.ANSWER_MAX).optional()
+});
+var reorderFaqsSchema = zod.z.object({
+  orderedIds: zod.z.array(uuidSchema).min(1, "At least one FAQ ID is required")
+});
+var copyFaqsSchema = zod.z.object({
+  sourceBuildingId: uuidSchema
 });
 var ORGANIZATION_LIMITS = {
   NAME_MIN: 1,
@@ -443,6 +452,28 @@ var storageUnitSchema = zod.z.looseObject({
   updatedAt: zod.z.string(),
   users: zod.z.array(storageUnitUserSchema)
 });
+var TRANSACTION_CATEGORY_LIMITS = {
+  NAME_MIN: 1,
+  NAME_MAX: 100,
+  SEARCH_MAX: 200
+};
+var createTransactionCategorySchema = zod.z.object({
+  name: zod.z.string().min(TRANSACTION_CATEGORY_LIMITS.NAME_MIN, "Name is required").max(
+    TRANSACTION_CATEGORY_LIMITS.NAME_MAX,
+    `Name must be at most ${TRANSACTION_CATEGORY_LIMITS.NAME_MAX} characters`
+  ),
+  type: zod.z.enum([chunk5UBJHQVX_cjs.TransactionType.INCOME, chunk5UBJHQVX_cjs.TransactionType.EXPENSE])
+});
+var updateTransactionCategorySchema = zod.z.object({
+  name: zod.z.string().min(TRANSACTION_CATEGORY_LIMITS.NAME_MIN).max(TRANSACTION_CATEGORY_LIMITS.NAME_MAX).optional()
+});
+var getTransactionCategoriesQuerySchema = zod.z.object({
+  type: zod.z.enum([chunk5UBJHQVX_cjs.TransactionType.INCOME, chunk5UBJHQVX_cjs.TransactionType.EXPENSE]).optional(),
+  search: zod.z.string().max(TRANSACTION_CATEGORY_LIMITS.SEARCH_MAX).optional()
+});
+var copyTransactionCategoriesSchema = zod.z.object({
+  sourceBuildingId: uuidSchema
+});
 var paginationParamsSchema = zod.z.object({
   offset: zod.z.coerce.number().min(0).optional().default(0),
   limit: zod.z.coerce.number().min(1).max(100).optional().default(10)
@@ -503,6 +534,7 @@ exports.ORGANIZATION_LIMITS = ORGANIZATION_LIMITS;
 exports.POLL_LIMITS = POLL_LIMITS;
 exports.POLL_TYPES = POLL_TYPES;
 exports.PrioritySchema = PrioritySchema;
+exports.TRANSACTION_CATEGORY_LIMITS = TRANSACTION_CATEGORY_LIMITS;
 exports.apartmentRoleSchema = apartmentRoleSchema;
 exports.apartmentSchema = apartmentSchema;
 exports.apartmentUserSchema = apartmentUserSchema;
@@ -515,6 +547,8 @@ exports.buildingEntitySchema = buildingEntitySchema;
 exports.buildingTypeSchema = buildingTypeSchema;
 exports.buildingUserEntitySchema = buildingUserEntitySchema;
 exports.commonStatusOptions = commonStatusOptions;
+exports.copyFaqsSchema = copyFaqsSchema;
+exports.copyTransactionCategoriesSchema = copyTransactionCategoriesSchema;
 exports.createBuildingSchema = createBuildingSchema;
 exports.createConversationSchema = createConversationSchema;
 exports.createEventSchema = createEventSchema;
@@ -524,6 +558,8 @@ exports.createMaintenanceLogSchema = createMaintenanceLogSchema;
 exports.createNoticeSchema = createNoticeSchema;
 exports.createOrganizationSchema = createOrganizationSchema;
 exports.createPollSchema = createPollSchema;
+exports.createTransactionCategorySchema = createTransactionCategorySchema;
+exports.cursorQuerySchema = cursorQuerySchema;
 exports.dateRangeParamsSchema = dateRangeParamsSchema;
 exports.dateRangeWithValidationSchema = dateRangeWithValidationSchema;
 exports.dateTimeSchema = dateTimeSchema;
@@ -536,6 +572,7 @@ exports.forgotPasswordSchema = forgotPasswordSchema;
 exports.garageRoleSchema = garageRoleSchema;
 exports.garageSchema = garageSchema;
 exports.garageUserSchema = garageUserSchema;
+exports.getTransactionCategoriesQuerySchema = getTransactionCategoriesQuerySchema;
 exports.joinBuildingWithOtpSchema = joinBuildingWithOtpSchema;
 exports.loginSchema = loginSchema;
 exports.maintenanceFinancedBySchema = maintenanceFinancedBySchema;
@@ -551,6 +588,7 @@ exports.permissionsResponseSchema = permissionsResponseSchema;
 exports.pollTypeSchema = pollTypeSchema;
 exports.priorityOptions = priorityOptions;
 exports.registerSchema = registerSchema;
+exports.reorderFaqsSchema = reorderFaqsSchema;
 exports.resetPasswordSchema = resetPasswordSchema;
 exports.roleTypeSchema = roleTypeSchema;
 exports.sendMessageSchema = sendMessageSchema;
@@ -568,10 +606,11 @@ exports.updateMaintenanceLogSchema = updateMaintenanceLogSchema;
 exports.updateNoticeSchema = updateNoticeSchema;
 exports.updateOrganizationSchema = updateOrganizationSchema;
 exports.updatePasswordSchema = updatePasswordSchema;
+exports.updateTransactionCategorySchema = updateTransactionCategorySchema;
 exports.updateUserBuildingRoleSchema = updateUserBuildingRoleSchema;
 exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-CVC7V2WI.cjs.map
-//# sourceMappingURL=chunk-CVC7V2WI.cjs.map
+//# sourceMappingURL=chunk-HV6FC2UQ.cjs.map
+//# sourceMappingURL=chunk-HV6FC2UQ.cjs.map

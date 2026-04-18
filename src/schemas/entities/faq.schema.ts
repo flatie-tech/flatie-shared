@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { uuidSchema } from '../base.schema';
 
 /**
  * Validation constants for FAQs
@@ -32,6 +33,22 @@ export const updateFaqSchema = z.object({
   answer: z.string().min(FAQ_LIMITS.ANSWER_MIN).max(FAQ_LIMITS.ANSWER_MAX).optional(),
 });
 
+/**
+ * Reorder FAQs request schema
+ */
+export const reorderFaqsSchema = z.object({
+  orderedIds: z.array(uuidSchema).min(1, 'At least one FAQ ID is required'),
+});
+
+/**
+ * Copy FAQs from another building request schema
+ */
+export const copyFaqsSchema = z.object({
+  sourceBuildingId: uuidSchema,
+});
+
 // Inferred types
 export type CreateFaqSchema = z.infer<typeof createFaqSchema>;
 export type UpdateFaqSchema = z.infer<typeof updateFaqSchema>;
+export type ReorderFaqsSchema = z.infer<typeof reorderFaqsSchema>;
+export type CopyFaqsSchema = z.infer<typeof copyFaqsSchema>;

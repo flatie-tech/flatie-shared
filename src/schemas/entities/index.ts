@@ -11,19 +11,32 @@ export {
 export type {
   ConversationType,
   CreateConversationSchema,
+  CursorQuerySchema,
   SendMessageSchema,
   UpdateConversationSchema,
 } from './chat.schema';
 export {
   CHAT_LIMITS,
   createConversationSchema,
+  cursorQuerySchema,
   sendMessageSchema,
   updateConversationSchema,
 } from './chat.schema';
 
 // FAQ schemas
-export type { CreateFaqSchema, UpdateFaqSchema } from './faq.schema';
-export { createFaqSchema, FAQ_LIMITS, updateFaqSchema } from './faq.schema';
+export type {
+  CopyFaqsSchema,
+  CreateFaqSchema,
+  ReorderFaqsSchema,
+  UpdateFaqSchema,
+} from './faq.schema';
+export {
+  copyFaqsSchema,
+  createFaqSchema,
+  FAQ_LIMITS,
+  reorderFaqsSchema,
+  updateFaqSchema,
+} from './faq.schema';
 
 // Organization schemas
 export type {
@@ -135,3 +148,18 @@ export {
   storageUnitSchema,
   storageUnitUserSchema,
 } from './storage-unit.schema';
+
+// Transaction category schemas
+export type {
+  CopyTransactionCategoriesSchema,
+  CreateTransactionCategorySchema,
+  GetTransactionCategoriesQuerySchema,
+  UpdateTransactionCategorySchema,
+} from './transaction-category.schema';
+export {
+  copyTransactionCategoriesSchema,
+  createTransactionCategorySchema,
+  getTransactionCategoriesQuerySchema,
+  TRANSACTION_CATEGORY_LIMITS,
+  updateTransactionCategorySchema,
+} from './transaction-category.schema';
