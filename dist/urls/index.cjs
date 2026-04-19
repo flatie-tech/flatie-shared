@@ -1,16 +1,16 @@
 'use strict';
 
-var chunkJV743BPB_cjs = require('../chunk-JV743BPB.cjs');
+var chunkE76I2DNG_cjs = require('../chunk-E76I2DNG.cjs');
 
 
 
 Object.defineProperty(exports, "API_ROUTES", {
   enumerable: true,
-  get: function () { return chunkJV743BPB_cjs.API_ROUTES; }
+  get: function () { return chunkE76I2DNG_cjs.API_ROUTES; }
 });
 Object.defineProperty(exports, "API_VERSION", {
   enumerable: true,
-  get: function () { return chunkJV743BPB_cjs.API_VERSION; }
+  get: function () { return chunkE76I2DNG_cjs.API_VERSION; }
 });
 //# sourceMappingURL=index.cjs.map
 //# sourceMappingURL=index.cjs.map

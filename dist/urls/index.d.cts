@@ -1,15 +1,14 @@
 /**
- * API Route Constants
+ * API route constants.
  *
- * Centralized API endpoint definitions for use across frontend, mobile, and backend.
+ * Single source of truth for URL paths used by Flatie clients (frontend + mobile).
+ * Consumers compose these into their own HTTP transport — shared does not own
+ * the transport layer (auth, headers, interceptors are per-client concerns).
  *
- * TODO: Add API route constants from frontend/backend implementations:
- * - Auth routes (login, register, refresh-token, etc.)
- * - Building routes
- * - Notice, Poll, Event routes
- * - Maintenance, Failure report routes
- * - Financial routes
- * - Admin routes
+ * Organized by resource group. Building-scoped resources live under their own
+ * namespace rather than nested under `BUILDINGS` so call sites stay readable:
+ *   API_ROUTES.FAILURE_REPORTS.DETAIL(buildingId, id)
+ *   API_ROUTES.FUNDS.SUMMARY(buildingId)
  */
 declare const API_VERSION = "v1";
 declare const API_ROUTES: {
@@ -24,29 +23,178 @@ declare const API_ROUTES: {
     };
     readonly USERS: {
         readonly ME: "/users/me";
+        readonly BY_ID: (userId: string) => string;
         readonly BUILDINGS: "/users/me/buildings";
+        readonly LOCALE: "/users/me/locale";
+        readonly CHAT_VISIBILITY: "/users/me/chat-visibility";
+        readonly EXPORT: "/users/me/export";
+        readonly RESTORE: "/users/me/restore";
+        readonly PERMISSIONS: "/users/me/permissions";
     };
     readonly BUILDINGS: {
         readonly BASE: "/buildings";
+        readonly SEARCH: "/buildings/search";
+        readonly PENDING: "/buildings/my/pending";
         readonly BY_ID: (id: string) => string;
         readonly GENERATE_OTP: (id: string) => string;
         readonly JOIN_WITH_OTP: "/buildings/join-with-otp";
+        readonly JOIN_REQUESTS: (id: string) => string;
+        readonly SETTINGS: (id: string) => string;
+        readonly RECENT: (id: string) => string;
+        readonly BUILDING_SEARCH: (id: string) => string;
         readonly USERS: (id: string) => string;
+        readonly USER_BY_ID: (id: string, userId: string) => string;
+        readonly IMPORT_TEMPLATE: (id: string) => string;
+        readonly IMPORT_PREVIEW: (id: string) => string;
+        readonly IMPORT_COMMIT: (id: string) => string;
     };
-    readonly NOTICES: (buildingId: string) => string;
-    readonly NOTICE: (buildingId: string, id: string) => string;
-    readonly POLLS: (buildingId: string) => string;
-    readonly POLL: (buildingId: string, id: string) => string;
-    readonly EVENTS: (buildingId: string) => string;
-    readonly EVENT: (buildingId: string, id: string) => string;
-    readonly FAILURE_REPORTS: (buildingId: string) => string;
-    readonly FAILURE_REPORT: (buildingId: string, id: string) => string;
-    readonly MAINTENANCE_LOGS: (buildingId: string) => string;
-    readonly MAINTENANCE_LOG: (buildingId: string, id: string) => string;
-    readonly FUNDS: (buildingId: string) => string;
-    readonly FUNDS_SUMMARY: (buildingId: string) => string;
-    readonly DOCUMENTS: (buildingId: string) => string;
-    readonly DOCUMENT: (buildingId: string, id: string) => string;
+    readonly APARTMENTS: {
+        readonly LIST: (buildingId: string) => string;
+        readonly DETAIL: (buildingId: string, apartmentId: string) => string;
+        readonly RESTORE: (buildingId: string, apartmentId: string) => string;
+        readonly USERS: (buildingId: string, apartmentId: string) => string;
+        readonly USER_DETAIL: (buildingId: string, apartmentId: string, userId: string) => string;
+        readonly FLOORS: (buildingId: string) => string;
+    };
+    readonly GARAGES: {
+        readonly LIST: (buildingId: string) => string;
+        readonly DETAIL: (buildingId: string, garageId: string) => string;
+        readonly RESTORE: (buildingId: string, garageId: string) => string;
+        readonly USERS: (buildingId: string, garageId: string) => string;
+        readonly USER_DETAIL: (buildingId: string, garageId: string, userId: string) => string;
+        readonly FLOORS: (buildingId: string) => string;
+    };
+    readonly STORAGE_UNITS: {
+        readonly LIST: (buildingId: string) => string;
+        readonly DETAIL: (buildingId: string, storageUnitId: string) => string;
+        readonly RESTORE: (buildingId: string, storageUnitId: string) => string;
+        readonly USERS: (buildingId: string, storageUnitId: string) => string;
+        readonly USER_DETAIL: (buildingId: string, storageUnitId: string, userId: string) => string;
+        readonly FLOORS: (buildingId: string) => string;
+    };
+    readonly UNITS: {
+        readonly LIST: (buildingId: string) => string;
+        readonly USER_UNITS: (buildingId: string) => string;
+    };
+    readonly NOTICES: {
+        readonly LIST: (buildingId: string) => string;
+        readonly DETAIL: (buildingId: string, noticeId: string) => string;
+        readonly RESTORE: (buildingId: string, noticeId: string) => string;
+    };
+    readonly POLLS: {
+        readonly LIST: (buildingId: string) => string;
+        readonly DETAIL: (buildingId: string, pollId: string) => string;
+        readonly APPROVE: (buildingId: string, pollId: string) => string;
+        readonly VOTE: (buildingId: string, pollId: string) => string;
+        readonly RESTORE: (buildingId: string, pollId: string) => string;
+        readonly RESULTS: (buildingId: string) => string;
+        readonly VOTERS: (buildingId: string, pollId: string) => string;
+    };
+    readonly EVENTS: {
+        readonly LIST: (buildingId: string) => string;
+        readonly DETAIL: (buildingId: string, eventId: string) => string;
+        readonly APPROVE: (buildingId: string, eventId: string) => string;
+        readonly RESTORE: (buildingId: string, eventId: string) => string;
+    };
+    readonly FAILURE_REPORTS: {
+        readonly LIST: (buildingId: string) => string;
+        readonly DETAIL: (buildingId: string, failureReportId: string) => string;
+        readonly APPROVE: (buildingId: string, failureReportId: string) => string;
+        readonly RESTORE: (buildingId: string, failureReportId: string) => string;
+    };
+    readonly MAINTENANCE_LOGS: {
+        readonly LIST: (buildingId: string) => string;
+        readonly DETAIL: (buildingId: string, maintenanceLogId: string) => string;
+        readonly RESTORE: (buildingId: string, maintenanceLogId: string) => string;
+    };
+    readonly DOCUMENTS: {
+        readonly LIST: (buildingId: string) => string;
+        readonly DETAIL: (buildingId: string, documentId: string) => string;
+        readonly RESTORE: (buildingId: string, documentId: string) => string;
+    };
+    readonly FAQS: {
+        readonly LIST: (buildingId: string) => string;
+        readonly DETAIL: (buildingId: string, faqId: string) => string;
+        readonly RESTORE: (buildingId: string, faqId: string) => string;
+        readonly REORDER: (buildingId: string) => string;
+        readonly COPY: (buildingId: string) => string;
+    };
+    readonly TRANSACTION_CATEGORIES: {
+        readonly LIST: (buildingId: string) => string;
+        readonly DETAIL: (buildingId: string, categoryId: string) => string;
+        readonly RESTORE: (buildingId: string, categoryId: string) => string;
+        readonly COPY: (buildingId: string) => string;
+    };
+    readonly FUNDS: {
+        readonly BALANCE: (buildingId: string) => string;
+        readonly SUMMARY: (buildingId: string) => string;
+        readonly GRAPH: (buildingId: string) => string;
+        readonly INCOME: (buildingId: string) => string;
+        readonly INCOME_DETAIL: (buildingId: string, incomeId: string) => string;
+        readonly RECURRING_TEMPLATES: (buildingId: string) => string;
+        readonly RECURRING_TEMPLATE_DETAIL: (buildingId: string, templateId: string) => string;
+    };
+    readonly CHAT: {
+        readonly CONVERSATIONS: (buildingId: string) => string;
+        readonly CONVERSATION: (buildingId: string, conversationId: string) => string;
+        readonly MESSAGES: (buildingId: string, conversationId: string) => string;
+        readonly MARK_READ: (buildingId: string, conversationId: string) => string;
+        readonly UNREAD_COUNT: (buildingId: string) => string;
+    };
+    readonly ORGANIZATIONS: {
+        readonly BASE: "/organizations";
+        readonly MY: "/organizations/my";
+        readonly BY_ID: (orgId: string) => string;
+        readonly BUILDINGS: (orgId: string) => string;
+        readonly MEMBERS: (orgId: string) => string;
+        readonly MEMBER_DETAIL: (orgId: string, memberId: string) => string;
+        readonly INVITATIONS: (orgId: string) => string;
+        readonly INVITE: (orgId: string) => string;
+    };
+    readonly PLATFORM: {
+        readonly USERS: "/platform/users";
+        readonly USER_DETAIL: (userId: string) => string;
+        readonly MEMBERS: "/platform/members";
+        readonly MEMBER_DETAIL: (memberId: string) => string;
+        readonly BUILDINGS: "/platform/buildings";
+        readonly ORGANIZATIONS: "/platform/organizations";
+        readonly ORGANIZATION_DETAIL: (orgId: string) => string;
+        readonly ORGANIZATION_MEMBERS: (orgId: string) => string;
+        readonly ORGANIZATION_BUILDINGS: (orgId: string) => string;
+        readonly DASHBOARD_SUMMARY: "/platform/dashboard/summary";
+        readonly SEARCH: "/platform/search";
+        readonly BLOG: "/platform/blog";
+        readonly BLOG_DETAIL: (id: string) => string;
+        readonly BLOG_PUBLISH: (id: string) => string;
+        readonly BLOG_COVER_IMAGE: (id: string) => string;
+        readonly BLOG_RESTORE: (id: string) => string;
+        readonly BLOG_CATEGORIES: "/platform/blog/categories";
+    };
+    readonly REPRESENTATIVES: {
+        readonly BUILDINGS: "/representatives/buildings";
+        readonly USERS: "/representatives/users";
+        readonly DASHBOARD_SUMMARY: "/representatives/dashboard/summary";
+    };
+    readonly NOTIFICATIONS: {
+        readonly LIST: "/notifications";
+        readonly DETAIL: (notificationId: string) => string;
+        readonly READ: "/notifications/read";
+        readonly READ_CATEGORY: (category: string) => string;
+        readonly READ_CHAT: (conversationId: string) => string;
+        readonly READ_ALL: "/notifications/read-all";
+        readonly UNREAD_COUNT: "/notifications/unread-count";
+        readonly UNREAD_COUNT_BY_CATEGORY: "/notifications/unread-count/by-category";
+        readonly PREFERENCES: "/notifications/preferences";
+        readonly STREAM: "/notifications/stream";
+    };
+    readonly ADDRESSES: {
+        readonly AUTOCOMPLETE: "/addresses/autocomplete";
+    };
+    readonly SUBSCRIPTIONS: {
+        readonly BASE: "/subscriptions";
+        readonly PRICES: "/subscriptions/prices";
+        readonly INVOICE: "/subscriptions/invoice";
+    };
 };
 
 export { API_ROUTES, API_VERSION };
