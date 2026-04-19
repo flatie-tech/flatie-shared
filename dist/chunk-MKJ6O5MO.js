@@ -1,5 +1,3 @@
-'use strict';
-
 // src/errors/index.ts
 var BACKEND_ERROR_CODES = {
   // Auth
@@ -30,7 +28,6 @@ function isBackendErrorCode(code) {
   return typeof code === "string" && Object.values(BACKEND_ERROR_CODES).includes(code);
 }
 
-exports.BACKEND_ERROR_CODES = BACKEND_ERROR_CODES;
-exports.isBackendErrorCode = isBackendErrorCode;
-//# sourceMappingURL=chunk-O5Y4KXLN.cjs.map
-//# sourceMappingURL=chunk-O5Y4KXLN.cjs.map
+export { BACKEND_ERROR_CODES, isBackendErrorCode };
+//# sourceMappingURL=chunk-MKJ6O5MO.js.map
+//# sourceMappingURL=chunk-MKJ6O5MO.js.map

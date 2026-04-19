@@ -51,6 +51,7 @@ declare const buildingKeys: {
         readonly [x: string]: unknown;
     }];
     joinRequests: (id: string) => readonly ["building", "joinRequests", string];
+    search: (query: string) => readonly ["building", "search", string];
     pending: () => readonly ["buildings", "my", "pending"];
     chatVisibility: () => readonly ["buildings", "chat-visibility"];
     chatPermissions: (buildingIds?: string[]) => readonly ["building-permissions", "chat-visibility", ...string[][]];

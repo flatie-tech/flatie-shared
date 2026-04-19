@@ -38,6 +38,7 @@ export const buildingKeys = {
   users: (id: string, filters: Record<string, unknown> = {}) =>
     [...buildingKeys.all, 'users', id, { ...filters }] as const,
   joinRequests: (id: string) => [...buildingKeys.all, 'joinRequests', id] as const,
+  search: (query: string) => [...buildingKeys.all, 'search', query] as const,
   pending: () => ['buildings', 'my', 'pending'] as const,
   chatVisibility: () => ['buildings', 'chat-visibility'] as const,
   chatPermissions: (buildingIds?: string[]) =>

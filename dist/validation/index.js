@@ -1,3 +1,3 @@
-export { addressSchema, oibSchema, optionalOibSchema, phoneSchema } from '../chunk-MHGNWH2U.js';
+export { addressSchema, oibSchema, optionalOibSchema, phoneSchema } from '../chunk-NZBXBPJL.js';
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

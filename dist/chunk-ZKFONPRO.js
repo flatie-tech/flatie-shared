@@ -23,6 +23,7 @@ var buildingKeys = {
   settings: (id) => [...buildingKeys.all, "settings", id],
   users: (id, filters = {}) => [...buildingKeys.all, "users", id, { ...filters }],
   joinRequests: (id) => [...buildingKeys.all, "joinRequests", id],
+  search: (query) => [...buildingKeys.all, "search", query],
   pending: () => ["buildings", "my", "pending"],
   chatVisibility: () => ["buildings", "chat-visibility"],
   chatPermissions: (buildingIds) => ["building-permissions", "chat-visibility", ...buildingIds ? [buildingIds] : []]
@@ -324,5 +325,5 @@ var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[OrgRole.ORG_ADMIN];
 var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_ADMIN];
 
 export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminBuildingKeys, apartmentKeys, blogKeys, buildingKeys, chatKeys, dashboardSummaryKeys, documentKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, permissionKeys, platformBuildingKeys, pollKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };
-//# sourceMappingURL=chunk-UVLKB4YX.js.map
-//# sourceMappingURL=chunk-UVLKB4YX.js.map
+//# sourceMappingURL=chunk-ZKFONPRO.js.map
+//# sourceMappingURL=chunk-ZKFONPRO.js.map
