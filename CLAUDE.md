@@ -21,12 +21,31 @@ src/
 │   ├── role.enum.ts         # BuildingRole, OrgRole, PlatformRole + canAssign*()
 │   └── *.enum.ts            # BuildingType, PollType, etc.
 ├── schemas/              # Zod validation schemas
+├── test-ids/             # E2E test-id constants per feature
+├── tokens/               # Design tokens (colors, themes, radii)
 ├── types/                # TypeScript type definitions
 ├── constants/            # Shared constants
 ├── urls/                 # URL/route helpers
 └── utils/                # Shared utility functions
+scripts/
+└── emit-tokens-assets.mjs # Post-build: emits tokens.css + tailwind-preset
 tests/                    # Vitest tests
 ```
+
+## Design Tokens
+
+Token sources live in `src/tokens/*.ts`. The build produces three consumer shapes:
+
+1. **Programmatic TS/JS** — `@flatie/shared/tokens` → `{ colors, themes, radii }` for code that needs to read tokens directly (e.g. status variant helpers, runtime theme switching logic).
+2. **CSS** — `@flatie/shared/tokens.css` → ready-to-import stylesheet with `:root`, `.dark`, `.theme-*`, and `.dark .theme-*` blocks. Frontend's `globals.css` uses `@import "@flatie/shared/tokens.css";` and lets Tailwind v4 `@theme inline` map them to utility class names.
+3. **Tailwind preset** — `@flatie/shared/tailwind-preset` → Tailwind v3-compatible preset exposing default (light) colors + a raw `tokens` export with `colorsDark` and per-theme data for NativeWind consumers (mobile).
+
+Outputs #2 and #3 are generated post-build by `scripts/emit-tokens-assets.mjs` (wired into `tsup.config.ts` `onSuccess`).
+
+When a token value changes:
+1. Edit `src/tokens/*.ts`
+2. `pnpm build && pnpm test`
+3. Bump version, tag, push — consumers update via their normal dep bump workflow
 
 ## Commands
 

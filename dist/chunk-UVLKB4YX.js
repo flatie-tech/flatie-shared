@@ -20,7 +20,37 @@ var buildingKeys = {
   details: () => [...buildingKeys.all, "detail"],
   detail: (id) => [...buildingKeys.details(), id],
   otp: (id) => [...buildingKeys.all, "otp", id],
-  users: (id, filters = {}) => [...buildingKeys.all, "users", id, { ...filters }]
+  settings: (id) => [...buildingKeys.all, "settings", id],
+  users: (id, filters = {}) => [...buildingKeys.all, "users", id, { ...filters }],
+  joinRequests: (id) => [...buildingKeys.all, "joinRequests", id],
+  pending: () => ["buildings", "my", "pending"],
+  chatVisibility: () => ["buildings", "chat-visibility"],
+  chatPermissions: (buildingIds) => ["building-permissions", "chat-visibility", ...buildingIds ? [buildingIds] : []]
+};
+var adminBuildingKeys = {
+  all: ["admin-buildings"],
+  lists: () => [...adminBuildingKeys.all, "list"]
+};
+var platformBuildingKeys = {
+  all: ["platform-buildings"],
+  lists: () => [...platformBuildingKeys.all, "list"]
+};
+var apartmentKeys = {
+  all: ["apartment"],
+  lists: () => [...apartmentKeys.all, "list"],
+  list: (buildingId, filters = {}) => [...apartmentKeys.lists(), buildingId, { ...filters }],
+  details: () => [...apartmentKeys.all, "detail"],
+  detail: (buildingId, apartmentId) => [...apartmentKeys.details(), buildingId, apartmentId]
+};
+var garageKeys = {
+  all: ["garage"],
+  lists: () => [...garageKeys.all, "list"],
+  list: (buildingId) => [...garageKeys.lists(), buildingId]
+};
+var storageUnitKeys = {
+  all: ["storageUnit"],
+  lists: () => [...storageUnitKeys.all, "list"],
+  list: (buildingId) => [...storageUnitKeys.lists(), buildingId]
 };
 var noticeKeys = {
   all: ["notice"],
@@ -29,28 +59,12 @@ var noticeKeys = {
   details: () => [...noticeKeys.all, "detail"],
   detail: (id) => [...noticeKeys.details(), id]
 };
-var pollKeys = {
-  all: ["poll"],
-  lists: () => [...pollKeys.all, "list"],
-  list: (filters = {}) => [...pollKeys.lists(), { ...filters }],
-  details: () => [...pollKeys.all, "detail"],
-  detail: (id) => [...pollKeys.details(), id],
-  results: (id) => [...pollKeys.detail(id), "results"],
-  voters: (id) => [...pollKeys.detail(id), "voters"]
-};
-var eventKeys = {
-  all: ["event"],
-  lists: () => [...eventKeys.all, "list"],
-  list: (filters = {}) => [...eventKeys.lists(), { ...filters }],
-  details: () => [...eventKeys.all, "detail"],
-  detail: (id) => [...eventKeys.details(), id]
-};
-var failureReportKeys = {
-  all: ["failureReport"],
-  lists: () => [...failureReportKeys.all, "list"],
-  list: (filters = {}) => [...failureReportKeys.lists(), { ...filters }],
-  details: () => [...failureReportKeys.all, "detail"],
-  detail: (id) => [...failureReportKeys.details(), id]
+var permissionKeys = {
+  all: ["permission"],
+  lists: () => [...permissionKeys.all, "list"],
+  list: (filters = {}) => [...permissionKeys.lists(), { ...filters }],
+  details: () => [...permissionKeys.all, "detail"],
+  detail: (id) => [...permissionKeys.details(), id]
 };
 var maintenanceLogKeys = {
   all: ["maintenanceLog"],
@@ -59,6 +73,35 @@ var maintenanceLogKeys = {
   details: () => [...maintenanceLogKeys.all, "detail"],
   detail: (id) => [...maintenanceLogKeys.details(), id]
 };
+var failureReportKeys = {
+  all: ["failureReport"],
+  lists: () => [...failureReportKeys.all, "list"],
+  list: (filters = {}) => [...failureReportKeys.lists(), { ...filters }],
+  details: () => [...failureReportKeys.all, "detail"],
+  detail: (id) => [...failureReportKeys.details(), id]
+};
+var eventKeys = {
+  all: ["event"],
+  lists: () => [...eventKeys.all, "list"],
+  list: (filters = {}) => [...eventKeys.lists(), { ...filters }],
+  details: () => [...eventKeys.all, "detail"],
+  detail: (id) => [...eventKeys.details(), id]
+};
+var pollKeys = {
+  all: ["poll"],
+  lists: () => [...pollKeys.all, "list"],
+  list: (filters = {}) => [...pollKeys.lists(), { ...filters }],
+  details: () => [...pollKeys.all, "detail"],
+  detail: (id) => [...pollKeys.details(), id],
+  voters: (buildingId, pollId) => [...pollKeys.all, "voters", buildingId, pollId]
+};
+var fundsKeys = {
+  all: ["funds"],
+  balance: (buildingId) => [...fundsKeys.all, "balance", buildingId],
+  summary: (buildingId) => [...fundsKeys.all, "summary", buildingId],
+  graph: (buildingId) => [...fundsKeys.all, "graph", buildingId],
+  income: (buildingId) => [...fundsKeys.all, "income", buildingId]
+};
 var documentKeys = {
   all: ["document"],
   lists: () => [...documentKeys.all, "list"],
@@ -66,45 +109,71 @@ var documentKeys = {
   details: () => [...documentKeys.all, "detail"],
   detail: (id) => [...documentKeys.details(), id]
 };
-var fundsKeys = {
-  all: ["funds"],
-  balance: (buildingId) => [...fundsKeys.all, "balance", buildingId],
-  summary: (buildingId) => [...fundsKeys.all, "summary", buildingId],
-  graph: (buildingId) => [...fundsKeys.all, "graph", buildingId],
-  income: (buildingId) => [...fundsKeys.all, "income", buildingId],
-  transactions: (buildingId, filters = {}) => [...fundsKeys.all, "transactions", buildingId, { ...filters }]
-};
-var permissionKeys = {
-  all: ["permission"],
-  lists: () => [...permissionKeys.all, "list"],
-  list: (filters = {}) => [...permissionKeys.lists(), { ...filters }],
-  details: () => [...permissionKeys.all, "detail"],
-  detail: (id) => [...permissionKeys.details(), id]
-};
 var recentKeys = {
   all: ["recent"],
   items: (buildingId, filters = {}) => [...recentKeys.all, buildingId, { ...filters }]
 };
-var adminKeys = {
-  all: ["admin"],
-  dashboard: () => [...adminKeys.all, "dashboard"],
-  dashboardSummary: () => [...adminKeys.dashboard(), "summary"],
-  users: (filters = {}) => [...adminKeys.all, "users", { ...filters }],
-  buildings: (filters = {}) => [...adminKeys.all, "buildings", { ...filters }]
+var transactionCategoryKeys = {
+  all: ["transactionCategory"],
+  lists: () => [...transactionCategoryKeys.all, "list"],
+  list: (buildingId, type, search) => [...transactionCategoryKeys.lists(), buildingId, type, search]
 };
-var queryKeys = {
-  user: userKeys,
-  building: buildingKeys,
-  notice: noticeKeys,
-  poll: pollKeys,
-  event: eventKeys,
-  failureReport: failureReportKeys,
-  maintenanceLog: maintenanceLogKeys,
-  document: documentKeys,
-  funds: fundsKeys,
-  permission: permissionKeys,
-  recent: recentKeys,
-  admin: adminKeys
+var faqKeys = {
+  all: ["faq"],
+  lists: () => [...faqKeys.all, "list"],
+  list: (buildingId) => [...faqKeys.lists(), buildingId]
+};
+var chatKeys = {
+  all: ["chat"],
+  conversations: (buildingId) => [...chatKeys.all, "conversations", buildingId],
+  conversation: (conversationId) => [...chatKeys.all, "conversation", conversationId],
+  messages: (conversationId) => [...chatKeys.all, "messages", conversationId],
+  unreadCount: (buildingId) => [...chatKeys.all, "unreadCount", buildingId],
+  buildingUsers: (buildingId, search) => [...chatKeys.all, "building-users", buildingId, search],
+  selfUser: (buildingId) => [...chatKeys.all, "building-users-self", buildingId]
+};
+var blogKeys = {
+  all: ["blog"],
+  lists: () => [...blogKeys.all, "list"],
+  list: (filters = {}) => [...blogKeys.lists(), { ...filters }],
+  details: () => [...blogKeys.all, "detail"],
+  detail: (id) => [...blogKeys.details(), id]
+};
+var layoutKeys = {
+  all: ["building-layouts"],
+  building: (buildingId) => [...layoutKeys.all, buildingId],
+  kiosk: (buildingId) => ["kiosk-layout", buildingId]
+};
+var recurringTemplateKeys = {
+  all: ["recurring-templates"],
+  list: (buildingId) => [...recurringTemplateKeys.all, buildingId]
+};
+var spotlightKeys = {
+  all: ["spotlight"],
+  buildingSearch: (buildingId, query, limit) => [...spotlightKeys.all, "building", buildingId, query, limit],
+  platformSearch: (query, limit) => [...spotlightKeys.all, "platform", query, limit]
+};
+var dashboardSummaryKeys = {
+  all: ["dashboard"],
+  summary: () => [...dashboardSummaryKeys.all, "summary"]
+};
+var unitSearchKeys = {
+  all: ["units"],
+  search: (buildingId, query) => [...unitSearchKeys.all, "search", buildingId, query],
+  initial: (buildingId, unitId) => [...unitSearchKeys.all, "search", buildingId, "__initial", unitId],
+  my: (buildingId) => [...unitSearchKeys.all, "my", buildingId]
+};
+var widgetKeys = {
+  all: ["widget"],
+  notices: (buildingId) => [...widgetKeys.all, "notices", buildingId]
+};
+var notificationKeys = {
+  all: ["notification"],
+  lists: () => [...notificationKeys.all, "list"],
+  list: (filters = {}) => [...notificationKeys.lists(), { ...filters }],
+  unreadCount: () => [...notificationKeys.all, "unreadCount"],
+  unreadCountByCategory: (buildingId) => [...notificationKeys.all, "unreadCountByCategory", buildingId],
+  preferences: () => [...notificationKeys.all, "preferences"]
 };
 
 // src/constants/role-permissions.ts
@@ -254,6 +323,6 @@ var ALL_PERMISSIONS = unique(Object.values(Permission));
 var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[OrgRole.ORG_ADMIN];
 var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_ADMIN];
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminKeys, buildingKeys, documentKeys, eventKeys, failureReportKeys, fundsKeys, maintenanceLogKeys, noticeKeys, permissionKeys, pollKeys, queryKeys, recentKeys, userKeys };
-//# sourceMappingURL=chunk-BKMSEUZD.js.map
-//# sourceMappingURL=chunk-BKMSEUZD.js.map
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminBuildingKeys, apartmentKeys, blogKeys, buildingKeys, chatKeys, dashboardSummaryKeys, documentKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, permissionKeys, platformBuildingKeys, pollKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };
+//# sourceMappingURL=chunk-UVLKB4YX.js.map
+//# sourceMappingURL=chunk-UVLKB4YX.js.map

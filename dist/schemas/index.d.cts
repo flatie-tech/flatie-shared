@@ -1223,8 +1223,8 @@ declare const roleTypeSchema: z.ZodEnum<{
 declare const permissionsResponseSchema: z.ZodObject<{
     scope: z.ZodEnum<{
         building: "building";
-        organization: "organization";
         platform: "platform";
+        organization: "organization";
     }>;
     permissions: z.ZodArray<z.ZodString>;
     roleType: z.ZodOptional<z.ZodEnum<{

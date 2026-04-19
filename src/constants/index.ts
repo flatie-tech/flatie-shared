@@ -2,19 +2,33 @@
 export { DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT } from './defaults';
 // Query keys for React Query / TanStack Query
 export {
-  adminKeys,
+  adminBuildingKeys,
+  apartmentKeys,
+  blogKeys,
   buildingKeys,
+  chatKeys,
+  dashboardSummaryKeys,
   documentKeys,
   eventKeys,
   failureReportKeys,
+  faqKeys,
   fundsKeys,
+  garageKeys,
+  layoutKeys,
   maintenanceLogKeys,
   noticeKeys,
+  notificationKeys,
   permissionKeys,
+  platformBuildingKeys,
   pollKeys,
-  queryKeys,
   recentKeys,
+  recurringTemplateKeys,
+  spotlightKeys,
+  storageUnitKeys,
+  transactionCategoryKeys,
+  unitSearchKeys,
   userKeys,
+  widgetKeys,
 } from './query-keys';
 // Role → permission mappings (hoisted from backend so clients can compute
 // permissions without an API round-trip)

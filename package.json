@@ -1,6 +1,6 @@
 {
   "name": "@flatie/shared",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "Shared types, schemas, and utilities for Flatie applications",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -45,6 +45,27 @@
       "require": {
         "types": "./dist/schemas/index.d.cts",
         "default": "./dist/schemas/index.cjs"
+      }
+    },
+    "./tokens": {
+      "import": {
+        "types": "./dist/tokens/index.d.ts",
+        "default": "./dist/tokens/index.js"
+      },
+      "require": {
+        "types": "./dist/tokens/index.d.cts",
+        "default": "./dist/tokens/index.cjs"
+      }
+    },
+    "./tokens.css": "./dist/tokens.css",
+    "./tailwind-preset": {
+      "import": {
+        "types": "./dist/tailwind-preset.d.ts",
+        "default": "./dist/tailwind-preset.js"
+      },
+      "require": {
+        "types": "./dist/tailwind-preset.d.cts",
+        "default": "./dist/tailwind-preset.cjs"
       }
     },
     "./types": {

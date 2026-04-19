@@ -10,6 +10,8 @@ export * from './enums';
 export * from './schemas';
 // Test IDs
 export * from './test-ids';
+// Tokens (design tokens: colors, themes, radii)
+export * from './tokens';
 // Types
 export * from './types';
 // URLs (API route constants)
