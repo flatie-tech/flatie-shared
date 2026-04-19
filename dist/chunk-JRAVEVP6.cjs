@@ -11,7 +11,9 @@ var API_ROUTES = {
     REFRESH_TOKEN: "/auth/refresh-token",
     FORGOT_PASSWORD: "/auth/forgot-password",
     RESET_PASSWORD: "/auth/reset-password",
-    VERIFY_OTP: "/auth/verify-otp"
+    VERIFY_OTP: "/auth/verify-otp",
+    UPDATE_USER: "/auth/update-user",
+    UPDATE_PASSWORD: "/auth/update-password"
   },
   // ─── Users / self ────────────────────────────────────────────────────────
   USERS: {
@@ -19,10 +21,12 @@ var API_ROUTES = {
     BY_ID: (userId) => `/users/${userId}`,
     BUILDINGS: "/users/me/buildings",
     LOCALE: "/users/me/locale",
-    CHAT_VISIBILITY: "/users/me/chat-visibility",
+    BUILDING_CHAT_VISIBILITY: (buildingId) => `/users/me/buildings/${buildingId}/chat-visibility`,
     EXPORT: "/users/me/export",
     RESTORE: "/users/me/restore",
-    PERMISSIONS: "/users/me/permissions"
+    PERMISSIONS: "/users/me/permissions",
+    PHONE_SEND_VERIFICATION: "/users/me/phone/send-verification",
+    PHONE_VERIFY: "/users/me/phone/verify"
   },
   // ─── Buildings ───────────────────────────────────────────────────────────
   BUILDINGS: {
@@ -30,9 +34,12 @@ var API_ROUTES = {
     SEARCH: "/buildings/search",
     PENDING: "/buildings/my/pending",
     BY_ID: (id) => `/buildings/${id}`,
-    GENERATE_OTP: (id) => `/buildings/${id}/otp`,
+    OTP: (id) => `/buildings/${id}/otp`,
+    GENERATE_OTP: "/buildings/generate-otp",
     JOIN_WITH_OTP: "/buildings/join-with-otp",
     JOIN_REQUESTS: (id) => `/buildings/${id}/join-requests`,
+    JOIN_REQUEST_APPROVE: (id, requestId) => `/buildings/${id}/join-requests/${requestId}/approve`,
+    JOIN_REQUEST_REJECT: (id, requestId) => `/buildings/${id}/join-requests/${requestId}/reject`,
     SETTINGS: (id) => `/buildings/${id}/settings`,
     RECENT: (id) => `/buildings/${id}/recent`,
     BUILDING_SEARCH: (id) => `/buildings/${id}/search`,
@@ -78,6 +85,7 @@ var API_ROUTES = {
   NOTICES: {
     LIST: (buildingId) => `/buildings/${buildingId}/notices`,
     DETAIL: (buildingId, noticeId) => `/buildings/${buildingId}/notices/${noticeId}`,
+    APPROVE: (buildingId, noticeId) => `/buildings/${buildingId}/notices/${noticeId}/approve`,
     RESTORE: (buildingId, noticeId) => `/buildings/${buildingId}/notices/${noticeId}/restore`
   },
   // ─── Polls (building-scoped) ─────────────────────────────────────────────
@@ -110,11 +118,13 @@ var API_ROUTES = {
     DETAIL: (buildingId, maintenanceLogId) => `/buildings/${buildingId}/maintenance-logs/${maintenanceLogId}`,
     RESTORE: (buildingId, maintenanceLogId) => `/buildings/${buildingId}/maintenance-logs/${maintenanceLogId}/restore`
   },
-  // ─── Documents (building-scoped) ─────────────────────────────────────────
-  DOCUMENTS: {
-    LIST: (buildingId) => `/buildings/${buildingId}/documents`,
-    DETAIL: (buildingId, documentId) => `/buildings/${buildingId}/documents/${documentId}`,
-    RESTORE: (buildingId, documentId) => `/buildings/${buildingId}/documents/${documentId}/restore`
+  // ─── Files / documents (building-scoped) ─────────────────────────────────
+  // Note: Backend renamed /documents → /files. Frontend keeps "document"
+  // terminology in its own types and query keys; the wire route is /files.
+  FILES: {
+    LIST: (buildingId) => `/buildings/${buildingId}/files`,
+    DETAIL: (buildingId, fileId) => `/buildings/${buildingId}/files/${fileId}`,
+    RESTORE: (buildingId, fileId) => `/buildings/${buildingId}/files/${fileId}/restore`
   },
   // ─── FAQs (building-scoped) ──────────────────────────────────────────────
   FAQS: {
@@ -136,10 +146,13 @@ var API_ROUTES = {
     BALANCE: (buildingId) => `/buildings/${buildingId}/funds`,
     SUMMARY: (buildingId) => `/buildings/${buildingId}/funds/summary`,
     GRAPH: (buildingId) => `/buildings/${buildingId}/funds/graph`,
+    RECALCULATE: (buildingId) => `/buildings/${buildingId}/funds/recalculate`,
     INCOME: (buildingId) => `/buildings/${buildingId}/income`,
     INCOME_DETAIL: (buildingId, incomeId) => `/buildings/${buildingId}/income/${incomeId}`,
+    INCOME_RESTORE: (buildingId, incomeId) => `/buildings/${buildingId}/income/${incomeId}/restore`,
     RECURRING_TEMPLATES: (buildingId) => `/buildings/${buildingId}/recurring-templates`,
-    RECURRING_TEMPLATE_DETAIL: (buildingId, templateId) => `/buildings/${buildingId}/recurring-templates/${templateId}`
+    RECURRING_TEMPLATE_DETAIL: (buildingId, templateId) => `/buildings/${buildingId}/recurring-templates/${templateId}`,
+    RECURRING_TEMPLATE_RESTORE: (buildingId, templateId) => `/buildings/${buildingId}/recurring-templates/${templateId}/restore`
   },
   // ─── Chat (building-scoped) ──────────────────────────────────────────────
   CHAT: {
@@ -213,5 +226,5 @@ var API_ROUTES = {
 
 exports.API_ROUTES = API_ROUTES;
 exports.API_VERSION = API_VERSION;
-//# sourceMappingURL=chunk-E76I2DNG.cjs.map
-//# sourceMappingURL=chunk-E76I2DNG.cjs.map
+//# sourceMappingURL=chunk-JRAVEVP6.cjs.map
+//# sourceMappingURL=chunk-JRAVEVP6.cjs.map

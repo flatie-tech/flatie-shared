@@ -23,6 +23,8 @@ export const API_ROUTES = {
     FORGOT_PASSWORD: '/auth/forgot-password',
     RESET_PASSWORD: '/auth/reset-password',
     VERIFY_OTP: '/auth/verify-otp',
+    UPDATE_USER: '/auth/update-user',
+    UPDATE_PASSWORD: '/auth/update-password',
   },
 
   // ─── Users / self ────────────────────────────────────────────────────────
@@ -31,10 +33,13 @@ export const API_ROUTES = {
     BY_ID: (userId: string) => `/users/${userId}`,
     BUILDINGS: '/users/me/buildings',
     LOCALE: '/users/me/locale',
-    CHAT_VISIBILITY: '/users/me/chat-visibility',
+    BUILDING_CHAT_VISIBILITY: (buildingId: string) =>
+      `/users/me/buildings/${buildingId}/chat-visibility`,
     EXPORT: '/users/me/export',
     RESTORE: '/users/me/restore',
     PERMISSIONS: '/users/me/permissions',
+    PHONE_SEND_VERIFICATION: '/users/me/phone/send-verification',
+    PHONE_VERIFY: '/users/me/phone/verify',
   },
 
   // ─── Buildings ───────────────────────────────────────────────────────────
@@ -43,9 +48,14 @@ export const API_ROUTES = {
     SEARCH: '/buildings/search',
     PENDING: '/buildings/my/pending',
     BY_ID: (id: string) => `/buildings/${id}`,
-    GENERATE_OTP: (id: string) => `/buildings/${id}/otp`,
+    OTP: (id: string) => `/buildings/${id}/otp`,
+    GENERATE_OTP: '/buildings/generate-otp',
     JOIN_WITH_OTP: '/buildings/join-with-otp',
     JOIN_REQUESTS: (id: string) => `/buildings/${id}/join-requests`,
+    JOIN_REQUEST_APPROVE: (id: string, requestId: string) =>
+      `/buildings/${id}/join-requests/${requestId}/approve`,
+    JOIN_REQUEST_REJECT: (id: string, requestId: string) =>
+      `/buildings/${id}/join-requests/${requestId}/reject`,
     SETTINGS: (id: string) => `/buildings/${id}/settings`,
     RECENT: (id: string) => `/buildings/${id}/recent`,
     BUILDING_SEARCH: (id: string) => `/buildings/${id}/search`,
@@ -109,6 +119,8 @@ export const API_ROUTES = {
     LIST: (buildingId: string) => `/buildings/${buildingId}/notices`,
     DETAIL: (buildingId: string, noticeId: string) =>
       `/buildings/${buildingId}/notices/${noticeId}`,
+    APPROVE: (buildingId: string, noticeId: string) =>
+      `/buildings/${buildingId}/notices/${noticeId}/approve`,
     RESTORE: (buildingId: string, noticeId: string) =>
       `/buildings/${buildingId}/notices/${noticeId}/restore`,
   },
@@ -157,13 +169,14 @@ export const API_ROUTES = {
       `/buildings/${buildingId}/maintenance-logs/${maintenanceLogId}/restore`,
   },
 
-  // ─── Documents (building-scoped) ─────────────────────────────────────────
-  DOCUMENTS: {
-    LIST: (buildingId: string) => `/buildings/${buildingId}/documents`,
-    DETAIL: (buildingId: string, documentId: string) =>
-      `/buildings/${buildingId}/documents/${documentId}`,
-    RESTORE: (buildingId: string, documentId: string) =>
-      `/buildings/${buildingId}/documents/${documentId}/restore`,
+  // ─── Files / documents (building-scoped) ─────────────────────────────────
+  // Note: Backend renamed /documents → /files. Frontend keeps "document"
+  // terminology in its own types and query keys; the wire route is /files.
+  FILES: {
+    LIST: (buildingId: string) => `/buildings/${buildingId}/files`,
+    DETAIL: (buildingId: string, fileId: string) => `/buildings/${buildingId}/files/${fileId}`,
+    RESTORE: (buildingId: string, fileId: string) =>
+      `/buildings/${buildingId}/files/${fileId}/restore`,
   },
 
   // ─── FAQs (building-scoped) ──────────────────────────────────────────────
@@ -191,12 +204,17 @@ export const API_ROUTES = {
     BALANCE: (buildingId: string) => `/buildings/${buildingId}/funds`,
     SUMMARY: (buildingId: string) => `/buildings/${buildingId}/funds/summary`,
     GRAPH: (buildingId: string) => `/buildings/${buildingId}/funds/graph`,
+    RECALCULATE: (buildingId: string) => `/buildings/${buildingId}/funds/recalculate`,
     INCOME: (buildingId: string) => `/buildings/${buildingId}/income`,
     INCOME_DETAIL: (buildingId: string, incomeId: string) =>
       `/buildings/${buildingId}/income/${incomeId}`,
+    INCOME_RESTORE: (buildingId: string, incomeId: string) =>
+      `/buildings/${buildingId}/income/${incomeId}/restore`,
     RECURRING_TEMPLATES: (buildingId: string) => `/buildings/${buildingId}/recurring-templates`,
     RECURRING_TEMPLATE_DETAIL: (buildingId: string, templateId: string) =>
       `/buildings/${buildingId}/recurring-templates/${templateId}`,
+    RECURRING_TEMPLATE_RESTORE: (buildingId: string, templateId: string) =>
+      `/buildings/${buildingId}/recurring-templates/${templateId}/restore`,
   },
 
   // ─── Chat (building-scoped) ──────────────────────────────────────────────

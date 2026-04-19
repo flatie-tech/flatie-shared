@@ -1,13 +1,15 @@
 'use strict';
 
+var chunk4V4EV2A7_cjs = require('./chunk-4V4EV2A7.cjs');
+var chunk3GLURNUB_cjs = require('./chunk-3GLURNUB.cjs');
 var chunkXRJUY67Y_cjs = require('./chunk-XRJUY67Y.cjs');
+var chunkO5Y4KXLN_cjs = require('./chunk-O5Y4KXLN.cjs');
 var chunkEBJHW27F_cjs = require('./chunk-EBJHW27F.cjs');
+var chunk5UBJHQVX_cjs = require('./chunk-5UBJHQVX.cjs');
 var chunkMTOJIOIR_cjs = require('./chunk-MTOJIOIR.cjs');
 require('./chunk-TCHOIK53.cjs');
-var chunkE76I2DNG_cjs = require('./chunk-E76I2DNG.cjs');
-var chunk4V4EV2A7_cjs = require('./chunk-4V4EV2A7.cjs');
-var chunk5UBJHQVX_cjs = require('./chunk-5UBJHQVX.cjs');
 var chunkIGBERUWL_cjs = require('./chunk-IGBERUWL.cjs');
+var chunkJRAVEVP6_cjs = require('./chunk-JRAVEVP6.cjs');
 
 // src/test-ids/apartments.ts
 var ApartmentsTestIds = {
@@ -97,6 +99,106 @@ var SettingsTestIds = {
   logoutButton: "settings-logout-button"
 };
 
+Object.defineProperty(exports, "MANAGERIAL_BUILDING_ROLES", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.MANAGERIAL_BUILDING_ROLES; }
+});
+Object.defineProperty(exports, "ROLE_DESCRIPTION_KEYS", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.ROLE_DESCRIPTION_KEYS; }
+});
+Object.defineProperty(exports, "ROLE_TRANSLATION_KEYS", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.ROLE_TRANSLATION_KEYS; }
+});
+Object.defineProperty(exports, "calculatePaginationMeta", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.calculatePaginationMeta; }
+});
+Object.defineProperty(exports, "canDo", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.canDo; }
+});
+Object.defineProperty(exports, "canDoOnResource", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.canDoOnResource; }
+});
+Object.defineProperty(exports, "computeActionFlags", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.computeActionFlags; }
+});
+Object.defineProperty(exports, "debounce", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.debounce; }
+});
+Object.defineProperty(exports, "extractPaginatedItems", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.extractPaginatedItems; }
+});
+Object.defineProperty(exports, "failureStatusVariant", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.failureStatusVariant; }
+});
+Object.defineProperty(exports, "formatCurrency", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.formatCurrency; }
+});
+Object.defineProperty(exports, "formatText", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.formatText; }
+});
+Object.defineProperty(exports, "getContextUserId", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.getContextUserId; }
+});
+Object.defineProperty(exports, "getDateRange", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.getDateRange; }
+});
+Object.defineProperty(exports, "hasAllPermissions", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.hasAllPermissions; }
+});
+Object.defineProperty(exports, "hasAnyPermission", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.hasAnyPermission; }
+});
+Object.defineProperty(exports, "hasPermission", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.hasPermission; }
+});
+Object.defineProperty(exports, "isAdminContext", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.isAdminContext; }
+});
+Object.defineProperty(exports, "isManagerialRole", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.isManagerialRole; }
+});
+Object.defineProperty(exports, "normalizePaginatedResponse", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.normalizePaginatedResponse; }
+});
+Object.defineProperty(exports, "priorityVariant", {
+  enumerable: true,
+  get: function () { return chunk4V4EV2A7_cjs.priorityVariant; }
+});
+Object.defineProperty(exports, "addressSchema", {
+  enumerable: true,
+  get: function () { return chunk3GLURNUB_cjs.addressSchema; }
+});
+Object.defineProperty(exports, "oibSchema", {
+  enumerable: true,
+  get: function () { return chunk3GLURNUB_cjs.oibSchema; }
+});
+Object.defineProperty(exports, "optionalOibSchema", {
+  enumerable: true,
+  get: function () { return chunk3GLURNUB_cjs.optionalOibSchema; }
+});
+Object.defineProperty(exports, "phoneSchema", {
+  enumerable: true,
+  get: function () { return chunk3GLURNUB_cjs.phoneSchema; }
+});
 Object.defineProperty(exports, "ADMIN_ORG_PERMISSIONS", {
   enumerable: true,
   get: function () { return chunkXRJUY67Y_cjs.ADMIN_ORG_PERMISSIONS; }
@@ -236,6 +338,14 @@ Object.defineProperty(exports, "userKeys", {
 Object.defineProperty(exports, "widgetKeys", {
   enumerable: true,
   get: function () { return chunkXRJUY67Y_cjs.widgetKeys; }
+});
+Object.defineProperty(exports, "BACKEND_ERROR_CODES", {
+  enumerable: true,
+  get: function () { return chunkO5Y4KXLN_cjs.BACKEND_ERROR_CODES; }
+});
+Object.defineProperty(exports, "isBackendErrorCode", {
+  enumerable: true,
+  get: function () { return chunkO5Y4KXLN_cjs.isBackendErrorCode; }
 });
 Object.defineProperty(exports, "ApprovalStatusSchema", {
   enumerable: true,
@@ -677,110 +787,6 @@ Object.defineProperty(exports, "votePollSchema", {
   enumerable: true,
   get: function () { return chunkEBJHW27F_cjs.votePollSchema; }
 });
-Object.defineProperty(exports, "colors", {
-  enumerable: true,
-  get: function () { return chunkMTOJIOIR_cjs.colors; }
-});
-Object.defineProperty(exports, "radii", {
-  enumerable: true,
-  get: function () { return chunkMTOJIOIR_cjs.radii; }
-});
-Object.defineProperty(exports, "themes", {
-  enumerable: true,
-  get: function () { return chunkMTOJIOIR_cjs.themes; }
-});
-Object.defineProperty(exports, "API_ROUTES", {
-  enumerable: true,
-  get: function () { return chunkE76I2DNG_cjs.API_ROUTES; }
-});
-Object.defineProperty(exports, "API_VERSION", {
-  enumerable: true,
-  get: function () { return chunkE76I2DNG_cjs.API_VERSION; }
-});
-Object.defineProperty(exports, "MANAGERIAL_BUILDING_ROLES", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.MANAGERIAL_BUILDING_ROLES; }
-});
-Object.defineProperty(exports, "ROLE_DESCRIPTION_KEYS", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.ROLE_DESCRIPTION_KEYS; }
-});
-Object.defineProperty(exports, "ROLE_TRANSLATION_KEYS", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.ROLE_TRANSLATION_KEYS; }
-});
-Object.defineProperty(exports, "calculatePaginationMeta", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.calculatePaginationMeta; }
-});
-Object.defineProperty(exports, "canDo", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.canDo; }
-});
-Object.defineProperty(exports, "canDoOnResource", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.canDoOnResource; }
-});
-Object.defineProperty(exports, "computeActionFlags", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.computeActionFlags; }
-});
-Object.defineProperty(exports, "debounce", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.debounce; }
-});
-Object.defineProperty(exports, "extractPaginatedItems", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.extractPaginatedItems; }
-});
-Object.defineProperty(exports, "failureStatusVariant", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.failureStatusVariant; }
-});
-Object.defineProperty(exports, "formatCurrency", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.formatCurrency; }
-});
-Object.defineProperty(exports, "formatText", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.formatText; }
-});
-Object.defineProperty(exports, "getContextUserId", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.getContextUserId; }
-});
-Object.defineProperty(exports, "getDateRange", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.getDateRange; }
-});
-Object.defineProperty(exports, "hasAllPermissions", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.hasAllPermissions; }
-});
-Object.defineProperty(exports, "hasAnyPermission", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.hasAnyPermission; }
-});
-Object.defineProperty(exports, "hasPermission", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.hasPermission; }
-});
-Object.defineProperty(exports, "isAdminContext", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.isAdminContext; }
-});
-Object.defineProperty(exports, "isManagerialRole", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.isManagerialRole; }
-});
-Object.defineProperty(exports, "normalizePaginatedResponse", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.normalizePaginatedResponse; }
-});
-Object.defineProperty(exports, "priorityVariant", {
-  enumerable: true,
-  get: function () { return chunk4V4EV2A7_cjs.priorityVariant; }
-});
 Object.defineProperty(exports, "APPROVE_PERMISSIONS", {
   enumerable: true,
   get: function () { return chunk5UBJHQVX_cjs.APPROVE_PERMISSIONS; }
@@ -957,9 +963,29 @@ Object.defineProperty(exports, "domainPermissions", {
   enumerable: true,
   get: function () { return chunk5UBJHQVX_cjs.domainPermissions; }
 });
+Object.defineProperty(exports, "colors", {
+  enumerable: true,
+  get: function () { return chunkMTOJIOIR_cjs.colors; }
+});
+Object.defineProperty(exports, "radii", {
+  enumerable: true,
+  get: function () { return chunkMTOJIOIR_cjs.radii; }
+});
+Object.defineProperty(exports, "themes", {
+  enumerable: true,
+  get: function () { return chunkMTOJIOIR_cjs.themes; }
+});
 Object.defineProperty(exports, "createPaginatedResponse", {
   enumerable: true,
   get: function () { return chunkIGBERUWL_cjs.createPaginatedResponse; }
+});
+Object.defineProperty(exports, "API_ROUTES", {
+  enumerable: true,
+  get: function () { return chunkJRAVEVP6_cjs.API_ROUTES; }
+});
+Object.defineProperty(exports, "API_VERSION", {
+  enumerable: true,
+  get: function () { return chunkJRAVEVP6_cjs.API_VERSION; }
 });
 exports.ApartmentsTestIds = ApartmentsTestIds;
 exports.BuildingInfoTestIds = BuildingInfoTestIds;

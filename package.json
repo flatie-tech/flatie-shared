@@ -1,6 +1,6 @@
 {
   "name": "@flatie/shared",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "description": "Shared types, schemas, and utilities for Flatie applications",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -35,6 +35,16 @@
       "require": {
         "types": "./dist/enums/index.d.cts",
         "default": "./dist/enums/index.cjs"
+      }
+    },
+    "./errors": {
+      "import": {
+        "types": "./dist/errors/index.d.ts",
+        "default": "./dist/errors/index.js"
+      },
+      "require": {
+        "types": "./dist/errors/index.d.cts",
+        "default": "./dist/errors/index.cjs"
       }
     },
     "./schemas": {
@@ -96,6 +106,16 @@
       "require": {
         "types": "./dist/utils/index.d.cts",
         "default": "./dist/utils/index.cjs"
+      }
+    },
+    "./validation": {
+      "import": {
+        "types": "./dist/validation/index.d.ts",
+        "default": "./dist/validation/index.js"
+      },
+      "require": {
+        "types": "./dist/validation/index.d.cts",
+        "default": "./dist/validation/index.cjs"
       }
     }
   },

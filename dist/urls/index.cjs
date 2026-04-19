@@ -1,16 +1,16 @@
 'use strict';
 
-var chunkE76I2DNG_cjs = require('../chunk-E76I2DNG.cjs');
+var chunkJRAVEVP6_cjs = require('../chunk-JRAVEVP6.cjs');
 
 
 
 Object.defineProperty(exports, "API_ROUTES", {
   enumerable: true,
-  get: function () { return chunkE76I2DNG_cjs.API_ROUTES; }
+  get: function () { return chunkJRAVEVP6_cjs.API_ROUTES; }
 });
 Object.defineProperty(exports, "API_VERSION", {
   enumerable: true,
-  get: function () { return chunkE76I2DNG_cjs.API_VERSION; }
+  get: function () { return chunkJRAVEVP6_cjs.API_VERSION; }
 });
 //# sourceMappingURL=index.cjs.map
 //# sourceMappingURL=index.cjs.map

@@ -20,25 +20,32 @@ declare const API_ROUTES: {
         readonly FORGOT_PASSWORD: "/auth/forgot-password";
         readonly RESET_PASSWORD: "/auth/reset-password";
         readonly VERIFY_OTP: "/auth/verify-otp";
+        readonly UPDATE_USER: "/auth/update-user";
+        readonly UPDATE_PASSWORD: "/auth/update-password";
     };
     readonly USERS: {
         readonly ME: "/users/me";
         readonly BY_ID: (userId: string) => string;
         readonly BUILDINGS: "/users/me/buildings";
         readonly LOCALE: "/users/me/locale";
-        readonly CHAT_VISIBILITY: "/users/me/chat-visibility";
+        readonly BUILDING_CHAT_VISIBILITY: (buildingId: string) => string;
         readonly EXPORT: "/users/me/export";
         readonly RESTORE: "/users/me/restore";
         readonly PERMISSIONS: "/users/me/permissions";
+        readonly PHONE_SEND_VERIFICATION: "/users/me/phone/send-verification";
+        readonly PHONE_VERIFY: "/users/me/phone/verify";
     };
     readonly BUILDINGS: {
         readonly BASE: "/buildings";
         readonly SEARCH: "/buildings/search";
         readonly PENDING: "/buildings/my/pending";
         readonly BY_ID: (id: string) => string;
-        readonly GENERATE_OTP: (id: string) => string;
+        readonly OTP: (id: string) => string;
+        readonly GENERATE_OTP: "/buildings/generate-otp";
         readonly JOIN_WITH_OTP: "/buildings/join-with-otp";
         readonly JOIN_REQUESTS: (id: string) => string;
+        readonly JOIN_REQUEST_APPROVE: (id: string, requestId: string) => string;
+        readonly JOIN_REQUEST_REJECT: (id: string, requestId: string) => string;
         readonly SETTINGS: (id: string) => string;
         readonly RECENT: (id: string) => string;
         readonly BUILDING_SEARCH: (id: string) => string;
@@ -79,6 +86,7 @@ declare const API_ROUTES: {
     readonly NOTICES: {
         readonly LIST: (buildingId: string) => string;
         readonly DETAIL: (buildingId: string, noticeId: string) => string;
+        readonly APPROVE: (buildingId: string, noticeId: string) => string;
         readonly RESTORE: (buildingId: string, noticeId: string) => string;
     };
     readonly POLLS: {
@@ -107,10 +115,10 @@ declare const API_ROUTES: {
         readonly DETAIL: (buildingId: string, maintenanceLogId: string) => string;
         readonly RESTORE: (buildingId: string, maintenanceLogId: string) => string;
     };
-    readonly DOCUMENTS: {
+    readonly FILES: {
         readonly LIST: (buildingId: string) => string;
-        readonly DETAIL: (buildingId: string, documentId: string) => string;
-        readonly RESTORE: (buildingId: string, documentId: string) => string;
+        readonly DETAIL: (buildingId: string, fileId: string) => string;
+        readonly RESTORE: (buildingId: string, fileId: string) => string;
     };
     readonly FAQS: {
         readonly LIST: (buildingId: string) => string;
@@ -129,10 +137,13 @@ declare const API_ROUTES: {
         readonly BALANCE: (buildingId: string) => string;
         readonly SUMMARY: (buildingId: string) => string;
         readonly GRAPH: (buildingId: string) => string;
+        readonly RECALCULATE: (buildingId: string) => string;
         readonly INCOME: (buildingId: string) => string;
         readonly INCOME_DETAIL: (buildingId: string, incomeId: string) => string;
+        readonly INCOME_RESTORE: (buildingId: string, incomeId: string) => string;
         readonly RECURRING_TEMPLATES: (buildingId: string) => string;
         readonly RECURRING_TEMPLATE_DETAIL: (buildingId: string, templateId: string) => string;
+        readonly RECURRING_TEMPLATE_RESTORE: (buildingId: string, templateId: string) => string;
     };
     readonly CHAT: {
         readonly CONVERSATIONS: (buildingId: string) => string;
