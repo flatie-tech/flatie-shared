@@ -1,5 +1,17 @@
+export type {
+  BuildingDetailResponse,
+  BuildingResponse,
+  PaginatedBuildingsResponse,
+} from './building';
+export {
+  buildingDetailResponseSchema,
+  buildingResponseSchema,
+  paginatedBuildingsResponseSchema,
+} from './building';
 export type { CommentResponse } from './comments';
 export { commentResponseSchema } from './comments';
+export type { EventResponse, PaginatedEventsResponse } from './events';
+export { eventResponseSchema, paginatedEventsResponseSchema } from './events';
 export type {
   FailureReportResponse,
   PaginatedFailureReportsResponse,
@@ -27,3 +39,15 @@ export {
   notificationPreferenceItemSchema,
   notificationResponseSchema,
 } from './notifications';
+export type {
+  PaginatedPollsResponse,
+  PollResponse,
+  PollResults,
+  PollVotersResponse,
+} from './polls';
+export {
+  paginatedPollsResponseSchema,
+  pollResponseSchema,
+  pollResultsSchema,
+  pollVotersResponseSchema,
+} from './polls';
