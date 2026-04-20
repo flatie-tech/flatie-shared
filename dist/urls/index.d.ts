@@ -18,14 +18,13 @@ declare const API_ROUTES: {
     };
     readonly USERS: {
         readonly ME: "/users/me";
-        readonly BUILDINGS: "/users/me/buildings";
         readonly BY_ID: (userId: string) => string;
-        readonly RESTORE: "/users/restore";
-        readonly EXPORT: "/users/export";
-        readonly LOCALE: "/users/locale";
-        readonly PERMISSIONS: "/users/permissions";
-        readonly PHONE_SEND_VERIFICATION: "/users/phone/send-verification";
-        readonly PHONE_VERIFY: "/users/phone/verify";
+        readonly RESTORE: "/users/me/restore";
+        readonly EXPORT: "/users/me/export";
+        readonly LOCALE: "/users/me/locale";
+        readonly PERMISSIONS: "/users/me/permissions";
+        readonly PHONE_SEND_VERIFICATION: "/users/me/phone/send-verification";
+        readonly PHONE_VERIFY: "/users/me/phone/verify";
         readonly BUILDING_CHAT_VISIBILITY: (buildingId: string) => string;
     };
     readonly BUILDINGS: {
@@ -36,7 +35,7 @@ declare const API_ROUTES: {
         readonly OTP: (id: string) => string;
         readonly GENERATE_OTP: "/buildings/generate-otp";
         readonly JOIN_WITH_OTP: "/buildings/join-with-otp";
-        readonly PENDING: "/buildings/pending";
+        readonly PENDING: "/buildings/my/pending";
         readonly RECENT: (id: string) => string;
         readonly SEARCH: "/buildings/search";
         readonly BUILDING_SEARCH: (id: string) => string;
@@ -112,11 +111,6 @@ declare const API_ROUTES: {
         readonly LIST: (buildingId: string) => string;
         readonly DETAIL: (buildingId: string, documentId: string) => string;
         readonly RESTORE: (buildingId: string, documentId: string) => string;
-    };
-    readonly DOCUMENTS: {
-        readonly LIST: (buildingId: string) => string;
-        readonly DETAIL: (buildingId: string, documentId: string) => string;
-        readonly RESTORE: (buildingId: string, documentId: string) => string;
         readonly STORAGE_USAGE: (buildingId: string) => string;
     };
     readonly COMMENTS: {
@@ -160,7 +154,7 @@ declare const API_ROUTES: {
         readonly DETAIL: (notificationId: string) => string;
         readonly PREFERENCES: "/notifications/preferences";
         readonly UNREAD_COUNT: "/notifications/unread-count";
-        readonly UNREAD_COUNT_BY_CATEGORY: "/notifications/unread-count-by-category";
+        readonly UNREAD_COUNT_BY_CATEGORY: "/notifications/unread-count/by-category";
         readonly READ: "/notifications/read";
         readonly READ_ALL: "/notifications/read-all";
         readonly READ_CATEGORY: (category: string) => string;
@@ -207,8 +201,6 @@ declare const API_ROUTES: {
         readonly BASE: "/subscriptions";
         readonly PRICES: "/subscriptions/prices";
         readonly INVOICE: "/subscriptions/invoice";
-        readonly INVOICES: "/subscriptions/invoices";
-        readonly INVOICE_BY_ID: (id: string) => string;
         readonly MARK_PAID: (id: string) => string;
     };
 };

@@ -23,15 +23,15 @@ export const API_ROUTES = {
   // ── Users ─────────────────────────────────────────────────────────────
   USERS: {
     ME: '/users/me',
-    BUILDINGS: '/users/me/buildings',
     BY_ID: (userId: string) => `/users/${userId}`,
-    RESTORE: '/users/restore',
-    EXPORT: '/users/export',
-    LOCALE: '/users/locale',
-    PERMISSIONS: '/users/permissions',
-    PHONE_SEND_VERIFICATION: '/users/phone/send-verification',
-    PHONE_VERIFY: '/users/phone/verify',
-    BUILDING_CHAT_VISIBILITY: (buildingId: string) => `/users/${buildingId}/chat-visibility`,
+    RESTORE: '/users/me/restore',
+    EXPORT: '/users/me/export',
+    LOCALE: '/users/me/locale',
+    PERMISSIONS: '/users/me/permissions',
+    PHONE_SEND_VERIFICATION: '/users/me/phone/send-verification',
+    PHONE_VERIFY: '/users/me/phone/verify',
+    BUILDING_CHAT_VISIBILITY: (buildingId: string) =>
+      `/users/me/buildings/${buildingId}/chat-visibility`,
   },
 
   // ── Buildings ─────────────────────────────────────────────────────────
@@ -43,7 +43,7 @@ export const API_ROUTES = {
     OTP: (id: string) => `/buildings/${id}/otp`,
     GENERATE_OTP: '/buildings/generate-otp',
     JOIN_WITH_OTP: '/buildings/join-with-otp',
-    PENDING: '/buildings/pending',
+    PENDING: '/buildings/my/pending',
     RECENT: (id: string) => `/buildings/${id}/recent`,
     SEARCH: '/buildings/search',
     BUILDING_SEARCH: (id: string) => `/buildings/${id}/search`,
@@ -102,7 +102,7 @@ export const API_ROUTES = {
   // ── Units (generic) ──────────────────────────────────────────────────
   UNITS: {
     LIST: (buildingId: string) => `/buildings/${buildingId}/units`,
-    USER_UNITS: (buildingId: string) => `/buildings/${buildingId}/units/user`,
+    USER_UNITS: (buildingId: string) => `/users/me/buildings/${buildingId}/units`,
   },
 
   // ── Notices ───────────────────────────────────────────────────────────
@@ -169,15 +169,7 @@ export const API_ROUTES = {
       `/buildings/${buildingId}/files/${documentId}`,
     RESTORE: (buildingId: string, documentId: string) =>
       `/buildings/${buildingId}/files/${documentId}/restore`,
-  },
-
-  DOCUMENTS: {
-    LIST: (buildingId: string) => `/buildings/${buildingId}/documents`,
-    DETAIL: (buildingId: string, documentId: string) =>
-      `/buildings/${buildingId}/documents/${documentId}`,
-    RESTORE: (buildingId: string, documentId: string) =>
-      `/buildings/${buildingId}/documents/${documentId}/restore`,
-    STORAGE_USAGE: (buildingId: string) => `/buildings/${buildingId}/documents/storage-usage`,
+    STORAGE_USAGE: (buildingId: string) => `/buildings/${buildingId}/files/storage-usage`,
   },
 
   // ── Comments ─────────────────────────────────────────────────────────
@@ -199,21 +191,20 @@ export const API_ROUTES = {
 
   // ── Funds ─────────────────────────────────────────────────────────────
   FUNDS: {
-    BALANCE: (buildingId: string) => `/buildings/${buildingId}/funds/balance`,
+    BALANCE: (buildingId: string) => `/buildings/${buildingId}/funds`,
     RECALCULATE: (buildingId: string) => `/buildings/${buildingId}/funds/recalculate`,
     SUMMARY: (buildingId: string) => `/buildings/${buildingId}/funds/summary`,
     GRAPH: (buildingId: string) => `/buildings/${buildingId}/funds/graph`,
-    INCOME: (buildingId: string) => `/buildings/${buildingId}/funds/income`,
+    INCOME: (buildingId: string) => `/buildings/${buildingId}/income`,
     INCOME_DETAIL: (buildingId: string, incomeId: string) =>
-      `/buildings/${buildingId}/funds/income/${incomeId}`,
+      `/buildings/${buildingId}/income/${incomeId}`,
     INCOME_RESTORE: (buildingId: string, incomeId: string) =>
-      `/buildings/${buildingId}/funds/income/${incomeId}/restore`,
-    RECURRING_TEMPLATES: (buildingId: string) =>
-      `/buildings/${buildingId}/funds/recurring-templates`,
+      `/buildings/${buildingId}/income/${incomeId}/restore`,
+    RECURRING_TEMPLATES: (buildingId: string) => `/buildings/${buildingId}/recurring-templates`,
     RECURRING_TEMPLATE_DETAIL: (buildingId: string, templateId: string) =>
-      `/buildings/${buildingId}/funds/recurring-templates/${templateId}`,
+      `/buildings/${buildingId}/recurring-templates/${templateId}`,
     RECURRING_TEMPLATE_RESTORE: (buildingId: string, templateId: string) =>
-      `/buildings/${buildingId}/funds/recurring-templates/${templateId}/restore`,
+      `/buildings/${buildingId}/recurring-templates/${templateId}/restore`,
   },
 
   // ── Transaction Categories ───────────────────────────────────────────
@@ -229,14 +220,14 @@ export const API_ROUTES = {
 
   // ── Chat ──────────────────────────────────────────────────────────────
   CHAT: {
-    CONVERSATIONS: (buildingId: string) => `/buildings/${buildingId}/chat/conversations`,
+    CONVERSATIONS: (buildingId: string) => `/buildings/${buildingId}/conversations`,
     CONVERSATION: (buildingId: string, conversationId: string) =>
-      `/buildings/${buildingId}/chat/conversations/${conversationId}`,
+      `/buildings/${buildingId}/conversations/${conversationId}`,
     MESSAGES: (buildingId: string, conversationId: string) =>
-      `/buildings/${buildingId}/chat/conversations/${conversationId}/messages`,
+      `/buildings/${buildingId}/conversations/${conversationId}/messages`,
     MARK_READ: (buildingId: string, conversationId: string) =>
-      `/buildings/${buildingId}/chat/conversations/${conversationId}/mark-read`,
-    UNREAD_COUNT: (buildingId: string) => `/buildings/${buildingId}/chat/unread-count`,
+      `/buildings/${buildingId}/conversations/${conversationId}/read`,
+    UNREAD_COUNT: (buildingId: string) => `/buildings/${buildingId}/conversations/unread-count`,
   },
 
   // ── Notifications ────────────────────────────────────────────────────
@@ -245,11 +236,11 @@ export const API_ROUTES = {
     DETAIL: (notificationId: string) => `/notifications/${notificationId}`,
     PREFERENCES: '/notifications/preferences',
     UNREAD_COUNT: '/notifications/unread-count',
-    UNREAD_COUNT_BY_CATEGORY: '/notifications/unread-count-by-category',
+    UNREAD_COUNT_BY_CATEGORY: '/notifications/unread-count/by-category',
     READ: '/notifications/read',
     READ_ALL: '/notifications/read-all',
-    READ_CATEGORY: (category: string) => `/notifications/read/${category}`,
-    READ_CHAT: (conversationId: string) => `/notifications/read/chat/${conversationId}`,
+    READ_CATEGORY: (category: string) => `/notifications/read-category/${category}`,
+    READ_CHAT: (conversationId: string) => `/notifications/read-chat/${conversationId}`,
   },
 
   // ── Organizations ────────────────────────────────────────────────────
@@ -303,8 +294,6 @@ export const API_ROUTES = {
     BASE: '/subscriptions',
     PRICES: '/subscriptions/prices',
     INVOICE: '/subscriptions/invoice',
-    INVOICES: '/subscriptions/invoices',
-    INVOICE_BY_ID: (id: string) => `/subscriptions/invoices/${id}`,
     MARK_PAID: (id: string) => `/subscriptions/invoices/${id}/mark-paid`,
   },
 } as const;

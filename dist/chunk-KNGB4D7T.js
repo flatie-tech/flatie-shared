@@ -1,5 +1,3 @@
-'use strict';
-
 // src/urls/index.ts
 var API_VERSION = "v1";
 var API_ROUTES = {
@@ -18,15 +16,14 @@ var API_ROUTES = {
   // ── Users ─────────────────────────────────────────────────────────────
   USERS: {
     ME: "/users/me",
-    BUILDINGS: "/users/me/buildings",
     BY_ID: (userId) => `/users/${userId}`,
-    RESTORE: "/users/restore",
-    EXPORT: "/users/export",
-    LOCALE: "/users/locale",
-    PERMISSIONS: "/users/permissions",
-    PHONE_SEND_VERIFICATION: "/users/phone/send-verification",
-    PHONE_VERIFY: "/users/phone/verify",
-    BUILDING_CHAT_VISIBILITY: (buildingId) => `/users/${buildingId}/chat-visibility`
+    RESTORE: "/users/me/restore",
+    EXPORT: "/users/me/export",
+    LOCALE: "/users/me/locale",
+    PERMISSIONS: "/users/me/permissions",
+    PHONE_SEND_VERIFICATION: "/users/me/phone/send-verification",
+    PHONE_VERIFY: "/users/me/phone/verify",
+    BUILDING_CHAT_VISIBILITY: (buildingId) => `/users/me/buildings/${buildingId}/chat-visibility`
   },
   // ── Buildings ─────────────────────────────────────────────────────────
   BUILDINGS: {
@@ -37,7 +34,7 @@ var API_ROUTES = {
     OTP: (id) => `/buildings/${id}/otp`,
     GENERATE_OTP: "/buildings/generate-otp",
     JOIN_WITH_OTP: "/buildings/join-with-otp",
-    PENDING: "/buildings/pending",
+    PENDING: "/buildings/my/pending",
     RECENT: (id) => `/buildings/${id}/recent`,
     SEARCH: "/buildings/search",
     BUILDING_SEARCH: (id) => `/buildings/${id}/search`,
@@ -78,7 +75,7 @@ var API_ROUTES = {
   // ── Units (generic) ──────────────────────────────────────────────────
   UNITS: {
     LIST: (buildingId) => `/buildings/${buildingId}/units`,
-    USER_UNITS: (buildingId) => `/buildings/${buildingId}/units/user`
+    USER_UNITS: (buildingId) => `/users/me/buildings/${buildingId}/units`
   },
   // ── Notices ───────────────────────────────────────────────────────────
   NOTICES: {
@@ -122,13 +119,8 @@ var API_ROUTES = {
   FILES: {
     LIST: (buildingId) => `/buildings/${buildingId}/files`,
     DETAIL: (buildingId, documentId) => `/buildings/${buildingId}/files/${documentId}`,
-    RESTORE: (buildingId, documentId) => `/buildings/${buildingId}/files/${documentId}/restore`
-  },
-  DOCUMENTS: {
-    LIST: (buildingId) => `/buildings/${buildingId}/documents`,
-    DETAIL: (buildingId, documentId) => `/buildings/${buildingId}/documents/${documentId}`,
-    RESTORE: (buildingId, documentId) => `/buildings/${buildingId}/documents/${documentId}/restore`,
-    STORAGE_USAGE: (buildingId) => `/buildings/${buildingId}/documents/storage-usage`
+    RESTORE: (buildingId, documentId) => `/buildings/${buildingId}/files/${documentId}/restore`,
+    STORAGE_USAGE: (buildingId) => `/buildings/${buildingId}/files/storage-usage`
   },
   // ── Comments ─────────────────────────────────────────────────────────
   COMMENTS: {
@@ -145,16 +137,16 @@ var API_ROUTES = {
   },
   // ── Funds ─────────────────────────────────────────────────────────────
   FUNDS: {
-    BALANCE: (buildingId) => `/buildings/${buildingId}/funds/balance`,
+    BALANCE: (buildingId) => `/buildings/${buildingId}/funds`,
     RECALCULATE: (buildingId) => `/buildings/${buildingId}/funds/recalculate`,
     SUMMARY: (buildingId) => `/buildings/${buildingId}/funds/summary`,
     GRAPH: (buildingId) => `/buildings/${buildingId}/funds/graph`,
-    INCOME: (buildingId) => `/buildings/${buildingId}/funds/income`,
-    INCOME_DETAIL: (buildingId, incomeId) => `/buildings/${buildingId}/funds/income/${incomeId}`,
-    INCOME_RESTORE: (buildingId, incomeId) => `/buildings/${buildingId}/funds/income/${incomeId}/restore`,
-    RECURRING_TEMPLATES: (buildingId) => `/buildings/${buildingId}/funds/recurring-templates`,
-    RECURRING_TEMPLATE_DETAIL: (buildingId, templateId) => `/buildings/${buildingId}/funds/recurring-templates/${templateId}`,
-    RECURRING_TEMPLATE_RESTORE: (buildingId, templateId) => `/buildings/${buildingId}/funds/recurring-templates/${templateId}/restore`
+    INCOME: (buildingId) => `/buildings/${buildingId}/income`,
+    INCOME_DETAIL: (buildingId, incomeId) => `/buildings/${buildingId}/income/${incomeId}`,
+    INCOME_RESTORE: (buildingId, incomeId) => `/buildings/${buildingId}/income/${incomeId}/restore`,
+    RECURRING_TEMPLATES: (buildingId) => `/buildings/${buildingId}/recurring-templates`,
+    RECURRING_TEMPLATE_DETAIL: (buildingId, templateId) => `/buildings/${buildingId}/recurring-templates/${templateId}`,
+    RECURRING_TEMPLATE_RESTORE: (buildingId, templateId) => `/buildings/${buildingId}/recurring-templates/${templateId}/restore`
   },
   // ── Transaction Categories ───────────────────────────────────────────
   TRANSACTION_CATEGORIES: {
@@ -165,11 +157,11 @@ var API_ROUTES = {
   },
   // ── Chat ──────────────────────────────────────────────────────────────
   CHAT: {
-    CONVERSATIONS: (buildingId) => `/buildings/${buildingId}/chat/conversations`,
-    CONVERSATION: (buildingId, conversationId) => `/buildings/${buildingId}/chat/conversations/${conversationId}`,
-    MESSAGES: (buildingId, conversationId) => `/buildings/${buildingId}/chat/conversations/${conversationId}/messages`,
-    MARK_READ: (buildingId, conversationId) => `/buildings/${buildingId}/chat/conversations/${conversationId}/mark-read`,
-    UNREAD_COUNT: (buildingId) => `/buildings/${buildingId}/chat/unread-count`
+    CONVERSATIONS: (buildingId) => `/buildings/${buildingId}/conversations`,
+    CONVERSATION: (buildingId, conversationId) => `/buildings/${buildingId}/conversations/${conversationId}`,
+    MESSAGES: (buildingId, conversationId) => `/buildings/${buildingId}/conversations/${conversationId}/messages`,
+    MARK_READ: (buildingId, conversationId) => `/buildings/${buildingId}/conversations/${conversationId}/read`,
+    UNREAD_COUNT: (buildingId) => `/buildings/${buildingId}/conversations/unread-count`
   },
   // ── Notifications ────────────────────────────────────────────────────
   NOTIFICATIONS: {
@@ -177,11 +169,11 @@ var API_ROUTES = {
     DETAIL: (notificationId) => `/notifications/${notificationId}`,
     PREFERENCES: "/notifications/preferences",
     UNREAD_COUNT: "/notifications/unread-count",
-    UNREAD_COUNT_BY_CATEGORY: "/notifications/unread-count-by-category",
+    UNREAD_COUNT_BY_CATEGORY: "/notifications/unread-count/by-category",
     READ: "/notifications/read",
     READ_ALL: "/notifications/read-all",
-    READ_CATEGORY: (category) => `/notifications/read/${category}`,
-    READ_CHAT: (conversationId) => `/notifications/read/chat/${conversationId}`
+    READ_CATEGORY: (category) => `/notifications/read-category/${category}`,
+    READ_CHAT: (conversationId) => `/notifications/read-chat/${conversationId}`
   },
   // ── Organizations ────────────────────────────────────────────────────
   ORGANIZATIONS: {
@@ -229,13 +221,10 @@ var API_ROUTES = {
     BASE: "/subscriptions",
     PRICES: "/subscriptions/prices",
     INVOICE: "/subscriptions/invoice",
-    INVOICES: "/subscriptions/invoices",
-    INVOICE_BY_ID: (id) => `/subscriptions/invoices/${id}`,
     MARK_PAID: (id) => `/subscriptions/invoices/${id}/mark-paid`
   }
 };
 
-exports.API_ROUTES = API_ROUTES;
-exports.API_VERSION = API_VERSION;
-//# sourceMappingURL=chunk-BVOQHJNV.cjs.map
-//# sourceMappingURL=chunk-BVOQHJNV.cjs.map
+export { API_ROUTES, API_VERSION };
+//# sourceMappingURL=chunk-KNGB4D7T.js.map
+//# sourceMappingURL=chunk-KNGB4D7T.js.map

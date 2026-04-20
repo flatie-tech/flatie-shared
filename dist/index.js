@@ -7,7 +7,7 @@ export { APPROVE_PERMISSIONS, ApartmentRole, ApprovalStatus, BUILDING_ROLE_RANK,
 export { colors, radii, themes } from './chunk-CVM7NQHG.js';
 import './chunk-4LSFAAZW.js';
 export { createPaginatedResponse } from './chunk-W3SU22LA.js';
-export { API_ROUTES, API_VERSION } from './chunk-V2VTCKVG.js';
+export { API_ROUTES, API_VERSION } from './chunk-KNGB4D7T.js';
 
 // src/test-ids/apartments.ts
 var ApartmentsTestIds = {

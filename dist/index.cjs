@@ -9,7 +9,7 @@ var chunk5UBJHQVX_cjs = require('./chunk-5UBJHQVX.cjs');
 var chunkMTOJIOIR_cjs = require('./chunk-MTOJIOIR.cjs');
 require('./chunk-TCHOIK53.cjs');
 var chunkIGBERUWL_cjs = require('./chunk-IGBERUWL.cjs');
-var chunkBVOQHJNV_cjs = require('./chunk-BVOQHJNV.cjs');
+var chunkKIXHDZPK_cjs = require('./chunk-KIXHDZPK.cjs');
 
 // src/test-ids/apartments.ts
 var ApartmentsTestIds = {
@@ -1013,11 +1013,11 @@ Object.defineProperty(exports, "createPaginatedResponse", {
 });
 Object.defineProperty(exports, "API_ROUTES", {
   enumerable: true,
-  get: function () { return chunkBVOQHJNV_cjs.API_ROUTES; }
+  get: function () { return chunkKIXHDZPK_cjs.API_ROUTES; }
 });
 Object.defineProperty(exports, "API_VERSION", {
   enumerable: true,
-  get: function () { return chunkBVOQHJNV_cjs.API_VERSION; }
+  get: function () { return chunkKIXHDZPK_cjs.API_VERSION; }
 });
 exports.ApartmentsTestIds = ApartmentsTestIds;
 exports.BuildingInfoTestIds = BuildingInfoTestIds;
