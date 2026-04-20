@@ -118,6 +118,8 @@ catch (error) {
 ```
 will silently swallow `DomainException` into a 500. Use `instanceof HttpException` instead. Audit existing services for this pattern before migrating them to `DomainException`.
 
+**Assertion style in tests.** Services and guards that throw `DomainException` (or the `ForbiddenDomainException` / `BadRequestDomainException` / `UnauthorizedDomainException` subclasses) are asserted via `rejects.toMatchObject({ code: BACKEND_ERROR_CODES.X })`. Bare NestJS exceptions (only acceptable where the framework boundary cannot know the domain) assert via `toBeInstanceOf(HttpException)` plus a status-code check.
+
 ## API_ROUTES contract
 
 `API_ROUTES` (in `src/urls/`) is the single source of truth for backend HTTP paths. The frontend imports it; the backend's controller decorators (`@Controller`, `@Get`, etc.) are the runtime truth. They must agree.
