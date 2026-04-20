@@ -711,6 +711,54 @@ var permissionsResponseSchema = zod.z.object({
   orgId: zod.z.string().uuid().optional(),
   chatVisibleToCoOwners: zod.z.boolean().optional()
 });
+var buildingManagerSchema = zod.z.looseObject({
+  name: zod.z.string(),
+  email: zod.z.string()
+});
+var buildingRepresentativeSchema = zod.z.looseObject({
+  id: zod.z.string(),
+  name: zod.z.string(),
+  email: zod.z.string(),
+  phone: zod.z.string().optional().nullable()
+});
+var buildingFundsSchema = zod.z.looseObject({
+  currentBalance: zod.z.string(),
+  currency: zod.z.string()
+});
+var buildingResponseSchema = zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  name: zod.z.string(),
+  address: zod.z.string(),
+  coverImage: zod.z.string().optional().nullable(),
+  type: buildingTypeSchema,
+  totalUnits: zod.z.number(),
+  isStratified: zod.z.boolean(),
+  createdBy: zod.z.string().uuid().optional().nullable(),
+  createdAt: zod.z.string(),
+  updatedAt: zod.z.string().nullable().optional()
+});
+zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  name: zod.z.string(),
+  address: zod.z.string(),
+  coverImage: zod.z.string().nullable().optional(),
+  type: buildingTypeSchema,
+  totalUnits: zod.z.number(),
+  isStratified: zod.z.boolean(),
+  houseRulesFileUrl: zod.z.string().nullable().optional(),
+  numberOfFloors: zod.z.number().nullable().optional(),
+  description: zod.z.string().nullable().optional(),
+  latitude: zod.z.number().nullable().optional(),
+  longitude: zod.z.number().nullable().optional(),
+  createdBy: zod.z.string(),
+  createdAt: zod.z.string(),
+  updatedAt: zod.z.string().nullable().optional(),
+  manager: buildingManagerSchema.nullable().optional(),
+  funds: buildingFundsSchema.nullable().optional(),
+  ownerRepresentatives: zod.z.array(buildingRepresentativeSchema).default([]),
+  deputyRepresentatives: zod.z.array(buildingRepresentativeSchema).default([])
+});
+paginatedResponseSchema(buildingResponseSchema);
 var commentResponseSchema = zod.z.looseObject({
   id: zod.z.string().uuid(),
   entityType: zod.z.string(),
@@ -724,6 +772,43 @@ var commentResponseSchema = zod.z.looseObject({
   canEdit: zod.z.boolean(),
   canDelete: zod.z.boolean()
 });
+var eventUserSchema = zod.z.looseObject({
+  id: zod.z.string(),
+  name: zod.z.string()
+});
+var entityScheduleReferenceSchema = zod.z.looseObject({
+  id: zod.z.string(),
+  // One of 'failure_report' | 'maintenance_log' | 'notice' — left as
+  // a free string to tolerate new entity types added backend-side.
+  type: zod.z.string(),
+  title: zod.z.string()
+});
+var eventResponseSchema = zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  title: zod.z.string(),
+  type: zod.z.string(),
+  description: zod.z.string().optional().nullable(),
+  startDate: zod.z.string(),
+  endDate: zod.z.string(),
+  color: zod.z.string(),
+  buildingId: zod.z.string().uuid(),
+  recurrenceType: zod.z.string(),
+  subtype: zod.z.string().nullable().optional(),
+  recurrenceEndDate: zod.z.string().nullable().optional(),
+  isRecurrenceInstance: zod.z.boolean().optional(),
+  originalEventId: zod.z.string().optional(),
+  user: eventUserSchema.optional(),
+  isAnonymous: zod.z.boolean(),
+  approved: zod.z.boolean(),
+  canEdit: zod.z.boolean(),
+  canDelete: zod.z.boolean(),
+  canApprove: zod.z.boolean(),
+  onlineMeetingUrl: zod.z.string().nullable().optional(),
+  meetingMinutes: zod.z.string().nullable().optional(),
+  minuteTakerId: zod.z.string().nullable().optional(),
+  usedAsScheduleBy: zod.z.array(entityScheduleReferenceSchema).optional()
+});
+paginatedResponseSchema(eventResponseSchema);
 var commonStatusOptions = ["active", "completed", "cancelled"];
 var approvalStatusOptions = ["pending", "approved", "rejected"];
 var maintenanceStatusOptions = [
@@ -899,6 +984,115 @@ var notificationPreferenceCategorySchema = zod.z.looseObject({
   category: zod.z.string(),
   notifications: zod.z.array(notificationPreferenceItemSchema)
 });
+var pollStatusSchema = zod.z.enum(["active", "completed", "cancelled"]);
+var pollDocumentReferenceSchema = zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  title: zod.z.string(),
+  description: zod.z.string().nullable().optional(),
+  documentUrl: zod.z.string(),
+  fileType: zod.z.enum(["image", "document"]),
+  uploadedBy: zod.z.string(),
+  createdAt: zod.z.string(),
+  updatedAt: zod.z.string().nullable().optional()
+});
+var pollMaintenanceLogReferenceSchema = zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  title: zod.z.string(),
+  contractor: zod.z.string(),
+  cost: zod.z.number(),
+  createdAt: zod.z.string()
+});
+var pollScopedUnitSchema = zod.z.looseObject({
+  unitType: zod.z.string(),
+  unitId: zod.z.string(),
+  label: zod.z.string(),
+  floor: zod.z.string().optional()
+});
+var pollScopedUserSchema = zod.z.looseObject({
+  userId: zod.z.string(),
+  name: zod.z.string()
+});
+var pollResponseSchema = zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  buildingId: zod.z.string().uuid(),
+  question: zod.z.string(),
+  options: zod.z.array(zod.z.string()),
+  createdBy: zod.z.string(),
+  createdAt: zod.z.string(),
+  updatedAt: zod.z.string(),
+  deadline: zod.z.string().optional(),
+  pollType: pollTypeSchema,
+  status: pollStatusSchema,
+  requiredConsensusPercentage: zod.z.number().optional(),
+  totalVotes: zod.z.number(),
+  totalWeight: zod.z.number(),
+  winningOptionIndex: zod.z.number().optional(),
+  isResultsFinalized: zod.z.boolean(),
+  finalizedAt: zod.z.string().optional(),
+  finalizedBy: zod.z.string().optional(),
+  hasVoted: zod.z.boolean().optional(),
+  userVote: zod.z.number().optional(),
+  files: zod.z.array(pollDocumentReferenceSchema).optional()
+});
+var pollOptionResultSchema = zod.z.looseObject({
+  optionIndex: zod.z.number(),
+  optionText: zod.z.string(),
+  voteCount: zod.z.number(),
+  totalWeight: zod.z.number(),
+  percentage: zod.z.number(),
+  weightPercentage: zod.z.number()
+});
+zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  buildingId: zod.z.string().uuid(),
+  question: zod.z.string(),
+  options: zod.z.array(zod.z.string()),
+  createdBy: zod.z.string(),
+  createdAt: zod.z.string(),
+  deadline: zod.z.string().optional(),
+  pollType: pollTypeSchema,
+  status: pollStatusSchema,
+  requiredConsensusPercentage: zod.z.number().optional(),
+  totalVotes: zod.z.number(),
+  totalWeight: zod.z.number(),
+  totalEligibleVoters: zod.z.number(),
+  winningOptionIndex: zod.z.number().optional(),
+  isResultsFinalized: zod.z.boolean(),
+  finalizedAt: zod.z.string().optional(),
+  finalizedBy: zod.z.string().optional(),
+  optionResults: zod.z.array(pollOptionResultSchema),
+  consensusReached: zod.z.boolean().optional(),
+  currentConsensusPercentage: zod.z.number().optional(),
+  approved: zod.z.boolean(),
+  canApprove: zod.z.boolean(),
+  canEdit: zod.z.boolean(),
+  canDelete: zod.z.boolean(),
+  canVote: zod.z.boolean(),
+  hasUserVoted: zod.z.boolean(),
+  userVotedOptionIndex: zod.z.number().nullable().optional(),
+  scopedUnits: zod.z.array(pollScopedUnitSchema).optional(),
+  eligibleTotalWeight: zod.z.number().optional(),
+  scopedUsers: zod.z.array(pollScopedUserSchema).optional(),
+  maintenanceLogs: zod.z.array(pollMaintenanceLogReferenceSchema).optional(),
+  files: zod.z.array(pollDocumentReferenceSchema).optional()
+});
+var pollVoterSchema = zod.z.looseObject({
+  userId: zod.z.string(),
+  name: zod.z.string(),
+  email: zod.z.string(),
+  selectedOptionIndex: zod.z.number(),
+  selectedOptionText: zod.z.string(),
+  voteWeight: zod.z.number(),
+  votedAt: zod.z.string()
+});
+zod.z.looseObject({
+  pollId: zod.z.string().uuid(),
+  question: zod.z.string(),
+  options: zod.z.array(zod.z.string()),
+  totalVotes: zod.z.number(),
+  voters: zod.z.array(pollVoterSchema)
+});
+paginatedResponseSchema(pollResponseSchema);
 
 exports.ApprovalStatusSchema = ApprovalStatusSchema;
 exports.BUILDING_LIMITS = BUILDING_LIMITS;
@@ -1021,5 +1215,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-VDEFPUY6.cjs.map
-//# sourceMappingURL=chunk-VDEFPUY6.cjs.map
+//# sourceMappingURL=chunk-QILV4F27.cjs.map
+//# sourceMappingURL=chunk-QILV4F27.cjs.map

@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.18.0
+
+### Minor Changes
+
+- 70dd033: Add response schemas for building, events, and polls
+
 ## 0.17.2
 
 - Add 11 new error codes for funds, billing, blog, platform, and workflow domains.

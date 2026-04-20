@@ -709,6 +709,54 @@ var permissionsResponseSchema = z.object({
   orgId: z.string().uuid().optional(),
   chatVisibleToCoOwners: z.boolean().optional()
 });
+var buildingManagerSchema = z.looseObject({
+  name: z.string(),
+  email: z.string()
+});
+var buildingRepresentativeSchema = z.looseObject({
+  id: z.string(),
+  name: z.string(),
+  email: z.string(),
+  phone: z.string().optional().nullable()
+});
+var buildingFundsSchema = z.looseObject({
+  currentBalance: z.string(),
+  currency: z.string()
+});
+var buildingResponseSchema = z.looseObject({
+  id: z.string().uuid(),
+  name: z.string(),
+  address: z.string(),
+  coverImage: z.string().optional().nullable(),
+  type: buildingTypeSchema,
+  totalUnits: z.number(),
+  isStratified: z.boolean(),
+  createdBy: z.string().uuid().optional().nullable(),
+  createdAt: z.string(),
+  updatedAt: z.string().nullable().optional()
+});
+z.looseObject({
+  id: z.string().uuid(),
+  name: z.string(),
+  address: z.string(),
+  coverImage: z.string().nullable().optional(),
+  type: buildingTypeSchema,
+  totalUnits: z.number(),
+  isStratified: z.boolean(),
+  houseRulesFileUrl: z.string().nullable().optional(),
+  numberOfFloors: z.number().nullable().optional(),
+  description: z.string().nullable().optional(),
+  latitude: z.number().nullable().optional(),
+  longitude: z.number().nullable().optional(),
+  createdBy: z.string(),
+  createdAt: z.string(),
+  updatedAt: z.string().nullable().optional(),
+  manager: buildingManagerSchema.nullable().optional(),
+  funds: buildingFundsSchema.nullable().optional(),
+  ownerRepresentatives: z.array(buildingRepresentativeSchema).default([]),
+  deputyRepresentatives: z.array(buildingRepresentativeSchema).default([])
+});
+paginatedResponseSchema(buildingResponseSchema);
 var commentResponseSchema = z.looseObject({
   id: z.string().uuid(),
   entityType: z.string(),
@@ -722,6 +770,43 @@ var commentResponseSchema = z.looseObject({
   canEdit: z.boolean(),
   canDelete: z.boolean()
 });
+var eventUserSchema = z.looseObject({
+  id: z.string(),
+  name: z.string()
+});
+var entityScheduleReferenceSchema = z.looseObject({
+  id: z.string(),
+  // One of 'failure_report' | 'maintenance_log' | 'notice' — left as
+  // a free string to tolerate new entity types added backend-side.
+  type: z.string(),
+  title: z.string()
+});
+var eventResponseSchema = z.looseObject({
+  id: z.string().uuid(),
+  title: z.string(),
+  type: z.string(),
+  description: z.string().optional().nullable(),
+  startDate: z.string(),
+  endDate: z.string(),
+  color: z.string(),
+  buildingId: z.string().uuid(),
+  recurrenceType: z.string(),
+  subtype: z.string().nullable().optional(),
+  recurrenceEndDate: z.string().nullable().optional(),
+  isRecurrenceInstance: z.boolean().optional(),
+  originalEventId: z.string().optional(),
+  user: eventUserSchema.optional(),
+  isAnonymous: z.boolean(),
+  approved: z.boolean(),
+  canEdit: z.boolean(),
+  canDelete: z.boolean(),
+  canApprove: z.boolean(),
+  onlineMeetingUrl: z.string().nullable().optional(),
+  meetingMinutes: z.string().nullable().optional(),
+  minuteTakerId: z.string().nullable().optional(),
+  usedAsScheduleBy: z.array(entityScheduleReferenceSchema).optional()
+});
+paginatedResponseSchema(eventResponseSchema);
 var commonStatusOptions = ["active", "completed", "cancelled"];
 var approvalStatusOptions = ["pending", "approved", "rejected"];
 var maintenanceStatusOptions = [
@@ -897,7 +982,116 @@ var notificationPreferenceCategorySchema = z.looseObject({
   category: z.string(),
   notifications: z.array(notificationPreferenceItemSchema)
 });
+var pollStatusSchema = z.enum(["active", "completed", "cancelled"]);
+var pollDocumentReferenceSchema = z.looseObject({
+  id: z.string().uuid(),
+  title: z.string(),
+  description: z.string().nullable().optional(),
+  documentUrl: z.string(),
+  fileType: z.enum(["image", "document"]),
+  uploadedBy: z.string(),
+  createdAt: z.string(),
+  updatedAt: z.string().nullable().optional()
+});
+var pollMaintenanceLogReferenceSchema = z.looseObject({
+  id: z.string().uuid(),
+  title: z.string(),
+  contractor: z.string(),
+  cost: z.number(),
+  createdAt: z.string()
+});
+var pollScopedUnitSchema = z.looseObject({
+  unitType: z.string(),
+  unitId: z.string(),
+  label: z.string(),
+  floor: z.string().optional()
+});
+var pollScopedUserSchema = z.looseObject({
+  userId: z.string(),
+  name: z.string()
+});
+var pollResponseSchema = z.looseObject({
+  id: z.string().uuid(),
+  buildingId: z.string().uuid(),
+  question: z.string(),
+  options: z.array(z.string()),
+  createdBy: z.string(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  deadline: z.string().optional(),
+  pollType: pollTypeSchema,
+  status: pollStatusSchema,
+  requiredConsensusPercentage: z.number().optional(),
+  totalVotes: z.number(),
+  totalWeight: z.number(),
+  winningOptionIndex: z.number().optional(),
+  isResultsFinalized: z.boolean(),
+  finalizedAt: z.string().optional(),
+  finalizedBy: z.string().optional(),
+  hasVoted: z.boolean().optional(),
+  userVote: z.number().optional(),
+  files: z.array(pollDocumentReferenceSchema).optional()
+});
+var pollOptionResultSchema = z.looseObject({
+  optionIndex: z.number(),
+  optionText: z.string(),
+  voteCount: z.number(),
+  totalWeight: z.number(),
+  percentage: z.number(),
+  weightPercentage: z.number()
+});
+z.looseObject({
+  id: z.string().uuid(),
+  buildingId: z.string().uuid(),
+  question: z.string(),
+  options: z.array(z.string()),
+  createdBy: z.string(),
+  createdAt: z.string(),
+  deadline: z.string().optional(),
+  pollType: pollTypeSchema,
+  status: pollStatusSchema,
+  requiredConsensusPercentage: z.number().optional(),
+  totalVotes: z.number(),
+  totalWeight: z.number(),
+  totalEligibleVoters: z.number(),
+  winningOptionIndex: z.number().optional(),
+  isResultsFinalized: z.boolean(),
+  finalizedAt: z.string().optional(),
+  finalizedBy: z.string().optional(),
+  optionResults: z.array(pollOptionResultSchema),
+  consensusReached: z.boolean().optional(),
+  currentConsensusPercentage: z.number().optional(),
+  approved: z.boolean(),
+  canApprove: z.boolean(),
+  canEdit: z.boolean(),
+  canDelete: z.boolean(),
+  canVote: z.boolean(),
+  hasUserVoted: z.boolean(),
+  userVotedOptionIndex: z.number().nullable().optional(),
+  scopedUnits: z.array(pollScopedUnitSchema).optional(),
+  eligibleTotalWeight: z.number().optional(),
+  scopedUsers: z.array(pollScopedUserSchema).optional(),
+  maintenanceLogs: z.array(pollMaintenanceLogReferenceSchema).optional(),
+  files: z.array(pollDocumentReferenceSchema).optional()
+});
+var pollVoterSchema = z.looseObject({
+  userId: z.string(),
+  name: z.string(),
+  email: z.string(),
+  selectedOptionIndex: z.number(),
+  selectedOptionText: z.string(),
+  voteWeight: z.number(),
+  votedAt: z.string()
+});
+z.looseObject({
+  pollId: z.string().uuid(),
+  question: z.string(),
+  options: z.array(z.string()),
+  totalVotes: z.number(),
+  voters: z.array(pollVoterSchema)
+});
+paginatedResponseSchema(pollResponseSchema);
 
 export { ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, baseEntitySchema, buildingEntitySchema, buildingTypeSchema, buildingUserEntitySchema, commentResponseSchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollTypeSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updatePasswordSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-A2KJUPCD.js.map
-//# sourceMappingURL=chunk-A2KJUPCD.js.map
+//# sourceMappingURL=chunk-RXC3KIQI.js.map
+//# sourceMappingURL=chunk-RXC3KIQI.js.map
