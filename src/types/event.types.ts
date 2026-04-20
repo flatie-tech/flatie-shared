@@ -53,15 +53,3 @@ export interface CreateEventRequest {
   endDate: string;
   color: EventColor;
 }
-
-/**
- * Update event request
- */
-export interface UpdateEventRequest {
-  title?: string;
-  type?: EventType;
-  description?: string;
-  startDate?: string;
-  endDate?: string;
-  color?: EventColor;
-}

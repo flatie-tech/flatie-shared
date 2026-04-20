@@ -65,26 +65,6 @@ export interface CreateTransactionRequest {
 }
 
 /**
- * Update transaction request
- */
-export interface UpdateTransactionRequest {
-  description?: string;
-  amount?: number;
-  date?: string;
-  type?: TransactionType;
-  category?: TransactionCategory;
-  title?: string;
-  frequency?: string;
-}
-
-/**
- * Update fund balance request
- */
-export interface UpdateFundRequest {
-  initialBalance: number;
-}
-
-/**
  * Recurring transaction template
  */
 export interface RecurringTemplate extends BaseEntity {
@@ -114,19 +94,4 @@ export interface CreateRecurringTemplateRequest {
   frequency: string;
   startDate: string;
   endDate?: string;
-}
-
-/**
- * Update recurring template request
- */
-export interface UpdateRecurringTemplateRequest {
-  title?: string;
-  description?: string;
-  amount?: number;
-  type?: TransactionType;
-  category?: TransactionCategory;
-  frequency?: string;
-  startDate?: string;
-  endDate?: string | null;
-  isActive?: boolean;
 }
