@@ -737,7 +737,7 @@ var buildingResponseSchema = zod.z.looseObject({
   createdAt: zod.z.string(),
   updatedAt: zod.z.string().nullable().optional()
 });
-zod.z.looseObject({
+var buildingDetailResponseSchema = zod.z.looseObject({
   id: zod.z.string().uuid(),
   name: zod.z.string(),
   address: zod.z.string(),
@@ -758,7 +758,7 @@ zod.z.looseObject({
   ownerRepresentatives: zod.z.array(buildingRepresentativeSchema).default([]),
   deputyRepresentatives: zod.z.array(buildingRepresentativeSchema).default([])
 });
-paginatedResponseSchema(buildingResponseSchema);
+var paginatedBuildingsResponseSchema = paginatedResponseSchema(buildingResponseSchema);
 var commentResponseSchema = zod.z.looseObject({
   id: zod.z.string().uuid(),
   entityType: zod.z.string(),
@@ -808,7 +808,7 @@ var eventResponseSchema = zod.z.looseObject({
   minuteTakerId: zod.z.string().nullable().optional(),
   usedAsScheduleBy: zod.z.array(entityScheduleReferenceSchema).optional()
 });
-paginatedResponseSchema(eventResponseSchema);
+var paginatedEventsResponseSchema = paginatedResponseSchema(eventResponseSchema);
 var commonStatusOptions = ["active", "completed", "cancelled"];
 var approvalStatusOptions = ["pending", "approved", "rejected"];
 var maintenanceStatusOptions = [
@@ -1042,7 +1042,7 @@ var pollOptionResultSchema = zod.z.looseObject({
   percentage: zod.z.number(),
   weightPercentage: zod.z.number()
 });
-zod.z.looseObject({
+var pollResultsSchema = zod.z.looseObject({
   id: zod.z.string().uuid(),
   buildingId: zod.z.string().uuid(),
   question: zod.z.string(),
@@ -1085,14 +1085,14 @@ var pollVoterSchema = zod.z.looseObject({
   voteWeight: zod.z.number(),
   votedAt: zod.z.string()
 });
-zod.z.looseObject({
+var pollVotersResponseSchema = zod.z.looseObject({
   pollId: zod.z.string().uuid(),
   question: zod.z.string(),
   options: zod.z.array(zod.z.string()),
   totalVotes: zod.z.number(),
   voters: zod.z.array(pollVoterSchema)
 });
-paginatedResponseSchema(pollResponseSchema);
+var paginatedPollsResponseSchema = paginatedResponseSchema(pollResponseSchema);
 
 exports.ApprovalStatusSchema = ApprovalStatusSchema;
 exports.BUILDING_LIMITS = BUILDING_LIMITS;
@@ -1125,7 +1125,9 @@ exports.approveNoticeSchema = approveNoticeSchema;
 exports.assignOrgBuildingSchema = assignOrgBuildingSchema;
 exports.assignOrgMemberBuildingSchema = assignOrgMemberBuildingSchema;
 exports.baseEntitySchema = baseEntitySchema;
+exports.buildingDetailResponseSchema = buildingDetailResponseSchema;
 exports.buildingEntitySchema = buildingEntitySchema;
+exports.buildingResponseSchema = buildingResponseSchema;
 exports.buildingTypeSchema = buildingTypeSchema;
 exports.buildingUserEntitySchema = buildingUserEntitySchema;
 exports.commentResponseSchema = commentResponseSchema;
@@ -1148,6 +1150,7 @@ exports.dateRangeWithValidationSchema = dateRangeWithValidationSchema;
 exports.dateTimeSchema = dateTimeSchema;
 exports.emailSchema = emailSchema;
 exports.eventColorSchema = eventColorSchema;
+exports.eventResponseSchema = eventResponseSchema;
 exports.eventTypeSchema = eventTypeSchema;
 exports.failureReportEventSchema = failureReportEventSchema;
 exports.failureReportResponseSchema = failureReportResponseSchema;
@@ -1177,15 +1180,21 @@ exports.notificationPreferenceItemSchema = notificationPreferenceItemSchema;
 exports.notificationResponseSchema = notificationResponseSchema;
 exports.optionalDateTimeSchema = optionalDateTimeSchema;
 exports.paginatedApartmentsResponseSchema = paginatedApartmentsResponseSchema;
+exports.paginatedBuildingsResponseSchema = paginatedBuildingsResponseSchema;
+exports.paginatedEventsResponseSchema = paginatedEventsResponseSchema;
 exports.paginatedFailureReportsResponseSchema = paginatedFailureReportsResponseSchema;
 exports.paginatedMaintenanceLogsResponseSchema = paginatedMaintenanceLogsResponseSchema;
 exports.paginatedNoticesResponseSchema = paginatedNoticesResponseSchema;
+exports.paginatedPollsResponseSchema = paginatedPollsResponseSchema;
 exports.paginatedResponseSchema = paginatedResponseSchema;
 exports.paginationParamsSchema = paginationParamsSchema;
 exports.passwordSchema = passwordSchema;
 exports.permissionFieldsSchema = permissionFieldsSchema;
 exports.permissionsResponseSchema = permissionsResponseSchema;
+exports.pollResponseSchema = pollResponseSchema;
+exports.pollResultsSchema = pollResultsSchema;
 exports.pollTypeSchema = pollTypeSchema;
+exports.pollVotersResponseSchema = pollVotersResponseSchema;
 exports.priorityOptions = priorityOptions;
 exports.registerSchema = registerSchema;
 exports.reorderFaqsSchema = reorderFaqsSchema;
@@ -1215,5 +1224,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-QILV4F27.cjs.map
-//# sourceMappingURL=chunk-QILV4F27.cjs.map
+//# sourceMappingURL=chunk-MX3E6MAC.cjs.map
+//# sourceMappingURL=chunk-MX3E6MAC.cjs.map
