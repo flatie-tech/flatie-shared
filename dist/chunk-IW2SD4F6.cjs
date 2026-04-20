@@ -1,3 +1,5 @@
+'use strict';
+
 // src/errors/index.ts
 var BACKEND_ERROR_CODES = {
   // Auth
@@ -54,12 +56,28 @@ var BACKEND_ERROR_CODES = {
   POLL_EXPIRED: "POLL_EXPIRED",
   USER_ALREADY_VOTED: "USER_ALREADY_VOTED",
   // Join request workflow
-  JOIN_REQUEST_PENDING: "JOIN_REQUEST_PENDING"
+  JOIN_REQUEST_PENDING: "JOIN_REQUEST_PENDING",
+  JOIN_REQUEST_NOT_FOUND: "JOIN_REQUEST_NOT_FOUND",
+  JOIN_REQUEST_ALREADY_DECIDED: "JOIN_REQUEST_ALREADY_DECIDED",
+  // Approval lifecycle (cross-cutting: notices, failure reports, polls, etc.)
+  ALREADY_APPROVED: "ALREADY_APPROVED",
+  ALREADY_DECLINED: "ALREADY_DECLINED",
+  // Resource not found — second wave
+  INCOME_TRANSACTION_NOT_FOUND: "INCOME_TRANSACTION_NOT_FOUND",
+  RECURRING_TEMPLATE_NOT_FOUND: "RECURRING_TEMPLATE_NOT_FOUND",
+  INVOICE_NOT_FOUND: "INVOICE_NOT_FOUND",
+  BLOG_POST_NOT_FOUND: "BLOG_POST_NOT_FOUND",
+  // Subscription / billing
+  INVOICE_ALREADY_PAID: "INVOICE_ALREADY_PAID",
+  // Platform-specific
+  BUILDING_NOT_PENDING_APPROVAL: "BUILDING_NOT_PENDING_APPROVAL",
+  USER_ALREADY_PLATFORM_MEMBER: "USER_ALREADY_PLATFORM_MEMBER"
 };
 function isBackendErrorCode(code) {
   return typeof code === "string" && Object.values(BACKEND_ERROR_CODES).includes(code);
 }
 
-export { BACKEND_ERROR_CODES, isBackendErrorCode };
-//# sourceMappingURL=chunk-VGG7G2VQ.js.map
-//# sourceMappingURL=chunk-VGG7G2VQ.js.map
+exports.BACKEND_ERROR_CODES = BACKEND_ERROR_CODES;
+exports.isBackendErrorCode = isBackendErrorCode;
+//# sourceMappingURL=chunk-IW2SD4F6.cjs.map
+//# sourceMappingURL=chunk-IW2SD4F6.cjs.map
