@@ -16,6 +16,18 @@ describe('BACKEND_ERROR_CODES', () => {
     expect(BACKEND_ERROR_CODES.UNAUTHORIZED).toBe('UNAUTHORIZED');
     expect(BACKEND_ERROR_CODES.FORBIDDEN).toBe('FORBIDDEN');
   });
+
+  it('contains domain resource not-found codes', () => {
+    expect(BACKEND_ERROR_CODES.BUILDING_NOT_FOUND).toBe('BUILDING_NOT_FOUND');
+    expect(BACKEND_ERROR_CODES.APARTMENT_NOT_FOUND).toBe('APARTMENT_NOT_FOUND');
+    expect(BACKEND_ERROR_CODES.NOTICE_NOT_FOUND).toBe('NOTICE_NOT_FOUND');
+  });
+
+  it('contains membership and permission codes', () => {
+    expect(BACKEND_ERROR_CODES.USER_NOT_MEMBER_OF_BUILDING).toBe('USER_NOT_MEMBER_OF_BUILDING');
+    expect(BACKEND_ERROR_CODES.USER_ALREADY_MEMBER).toBe('USER_ALREADY_MEMBER');
+    expect(BACKEND_ERROR_CODES.INSUFFICIENT_PERMISSIONS).toBe('INSUFFICIENT_PERMISSIONS');
+  });
 });
 
 describe('isBackendErrorCode', () => {
