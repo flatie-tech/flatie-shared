@@ -45,12 +45,21 @@ var BACKEND_ERROR_CODES = {
   // Validation
   INVALID_OIB: "INVALID_OIB",
   INVALID_PHONE: "INVALID_PHONE",
-  DUPLICATE_RECORD: "DUPLICATE_RECORD"
+  DUPLICATE_RECORD: "DUPLICATE_RECORD",
+  VALIDATION_ERROR: "VALIDATION_ERROR",
+  // Chat — conversation-scoped (distinct from "event" or "building")
+  CONVERSATION_NOT_FOUND: "CONVERSATION_NOT_FOUND",
+  // Poll lifecycle
+  POLL_NOT_ACTIVE: "POLL_NOT_ACTIVE",
+  POLL_EXPIRED: "POLL_EXPIRED",
+  USER_ALREADY_VOTED: "USER_ALREADY_VOTED",
+  // Join request workflow
+  JOIN_REQUEST_PENDING: "JOIN_REQUEST_PENDING"
 };
 function isBackendErrorCode(code) {
   return typeof code === "string" && Object.values(BACKEND_ERROR_CODES).includes(code);
 }
 
 export { BACKEND_ERROR_CODES, isBackendErrorCode };
-//# sourceMappingURL=chunk-ANAWSZRB.js.map
-//# sourceMappingURL=chunk-ANAWSZRB.js.map
+//# sourceMappingURL=chunk-VGG7G2VQ.js.map
+//# sourceMappingURL=chunk-VGG7G2VQ.js.map

@@ -40,6 +40,12 @@ declare const BACKEND_ERROR_CODES: {
     readonly INVALID_OIB: "INVALID_OIB";
     readonly INVALID_PHONE: "INVALID_PHONE";
     readonly DUPLICATE_RECORD: "DUPLICATE_RECORD";
+    readonly VALIDATION_ERROR: "VALIDATION_ERROR";
+    readonly CONVERSATION_NOT_FOUND: "CONVERSATION_NOT_FOUND";
+    readonly POLL_NOT_ACTIVE: "POLL_NOT_ACTIVE";
+    readonly POLL_EXPIRED: "POLL_EXPIRED";
+    readonly USER_ALREADY_VOTED: "USER_ALREADY_VOTED";
+    readonly JOIN_REQUEST_PENDING: "JOIN_REQUEST_PENDING";
 };
 type BackendErrorCode = (typeof BACKEND_ERROR_CODES)[keyof typeof BACKEND_ERROR_CODES];
 declare function isBackendErrorCode(code: unknown): code is BackendErrorCode;
