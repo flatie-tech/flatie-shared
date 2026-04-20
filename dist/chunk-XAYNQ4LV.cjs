@@ -824,8 +824,6 @@ var ApprovalStatusSchema = zod.z.enum(approvalStatusOptions);
 var MaintenanceStatusSchema = zod.z.enum(maintenanceStatusOptions);
 var FailureStatusSchema = zod.z.enum(failureStatusOptions);
 var PrioritySchema = zod.z.enum(priorityOptions);
-
-// src/schemas/responses/failure-reports.ts
 var nestedFileSchema = zod.z.looseObject({
   id: zod.z.string().uuid(),
   title: zod.z.string(),
@@ -844,6 +842,14 @@ var nestedEventSchema = zod.z.looseObject({
   createdAt: zod.z.string().optional(),
   updatedAt: zod.z.string().nullable().optional()
 });
+var pollReferenceSchema = zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  question: zod.z.string(),
+  pollType: zod.z.string(),
+  deadline: zod.z.string().optional().nullable()
+});
+
+// src/schemas/responses/failure-reports.ts
 var maintenanceLogReferenceSchema = zod.z.looseObject({
   id: zod.z.string().uuid(),
   title: zod.z.string(),
@@ -851,12 +857,6 @@ var maintenanceLogReferenceSchema = zod.z.looseObject({
   cost: zod.z.number().optional().nullable(),
   financedBy: maintenanceFinancedBySchema.optional().nullable(),
   warranty: zod.z.boolean().optional().nullable()
-});
-var pollReferenceSchema = zod.z.looseObject({
-  id: zod.z.string().uuid(),
-  question: zod.z.string(),
-  pollType: zod.z.string(),
-  deadline: zod.z.string().optional().nullable()
 });
 var failureReportResponseSchema = zod.z.looseObject({
   id: zod.z.string().uuid(),
@@ -899,30 +899,6 @@ var faqResponseSchema = zod.z.looseObject({
   createdAt: zod.z.string(),
   updatedAt: zod.z.string().nullable().optional()
 });
-var nestedFileSchema2 = zod.z.looseObject({
-  id: zod.z.string().uuid(),
-  title: zod.z.string(),
-  documentUrl: zod.z.string().optional().nullable()
-});
-var nestedEventSchema2 = zod.z.looseObject({
-  id: zod.z.string(),
-  title: zod.z.string(),
-  type: zod.z.string().optional(),
-  description: zod.z.string().nullable().optional(),
-  startDate: zod.z.string(),
-  endDate: zod.z.string(),
-  color: zod.z.string().optional(),
-  userId: zod.z.string().nullable().optional(),
-  buildingId: zod.z.string().optional(),
-  createdAt: zod.z.string().optional(),
-  updatedAt: zod.z.string().nullable().optional()
-});
-var pollReferenceSchema2 = zod.z.looseObject({
-  id: zod.z.string().uuid(),
-  question: zod.z.string(),
-  pollType: zod.z.string(),
-  deadline: zod.z.string().optional().nullable()
-});
 var failureReportReferenceSchema = zod.z.looseObject({
   id: zod.z.string().uuid(),
   title: zod.z.string(),
@@ -933,7 +909,7 @@ var maintenanceLogResponseSchema = zod.z.looseObject({
   id: zod.z.string().uuid(),
   buildingId: zod.z.string().uuid(),
   title: zod.z.string(),
-  files: zod.z.array(nestedFileSchema2).default([]),
+  files: zod.z.array(nestedFileSchema).default([]),
   createdBy: zod.z.string().uuid(),
   createdByName: zod.z.string().nullable().optional(),
   contractor: zod.z.string(),
@@ -942,41 +918,23 @@ var maintenanceLogResponseSchema = zod.z.looseObject({
   warranty: zod.z.boolean().optional().nullable(),
   categoryId: zod.z.string().uuid().optional().nullable(),
   categoryName: zod.z.string().optional().nullable(),
-  events: zod.z.array(nestedEventSchema2).default([]),
+  events: zod.z.array(nestedEventSchema).default([]),
   createdAt: zod.z.string(),
   updatedAt: zod.z.string().nullable().optional(),
   canEdit: zod.z.boolean(),
   canDelete: zod.z.boolean(),
-  polls: zod.z.array(pollReferenceSchema2).default([]),
+  polls: zod.z.array(pollReferenceSchema).default([]),
   failureReports: zod.z.array(failureReportReferenceSchema).optional()
 });
 var paginatedMaintenanceLogsResponseSchema = paginatedResponseSchema(
   maintenanceLogResponseSchema
 );
-var nestedFileSchema3 = zod.z.looseObject({
-  id: zod.z.string().uuid(),
-  title: zod.z.string(),
-  documentUrl: zod.z.string().optional().nullable()
-});
-var nestedEventSchema3 = zod.z.looseObject({
-  id: zod.z.string(),
-  title: zod.z.string(),
-  type: zod.z.string().optional(),
-  description: zod.z.string().nullable().optional(),
-  startDate: zod.z.string(),
-  endDate: zod.z.string(),
-  color: zod.z.string().optional(),
-  userId: zod.z.string().nullable().optional(),
-  buildingId: zod.z.string().optional(),
-  createdAt: zod.z.string().optional(),
-  updatedAt: zod.z.string().nullable().optional()
-});
 var noticeResponseSchema = zod.z.looseObject({
   id: zod.z.string().uuid(),
   buildingId: zod.z.string().uuid(),
   title: zod.z.string(),
   content: zod.z.string(),
-  files: zod.z.array(nestedFileSchema3).default([]),
+  files: zod.z.array(nestedFileSchema).default([]),
   createdBy: zod.z.string().uuid().nullable(),
   approved: zod.z.boolean(),
   isAnonymous: zod.z.boolean().optional().default(false),
@@ -987,7 +945,7 @@ var noticeResponseSchema = zod.z.looseObject({
   canApprove: zod.z.boolean(),
   canEdit: zod.z.boolean(),
   canDelete: zod.z.boolean(),
-  events: zod.z.array(nestedEventSchema3).default([])
+  events: zod.z.array(nestedEventSchema).default([])
 });
 var paginatedNoticesResponseSchema = paginatedResponseSchema(noticeResponseSchema);
 var notificationResponseSchema = zod.z.looseObject({
@@ -1252,5 +1210,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-MP6YD5E6.cjs.map
-//# sourceMappingURL=chunk-MP6YD5E6.cjs.map
+//# sourceMappingURL=chunk-XAYNQ4LV.cjs.map
+//# sourceMappingURL=chunk-XAYNQ4LV.cjs.map
