@@ -32,12 +32,3 @@ export interface CreateFailureReportRequest {
   title: string;
   description?: string;
 }
-
-/**
- * Update failure report request
- */
-export interface UpdateFailureReportRequest {
-  title?: string;
-  description?: string;
-  status?: FailureStatus;
-}

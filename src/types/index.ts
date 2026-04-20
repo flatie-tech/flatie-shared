@@ -21,14 +21,12 @@ export type {
   EventColor,
   EventType,
   EventWithCreator,
-  UpdateEventRequest,
 } from './event.types';
 // Failure report types
 export type {
   CreateFailureReportRequest,
   FailureReport,
   FailureReportWithCreator,
-  UpdateFailureReportRequest,
 } from './failure-report.types';
 // Financial types
 export type {
@@ -39,9 +37,6 @@ export type {
   FinancialSummary,
   RecurringTemplate,
   Transaction,
-  UpdateFundRequest,
-  UpdateRecurringTemplateRequest,
-  UpdateTransactionRequest,
 } from './financial.types';
 // Maintenance log types
 export type {
@@ -49,14 +44,12 @@ export type {
   MaintenanceFinancedBy,
   MaintenanceLog,
   MaintenanceLogWithCreator,
-  UpdateMaintenanceLogRequest,
 } from './maintenance-log.types';
 // Notice types
 export type {
   CreateNoticeRequest,
   Notice,
   NoticeWithCreator,
-  UpdateNoticeRequest,
 } from './notice.types';
 // Pagination types
 export type { DateRangeParams, PaginatedResponse, PaginationParams } from './pagination.types';

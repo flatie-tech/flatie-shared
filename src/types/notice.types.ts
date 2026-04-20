@@ -27,11 +27,3 @@ export interface CreateNoticeRequest {
   title: string;
   content: string;
 }
-
-/**
- * Update notice request
- */
-export interface UpdateNoticeRequest {
-  title?: string;
-  content?: string;
-}

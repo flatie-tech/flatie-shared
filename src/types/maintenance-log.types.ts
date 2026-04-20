@@ -40,15 +40,3 @@ export interface CreateMaintenanceLogRequest {
   financedBy?: MaintenanceFinancedBy;
   warranty?: boolean;
 }
-
-/**
- * Update maintenance log request
- */
-export interface UpdateMaintenanceLogRequest {
-  title?: string;
-  description?: string;
-  contractor?: string;
-  cost?: string;
-  financedBy?: MaintenanceFinancedBy;
-  warranty?: boolean;
-}
