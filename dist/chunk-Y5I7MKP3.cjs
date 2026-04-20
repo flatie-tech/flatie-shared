@@ -725,6 +725,133 @@ var MaintenanceStatusSchema = zod.z.enum(maintenanceStatusOptions);
 var FailureStatusSchema = zod.z.enum(failureStatusOptions);
 var PrioritySchema = zod.z.enum(priorityOptions);
 
+// src/schemas/responses/failure-reports.ts
+var nestedFileSchema = zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  title: zod.z.string(),
+  documentUrl: zod.z.string().optional().nullable()
+});
+var nestedEventSchema = zod.z.looseObject({
+  id: zod.z.string(),
+  title: zod.z.string(),
+  startDate: zod.z.string(),
+  endDate: zod.z.string()
+});
+var maintenanceLogReferenceSchema = zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  title: zod.z.string(),
+  contractor: zod.z.string(),
+  cost: zod.z.number().optional().nullable(),
+  financedBy: maintenanceFinancedBySchema.optional().nullable(),
+  warranty: zod.z.boolean().optional().nullable()
+});
+var failureReportResponseSchema = zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  buildingId: zod.z.string().uuid(),
+  title: zod.z.string(),
+  description: zod.z.string().optional().nullable(),
+  files: zod.z.array(nestedFileSchema).default([]),
+  submittedBy: zod.z.string().uuid().nullable(),
+  submittedByName: zod.z.string().optional().nullable(),
+  status: FailureStatusSchema,
+  approved: zod.z.boolean(),
+  isAnonymous: zod.z.boolean().optional().default(false),
+  priority: PrioritySchema.optional().nullable(),
+  createdAt: zod.z.string(),
+  updatedAt: zod.z.string().nullable().optional(),
+  canEdit: zod.z.boolean(),
+  canDelete: zod.z.boolean(),
+  canApprove: zod.z.boolean(),
+  canStatus: zod.z.boolean(),
+  locationType: zod.z.string().optional().nullable(),
+  commonAreaDescription: zod.z.string().optional().nullable(),
+  unitType: zod.z.string().optional().nullable(),
+  unitId: zod.z.string().uuid().optional().nullable(),
+  unitName: zod.z.string().optional().nullable(),
+  events: zod.z.array(nestedEventSchema).default([]),
+  maintenanceLogs: zod.z.array(maintenanceLogReferenceSchema).default([])
+});
+var paginatedFailureReportsResponseSchema = paginatedResponseSchema(
+  failureReportResponseSchema
+);
+var nestedFileSchema2 = zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  title: zod.z.string(),
+  documentUrl: zod.z.string().optional().nullable()
+});
+var nestedEventSchema2 = zod.z.looseObject({
+  id: zod.z.string(),
+  title: zod.z.string(),
+  startDate: zod.z.string(),
+  endDate: zod.z.string()
+});
+var pollReferenceSchema = zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  question: zod.z.string(),
+  pollType: zod.z.string(),
+  deadline: zod.z.string().optional().nullable()
+});
+var failureReportReferenceSchema = zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  title: zod.z.string(),
+  status: zod.z.string(),
+  createdAt: zod.z.string()
+});
+var maintenanceLogResponseSchema = zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  buildingId: zod.z.string().uuid(),
+  title: zod.z.string(),
+  files: zod.z.array(nestedFileSchema2).default([]),
+  createdBy: zod.z.string().uuid(),
+  createdByName: zod.z.string().nullable().optional(),
+  contractor: zod.z.string(),
+  cost: zod.z.number(),
+  financedBy: maintenanceFinancedBySchema.optional().nullable(),
+  warranty: zod.z.boolean().optional().nullable(),
+  categoryId: zod.z.string().uuid().optional().nullable(),
+  categoryName: zod.z.string().optional().nullable(),
+  events: zod.z.array(nestedEventSchema2).default([]),
+  createdAt: zod.z.string(),
+  updatedAt: zod.z.string().nullable().optional(),
+  canEdit: zod.z.boolean(),
+  canDelete: zod.z.boolean(),
+  polls: zod.z.array(pollReferenceSchema).default([]),
+  failureReports: zod.z.array(failureReportReferenceSchema).optional()
+});
+var paginatedMaintenanceLogsResponseSchema = paginatedResponseSchema(
+  maintenanceLogResponseSchema
+);
+var nestedFileSchema3 = zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  title: zod.z.string(),
+  documentUrl: zod.z.string().optional().nullable()
+});
+var nestedEventSchema3 = zod.z.looseObject({
+  id: zod.z.string(),
+  title: zod.z.string(),
+  startDate: zod.z.string(),
+  endDate: zod.z.string()
+});
+var noticeResponseSchema = zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  buildingId: zod.z.string().uuid(),
+  title: zod.z.string(),
+  content: zod.z.string(),
+  files: zod.z.array(nestedFileSchema3).default([]),
+  createdBy: zod.z.string().uuid().nullable(),
+  approved: zod.z.boolean(),
+  isAnonymous: zod.z.boolean().optional().default(false),
+  pinned: zod.z.boolean().optional().default(false),
+  createdAt: zod.z.string(),
+  updatedAt: zod.z.string().nullable().optional(),
+  createdByName: zod.z.string().nullable().optional(),
+  canApprove: zod.z.boolean(),
+  canEdit: zod.z.boolean(),
+  canDelete: zod.z.boolean(),
+  events: zod.z.array(nestedEventSchema3).default([])
+});
+var paginatedNoticesResponseSchema = paginatedResponseSchema(noticeResponseSchema);
+
 exports.ApprovalStatusSchema = ApprovalStatusSchema;
 exports.BUILDING_LIMITS = BUILDING_LIMITS;
 exports.BUILDING_TYPES = BUILDING_TYPES;
@@ -780,6 +907,7 @@ exports.emailSchema = emailSchema;
 exports.eventColorSchema = eventColorSchema;
 exports.eventTypeSchema = eventTypeSchema;
 exports.failureReportEventSchema = failureReportEventSchema;
+exports.failureReportResponseSchema = failureReportResponseSchema;
 exports.failureStatusOptions = failureStatusOptions;
 exports.finalizePollSchema = finalizePollSchema;
 exports.forgotPasswordSchema = forgotPasswordSchema;
@@ -794,12 +922,17 @@ exports.joinBuildingWithOtpSchema = joinBuildingWithOtpSchema;
 exports.loginSchema = loginSchema;
 exports.maintenanceFinancedBySchema = maintenanceFinancedBySchema;
 exports.maintenanceLogEventSchema = maintenanceLogEventSchema;
+exports.maintenanceLogResponseSchema = maintenanceLogResponseSchema;
 exports.maintenanceStatusOptions = maintenanceStatusOptions;
 exports.multipartArray = multipartArray;
 exports.multipartBoolean = multipartBoolean;
 exports.noticeEventSchema = noticeEventSchema;
+exports.noticeResponseSchema = noticeResponseSchema;
 exports.optionalDateTimeSchema = optionalDateTimeSchema;
 exports.paginatedApartmentsResponseSchema = paginatedApartmentsResponseSchema;
+exports.paginatedFailureReportsResponseSchema = paginatedFailureReportsResponseSchema;
+exports.paginatedMaintenanceLogsResponseSchema = paginatedMaintenanceLogsResponseSchema;
+exports.paginatedNoticesResponseSchema = paginatedNoticesResponseSchema;
 exports.paginatedResponseSchema = paginatedResponseSchema;
 exports.paginationParamsSchema = paginationParamsSchema;
 exports.passwordSchema = passwordSchema;
@@ -835,5 +968,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-EBJHW27F.cjs.map
-//# sourceMappingURL=chunk-EBJHW27F.cjs.map
+//# sourceMappingURL=chunk-Y5I7MKP3.cjs.map
+//# sourceMappingURL=chunk-Y5I7MKP3.cjs.map

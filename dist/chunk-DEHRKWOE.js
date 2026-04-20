@@ -723,6 +723,133 @@ var MaintenanceStatusSchema = z.enum(maintenanceStatusOptions);
 var FailureStatusSchema = z.enum(failureStatusOptions);
 var PrioritySchema = z.enum(priorityOptions);
 
-export { ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, baseEntitySchema, buildingEntitySchema, buildingTypeSchema, buildingUserEntitySchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventTypeSchema, failureReportEventSchema, failureStatusOptions, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceStatusOptions, multipartArray, multipartBoolean, noticeEventSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollTypeSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updatePasswordSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-CIS5YPM7.js.map
-//# sourceMappingURL=chunk-CIS5YPM7.js.map
+// src/schemas/responses/failure-reports.ts
+var nestedFileSchema = z.looseObject({
+  id: z.string().uuid(),
+  title: z.string(),
+  documentUrl: z.string().optional().nullable()
+});
+var nestedEventSchema = z.looseObject({
+  id: z.string(),
+  title: z.string(),
+  startDate: z.string(),
+  endDate: z.string()
+});
+var maintenanceLogReferenceSchema = z.looseObject({
+  id: z.string().uuid(),
+  title: z.string(),
+  contractor: z.string(),
+  cost: z.number().optional().nullable(),
+  financedBy: maintenanceFinancedBySchema.optional().nullable(),
+  warranty: z.boolean().optional().nullable()
+});
+var failureReportResponseSchema = z.looseObject({
+  id: z.string().uuid(),
+  buildingId: z.string().uuid(),
+  title: z.string(),
+  description: z.string().optional().nullable(),
+  files: z.array(nestedFileSchema).default([]),
+  submittedBy: z.string().uuid().nullable(),
+  submittedByName: z.string().optional().nullable(),
+  status: FailureStatusSchema,
+  approved: z.boolean(),
+  isAnonymous: z.boolean().optional().default(false),
+  priority: PrioritySchema.optional().nullable(),
+  createdAt: z.string(),
+  updatedAt: z.string().nullable().optional(),
+  canEdit: z.boolean(),
+  canDelete: z.boolean(),
+  canApprove: z.boolean(),
+  canStatus: z.boolean(),
+  locationType: z.string().optional().nullable(),
+  commonAreaDescription: z.string().optional().nullable(),
+  unitType: z.string().optional().nullable(),
+  unitId: z.string().uuid().optional().nullable(),
+  unitName: z.string().optional().nullable(),
+  events: z.array(nestedEventSchema).default([]),
+  maintenanceLogs: z.array(maintenanceLogReferenceSchema).default([])
+});
+var paginatedFailureReportsResponseSchema = paginatedResponseSchema(
+  failureReportResponseSchema
+);
+var nestedFileSchema2 = z.looseObject({
+  id: z.string().uuid(),
+  title: z.string(),
+  documentUrl: z.string().optional().nullable()
+});
+var nestedEventSchema2 = z.looseObject({
+  id: z.string(),
+  title: z.string(),
+  startDate: z.string(),
+  endDate: z.string()
+});
+var pollReferenceSchema = z.looseObject({
+  id: z.string().uuid(),
+  question: z.string(),
+  pollType: z.string(),
+  deadline: z.string().optional().nullable()
+});
+var failureReportReferenceSchema = z.looseObject({
+  id: z.string().uuid(),
+  title: z.string(),
+  status: z.string(),
+  createdAt: z.string()
+});
+var maintenanceLogResponseSchema = z.looseObject({
+  id: z.string().uuid(),
+  buildingId: z.string().uuid(),
+  title: z.string(),
+  files: z.array(nestedFileSchema2).default([]),
+  createdBy: z.string().uuid(),
+  createdByName: z.string().nullable().optional(),
+  contractor: z.string(),
+  cost: z.number(),
+  financedBy: maintenanceFinancedBySchema.optional().nullable(),
+  warranty: z.boolean().optional().nullable(),
+  categoryId: z.string().uuid().optional().nullable(),
+  categoryName: z.string().optional().nullable(),
+  events: z.array(nestedEventSchema2).default([]),
+  createdAt: z.string(),
+  updatedAt: z.string().nullable().optional(),
+  canEdit: z.boolean(),
+  canDelete: z.boolean(),
+  polls: z.array(pollReferenceSchema).default([]),
+  failureReports: z.array(failureReportReferenceSchema).optional()
+});
+var paginatedMaintenanceLogsResponseSchema = paginatedResponseSchema(
+  maintenanceLogResponseSchema
+);
+var nestedFileSchema3 = z.looseObject({
+  id: z.string().uuid(),
+  title: z.string(),
+  documentUrl: z.string().optional().nullable()
+});
+var nestedEventSchema3 = z.looseObject({
+  id: z.string(),
+  title: z.string(),
+  startDate: z.string(),
+  endDate: z.string()
+});
+var noticeResponseSchema = z.looseObject({
+  id: z.string().uuid(),
+  buildingId: z.string().uuid(),
+  title: z.string(),
+  content: z.string(),
+  files: z.array(nestedFileSchema3).default([]),
+  createdBy: z.string().uuid().nullable(),
+  approved: z.boolean(),
+  isAnonymous: z.boolean().optional().default(false),
+  pinned: z.boolean().optional().default(false),
+  createdAt: z.string(),
+  updatedAt: z.string().nullable().optional(),
+  createdByName: z.string().nullable().optional(),
+  canApprove: z.boolean(),
+  canEdit: z.boolean(),
+  canDelete: z.boolean(),
+  events: z.array(nestedEventSchema3).default([])
+});
+var paginatedNoticesResponseSchema = paginatedResponseSchema(noticeResponseSchema);
+
+export { ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, baseEntitySchema, buildingEntitySchema, buildingTypeSchema, buildingUserEntitySchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollTypeSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updatePasswordSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
+//# sourceMappingURL=chunk-DEHRKWOE.js.map
+//# sourceMappingURL=chunk-DEHRKWOE.js.map
