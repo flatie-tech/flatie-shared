@@ -1,5 +1,9 @@
 import { z } from 'zod';
 
+// Re-export UUID brand + helpers so consumers can `import { toUuid, UuidString }
+// from '@flatie/shared/validation'` alongside OIB/phone/address validators.
+export { isUuid, toUuid, type UuidString, unsafeUuid, uuidStringSchema } from './uuid';
+
 /**
  * Croatian OIB (Personal Identification Number) validation.
  * OIB is an 11-digit number with a check digit (ISO 7064, MOD 11,10).

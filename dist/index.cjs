@@ -1,7 +1,7 @@
 'use strict';
 
 var chunk4V4EV2A7_cjs = require('./chunk-4V4EV2A7.cjs');
-var chunkC3KUWJG7_cjs = require('./chunk-C3KUWJG7.cjs');
+var chunkH6ODYF4G_cjs = require('./chunk-H6ODYF4G.cjs');
 var chunk4DLVKGR7_cjs = require('./chunk-4DLVKGR7.cjs');
 var chunkIW2SD4F6_cjs = require('./chunk-IW2SD4F6.cjs');
 var chunkF2CHB4NM_cjs = require('./chunk-F2CHB4NM.cjs');
@@ -185,19 +185,35 @@ Object.defineProperty(exports, "priorityVariant", {
 });
 Object.defineProperty(exports, "addressSchema", {
   enumerable: true,
-  get: function () { return chunkC3KUWJG7_cjs.addressSchema; }
+  get: function () { return chunkH6ODYF4G_cjs.addressSchema; }
+});
+Object.defineProperty(exports, "isUuid", {
+  enumerable: true,
+  get: function () { return chunkH6ODYF4G_cjs.isUuid; }
 });
 Object.defineProperty(exports, "oibSchema", {
   enumerable: true,
-  get: function () { return chunkC3KUWJG7_cjs.oibSchema; }
+  get: function () { return chunkH6ODYF4G_cjs.oibSchema; }
 });
 Object.defineProperty(exports, "optionalOibSchema", {
   enumerable: true,
-  get: function () { return chunkC3KUWJG7_cjs.optionalOibSchema; }
+  get: function () { return chunkH6ODYF4G_cjs.optionalOibSchema; }
 });
 Object.defineProperty(exports, "phoneSchema", {
   enumerable: true,
-  get: function () { return chunkC3KUWJG7_cjs.phoneSchema; }
+  get: function () { return chunkH6ODYF4G_cjs.phoneSchema; }
+});
+Object.defineProperty(exports, "toUuid", {
+  enumerable: true,
+  get: function () { return chunkH6ODYF4G_cjs.toUuid; }
+});
+Object.defineProperty(exports, "unsafeUuid", {
+  enumerable: true,
+  get: function () { return chunkH6ODYF4G_cjs.unsafeUuid; }
+});
+Object.defineProperty(exports, "uuidStringSchema", {
+  enumerable: true,
+  get: function () { return chunkH6ODYF4G_cjs.uuidStringSchema; }
 });
 Object.defineProperty(exports, "ADMIN_ORG_PERMISSIONS", {
   enumerable: true,

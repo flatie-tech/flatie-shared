@@ -1,9 +1,23 @@
-'use strict';
-
-var zod = require('zod');
+import { z } from 'zod';
 
 // src/validation/index.ts
-var oibSchema = zod.z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").refine(
+var uuidStringSchema = z.string().uuid("Must be a valid UUID").transform((value) => value);
+var UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+function isUuid(value) {
+  return UUID_RE.test(value);
+}
+function toUuid(value) {
+  if (!UUID_RE.test(value)) {
+    throw new Error(`Expected a valid UUID, got: ${value}`);
+  }
+  return value;
+}
+function unsafeUuid(value) {
+  return value;
+}
+
+// src/validation/index.ts
+var oibSchema = z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").refine(
   (oib) => {
     let remainder = 10;
     for (let i = 0; i < 10; i++) {
@@ -16,7 +30,7 @@ var oibSchema = zod.z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits"
   },
   { message: "Invalid OIB check digit" }
 );
-var optionalOibSchema = zod.z.string().optional().refine(
+var optionalOibSchema = z.string().optional().refine(
   (val) => {
     if (!val || val.trim() === "") return true;
     if (!/^\d{11}$/.test(val.trim())) return false;
@@ -32,7 +46,7 @@ var optionalOibSchema = zod.z.string().optional().refine(
   },
   { message: "OIB must be exactly 11 digits with a valid check digit" }
 );
-var phoneSchema = zod.z.string().optional().refine(
+var phoneSchema = z.string().optional().refine(
   (val) => {
     if (!val || val.trim() === "") return true;
     if (!/^[\d\s\-+()]+$/.test(val)) return false;
@@ -41,11 +55,8 @@ var phoneSchema = zod.z.string().optional().refine(
   },
   { message: "Please enter a valid phone number (minimum 8 digits)" }
 );
-var addressSchema = zod.z.string().max(200, "Address must be at most 200 characters");
+var addressSchema = z.string().max(200, "Address must be at most 200 characters");
 
-exports.addressSchema = addressSchema;
-exports.oibSchema = oibSchema;
-exports.optionalOibSchema = optionalOibSchema;
-exports.phoneSchema = phoneSchema;
-//# sourceMappingURL=chunk-C3KUWJG7.cjs.map
-//# sourceMappingURL=chunk-C3KUWJG7.cjs.map
+export { addressSchema, isUuid, oibSchema, optionalOibSchema, phoneSchema, toUuid, unsafeUuid, uuidStringSchema };
+//# sourceMappingURL=chunk-DLK53UMD.js.map
+//# sourceMappingURL=chunk-DLK53UMD.js.map
