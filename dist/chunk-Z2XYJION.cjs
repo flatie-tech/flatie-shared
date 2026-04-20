@@ -971,14 +971,169 @@ var noticeResponseSchema = zod.z.looseObject({
   events: zod.z.array(nestedEventSchema).default([])
 });
 var paginatedNoticesResponseSchema = paginatedResponseSchema(noticeResponseSchema);
+var baseNotificationDataSchema = zod.z.object({
+  entityType: zod.z.string().optional(),
+  entityId: zod.z.string().optional(),
+  actorId: zod.z.string().uuid().optional(),
+  actorName: zod.z.string().optional(),
+  actionUrl: zod.z.string().optional()
+});
+var noticeCreatedDataSchema = baseNotificationDataSchema.extend({
+  title: zod.z.string(),
+  content: zod.z.string(),
+  createdAt: zod.z.string().or(zod.z.date()),
+  isPinned: zod.z.boolean().optional()
+});
+var noticeApprovedDataSchema = baseNotificationDataSchema.extend({
+  title: zod.z.string()
+});
+var noticeRejectedDataSchema = baseNotificationDataSchema.extend({
+  title: zod.z.string()
+});
+var pollCreatedDataSchema = baseNotificationDataSchema.extend({
+  question: zod.z.string(),
+  pollType: zod.z.string(),
+  deadline: zod.z.string().or(zod.z.date()).nullable().optional(),
+  options: zod.z.array(zod.z.string())
+});
+var pollFinalizedDataSchema = baseNotificationDataSchema.extend({
+  question: zod.z.string(),
+  pollType: zod.z.string(),
+  options: zod.z.array(zod.z.string())
+});
+var eventCreatedOrUpdatedDataSchema = baseNotificationDataSchema.extend({
+  title: zod.z.string(),
+  description: zod.z.string().nullable().optional(),
+  eventType: zod.z.string().nullable().optional(),
+  subtype: zod.z.string().nullable().optional(),
+  startDate: zod.z.string().or(zod.z.date()),
+  endDate: zod.z.string().or(zod.z.date()).nullable().optional(),
+  color: zod.z.string().nullable().optional()
+});
+var eventCancelledDataSchema = baseNotificationDataSchema.extend({
+  title: zod.z.string(),
+  description: zod.z.string().nullable().optional(),
+  eventType: zod.z.string().nullable().optional(),
+  startDate: zod.z.string().or(zod.z.date()),
+  endDate: zod.z.string().or(zod.z.date()).nullable().optional()
+});
+var wasteReminderDataSchema = baseNotificationDataSchema.extend({
+  title: zod.z.string(),
+  wasteTypeLabel: zod.z.string(),
+  subtype: zod.z.string(),
+  startDate: zod.z.string().or(zod.z.date())
+});
+var failureReportCreatedDataSchema = baseNotificationDataSchema.extend({
+  title: zod.z.string(),
+  description: zod.z.string().nullable().optional(),
+  location: zod.z.string().nullable().optional()
+});
+var failureReportStatusDataSchema = baseNotificationDataSchema.extend({
+  title: zod.z.string(),
+  status: zod.z.string(),
+  description: zod.z.string().nullable().optional()
+});
+var maintenanceLogCreatedDataSchema = baseNotificationDataSchema.extend({
+  title: zod.z.string(),
+  description: zod.z.string().nullable().optional(),
+  category: zod.z.string().nullable().optional(),
+  contractor: zod.z.string().nullable().optional(),
+  // `cost` comes from a Postgres DECIMAL, which drizzle serializes as string.
+  cost: zod.z.union([zod.z.string(), zod.z.number()]).nullable().optional()
+});
+var buildingJoinRequestReceivedDataSchema = baseNotificationDataSchema.extend({
+  userName: zod.z.string(),
+  userEmail: zod.z.string(),
+  message: zod.z.string().nullable().optional()
+});
+var buildingJoinRequestDecidedDataSchema = baseNotificationDataSchema.extend({
+  rejectionReason: zod.z.string().nullable().optional()
+});
+var buildingMemberJoinedDataSchema = baseNotificationDataSchema;
+var buildingRoleChangedDataSchema = baseNotificationDataSchema.extend({
+  role: zod.z.string()
+});
+var buildingPendingApprovalDataSchema = baseNotificationDataSchema.extend({
+  buildingName: zod.z.string()
+});
+var buildingApprovedDataSchema = baseNotificationDataSchema.extend({
+  buildingName: zod.z.string()
+});
+var buildingRejectedDataSchema = baseNotificationDataSchema.extend({
+  buildingName: zod.z.string(),
+  rejectionReason: zod.z.string()
+});
+var chatMessageDataSchema = baseNotificationDataSchema.extend({
+  senderName: zod.z.string(),
+  messagePreview: zod.z.string(),
+  conversationId: zod.z.string().uuid()
+});
+var unimplementedDataSchema = baseNotificationDataSchema;
+({
+  [chunk5UBJHQVX_cjs.NotificationType.NOTICE_CREATED]: noticeCreatedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.NOTICE_APPROVED]: noticeApprovedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.NOTICE_REJECTED]: noticeRejectedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.POLL_CREATED]: pollCreatedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.POLL_DEADLINE_24H]: unimplementedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.POLL_DEADLINE_1H]: unimplementedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.POLL_FINALIZED]: pollFinalizedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.EVENT_CREATED]: eventCreatedOrUpdatedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.EVENT_UPDATED]: eventCreatedOrUpdatedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.EVENT_CANCELLED]: eventCancelledDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.EVENT_REMINDER_24H]: unimplementedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.EVENT_REMINDER_1H]: unimplementedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.WASTE_REMINDER_MIXED]: wasteReminderDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.WASTE_REMINDER_BIO]: wasteReminderDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.WASTE_REMINDER_PLASTIC_METAL]: wasteReminderDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.WASTE_REMINDER_PAPER_CARDBOARD]: wasteReminderDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.FAILURE_REPORT_CREATED]: failureReportCreatedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.FAILURE_REPORT_STATUS_CHANGED]: failureReportStatusDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.FAILURE_REPORT_RESOLVED]: failureReportStatusDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.MAINTENANCE_LOG_CREATED]: maintenanceLogCreatedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.PAYMENT_DUE]: unimplementedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.PAYMENT_RECEIVED]: unimplementedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.BUILDING_JOIN_REQUEST_RECEIVED]: buildingJoinRequestReceivedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.BUILDING_JOIN_REQUEST_APPROVED]: buildingJoinRequestDecidedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.BUILDING_JOIN_REQUEST_REJECTED]: buildingJoinRequestDecidedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.BUILDING_MEMBER_JOINED]: buildingMemberJoinedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.BUILDING_ROLE_CHANGED]: buildingRoleChangedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.BUILDING_PENDING_APPROVAL]: buildingPendingApprovalDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.BUILDING_APPROVED]: buildingApprovedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.BUILDING_REJECTED]: buildingRejectedDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.CHAT_MESSAGE]: chatMessageDataSchema,
+  [chunk5UBJHQVX_cjs.NotificationType.SYSTEM_ANNOUNCEMENT]: unimplementedDataSchema
+});
+var notificationDataSchema = zod.z.union([
+  noticeCreatedDataSchema,
+  noticeApprovedDataSchema,
+  noticeRejectedDataSchema,
+  pollCreatedDataSchema,
+  pollFinalizedDataSchema,
+  eventCreatedOrUpdatedDataSchema,
+  eventCancelledDataSchema,
+  wasteReminderDataSchema,
+  failureReportCreatedDataSchema,
+  failureReportStatusDataSchema,
+  maintenanceLogCreatedDataSchema,
+  buildingJoinRequestReceivedDataSchema,
+  buildingJoinRequestDecidedDataSchema,
+  buildingMemberJoinedDataSchema,
+  buildingRoleChangedDataSchema,
+  buildingPendingApprovalDataSchema,
+  buildingApprovedDataSchema,
+  buildingRejectedDataSchema,
+  chatMessageDataSchema,
+  unimplementedDataSchema
+]);
+var notificationTypeValues = Object.values(chunk5UBJHQVX_cjs.NotificationType);
 var notificationResponseSchema = zod.z.looseObject({
   id: zod.z.string().uuid(),
   title: zod.z.string(),
   body: zod.z.string(),
-  type: zod.z.string(),
+  type: zod.z.enum(notificationTypeValues),
   buildingId: zod.z.string().uuid().nullable().optional(),
   buildingName: zod.z.string().nullable().optional(),
-  data: zod.z.record(zod.z.string(), zod.z.unknown()).nullable().optional(),
+  data: notificationDataSchema.nullable().optional(),
   read: zod.z.boolean(),
   readAt: zod.z.string().nullable().optional(),
   createdAt: zod.z.string()
@@ -1237,5 +1392,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-GA7ZTNF7.cjs.map
-//# sourceMappingURL=chunk-GA7ZTNF7.cjs.map
+//# sourceMappingURL=chunk-Z2XYJION.cjs.map
+//# sourceMappingURL=chunk-Z2XYJION.cjs.map

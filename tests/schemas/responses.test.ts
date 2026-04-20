@@ -1,11 +1,14 @@
 import { describe, expect, it } from 'vitest';
+import { NotificationType } from '../../src/enums/notification.enum';
 import {
   buildingDetailResponseSchema,
   buildingResponseSchema,
   eventResponseSchema,
   failureReportResponseSchema,
+  getNotificationDataSchema,
   maintenanceLogResponseSchema,
   noticeResponseSchema,
+  notificationResponseSchema,
   paginatedBuildingsResponseSchema,
   paginatedEventsResponseSchema,
   paginatedPollsResponseSchema,
@@ -358,5 +361,141 @@ describe('Failure report response (polls field added in v0.18.2)', () => {
     };
     const parsed = failureReportResponseSchema.parse(payload);
     expect(parsed.polls).toEqual([]);
+  });
+});
+
+describe('Notification response schema', () => {
+  const NOTIFICATION_ID = 'dd0a1e6e-8c9d-4a5b-8e7f-4d3c2e1b0a33';
+  const CONVERSATION_ID = 'ee0a1e6e-8c9d-4a5b-8e7f-4d3c2e1b0a44';
+
+  const baseNotification = {
+    id: NOTIFICATION_ID,
+    buildingId: BUILDING_ID,
+    buildingName: 'Sunset Apartments',
+    read: false,
+    readAt: null,
+    createdAt: TIMESTAMP,
+  };
+
+  it('parses a NOTICE_CREATED notification with typed data', () => {
+    const payload = {
+      ...baseNotification,
+      type: NotificationType.NOTICE_CREATED,
+      title: 'New notice',
+      body: 'A notice was posted',
+      data: {
+        entityType: 'notice',
+        entityId: NOTIFICATION_ID,
+        actorId: USER_ID,
+        actorName: 'Iva',
+        title: 'Water outage',
+        content: 'Tomorrow 08:00-14:00',
+        createdAt: TIMESTAMP,
+        isPinned: false,
+        actionUrl: `/admin/buildings/${BUILDING_ID}?noticeId=${NOTIFICATION_ID}`,
+      },
+    };
+    expect(() => notificationResponseSchema.parse(payload)).not.toThrow();
+  });
+
+  it('parses a CHAT_MESSAGE notification with conversation payload', () => {
+    const payload = {
+      ...baseNotification,
+      type: NotificationType.CHAT_MESSAGE,
+      title: 'New message',
+      body: 'Iva: hello',
+      data: {
+        actorId: USER_ID,
+        actorName: 'Iva',
+        senderName: 'Iva',
+        messagePreview: 'hello',
+        conversationId: CONVERSATION_ID,
+        actionUrl: `/admin/buildings/${BUILDING_ID}/chat?c=${CONVERSATION_ID}`,
+      },
+    };
+    expect(() => notificationResponseSchema.parse(payload)).not.toThrow();
+  });
+
+  it('parses a WASTE_REMINDER_MIXED payload from the scheduler', () => {
+    const payload = {
+      ...baseNotification,
+      type: NotificationType.WASTE_REMINDER_MIXED,
+      title: 'Mixed waste tomorrow',
+      body: 'Bring out the mixed waste bin',
+      data: {
+        entityType: 'event',
+        entityId: EVENT_ID,
+        actorId: USER_ID,
+        actorName: 'Iva',
+        title: 'Mixed waste collection',
+        wasteTypeLabel: '{{wasteSubtype_mixed}}',
+        subtype: 'mixed',
+        startDate: TIMESTAMP,
+        actionUrl: `/admin/buildings/${BUILDING_ID}/events`,
+      },
+    };
+    expect(() => notificationResponseSchema.parse(payload)).not.toThrow();
+  });
+
+  it('parses a MAINTENANCE_LOG_CREATED with decimal cost as string', () => {
+    const payload = {
+      ...baseNotification,
+      type: NotificationType.MAINTENANCE_LOG_CREATED,
+      title: 'New maintenance log',
+      body: 'Log added',
+      data: {
+        entityType: 'maintenance_log',
+        entityId: NOTIFICATION_ID,
+        actorName: 'Iva',
+        title: 'Elevator service',
+        description: 'Annual inspection',
+        category: 'Elevator',
+        contractor: 'KONE',
+        cost: '1250.00',
+        actionUrl: `/admin/buildings/${BUILDING_ID}`,
+      },
+    };
+    expect(() => notificationResponseSchema.parse(payload)).not.toThrow();
+  });
+
+  it('accepts a null data field for unimplemented notification types', () => {
+    const payload = {
+      ...baseNotification,
+      type: NotificationType.SYSTEM_ANNOUNCEMENT,
+      title: 'System',
+      body: 'Hello',
+      data: null,
+    };
+    expect(() => notificationResponseSchema.parse(payload)).not.toThrow();
+  });
+
+  it('rejects an unknown notification type', () => {
+    const payload = {
+      ...baseNotification,
+      type: 'not_a_real_type',
+      title: 'Bogus',
+      body: 'Bogus',
+    };
+    expect(() => notificationResponseSchema.parse(payload)).toThrow();
+  });
+
+  it('getNotificationDataSchema narrows to the per-type payload schema', () => {
+    const chatSchema = getNotificationDataSchema(NotificationType.CHAT_MESSAGE);
+    const valid = chatSchema.parse({
+      actorName: 'Iva',
+      senderName: 'Iva',
+      messagePreview: 'hello',
+      conversationId: CONVERSATION_ID,
+    });
+    expect(valid.conversationId).toBe(CONVERSATION_ID);
+
+    expect(() =>
+      chatSchema.parse({
+        actorName: 'Iva',
+        senderName: 'Iva',
+        messagePreview: 'hello',
+        conversationId: 'not-a-uuid',
+      }),
+    ).toThrow();
   });
 });

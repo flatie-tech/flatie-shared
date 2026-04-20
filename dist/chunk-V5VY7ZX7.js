@@ -1,4 +1,4 @@
-import { ApartmentRole, OrgRole, OrgType, BuildingRole, FailureUnitType, FailureLocationType, Priority, TransactionType, Role, PlatformRole, BuildingStatus } from './chunk-P25WSM2I.js';
+import { ApartmentRole, OrgRole, OrgType, BuildingRole, FailureUnitType, FailureLocationType, Priority, TransactionType, Role, PlatformRole, BuildingStatus, NotificationType } from './chunk-P25WSM2I.js';
 import { z } from 'zod';
 
 var apiErrorSchema = z.object({
@@ -969,14 +969,169 @@ var noticeResponseSchema = z.looseObject({
   events: z.array(nestedEventSchema).default([])
 });
 var paginatedNoticesResponseSchema = paginatedResponseSchema(noticeResponseSchema);
+var baseNotificationDataSchema = z.object({
+  entityType: z.string().optional(),
+  entityId: z.string().optional(),
+  actorId: z.string().uuid().optional(),
+  actorName: z.string().optional(),
+  actionUrl: z.string().optional()
+});
+var noticeCreatedDataSchema = baseNotificationDataSchema.extend({
+  title: z.string(),
+  content: z.string(),
+  createdAt: z.string().or(z.date()),
+  isPinned: z.boolean().optional()
+});
+var noticeApprovedDataSchema = baseNotificationDataSchema.extend({
+  title: z.string()
+});
+var noticeRejectedDataSchema = baseNotificationDataSchema.extend({
+  title: z.string()
+});
+var pollCreatedDataSchema = baseNotificationDataSchema.extend({
+  question: z.string(),
+  pollType: z.string(),
+  deadline: z.string().or(z.date()).nullable().optional(),
+  options: z.array(z.string())
+});
+var pollFinalizedDataSchema = baseNotificationDataSchema.extend({
+  question: z.string(),
+  pollType: z.string(),
+  options: z.array(z.string())
+});
+var eventCreatedOrUpdatedDataSchema = baseNotificationDataSchema.extend({
+  title: z.string(),
+  description: z.string().nullable().optional(),
+  eventType: z.string().nullable().optional(),
+  subtype: z.string().nullable().optional(),
+  startDate: z.string().or(z.date()),
+  endDate: z.string().or(z.date()).nullable().optional(),
+  color: z.string().nullable().optional()
+});
+var eventCancelledDataSchema = baseNotificationDataSchema.extend({
+  title: z.string(),
+  description: z.string().nullable().optional(),
+  eventType: z.string().nullable().optional(),
+  startDate: z.string().or(z.date()),
+  endDate: z.string().or(z.date()).nullable().optional()
+});
+var wasteReminderDataSchema = baseNotificationDataSchema.extend({
+  title: z.string(),
+  wasteTypeLabel: z.string(),
+  subtype: z.string(),
+  startDate: z.string().or(z.date())
+});
+var failureReportCreatedDataSchema = baseNotificationDataSchema.extend({
+  title: z.string(),
+  description: z.string().nullable().optional(),
+  location: z.string().nullable().optional()
+});
+var failureReportStatusDataSchema = baseNotificationDataSchema.extend({
+  title: z.string(),
+  status: z.string(),
+  description: z.string().nullable().optional()
+});
+var maintenanceLogCreatedDataSchema = baseNotificationDataSchema.extend({
+  title: z.string(),
+  description: z.string().nullable().optional(),
+  category: z.string().nullable().optional(),
+  contractor: z.string().nullable().optional(),
+  // `cost` comes from a Postgres DECIMAL, which drizzle serializes as string.
+  cost: z.union([z.string(), z.number()]).nullable().optional()
+});
+var buildingJoinRequestReceivedDataSchema = baseNotificationDataSchema.extend({
+  userName: z.string(),
+  userEmail: z.string(),
+  message: z.string().nullable().optional()
+});
+var buildingJoinRequestDecidedDataSchema = baseNotificationDataSchema.extend({
+  rejectionReason: z.string().nullable().optional()
+});
+var buildingMemberJoinedDataSchema = baseNotificationDataSchema;
+var buildingRoleChangedDataSchema = baseNotificationDataSchema.extend({
+  role: z.string()
+});
+var buildingPendingApprovalDataSchema = baseNotificationDataSchema.extend({
+  buildingName: z.string()
+});
+var buildingApprovedDataSchema = baseNotificationDataSchema.extend({
+  buildingName: z.string()
+});
+var buildingRejectedDataSchema = baseNotificationDataSchema.extend({
+  buildingName: z.string(),
+  rejectionReason: z.string()
+});
+var chatMessageDataSchema = baseNotificationDataSchema.extend({
+  senderName: z.string(),
+  messagePreview: z.string(),
+  conversationId: z.string().uuid()
+});
+var unimplementedDataSchema = baseNotificationDataSchema;
+({
+  [NotificationType.NOTICE_CREATED]: noticeCreatedDataSchema,
+  [NotificationType.NOTICE_APPROVED]: noticeApprovedDataSchema,
+  [NotificationType.NOTICE_REJECTED]: noticeRejectedDataSchema,
+  [NotificationType.POLL_CREATED]: pollCreatedDataSchema,
+  [NotificationType.POLL_DEADLINE_24H]: unimplementedDataSchema,
+  [NotificationType.POLL_DEADLINE_1H]: unimplementedDataSchema,
+  [NotificationType.POLL_FINALIZED]: pollFinalizedDataSchema,
+  [NotificationType.EVENT_CREATED]: eventCreatedOrUpdatedDataSchema,
+  [NotificationType.EVENT_UPDATED]: eventCreatedOrUpdatedDataSchema,
+  [NotificationType.EVENT_CANCELLED]: eventCancelledDataSchema,
+  [NotificationType.EVENT_REMINDER_24H]: unimplementedDataSchema,
+  [NotificationType.EVENT_REMINDER_1H]: unimplementedDataSchema,
+  [NotificationType.WASTE_REMINDER_MIXED]: wasteReminderDataSchema,
+  [NotificationType.WASTE_REMINDER_BIO]: wasteReminderDataSchema,
+  [NotificationType.WASTE_REMINDER_PLASTIC_METAL]: wasteReminderDataSchema,
+  [NotificationType.WASTE_REMINDER_PAPER_CARDBOARD]: wasteReminderDataSchema,
+  [NotificationType.FAILURE_REPORT_CREATED]: failureReportCreatedDataSchema,
+  [NotificationType.FAILURE_REPORT_STATUS_CHANGED]: failureReportStatusDataSchema,
+  [NotificationType.FAILURE_REPORT_RESOLVED]: failureReportStatusDataSchema,
+  [NotificationType.MAINTENANCE_LOG_CREATED]: maintenanceLogCreatedDataSchema,
+  [NotificationType.PAYMENT_DUE]: unimplementedDataSchema,
+  [NotificationType.PAYMENT_RECEIVED]: unimplementedDataSchema,
+  [NotificationType.BUILDING_JOIN_REQUEST_RECEIVED]: buildingJoinRequestReceivedDataSchema,
+  [NotificationType.BUILDING_JOIN_REQUEST_APPROVED]: buildingJoinRequestDecidedDataSchema,
+  [NotificationType.BUILDING_JOIN_REQUEST_REJECTED]: buildingJoinRequestDecidedDataSchema,
+  [NotificationType.BUILDING_MEMBER_JOINED]: buildingMemberJoinedDataSchema,
+  [NotificationType.BUILDING_ROLE_CHANGED]: buildingRoleChangedDataSchema,
+  [NotificationType.BUILDING_PENDING_APPROVAL]: buildingPendingApprovalDataSchema,
+  [NotificationType.BUILDING_APPROVED]: buildingApprovedDataSchema,
+  [NotificationType.BUILDING_REJECTED]: buildingRejectedDataSchema,
+  [NotificationType.CHAT_MESSAGE]: chatMessageDataSchema,
+  [NotificationType.SYSTEM_ANNOUNCEMENT]: unimplementedDataSchema
+});
+var notificationDataSchema = z.union([
+  noticeCreatedDataSchema,
+  noticeApprovedDataSchema,
+  noticeRejectedDataSchema,
+  pollCreatedDataSchema,
+  pollFinalizedDataSchema,
+  eventCreatedOrUpdatedDataSchema,
+  eventCancelledDataSchema,
+  wasteReminderDataSchema,
+  failureReportCreatedDataSchema,
+  failureReportStatusDataSchema,
+  maintenanceLogCreatedDataSchema,
+  buildingJoinRequestReceivedDataSchema,
+  buildingJoinRequestDecidedDataSchema,
+  buildingMemberJoinedDataSchema,
+  buildingRoleChangedDataSchema,
+  buildingPendingApprovalDataSchema,
+  buildingApprovedDataSchema,
+  buildingRejectedDataSchema,
+  chatMessageDataSchema,
+  unimplementedDataSchema
+]);
+var notificationTypeValues = Object.values(NotificationType);
 var notificationResponseSchema = z.looseObject({
   id: z.string().uuid(),
   title: z.string(),
   body: z.string(),
-  type: z.string(),
+  type: z.enum(notificationTypeValues),
   buildingId: z.string().uuid().nullable().optional(),
   buildingName: z.string().nullable().optional(),
-  data: z.record(z.string(), z.unknown()).nullable().optional(),
+  data: notificationDataSchema.nullable().optional(),
   read: z.boolean(),
   readAt: z.string().nullable().optional(),
   createdAt: z.string()
@@ -1102,5 +1257,5 @@ var pollVotersResponseSchema = z.looseObject({
 var paginatedPollsResponseSchema = paginatedResponseSchema(pollResponseSchema);
 
 export { ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, baseEntitySchema, buildingDetailResponseSchema, buildingEntitySchema, buildingResponseSchema, buildingTypeSchema, buildingUserEntitySchema, commentResponseSchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-XZ5GRUVG.js.map
-//# sourceMappingURL=chunk-XZ5GRUVG.js.map
+//# sourceMappingURL=chunk-V5VY7ZX7.js.map
+//# sourceMappingURL=chunk-V5VY7ZX7.js.map

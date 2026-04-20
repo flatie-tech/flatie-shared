@@ -30,11 +30,14 @@ export {
 export type { NoticeResponse, PaginatedNoticesResponse } from './notices';
 export { noticeResponseSchema, paginatedNoticesResponseSchema } from './notices';
 export type {
+  NotificationData,
   NotificationPreferenceCategory,
   NotificationPreferenceItem,
   NotificationResponse,
 } from './notifications';
 export {
+  getNotificationDataSchema,
+  notificationDataSchema,
   notificationPreferenceCategorySchema,
   notificationPreferenceItemSchema,
   notificationResponseSchema,

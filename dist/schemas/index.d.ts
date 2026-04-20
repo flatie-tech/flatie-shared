@@ -1922,10 +1922,215 @@ declare const notificationResponseSchema: z.ZodObject<{
     id: z.ZodString;
     title: z.ZodString;
     body: z.ZodString;
-    type: z.ZodString;
+    type: z.ZodEnum<{
+        notice_created: "notice_created";
+        notice_approved: "notice_approved";
+        notice_rejected: "notice_rejected";
+        poll_created: "poll_created";
+        poll_deadline_24h: "poll_deadline_24h";
+        poll_deadline_1h: "poll_deadline_1h";
+        poll_finalized: "poll_finalized";
+        event_created: "event_created";
+        event_reminder_24h: "event_reminder_24h";
+        event_reminder_1h: "event_reminder_1h";
+        event_updated: "event_updated";
+        event_cancelled: "event_cancelled";
+        waste_reminder_mixed: "waste_reminder_mixed";
+        waste_reminder_bio: "waste_reminder_bio";
+        waste_reminder_plastic_metal: "waste_reminder_plastic_metal";
+        waste_reminder_paper_cardboard: "waste_reminder_paper_cardboard";
+        failure_report_created: "failure_report_created";
+        failure_report_status_changed: "failure_report_status_changed";
+        failure_report_resolved: "failure_report_resolved";
+        maintenance_log_created: "maintenance_log_created";
+        payment_due: "payment_due";
+        payment_received: "payment_received";
+        building_join_request_received: "building_join_request_received";
+        building_join_request_approved: "building_join_request_approved";
+        building_join_request_rejected: "building_join_request_rejected";
+        building_member_joined: "building_member_joined";
+        building_role_changed: "building_role_changed";
+        building_pending_approval: "building_pending_approval";
+        building_approved: "building_approved";
+        building_rejected: "building_rejected";
+        chat_message: "chat_message";
+        system_announcement: "system_announcement";
+    }>;
     buildingId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     buildingName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-    data: z.ZodOptional<z.ZodNullable<z.ZodRecord<z.ZodString, z.ZodUnknown>>>;
+    data: z.ZodOptional<z.ZodNullable<z.ZodUnion<readonly [z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        content: z.ZodString;
+        createdAt: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+        isPinned: z.ZodOptional<z.ZodBoolean>;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        question: z.ZodString;
+        pollType: z.ZodString;
+        deadline: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodDate]>>>;
+        options: z.ZodArray<z.ZodString>;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        question: z.ZodString;
+        pollType: z.ZodString;
+        options: z.ZodArray<z.ZodString>;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        eventType: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        subtype: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        startDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+        endDate: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodDate]>>>;
+        color: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        eventType: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        startDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+        endDate: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodDate]>>>;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        wasteTypeLabel: z.ZodString;
+        subtype: z.ZodString;
+        startDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        location: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        status: z.ZodString;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        category: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        contractor: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        cost: z.ZodOptional<z.ZodNullable<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>>>;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        userName: z.ZodString;
+        userEmail: z.ZodString;
+        message: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        rejectionReason: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        role: z.ZodString;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        buildingName: z.ZodString;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        buildingName: z.ZodString;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        buildingName: z.ZodString;
+        rejectionReason: z.ZodString;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        senderName: z.ZodString;
+        messagePreview: z.ZodString;
+        conversationId: z.ZodString;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+    }, z.core.$strip>]>>>;
     read: z.ZodBoolean;
     readAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     createdAt: z.ZodString;
