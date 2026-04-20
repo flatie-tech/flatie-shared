@@ -731,6 +731,9 @@ var updateNoticeRequestSchema = updateNoticeSchema.extend({
 var updatePollRequestSchema = updatePollSchema.extend({
   id: uuidSchema
 });
+var messageResponseSchema = zod.z.object({
+  message: zod.z.string()
+});
 var buildingStatusSchema = zod.z.enum(Object.values(chunk5UBJHQVX_cjs.BuildingStatus));
 var buildingManagerSchema = zod.z.looseObject({
   name: zod.z.string(),
@@ -1335,6 +1338,7 @@ exports.maintenanceFinancedBySchema = maintenanceFinancedBySchema;
 exports.maintenanceLogEventSchema = maintenanceLogEventSchema;
 exports.maintenanceLogResponseSchema = maintenanceLogResponseSchema;
 exports.maintenanceStatusOptions = maintenanceStatusOptions;
+exports.messageResponseSchema = messageResponseSchema;
 exports.multipartArray = multipartArray;
 exports.multipartBoolean = multipartBoolean;
 exports.noticeEventSchema = noticeEventSchema;
@@ -1392,5 +1396,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-Z2XYJION.cjs.map
-//# sourceMappingURL=chunk-Z2XYJION.cjs.map
+//# sourceMappingURL=chunk-F2CHB4NM.cjs.map
+//# sourceMappingURL=chunk-F2CHB4NM.cjs.map

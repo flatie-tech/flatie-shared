@@ -1,3 +1,5 @@
+export type { MessageResponse } from './action';
+export { messageResponseSchema } from './action';
 export type {
   BuildingDetailResponse,
   BuildingResponse,
