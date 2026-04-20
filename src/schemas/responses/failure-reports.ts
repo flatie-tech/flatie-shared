@@ -12,8 +12,15 @@ const nestedFileSchema = z.looseObject({
 const nestedEventSchema = z.looseObject({
   id: z.string(),
   title: z.string(),
+  type: z.string().optional(),
+  description: z.string().nullable().optional(),
   startDate: z.string(),
   endDate: z.string(),
+  color: z.string().optional(),
+  userId: z.string().nullable().optional(),
+  buildingId: z.string().optional(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().nullable().optional(),
 });
 
 const maintenanceLogReferenceSchema = z.looseObject({
@@ -23,6 +30,13 @@ const maintenanceLogReferenceSchema = z.looseObject({
   cost: z.number().optional().nullable(),
   financedBy: maintenanceFinancedBySchema.optional().nullable(),
   warranty: z.boolean().optional().nullable(),
+});
+
+const pollReferenceSchema = z.looseObject({
+  id: z.string().uuid(),
+  question: z.string(),
+  pollType: z.string(),
+  deadline: z.string().optional().nullable(),
 });
 
 export const failureReportResponseSchema = z.looseObject({
@@ -50,6 +64,7 @@ export const failureReportResponseSchema = z.looseObject({
   unitName: z.string().optional().nullable(),
   events: z.array(nestedEventSchema).default([]),
   maintenanceLogs: z.array(maintenanceLogReferenceSchema).default([]),
+  polls: z.array(pollReferenceSchema).default([]),
 });
 
 export const paginatedFailureReportsResponseSchema = paginatedResponseSchema(

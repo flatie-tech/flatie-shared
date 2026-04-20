@@ -832,8 +832,15 @@ var nestedFileSchema = z.looseObject({
 var nestedEventSchema = z.looseObject({
   id: z.string(),
   title: z.string(),
+  type: z.string().optional(),
+  description: z.string().nullable().optional(),
   startDate: z.string(),
-  endDate: z.string()
+  endDate: z.string(),
+  color: z.string().optional(),
+  userId: z.string().nullable().optional(),
+  buildingId: z.string().optional(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().nullable().optional()
 });
 var maintenanceLogReferenceSchema = z.looseObject({
   id: z.string().uuid(),
@@ -842,6 +849,12 @@ var maintenanceLogReferenceSchema = z.looseObject({
   cost: z.number().optional().nullable(),
   financedBy: maintenanceFinancedBySchema.optional().nullable(),
   warranty: z.boolean().optional().nullable()
+});
+var pollReferenceSchema = z.looseObject({
+  id: z.string().uuid(),
+  question: z.string(),
+  pollType: z.string(),
+  deadline: z.string().optional().nullable()
 });
 var failureReportResponseSchema = z.looseObject({
   id: z.string().uuid(),
@@ -867,7 +880,8 @@ var failureReportResponseSchema = z.looseObject({
   unitId: z.string().uuid().optional().nullable(),
   unitName: z.string().optional().nullable(),
   events: z.array(nestedEventSchema).default([]),
-  maintenanceLogs: z.array(maintenanceLogReferenceSchema).default([])
+  maintenanceLogs: z.array(maintenanceLogReferenceSchema).default([]),
+  polls: z.array(pollReferenceSchema).default([])
 });
 var paginatedFailureReportsResponseSchema = paginatedResponseSchema(
   failureReportResponseSchema
@@ -891,10 +905,17 @@ var nestedFileSchema2 = z.looseObject({
 var nestedEventSchema2 = z.looseObject({
   id: z.string(),
   title: z.string(),
+  type: z.string().optional(),
+  description: z.string().nullable().optional(),
   startDate: z.string(),
-  endDate: z.string()
+  endDate: z.string(),
+  color: z.string().optional(),
+  userId: z.string().nullable().optional(),
+  buildingId: z.string().optional(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().nullable().optional()
 });
-var pollReferenceSchema = z.looseObject({
+var pollReferenceSchema2 = z.looseObject({
   id: z.string().uuid(),
   question: z.string(),
   pollType: z.string(),
@@ -924,7 +945,7 @@ var maintenanceLogResponseSchema = z.looseObject({
   updatedAt: z.string().nullable().optional(),
   canEdit: z.boolean(),
   canDelete: z.boolean(),
-  polls: z.array(pollReferenceSchema).default([]),
+  polls: z.array(pollReferenceSchema2).default([]),
   failureReports: z.array(failureReportReferenceSchema).optional()
 });
 var paginatedMaintenanceLogsResponseSchema = paginatedResponseSchema(
@@ -938,8 +959,15 @@ var nestedFileSchema3 = z.looseObject({
 var nestedEventSchema3 = z.looseObject({
   id: z.string(),
   title: z.string(),
+  type: z.string().optional(),
+  description: z.string().nullable().optional(),
   startDate: z.string(),
-  endDate: z.string()
+  endDate: z.string(),
+  color: z.string().optional(),
+  userId: z.string().nullable().optional(),
+  buildingId: z.string().optional(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().nullable().optional()
 });
 var noticeResponseSchema = z.looseObject({
   id: z.string().uuid(),
@@ -1093,5 +1121,5 @@ var pollVotersResponseSchema = z.looseObject({
 var paginatedPollsResponseSchema = paginatedResponseSchema(pollResponseSchema);
 
 export { ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, baseEntitySchema, buildingDetailResponseSchema, buildingEntitySchema, buildingResponseSchema, buildingTypeSchema, buildingUserEntitySchema, commentResponseSchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updatePasswordSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-4UMRS556.js.map
-//# sourceMappingURL=chunk-4UMRS556.js.map
+//# sourceMappingURL=chunk-ZMBJ7HAP.js.map
+//# sourceMappingURL=chunk-ZMBJ7HAP.js.map

@@ -1,5 +1,12 @@
 # @flatie/shared
 
+## 0.18.2
+
+### Patch Changes
+
+- Widen nested `events` schema in notices, failure-reports, and maintenance-logs response schemas to declare the full 11-field shape the backend emits (`type`, `description`, `color`, `userId`, `buildingId`, `createdAt`, `updatedAt` — all optional/nullable). Loose parsing already tolerated them; strict-parse tests in consumers can now validate nested events without drift.
+- Add `polls` array to `failureReportResponseSchema` (mirrors the existing `events` and `maintenanceLogs` nested references). The backend has been emitting this field; the schema now declares it.
+
 ## 0.18.1
 
 ### Patch Changes

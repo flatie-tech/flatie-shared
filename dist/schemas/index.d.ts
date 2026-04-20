@@ -1463,8 +1463,15 @@ declare const failureReportResponseSchema: z.ZodObject<{
     events: z.ZodDefault<z.ZodArray<z.ZodObject<{
         id: z.ZodString;
         title: z.ZodString;
+        type: z.ZodOptional<z.ZodString>;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         startDate: z.ZodString;
         endDate: z.ZodString;
+        color: z.ZodOptional<z.ZodString>;
+        userId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        buildingId: z.ZodOptional<z.ZodString>;
+        createdAt: z.ZodOptional<z.ZodString>;
+        updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     }, z.core.$loose>>>;
     maintenanceLogs: z.ZodDefault<z.ZodArray<z.ZodObject<{
         id: z.ZodString;
@@ -1477,6 +1484,12 @@ declare const failureReportResponseSchema: z.ZodObject<{
             co_owner: "co_owner";
         }>>>;
         warranty: z.ZodNullable<z.ZodOptional<z.ZodBoolean>>;
+    }, z.core.$loose>>>;
+    polls: z.ZodDefault<z.ZodArray<z.ZodObject<{
+        id: z.ZodString;
+        question: z.ZodString;
+        pollType: z.ZodString;
+        deadline: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     }, z.core.$loose>>>;
 }, z.core.$loose>;
 declare const paginatedFailureReportsResponseSchema: z.ZodObject<{
@@ -1517,8 +1530,15 @@ declare const paginatedFailureReportsResponseSchema: z.ZodObject<{
         events: z.ZodDefault<z.ZodArray<z.ZodObject<{
             id: z.ZodString;
             title: z.ZodString;
+            type: z.ZodOptional<z.ZodString>;
+            description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
             startDate: z.ZodString;
             endDate: z.ZodString;
+            color: z.ZodOptional<z.ZodString>;
+            userId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+            buildingId: z.ZodOptional<z.ZodString>;
+            createdAt: z.ZodOptional<z.ZodString>;
+            updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         }, z.core.$loose>>>;
         maintenanceLogs: z.ZodDefault<z.ZodArray<z.ZodObject<{
             id: z.ZodString;
@@ -1531,6 +1551,12 @@ declare const paginatedFailureReportsResponseSchema: z.ZodObject<{
                 co_owner: "co_owner";
             }>>>;
             warranty: z.ZodNullable<z.ZodOptional<z.ZodBoolean>>;
+        }, z.core.$loose>>>;
+        polls: z.ZodDefault<z.ZodArray<z.ZodObject<{
+            id: z.ZodString;
+            question: z.ZodString;
+            pollType: z.ZodString;
+            deadline: z.ZodNullable<z.ZodOptional<z.ZodString>>;
         }, z.core.$loose>>>;
     }, z.core.$loose>>;
     count: z.ZodNumber;
@@ -1583,8 +1609,15 @@ declare const maintenanceLogResponseSchema: z.ZodObject<{
     events: z.ZodDefault<z.ZodArray<z.ZodObject<{
         id: z.ZodString;
         title: z.ZodString;
+        type: z.ZodOptional<z.ZodString>;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         startDate: z.ZodString;
         endDate: z.ZodString;
+        color: z.ZodOptional<z.ZodString>;
+        userId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        buildingId: z.ZodOptional<z.ZodString>;
+        createdAt: z.ZodOptional<z.ZodString>;
+        updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     }, z.core.$loose>>>;
     createdAt: z.ZodString;
     updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
@@ -1628,8 +1661,15 @@ declare const paginatedMaintenanceLogsResponseSchema: z.ZodObject<{
         events: z.ZodDefault<z.ZodArray<z.ZodObject<{
             id: z.ZodString;
             title: z.ZodString;
+            type: z.ZodOptional<z.ZodString>;
+            description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
             startDate: z.ZodString;
             endDate: z.ZodString;
+            color: z.ZodOptional<z.ZodString>;
+            userId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+            buildingId: z.ZodOptional<z.ZodString>;
+            createdAt: z.ZodOptional<z.ZodString>;
+            updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         }, z.core.$loose>>>;
         createdAt: z.ZodString;
         updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
@@ -1681,8 +1721,15 @@ declare const noticeResponseSchema: z.ZodObject<{
     events: z.ZodDefault<z.ZodArray<z.ZodObject<{
         id: z.ZodString;
         title: z.ZodString;
+        type: z.ZodOptional<z.ZodString>;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         startDate: z.ZodString;
         endDate: z.ZodString;
+        color: z.ZodOptional<z.ZodString>;
+        userId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        buildingId: z.ZodOptional<z.ZodString>;
+        createdAt: z.ZodOptional<z.ZodString>;
+        updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     }, z.core.$loose>>>;
 }, z.core.$loose>;
 declare const paginatedNoticesResponseSchema: z.ZodObject<{
@@ -1709,8 +1756,15 @@ declare const paginatedNoticesResponseSchema: z.ZodObject<{
         events: z.ZodDefault<z.ZodArray<z.ZodObject<{
             id: z.ZodString;
             title: z.ZodString;
+            type: z.ZodOptional<z.ZodString>;
+            description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
             startDate: z.ZodString;
             endDate: z.ZodString;
+            color: z.ZodOptional<z.ZodString>;
+            userId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+            buildingId: z.ZodOptional<z.ZodString>;
+            createdAt: z.ZodOptional<z.ZodString>;
+            updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         }, z.core.$loose>>>;
     }, z.core.$loose>>;
     count: z.ZodNumber;

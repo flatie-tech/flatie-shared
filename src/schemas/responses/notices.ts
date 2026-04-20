@@ -10,8 +10,15 @@ const nestedFileSchema = z.looseObject({
 const nestedEventSchema = z.looseObject({
   id: z.string(),
   title: z.string(),
+  type: z.string().optional(),
+  description: z.string().nullable().optional(),
   startDate: z.string(),
   endDate: z.string(),
+  color: z.string().optional(),
+  userId: z.string().nullable().optional(),
+  buildingId: z.string().optional(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().nullable().optional(),
 });
 
 export const noticeResponseSchema = z.looseObject({
