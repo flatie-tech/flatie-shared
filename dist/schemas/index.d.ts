@@ -1376,8 +1376,8 @@ declare const faqResponseSchema: z.ZodObject<{
     question: z.ZodString;
     answer: z.ZodString;
     category: z.ZodEnum<{
-        representative: "representative";
         manager: "manager";
+        representative: "representative";
     }>;
     orderIndex: z.ZodNumber;
     createdBy: z.ZodNullable<z.ZodString>;
