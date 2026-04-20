@@ -711,6 +711,19 @@ var permissionsResponseSchema = zod.z.object({
   orgId: zod.z.string().uuid().optional(),
   chatVisibleToCoOwners: zod.z.boolean().optional()
 });
+var commentResponseSchema = zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  entityType: zod.z.string(),
+  entityId: zod.z.string(),
+  userId: zod.z.string(),
+  userName: zod.z.string().nullable(),
+  userImage: zod.z.string().nullable(),
+  content: zod.z.string(),
+  createdAt: zod.z.string(),
+  updatedAt: zod.z.string(),
+  canEdit: zod.z.boolean(),
+  canDelete: zod.z.boolean()
+});
 var commonStatusOptions = ["active", "completed", "cancelled"];
 var approvalStatusOptions = ["pending", "approved", "rejected"];
 var maintenanceStatusOptions = [
@@ -776,6 +789,17 @@ var failureReportResponseSchema = zod.z.looseObject({
 var paginatedFailureReportsResponseSchema = paginatedResponseSchema(
   failureReportResponseSchema
 );
+var faqResponseSchema = zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  buildingId: zod.z.string().uuid(),
+  question: zod.z.string(),
+  answer: zod.z.string(),
+  category: zod.z.enum(["representative", "manager"]),
+  orderIndex: zod.z.number(),
+  createdBy: zod.z.string().uuid().nullable(),
+  createdAt: zod.z.string(),
+  updatedAt: zod.z.string().nullable().optional()
+});
 var nestedFileSchema2 = zod.z.looseObject({
   id: zod.z.string().uuid(),
   title: zod.z.string(),
@@ -853,6 +877,28 @@ var noticeResponseSchema = zod.z.looseObject({
   events: zod.z.array(nestedEventSchema3).default([])
 });
 var paginatedNoticesResponseSchema = paginatedResponseSchema(noticeResponseSchema);
+var notificationResponseSchema = zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  title: zod.z.string(),
+  body: zod.z.string(),
+  type: zod.z.string(),
+  buildingId: zod.z.string().uuid().nullable().optional(),
+  buildingName: zod.z.string().nullable().optional(),
+  data: zod.z.record(zod.z.string(), zod.z.unknown()).nullable().optional(),
+  read: zod.z.boolean(),
+  readAt: zod.z.string().nullable().optional(),
+  createdAt: zod.z.string()
+});
+var notificationPreferenceItemSchema = zod.z.looseObject({
+  type: zod.z.string(),
+  description: zod.z.string(),
+  enabled: zod.z.boolean(),
+  channels: zod.z.array(zod.z.string())
+});
+var notificationPreferenceCategorySchema = zod.z.looseObject({
+  category: zod.z.string(),
+  notifications: zod.z.array(notificationPreferenceItemSchema)
+});
 
 exports.ApprovalStatusSchema = ApprovalStatusSchema;
 exports.BUILDING_LIMITS = BUILDING_LIMITS;
@@ -888,6 +934,7 @@ exports.baseEntitySchema = baseEntitySchema;
 exports.buildingEntitySchema = buildingEntitySchema;
 exports.buildingTypeSchema = buildingTypeSchema;
 exports.buildingUserEntitySchema = buildingUserEntitySchema;
+exports.commentResponseSchema = commentResponseSchema;
 exports.commonStatusOptions = commonStatusOptions;
 exports.copyFaqsSchema = copyFaqsSchema;
 exports.copyTransactionCategoriesSchema = copyTransactionCategoriesSchema;
@@ -911,6 +958,7 @@ exports.eventTypeSchema = eventTypeSchema;
 exports.failureReportEventSchema = failureReportEventSchema;
 exports.failureReportResponseSchema = failureReportResponseSchema;
 exports.failureStatusOptions = failureStatusOptions;
+exports.faqResponseSchema = faqResponseSchema;
 exports.finalizePollSchema = finalizePollSchema;
 exports.forgotPasswordSchema = forgotPasswordSchema;
 exports.garageRoleSchema = garageRoleSchema;
@@ -930,6 +978,9 @@ exports.multipartArray = multipartArray;
 exports.multipartBoolean = multipartBoolean;
 exports.noticeEventSchema = noticeEventSchema;
 exports.noticeResponseSchema = noticeResponseSchema;
+exports.notificationPreferenceCategorySchema = notificationPreferenceCategorySchema;
+exports.notificationPreferenceItemSchema = notificationPreferenceItemSchema;
+exports.notificationResponseSchema = notificationResponseSchema;
 exports.optionalDateTimeSchema = optionalDateTimeSchema;
 exports.paginatedApartmentsResponseSchema = paginatedApartmentsResponseSchema;
 exports.paginatedFailureReportsResponseSchema = paginatedFailureReportsResponseSchema;
@@ -970,5 +1021,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-HOGINQ3M.cjs.map
-//# sourceMappingURL=chunk-HOGINQ3M.cjs.map
+//# sourceMappingURL=chunk-VDEFPUY6.cjs.map
+//# sourceMappingURL=chunk-VDEFPUY6.cjs.map

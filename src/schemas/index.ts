@@ -59,17 +59,27 @@ export { permissionsResponseSchema, roleTypeSchema } from './permissions.schema'
 
 // Response schemas
 export type {
+  CommentResponse,
   FailureReportResponse,
+  FaqResponse,
   MaintenanceLogResponse,
   NoticeResponse,
+  NotificationPreferenceCategory,
+  NotificationPreferenceItem,
+  NotificationResponse,
   PaginatedFailureReportsResponse,
   PaginatedMaintenanceLogsResponse,
   PaginatedNoticesResponse,
 } from './responses';
 export {
+  commentResponseSchema,
   failureReportResponseSchema,
+  faqResponseSchema,
   maintenanceLogResponseSchema,
   noticeResponseSchema,
+  notificationPreferenceCategorySchema,
+  notificationPreferenceItemSchema,
+  notificationResponseSchema,
   paginatedFailureReportsResponseSchema,
   paginatedMaintenanceLogsResponseSchema,
   paginatedNoticesResponseSchema,
