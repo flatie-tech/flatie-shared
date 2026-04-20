@@ -27,7 +27,8 @@ var buildingKeys = {
   joinRequests: (id) => [...buildingKeys.all, "joinRequests", id],
   pending: () => [...buildingKeys.all, "pending"],
   chatVisibility: () => [...buildingKeys.all, "chatVisibility"],
-  chatPermissions: (ids) => [...buildingKeys.all, "chatPermissions", ...ids ? [ids] : []]
+  chatPermissions: (ids) => [...buildingKeys.all, "chatPermissions", ...ids ? [ids] : []],
+  search: (query) => [...buildingKeys.all, "search", query]
 };
 var noticeKeys = {
   all: ["notice"],
@@ -433,5 +434,5 @@ exports.transactionCategoryKeys = transactionCategoryKeys;
 exports.unitSearchKeys = unitSearchKeys;
 exports.userKeys = userKeys;
 exports.widgetKeys = widgetKeys;
-//# sourceMappingURL=chunk-GFM6A3P7.cjs.map
-//# sourceMappingURL=chunk-GFM6A3P7.cjs.map
+//# sourceMappingURL=chunk-J7F3EEOJ.cjs.map
+//# sourceMappingURL=chunk-J7F3EEOJ.cjs.map

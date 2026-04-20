@@ -1,6 +1,6 @@
 {
   "name": "@flatie/shared",
-  "version": "0.13.0",
+  "version": "0.17.2",
   "description": "Shared types, schemas, and utilities for Flatie applications",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -37,6 +37,16 @@
         "default": "./dist/enums/index.cjs"
       }
     },
+    "./errors": {
+      "import": {
+        "types": "./dist/errors/index.d.ts",
+        "default": "./dist/errors/index.js"
+      },
+      "require": {
+        "types": "./dist/errors/index.d.cts",
+        "default": "./dist/errors/index.cjs"
+      }
+    },
     "./schemas": {
       "import": {
         "types": "./dist/schemas/index.d.ts",
@@ -45,6 +55,27 @@
       "require": {
         "types": "./dist/schemas/index.d.cts",
         "default": "./dist/schemas/index.cjs"
+      }
+    },
+    "./tokens": {
+      "import": {
+        "types": "./dist/tokens/index.d.ts",
+        "default": "./dist/tokens/index.js"
+      },
+      "require": {
+        "types": "./dist/tokens/index.d.cts",
+        "default": "./dist/tokens/index.cjs"
+      }
+    },
+    "./tokens.css": "./dist/tokens.css",
+    "./tailwind-preset": {
+      "import": {
+        "types": "./dist/tailwind-preset.d.ts",
+        "default": "./dist/tailwind-preset.js"
+      },
+      "require": {
+        "types": "./dist/tailwind-preset.d.cts",
+        "default": "./dist/tailwind-preset.cjs"
       }
     },
     "./types": {
@@ -102,13 +133,16 @@
     "type-check": "tsc --noEmit",
     "clean": "rm -rf dist",
     "prepare": "test -d dist || tsup",
-    "prepublishOnly": "pnpm run build"
+    "prepublishOnly": "pnpm run build",
+    "release": "changeset publish --help"
   },
   "peerDependencies": {
     "zod": "^4.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.6",
+    "@changesets/changelog-github": "^0.6.0",
+    "@changesets/cli": "^2.31.0",
     "lefthook": "^1.6.0",
     "tsup": "^8.0.0",
     "typescript": "^5.9.0",

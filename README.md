@@ -19,7 +19,7 @@ pnpm add github:flatie-tech/flatie-shared#v0.2.0
 pnpm add file:../flatie-shared
 ```
 
-**Peer dependency:** Requires `zod@^3.23.0`.
+**Peer dependency:** Requires `zod@^4.0.0`.
 
 > **Do not use `pnpm link`** for local development. It creates symlinks that break Next.js/Turbopack module resolution. Use `file:` protocol instead.
 
@@ -102,7 +102,7 @@ Shared exports **only** string sets that the backend enforces via `pgEnum()`. Th
 | When adding a new `pgEnum` to the backend, you **must** also add it to `@flatie/shared/enums` and import it in the Drizzle schema. | Keeps the invariant above. |
 | Use `const` objects (`as const`) with a same-named type — **never** TypeScript `enum`. | TS enums create nominal types that break across package boundaries; const objects are structural and work with string literals. |
 
-### Schemas (Zod 3)
+### Schemas (Zod 4)
 
 Validation schemas for auth, entities, and API payloads:
 
@@ -111,8 +111,6 @@ import { loginSchema, registerSchema, createNoticeSchema } from '@flatie/shared/
 import { permissionsResponseSchema } from '@flatie/shared/schemas';
 ```
 
-> **Note:** These schemas use Zod 3. If your consumer uses Zod 4 (like the Next.js frontend), you cannot import them directly. Instead, derive Zod enums from the exported const objects.
-
 ### Types
 
 TypeScript type definitions for entities, requests, and responses:
@@ -120,6 +118,36 @@ TypeScript type definitions for entities, requests, and responses:
 ```typescript
 import type { Building, User, Notice, PaginatedResponse } from '@flatie/shared/types';
 ```
+
+### Design Tokens
+
+OKLCH color tokens, per-context themes (org, admin, platform, representatives), and radii — extracted from `flatie-frontend/src/app/globals.css` and now the canonical source.
+
+Three consumer shapes:
+
+```typescript
+// 1. Programmatic — read tokens in JS/TS code
+import { colors, themes, radii } from '@flatie/shared/tokens';
+colors['background'].light;          // 'oklch(1 0 0)'
+themes.org.dark.primary;             // 'oklch(0.6 0.17 145)'
+radii.radius;                        // '0.625rem'
+```
+
+```css
+/* 2. CSS — frontend (Tailwind v4) */
+@import '@flatie/shared/tokens.css';
+```
+
+```js
+// 3. Tailwind preset — mobile (NativeWind)
+const flatiePreset = require('@flatie/shared/tailwind-preset');
+module.exports = {
+  presets: [flatiePreset],
+  content: ['./src/**/*.{ts,tsx}'],
+};
+```
+
+The CSS output defines `:root`, `.dark`, `.theme-<name>` and `.dark .theme-<name>` blocks. Frontend's `globals.css` `@theme inline` block stays in the consumer — it maps CSS variables to Tailwind utility class names (web-specific concern).
 
 ### URL Constants
 
@@ -146,6 +174,7 @@ Import by category to reduce bundle size:
 ```typescript
 import { Permission } from '@flatie/shared/enums';
 import { loginSchema } from '@flatie/shared/schemas';
+import { colors, themes } from '@flatie/shared/tokens';
 import type { Building } from '@flatie/shared/types';
 import { API_ROUTES } from '@flatie/shared/urls';
 import { hasPermission } from '@flatie/shared/utils';
@@ -207,8 +236,9 @@ The `prepare` script runs `tsup` automatically on `pnpm install`, so git depende
 ## Design Decisions
 
 - **Const objects over TypeScript enums**: Permissions and roles use `as const` objects for structural compatibility across package boundaries (TS enums create nominal types that break when consumed across separate builds).
-- **Zod 3 as peer dependency**: The backend uses Zod 3 directly. The frontend (Zod 4) derives its own enums from the exported const objects rather than importing Zod schemas.
+- **Zod 4 as peer dependency**: Backend, frontend, and shared all use Zod 4. Schemas can be imported directly by any consumer.
 - **Permission mappings in the backend**: This package defines the Permission enum and helpers. The role-to-permission mapping constants live in the backend since they're a deployment concern.
+- **Design tokens**: Shared owns the wire contract for visual tokens (colors, themes, radii). Frontend's `@theme inline` Tailwind v4 block stays in the consumer — that's a web-specific mapping layer, not a shared token concern.
 
 ## License
 

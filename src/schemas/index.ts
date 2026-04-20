@@ -57,6 +57,34 @@ export { paginatedResponseSchema, paginationParamsSchema } from './pagination.sc
 export type { PermissionsResponseSchema } from './permissions.schema';
 export { permissionsResponseSchema, roleTypeSchema } from './permissions.schema';
 
+// Response schemas
+export type {
+  CommentResponse,
+  FailureReportResponse,
+  FaqResponse,
+  MaintenanceLogResponse,
+  NoticeResponse,
+  NotificationPreferenceCategory,
+  NotificationPreferenceItem,
+  NotificationResponse,
+  PaginatedFailureReportsResponse,
+  PaginatedMaintenanceLogsResponse,
+  PaginatedNoticesResponse,
+} from './responses';
+export {
+  commentResponseSchema,
+  failureReportResponseSchema,
+  faqResponseSchema,
+  maintenanceLogResponseSchema,
+  noticeResponseSchema,
+  notificationPreferenceCategorySchema,
+  notificationPreferenceItemSchema,
+  notificationResponseSchema,
+  paginatedFailureReportsResponseSchema,
+  paginatedMaintenanceLogsResponseSchema,
+  paginatedNoticesResponseSchema,
+} from './responses';
+
 // Status schemas
 export type {
   ApprovalStatusSchemaType,

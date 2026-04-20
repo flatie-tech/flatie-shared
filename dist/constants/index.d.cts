@@ -56,6 +56,7 @@ declare const buildingKeys: {
     pending: () => readonly ["building", "pending"];
     chatVisibility: () => readonly ["building", "chatVisibility"];
     chatPermissions: (ids?: string[]) => readonly ["building", "chatPermissions", ...string[][]];
+    search: (query: string) => readonly ["building", "search", string];
 };
 declare const noticeKeys: {
     all: readonly ["notice"];
@@ -305,6 +306,7 @@ declare const queryKeys: {
         pending: () => readonly ["building", "pending"];
         chatVisibility: () => readonly ["building", "chatVisibility"];
         chatPermissions: (ids?: string[]) => readonly ["building", "chatPermissions", ...string[][]];
+        search: (query: string) => readonly ["building", "search", string];
     };
     readonly notice: {
         all: readonly ["notice"];

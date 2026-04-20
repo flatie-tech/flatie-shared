@@ -44,6 +44,7 @@ export const buildingKeys = {
   chatVisibility: () => [...buildingKeys.all, 'chatVisibility'] as const,
   chatPermissions: (ids?: string[]) =>
     [...buildingKeys.all, 'chatPermissions', ...(ids ? [ids] : [])] as const,
+  search: (query: string) => [...buildingKeys.all, 'search', query] as const,
 };
 
 export const noticeKeys = {

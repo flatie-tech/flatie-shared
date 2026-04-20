@@ -1,34 +1,24 @@
 'use strict';
 
-var zod = require('zod');
+var chunkC3KUWJG7_cjs = require('../chunk-C3KUWJG7.cjs');
 
-// src/validation/index.ts
-var oibSchema = zod.z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").refine(
-  (oib) => {
-    let remainder = 10;
-    for (let i = 0; i < 10; i++) {
-      remainder = (remainder + Number(oib[i])) % 10;
-      if (remainder === 0) remainder = 10;
-      remainder = remainder * 2 % 11;
-    }
-    const checkDigit = (11 - remainder) % 10;
-    return checkDigit === Number(oib[10]);
-  },
-  { message: "Invalid OIB check digit" }
-);
-var optionalOibSchema = zod.z.string().optional().refine(
-  (val) => {
-    if (!val || val === "") return true;
-    return /^\d{11}$/.test(val);
-  },
-  { message: "OIB must be exactly 11 digits" }
-);
-var phoneSchema = zod.z.string().regex(/^\+?[\d\s\-()]{6,20}$/, "Invalid phone number format").optional().or(zod.z.literal(""));
-var addressSchema = zod.z.string().min(3, "Address must be at least 3 characters").max(200, "Address must be at most 200 characters");
 
-exports.addressSchema = addressSchema;
-exports.oibSchema = oibSchema;
-exports.optionalOibSchema = optionalOibSchema;
-exports.phoneSchema = phoneSchema;
+
+Object.defineProperty(exports, "addressSchema", {
+  enumerable: true,
+  get: function () { return chunkC3KUWJG7_cjs.addressSchema; }
+});
+Object.defineProperty(exports, "oibSchema", {
+  enumerable: true,
+  get: function () { return chunkC3KUWJG7_cjs.oibSchema; }
+});
+Object.defineProperty(exports, "optionalOibSchema", {
+  enumerable: true,
+  get: function () { return chunkC3KUWJG7_cjs.optionalOibSchema; }
+});
+Object.defineProperty(exports, "phoneSchema", {
+  enumerable: true,
+  get: function () { return chunkC3KUWJG7_cjs.phoneSchema; }
+});
 //# sourceMappingURL=index.cjs.map
 //# sourceMappingURL=index.cjs.map

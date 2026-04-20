@@ -25,7 +25,8 @@ var buildingKeys = {
   joinRequests: (id) => [...buildingKeys.all, "joinRequests", id],
   pending: () => [...buildingKeys.all, "pending"],
   chatVisibility: () => [...buildingKeys.all, "chatVisibility"],
-  chatPermissions: (ids) => [...buildingKeys.all, "chatPermissions", ...ids ? [ids] : []]
+  chatPermissions: (ids) => [...buildingKeys.all, "chatPermissions", ...ids ? [ids] : []],
+  search: (query) => [...buildingKeys.all, "search", query]
 };
 var noticeKeys = {
   all: ["notice"],
@@ -395,5 +396,5 @@ var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[OrgRole.ORG_ADMIN];
 var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_ADMIN];
 
 export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminBuildingKeys, adminKeys, apartmentKeys, blogKeys, buildingKeys, chatKeys, dashboardSummaryKeys, documentKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };
-//# sourceMappingURL=chunk-FBOT5W5D.js.map
-//# sourceMappingURL=chunk-FBOT5W5D.js.map
+//# sourceMappingURL=chunk-2XKCG7VK.js.map
+//# sourceMappingURL=chunk-2XKCG7VK.js.map

@@ -5,7 +5,9 @@ export default defineConfig({
     index: 'src/index.ts',
     'constants/index': 'src/constants/index.ts',
     'enums/index': 'src/enums/index.ts',
+    'errors/index': 'src/errors/index.ts',
     'schemas/index': 'src/schemas/index.ts',
+    'tokens/index': 'src/tokens/index.ts',
     'types/index': 'src/types/index.ts',
     'urls/index': 'src/urls/index.ts',
     'utils/index': 'src/utils/index.ts',
@@ -18,4 +20,5 @@ export default defineConfig({
   treeshake: true,
   sourcemap: true,
   external: ['zod'],
+  onSuccess: 'node scripts/emit-tokens-assets.mjs',
 });
