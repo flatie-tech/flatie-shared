@@ -3,6 +3,9 @@ import {
   buildingDetailResponseSchema,
   buildingResponseSchema,
   eventResponseSchema,
+  failureReportResponseSchema,
+  maintenanceLogResponseSchema,
+  noticeResponseSchema,
   paginatedBuildingsResponseSchema,
   paginatedEventsResponseSchema,
   paginatedPollsResponseSchema,
@@ -234,5 +237,126 @@ describe('Poll response schemas', () => {
 
   it('parses an empty paginated polls wrapper', () => {
     expect(() => paginatedPollsResponseSchema.parse(emptyPaginated)).not.toThrow();
+  });
+});
+
+describe('Nested event schema (widened in v0.18.2)', () => {
+  const nestedEvent = {
+    id: EVENT_ID,
+    title: 'Inspection',
+    type: 'maintenance',
+    description: 'Quarterly walkthrough',
+    startDate: TIMESTAMP,
+    endDate: TIMESTAMP,
+    color: 'green',
+    userId: USER_ID,
+    buildingId: BUILDING_ID,
+    createdAt: TIMESTAMP,
+    updatedAt: TIMESTAMP,
+  };
+
+  it('notices accept an events array with the full 11-field shape', () => {
+    const payload = {
+      id: BUILDING_ID,
+      buildingId: BUILDING_ID,
+      title: 'Elevator service',
+      content: 'Lift will be offline on Tuesday.',
+      createdBy: USER_ID,
+      approved: true,
+      createdAt: TIMESTAMP,
+      canApprove: false,
+      canEdit: false,
+      canDelete: false,
+      events: [nestedEvent],
+    };
+    expect(() => noticeResponseSchema.parse(payload)).not.toThrow();
+  });
+
+  it('maintenance logs accept an events array with the full 11-field shape', () => {
+    const payload = {
+      id: BUILDING_ID,
+      buildingId: BUILDING_ID,
+      title: 'Roof repair',
+      createdBy: USER_ID,
+      contractor: 'ACME Roofing',
+      cost: 5000,
+      events: [nestedEvent],
+      createdAt: TIMESTAMP,
+      canEdit: false,
+      canDelete: false,
+    };
+    expect(() => maintenanceLogResponseSchema.parse(payload)).not.toThrow();
+  });
+
+  it('nested event tolerates null optionals (description, userId, updatedAt)', () => {
+    const payload = {
+      id: BUILDING_ID,
+      buildingId: BUILDING_ID,
+      title: 'Notice',
+      content: '...',
+      createdBy: USER_ID,
+      approved: true,
+      createdAt: TIMESTAMP,
+      canApprove: false,
+      canEdit: false,
+      canDelete: false,
+      events: [
+        {
+          id: EVENT_ID,
+          title: 'System event',
+          startDate: TIMESTAMP,
+          endDate: TIMESTAMP,
+          description: null,
+          userId: null,
+          updatedAt: null,
+        },
+      ],
+    };
+    expect(() => noticeResponseSchema.parse(payload)).not.toThrow();
+  });
+});
+
+describe('Failure report response (polls field added in v0.18.2)', () => {
+  it('parses a failure report with a populated polls array', () => {
+    const payload = {
+      id: BUILDING_ID,
+      buildingId: BUILDING_ID,
+      title: 'Broken intercom',
+      submittedBy: USER_ID,
+      status: 'pending',
+      approved: false,
+      createdAt: TIMESTAMP,
+      canEdit: false,
+      canDelete: false,
+      canApprove: false,
+      canStatus: false,
+      polls: [
+        {
+          id: POLL_ID,
+          question: 'Should we replace the intercom?',
+          pollType: 'standard',
+          deadline: TIMESTAMP,
+        },
+      ],
+    };
+    expect(() => failureReportResponseSchema.parse(payload)).not.toThrow();
+  });
+
+  it('defaults polls to empty array when absent', () => {
+    const payload = {
+      id: BUILDING_ID,
+      buildingId: BUILDING_ID,
+      title: 'Broken intercom',
+      submittedBy: USER_ID,
+      status: 'pending',
+      approved: false,
+      createdAt: TIMESTAMP,
+      canEdit: false,
+      canDelete: false,
+      canApprove: false,
+      canStatus: false,
+    };
+    const parsed = failureReportResponseSchema.parse(payload);
+    expect(parsed.polls).toEqual([]);
   });
 });
