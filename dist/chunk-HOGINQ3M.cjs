@@ -593,6 +593,8 @@ var createPollSchema = zod.z.object({
   pollType: pollTypeSchema,
   deadline: zod.z.coerce.date().optional(),
   requiredConsensusPercentage: zod.z.coerce.number().min(POLL_LIMITS.CONSENSUS_PERCENTAGE_MIN).max(POLL_LIMITS.CONSENSUS_PERCENTAGE_MAX).optional(),
+  consensusCategory: zod.z.string().max(100).optional(),
+  legalBasis: zod.z.string().max(100).optional(),
   scopedUnitIds: multipartArray(uuidSchema).optional(),
   scopedUserIds: multipartArray(uuidSchema).optional(),
   fileIds: multipartArray(uuidSchema).optional().default([])
@@ -968,5 +970,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-Y5I7MKP3.cjs.map
-//# sourceMappingURL=chunk-Y5I7MKP3.cjs.map
+//# sourceMappingURL=chunk-HOGINQ3M.cjs.map
+//# sourceMappingURL=chunk-HOGINQ3M.cjs.map

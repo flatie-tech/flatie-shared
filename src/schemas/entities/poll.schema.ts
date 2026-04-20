@@ -51,6 +51,8 @@ export const createPollSchema = z
       .min(POLL_LIMITS.CONSENSUS_PERCENTAGE_MIN)
       .max(POLL_LIMITS.CONSENSUS_PERCENTAGE_MAX)
       .optional(),
+    consensusCategory: z.string().max(100).optional(),
+    legalBasis: z.string().max(100).optional(),
     scopedUnitIds: multipartArray(uuidSchema).optional(),
     scopedUserIds: multipartArray(uuidSchema).optional(),
     fileIds: multipartArray(uuidSchema).optional().default([]),

@@ -1015,6 +1015,8 @@ declare const createPollSchema: z.ZodObject<{
     }>;
     deadline: z.ZodOptional<z.ZodCoercedDate<unknown>>;
     requiredConsensusPercentage: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    consensusCategory: z.ZodOptional<z.ZodString>;
+    legalBasis: z.ZodOptional<z.ZodString>;
     scopedUnitIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
     scopedUserIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
     fileIds: z.ZodDefault<z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>>;

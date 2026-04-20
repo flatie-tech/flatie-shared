@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { addressSchema, oibSchema, optionalOibSchema, phoneSchema } from '../../src/validation';
 
+// 12345678903 is a valid OIB (ISO 7064 MOD 11,10 check digit = 3)
+const VALID_OIB = '12345678903';
+
 describe('oibSchema', () => {
-  it('accepts valid 11-digit OIB', () => {
-    expect(oibSchema.safeParse('12345678901').success).toBe(true);
+  it('accepts valid 11-digit OIB with correct check digit', () => {
+    expect(oibSchema.safeParse(VALID_OIB).success).toBe(true);
   });
 
   it('rejects fewer than 11 digits', () => {
@@ -17,6 +20,10 @@ describe('oibSchema', () => {
   it('rejects non-digit characters', () => {
     expect(oibSchema.safeParse('1234567890A').success).toBe(false);
     expect(oibSchema.safeParse('12345-67890').success).toBe(false);
+  });
+
+  it('rejects 11 digits with invalid check digit', () => {
+    expect(oibSchema.safeParse('12345678901').success).toBe(false);
   });
 });
 
@@ -33,13 +40,17 @@ describe('optionalOibSchema', () => {
     expect(optionalOibSchema.safeParse('   ').success).toBe(true);
   });
 
-  it('accepts valid 11-digit OIB', () => {
-    expect(optionalOibSchema.safeParse('12345678901').success).toBe(true);
+  it('accepts valid OIB with correct check digit', () => {
+    expect(optionalOibSchema.safeParse(VALID_OIB).success).toBe(true);
   });
 
   it('rejects malformed OIB when non-empty', () => {
     expect(optionalOibSchema.safeParse('1234567').success).toBe(false);
     expect(optionalOibSchema.safeParse('1234567890A').success).toBe(false);
+  });
+
+  it('rejects OIB with invalid check digit', () => {
+    expect(optionalOibSchema.safeParse('12345678901').success).toBe(false);
   });
 });
 

@@ -108,7 +108,7 @@ declare const Permission: {
     readonly PLATFORM_PURGE: "platform:purge";
 };
 type Permission = (typeof Permission)[keyof typeof Permission];
-declare const SCOPED_PERMISSIONS: Record<"notice" | "event" | "poll" | "document" | "failure_report" | "maintenance_log", Record<ScopedAction, {
+declare const SCOPED_PERMISSIONS: Record<"notice" | "poll" | "event" | "document" | "failure_report" | "maintenance_log", Record<ScopedAction, {
     own: Permission;
     any: Permission;
 }>>;
