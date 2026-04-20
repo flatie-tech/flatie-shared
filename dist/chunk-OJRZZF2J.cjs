@@ -394,7 +394,8 @@ var createEventSchema = zod.z.object({
   description: zod.z.string().max(2e3, "Description must be at most 2000 characters").optional().describe("Free-text details about the event; omitted when the event is self-explanatory."),
   startDate: zod.z.coerce.date({ error: "Start date is required" }).describe("Event start \u2014 accepts an ISO-8601 string or Date, stored as a timestamp."),
   endDate: zod.z.coerce.date({ error: "End date is required" }).describe("Event end \u2014 accepts an ISO-8601 string or Date; must not precede `startDate`."),
-  color: eventColorSchema
+  color: eventColorSchema,
+  allowComments: zod.z.boolean().optional()
 });
 var updateEventSchema = zod.z.object({
   type: eventTypeSchema.optional(),
@@ -402,7 +403,8 @@ var updateEventSchema = zod.z.object({
   description: zod.z.string().max(2e3).optional().describe("Revised description, max 2000 chars."),
   startDate: zod.z.coerce.date().optional().describe("Revised start \u2014 accepts an ISO-8601 string or Date."),
   endDate: zod.z.coerce.date().optional().describe("Revised end \u2014 accepts an ISO-8601 string or Date."),
-  color: eventColorSchema.optional()
+  color: eventColorSchema.optional(),
+  allowComments: zod.z.boolean().optional()
 });
 var FAILURE_REPORT_LIMITS = {
   TITLE_MIN: 1,
@@ -458,6 +460,9 @@ var createFailureReportSchema = refineLocation(
     isAnonymous: multipartBoolean().optional().describe(
       "When true, hides the reporter\u2019s identity from other residents. Defaults to false."
     ),
+    allowComments: multipartBoolean().optional().describe(
+      "When false, the author has opted out of comments on this report; clients hide the comment thread and backend rejects `POST /comments` for this post. Defaults to true."
+    ),
     priority: zod.z.enum([chunk5UBJHQVX_cjs.Priority.NORMAL, chunk5UBJHQVX_cjs.Priority.URGENT]).optional().describe("`normal` for standard reports, `urgent` to flag immediate attention."),
     locationType: zod.z.enum([chunk5UBJHQVX_cjs.FailureLocationType.COMMON_AREA, chunk5UBJHQVX_cjs.FailureLocationType.OWN_UNIT]).optional().describe(
       "`common_area` for shared spaces (hallway, roof, etc.) or `own_unit` for a specific apartment/garage/storage unit."
@@ -478,6 +483,9 @@ var updateFailureReportSchema = refineLocation(
     description: zod.z.string().min(1).max(FAILURE_REPORT_LIMITS.DESCRIPTION_MAX).optional().describe("Revised description, up to 2000 chars."),
     status: zod.z.enum(["pending", "inProgress", "resolved"]).optional().describe(
       "Lifecycle status: `pending` (newly filed), `inProgress` (assigned work), `resolved` (closed out)."
+    ),
+    allowComments: multipartBoolean().optional().describe(
+      "Toggles per-post comments. When flipped to false, existing comments remain in storage but clients hide the thread and backend rejects new comment creation."
     ),
     priority: zod.z.enum([chunk5UBJHQVX_cjs.Priority.NORMAL, chunk5UBJHQVX_cjs.Priority.URGENT]).optional().describe("Revised priority: `normal` or `urgent`."),
     locationType: zod.z.enum([chunk5UBJHQVX_cjs.FailureLocationType.COMMON_AREA, chunk5UBJHQVX_cjs.FailureLocationType.OWN_UNIT]).optional().describe("Revised location classification: `common_area` or `own_unit`."),
@@ -613,6 +621,9 @@ var createNoticeSchema = zod.z.object({
   ).describe("Rich-text or plain-text body of the notice, up to 2000 chars."),
   isAnonymous: multipartBoolean().optional().describe("When true, hides the author\u2019s identity from other residents. Defaults to false."),
   pinned: multipartBoolean().optional().describe("When true, pins the notice to the top of the building feed."),
+  allowComments: multipartBoolean().optional().describe(
+    "When false, the author has opted out of comments on this notice; clients hide the comment thread and backend rejects `POST /comments` for this post. Defaults to true."
+  ),
   events: multipartArray(noticeEventSchema).optional().default([]).describe("Calendar events to create alongside the notice (e.g. meeting on a given date)."),
   fileIds: multipartArray(uuidSchema).optional().default([]).describe("UUIDs of previously-uploaded files to attach to the notice.")
 }).refine(
@@ -631,6 +642,9 @@ var updateNoticeSchema = zod.z.object({
   title: zod.z.string().min(NOTICE_LIMITS.TITLE_MIN).max(NOTICE_LIMITS.TITLE_MAX).optional().describe("Revised notice headline, 1\u2013100 chars."),
   content: zod.z.string().min(NOTICE_LIMITS.CONTENT_MIN).max(NOTICE_LIMITS.CONTENT_MAX).optional().describe("Revised notice body, up to 2000 chars."),
   pinned: multipartBoolean().optional().describe("Toggles whether the notice is pinned to the top of the feed."),
+  allowComments: multipartBoolean().optional().describe(
+    "Toggles per-post comments. When flipped to false, existing comments remain in storage but clients hide the thread and backend rejects new comment creation."
+  ),
   events: multipartArray(noticeEventSchema).optional().describe(
     "Replacement event set: events with an `id` are updated, new events are inserted, and existing events omitted from the list are deleted."
   ),
@@ -1004,6 +1018,9 @@ var eventResponseSchema = zod.z.looseObject({
   user: eventUserSchema.optional().describe("Creator of the event; omitted when the event is anonymous or seeded by the system."),
   isAnonymous: zod.z.boolean().describe("True when the creator chose to hide their identity from other residents."),
   approved: zod.z.boolean().describe("True when the event has been approved by a representative and is publicly visible."),
+  allowComments: zod.z.boolean().optional().default(true).describe(
+    "True when comments are permitted on this event. False hides the comment thread on clients and prevents new comment creation server-side."
+  ),
   canEdit: zod.z.boolean().describe("True when the calling user is allowed to edit this event."),
   canDelete: zod.z.boolean().describe("True when the calling user is allowed to delete this event."),
   canApprove: zod.z.boolean().describe("True when the calling user is allowed to approve or reject this event."),
@@ -1101,6 +1118,9 @@ var failureReportResponseSchema = zod.z.looseObject({
   ),
   approved: zod.z.boolean().describe("True when a representative has approved the report for public visibility."),
   isAnonymous: zod.z.boolean().optional().default(false).describe("True when the reporter opted to hide their identity from other residents."),
+  allowComments: zod.z.boolean().optional().default(true).describe(
+    "True when comments are permitted on this report. False hides the comment thread on clients and prevents new comment creation server-side."
+  ),
   priority: PrioritySchema.optional().nullable().describe(
     "`normal` for standard reports, `urgent` to flag immediate attention. Null when unset."
   ),
@@ -1187,6 +1207,9 @@ var noticeResponseSchema = zod.z.looseObject({
   approved: zod.z.boolean().describe("True once a representative has approved the notice for public visibility."),
   isAnonymous: zod.z.boolean().optional().default(false).describe("True when the author opted to hide their identity from other residents."),
   pinned: zod.z.boolean().optional().default(false).describe("True when the notice is pinned to the top of the notice board."),
+  allowComments: zod.z.boolean().optional().default(true).describe(
+    "True when comments are permitted on this notice. False hides the comment thread on clients and prevents new comment creation server-side."
+  ),
   createdAt: zod.z.string().describe("ISO-8601 timestamp when the notice was created."),
   updatedAt: zod.z.string().nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited."),
   createdByName: zod.z.string().nullable().optional().describe(
@@ -1663,5 +1686,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-RJYPG2CO.cjs.map
-//# sourceMappingURL=chunk-RJYPG2CO.cjs.map
+//# sourceMappingURL=chunk-OJRZZF2J.cjs.map
+//# sourceMappingURL=chunk-OJRZZF2J.cjs.map

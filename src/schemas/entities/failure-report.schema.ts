@@ -96,6 +96,11 @@ export const createFailureReportSchema = refineLocation(
       .describe(
         'When true, hides the reporter’s identity from other residents. Defaults to false.',
       ),
+    allowComments: multipartBoolean()
+      .optional()
+      .describe(
+        'When false, the author has opted out of comments on this report; clients hide the comment thread and backend rejects `POST /comments` for this post. Defaults to true.',
+      ),
     priority: z
       .enum([Priority.NORMAL, Priority.URGENT])
       .optional()
@@ -156,6 +161,11 @@ export const updateFailureReportSchema = refineLocation(
       .optional()
       .describe(
         'Lifecycle status: `pending` (newly filed), `inProgress` (assigned work), `resolved` (closed out).',
+      ),
+    allowComments: multipartBoolean()
+      .optional()
+      .describe(
+        'Toggles per-post comments. When flipped to false, existing comments remain in storage but clients hide the thread and backend rejects new comment creation.',
       ),
     priority: z
       .enum([Priority.NORMAL, Priority.URGENT])

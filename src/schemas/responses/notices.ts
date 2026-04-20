@@ -29,6 +29,13 @@ export const noticeResponseSchema = z.looseObject({
     .optional()
     .default(false)
     .describe('True when the notice is pinned to the top of the notice board.'),
+  allowComments: z
+    .boolean()
+    .optional()
+    .default(true)
+    .describe(
+      'True when comments are permitted on this notice. False hides the comment thread on clients and prevents new comment creation server-side.',
+    ),
   createdAt: z.string().describe('ISO-8601 timestamp when the notice was created.'),
   updatedAt: z
     .string()

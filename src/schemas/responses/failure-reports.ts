@@ -70,6 +70,13 @@ export const failureReportResponseSchema = z.looseObject({
     .optional()
     .default(false)
     .describe('True when the reporter opted to hide their identity from other residents.'),
+  allowComments: z
+    .boolean()
+    .optional()
+    .default(true)
+    .describe(
+      'True when comments are permitted on this report. False hides the comment thread on clients and prevents new comment creation server-side.',
+    ),
   priority: PrioritySchema.optional()
     .nullable()
     .describe(

@@ -81,6 +81,7 @@ export const createEventSchema = z.object({
     .date({ error: 'End date is required' })
     .describe('Event end — accepts an ISO-8601 string or Date; must not precede `startDate`.'),
   color: eventColorSchema,
+  allowComments: z.boolean().optional(),
 });
 
 /**
@@ -96,6 +97,7 @@ export const updateEventSchema = z.object({
     .describe('Revised start — accepts an ISO-8601 string or Date.'),
   endDate: z.coerce.date().optional().describe('Revised end — accepts an ISO-8601 string or Date.'),
   color: eventColorSchema.optional(),
+  allowComments: z.boolean().optional(),
 });
 
 // Inferred types

@@ -67,6 +67,11 @@ export const createNoticeSchema = z
     pinned: multipartBoolean()
       .optional()
       .describe('When true, pins the notice to the top of the building feed.'),
+    allowComments: multipartBoolean()
+      .optional()
+      .describe(
+        'When false, the author has opted out of comments on this notice; clients hide the comment thread and backend rejects `POST /comments` for this post. Defaults to true.',
+      ),
     events: multipartArray(noticeEventSchema)
       .optional()
       .default([])
@@ -111,6 +116,11 @@ export const updateNoticeSchema = z.object({
   pinned: multipartBoolean()
     .optional()
     .describe('Toggles whether the notice is pinned to the top of the feed.'),
+  allowComments: multipartBoolean()
+    .optional()
+    .describe(
+      'Toggles per-post comments. When flipped to false, existing comments remain in storage but clients hide the thread and backend rejects new comment creation.',
+    ),
   events: multipartArray(noticeEventSchema)
     .optional()
     .describe(

@@ -657,6 +657,7 @@ declare const createEventSchema: z.ZodObject<{
         orange: "orange";
         gray: "gray";
     }>;
+    allowComments: z.ZodOptional<z.ZodBoolean>;
 }, z.core.$strip>;
 /**
  * Update event request schema
@@ -684,6 +685,7 @@ declare const updateEventSchema: z.ZodObject<{
         orange: "orange";
         gray: "gray";
     }>>;
+    allowComments: z.ZodOptional<z.ZodBoolean>;
 }, z.core.$strip>;
 type TimeSchema = z.infer<typeof timeSchema>;
 type CreateEventSchema = z.infer<typeof createEventSchema>;
@@ -717,6 +719,7 @@ declare const createFailureReportSchema: z.ZodObject<{
     title: z.ZodString;
     description: z.ZodString;
     isAnonymous: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
+    allowComments: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
     priority: z.ZodOptional<z.ZodEnum<{
         normal: "normal";
         urgent: "urgent";
@@ -754,6 +757,7 @@ declare const updateFailureReportSchema: z.ZodObject<{
         inProgress: "inProgress";
         resolved: "resolved";
     }>>;
+    allowComments: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
     priority: z.ZodOptional<z.ZodEnum<{
         normal: "normal";
         urgent: "urgent";
@@ -961,6 +965,7 @@ declare const createNoticeSchema: z.ZodObject<{
     content: z.ZodString;
     isAnonymous: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
     pinned: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
+    allowComments: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
     events: z.ZodDefault<z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodObject<{
         id: z.ZodOptional<z.ZodString>;
         startDate: z.ZodCoercedDate<unknown>;
@@ -980,6 +985,7 @@ declare const updateNoticeSchema: z.ZodObject<{
     title: z.ZodOptional<z.ZodString>;
     content: z.ZodOptional<z.ZodString>;
     pinned: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
+    allowComments: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
     events: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodObject<{
         id: z.ZodOptional<z.ZodString>;
         startDate: z.ZodCoercedDate<unknown>;
@@ -1281,6 +1287,7 @@ declare const updateFailureReportRequestSchema: z.ZodObject<{
         inProgress: "inProgress";
         resolved: "resolved";
     }>>;
+    allowComments: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
     priority: z.ZodOptional<z.ZodEnum<{
         normal: "normal";
         urgent: "urgent";
@@ -1356,6 +1363,7 @@ declare const updateNoticeRequestSchema: z.ZodObject<{
     title: z.ZodOptional<z.ZodString>;
     content: z.ZodOptional<z.ZodString>;
     pinned: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
+    allowComments: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
     events: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodObject<{
         id: z.ZodOptional<z.ZodString>;
         startDate: z.ZodCoercedDate<unknown>;
@@ -1637,6 +1645,7 @@ declare const eventResponseSchema: z.ZodObject<{
     }, z.core.$loose>>;
     isAnonymous: z.ZodBoolean;
     approved: z.ZodBoolean;
+    allowComments: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
     canEdit: z.ZodBoolean;
     canDelete: z.ZodBoolean;
     canApprove: z.ZodBoolean;
@@ -1670,6 +1679,7 @@ declare const paginatedEventsResponseSchema: z.ZodObject<{
         }, z.core.$loose>>;
         isAnonymous: z.ZodBoolean;
         approved: z.ZodBoolean;
+        allowComments: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
         canEdit: z.ZodBoolean;
         canDelete: z.ZodBoolean;
         canApprove: z.ZodBoolean;
@@ -1711,6 +1721,7 @@ declare const failureReportResponseSchema: z.ZodObject<{
     }>;
     approved: z.ZodBoolean;
     isAnonymous: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
+    allowComments: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
     priority: z.ZodNullable<z.ZodOptional<z.ZodEnum<{
         normal: "normal";
         urgent: "urgent";
@@ -1778,6 +1789,7 @@ declare const paginatedFailureReportsResponseSchema: z.ZodObject<{
         }>;
         approved: z.ZodBoolean;
         isAnonymous: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
+        allowComments: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
         priority: z.ZodNullable<z.ZodOptional<z.ZodEnum<{
             normal: "normal";
             urgent: "urgent";
@@ -1978,6 +1990,7 @@ declare const noticeResponseSchema: z.ZodObject<{
     approved: z.ZodBoolean;
     isAnonymous: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
     pinned: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
+    allowComments: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
     createdAt: z.ZodString;
     updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     createdByName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
@@ -2013,6 +2026,7 @@ declare const paginatedNoticesResponseSchema: z.ZodObject<{
         approved: z.ZodBoolean;
         isAnonymous: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
         pinned: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
+        allowComments: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
         createdAt: z.ZodString;
         updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         createdByName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
