@@ -1,6 +1,9 @@
 import { z } from 'zod';
+import { BuildingStatus } from '../../enums/building-status.enum';
 import { buildingTypeSchema } from '../entities/building.schema';
 import { paginatedResponseSchema } from '../pagination.schema';
+
+const buildingStatusSchema = z.enum(Object.values(BuildingStatus) as [string, ...string[]]);
 
 const buildingManagerSchema = z.looseObject({
   name: z.string(),
@@ -29,8 +32,10 @@ export const buildingResponseSchema = z.looseObject({
   address: z.string(),
   coverImage: z.string().optional().nullable(),
   type: buildingTypeSchema,
+  status: buildingStatusSchema.optional(),
   totalUnits: z.number(),
   isStratified: z.boolean(),
+  houseRulesFileUrl: z.string().nullable().optional(),
   createdBy: z.string().uuid().optional().nullable(),
   createdAt: z.string(),
   updatedAt: z.string().nullable().optional(),

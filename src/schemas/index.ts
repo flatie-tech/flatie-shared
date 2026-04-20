@@ -57,6 +57,20 @@ export { paginatedResponseSchema, paginationParamsSchema } from './pagination.sc
 export type { PermissionsResponseSchema } from './permissions.schema';
 export { permissionsResponseSchema, roleTypeSchema } from './permissions.schema';
 
+// Request schemas (PATCH/PUT payloads: id + optional body fields)
+export type {
+  UpdateFailureReportRequestPayload,
+  UpdateMaintenanceLogRequestPayload,
+  UpdateNoticeRequestPayload,
+  UpdatePollRequestPayload,
+} from './requests';
+export {
+  updateFailureReportRequestSchema,
+  updateMaintenanceLogRequestSchema,
+  updateNoticeRequestSchema,
+  updatePollRequestSchema,
+} from './requests';
+
 // Response schemas
 export type {
   BuildingDetailResponse,

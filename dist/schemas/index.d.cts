@@ -1239,6 +1239,139 @@ declare const permissionsResponseSchema: z.ZodObject<{
 type PermissionsResponseSchema = z.infer<typeof permissionsResponseSchema>;
 
 /**
+ * Update failure report request schema — the canonical PATCH request
+ * shape, combining the failure-report `id` (from the URL) with the
+ * optional body fields validated by `updateFailureReportSchema` in
+ * `entities/failure-report.schema.ts`.
+ *
+ * The cross-field `refineLocation` rule (commonAreaDescription required
+ * for common_area locations; unitType + unitId required for own_unit)
+ * is preserved by Zod's `.extend()` on a refined object.
+ */
+declare const updateFailureReportRequestSchema: z.ZodObject<{
+    title: z.ZodOptional<z.ZodString>;
+    description: z.ZodOptional<z.ZodString>;
+    status: z.ZodOptional<z.ZodEnum<{
+        pending: "pending";
+        inProgress: "inProgress";
+        resolved: "resolved";
+    }>>;
+    priority: z.ZodOptional<z.ZodEnum<{
+        normal: "normal";
+        urgent: "urgent";
+    }>>;
+    locationType: z.ZodOptional<z.ZodEnum<{
+        common_area: "common_area";
+        own_unit: "own_unit";
+    }>>;
+    commonAreaDescription: z.ZodOptional<z.ZodString>;
+    unitType: z.ZodOptional<z.ZodEnum<{
+        apartment: "apartment";
+        garage: "garage";
+        storage_unit: "storage_unit";
+    }>>;
+    unitId: z.ZodOptional<z.ZodString>;
+    fileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
+    removeChildFileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
+    maintenanceLogIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
+    events: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodObject<{
+        startDate: z.ZodCoercedDate<unknown>;
+        endDate: z.ZodCoercedDate<unknown>;
+        title: z.ZodOptional<z.ZodString>;
+        description: z.ZodOptional<z.ZodString>;
+    }, z.core.$strip>>>>;
+    id: z.ZodString;
+}, z.core.$strip>;
+type UpdateFailureReportRequestPayload = z.infer<typeof updateFailureReportRequestSchema>;
+
+/**
+ * Update maintenance-log request schema — the canonical PATCH request
+ * shape, combining the maintenance-log `id` (from the URL) with the
+ * optional body fields validated by `updateMaintenanceLogSchema` in
+ * `entities/maintenance-log.schema.ts`.
+ */
+declare const updateMaintenanceLogRequestSchema: z.ZodObject<{
+    title: z.ZodOptional<z.ZodString>;
+    description: z.ZodOptional<z.ZodString>;
+    categoryId: z.ZodOptional<z.ZodString>;
+    contractor: z.ZodOptional<z.ZodString>;
+    cost: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodString>>;
+    financedBy: z.ZodOptional<z.ZodEnum<{
+        building_funds: "building_funds";
+        insurance: "insurance";
+        co_owner: "co_owner";
+    }>>;
+    warranty: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
+    events: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodObject<{
+        id: z.ZodOptional<z.ZodString>;
+        startDate: z.ZodCoercedDate<unknown>;
+        endDate: z.ZodCoercedDate<unknown>;
+        title: z.ZodOptional<z.ZodString>;
+        description: z.ZodOptional<z.ZodString>;
+    }, z.core.$strip>>>>;
+    fileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
+    removeChildFileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
+    pollId: z.ZodOptional<z.ZodString>;
+    pollIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
+    id: z.ZodString;
+}, z.core.$strip>;
+type UpdateMaintenanceLogRequestPayload = z.infer<typeof updateMaintenanceLogRequestSchema>;
+
+/**
+ * Update notice request schema — the canonical PATCH request shape,
+ * combining the notice `id` (from the URL) with the optional body
+ * fields validated by `updateNoticeSchema` in `entities/notice.schema.ts`.
+ *
+ * Consumers (frontend server actions, backend handlers that want a
+ * single-object signature) should prefer this over hand-rolling their
+ * own wrapper — the body shape stays in lockstep with the backend
+ * controller because it reuses the entity-level body schema directly.
+ */
+declare const updateNoticeRequestSchema: z.ZodObject<{
+    title: z.ZodOptional<z.ZodString>;
+    content: z.ZodOptional<z.ZodString>;
+    pinned: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
+    events: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodObject<{
+        id: z.ZodOptional<z.ZodString>;
+        startDate: z.ZodCoercedDate<unknown>;
+        endDate: z.ZodCoercedDate<unknown>;
+        title: z.ZodOptional<z.ZodString>;
+        description: z.ZodOptional<z.ZodString>;
+    }, z.core.$strip>>>>;
+    fileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
+    removeChildFileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
+    id: z.ZodString;
+}, z.core.$strip>;
+type UpdateNoticeRequestPayload = z.infer<typeof updateNoticeRequestSchema>;
+
+/**
+ * Update poll request schema — the canonical PATCH request shape,
+ * combining the poll `id` (from the URL) with the optional body fields
+ * validated by `updatePollSchema` in `entities/poll.schema.ts`.
+ */
+declare const updatePollRequestSchema: z.ZodObject<{
+    question: z.ZodOptional<z.ZodString>;
+    options: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
+    pollType: z.ZodOptional<z.ZodEnum<{
+        CONSENSUS: "CONSENSUS";
+        COMMUNITY: "COMMUNITY";
+    }>>;
+    deadline: z.ZodOptional<z.ZodCoercedDate<unknown>>;
+    requiredConsensusPercentage: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    status: z.ZodOptional<z.ZodEnum<{
+        active: "active";
+        inactive: "inactive";
+        ended: "ended";
+    }>>;
+    scopedUnitIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
+    scopedUserIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
+    fileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
+    removeChildFileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
+    id: z.ZodString;
+}, z.core.$strip>;
+type UpdatePollRequestPayload = z.infer<typeof updatePollRequestSchema>;
+
+/**
  * Building summary response — shape returned from the paginated
  * list endpoints (`GET /buildings`, admin building lists).
  */
@@ -1252,8 +1385,12 @@ declare const buildingResponseSchema: z.ZodObject<{
         COMMERCIAL: "COMMERCIAL";
         RESIDENTIAL_COMMERCIAL: "RESIDENTIAL_COMMERCIAL";
     }>;
+    status: z.ZodOptional<z.ZodEnum<{
+        [x: string]: string;
+    }>>;
     totalUnits: z.ZodNumber;
     isStratified: z.ZodBoolean;
+    houseRulesFileUrl: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     createdBy: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     createdAt: z.ZodString;
     updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
@@ -1314,8 +1451,12 @@ declare const paginatedBuildingsResponseSchema: z.ZodObject<{
             COMMERCIAL: "COMMERCIAL";
             RESIDENTIAL_COMMERCIAL: "RESIDENTIAL_COMMERCIAL";
         }>;
+        status: z.ZodOptional<z.ZodEnum<{
+            [x: string]: string;
+        }>>;
         totalUnits: z.ZodNumber;
         isStratified: z.ZodBoolean;
+        houseRulesFileUrl: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         createdBy: z.ZodNullable<z.ZodOptional<z.ZodString>>;
         createdAt: z.ZodString;
         updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
@@ -1834,10 +1975,10 @@ declare const pollResponseSchema: z.ZodObject<{
     requiredConsensusPercentage: z.ZodOptional<z.ZodNumber>;
     totalVotes: z.ZodNumber;
     totalWeight: z.ZodNumber;
-    winningOptionIndex: z.ZodOptional<z.ZodNumber>;
+    winningOptionIndex: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
     isResultsFinalized: z.ZodBoolean;
-    finalizedAt: z.ZodOptional<z.ZodString>;
-    finalizedBy: z.ZodOptional<z.ZodString>;
+    finalizedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    finalizedBy: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     hasVoted: z.ZodOptional<z.ZodBoolean>;
     userVote: z.ZodOptional<z.ZodNumber>;
     files: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -1879,10 +2020,10 @@ declare const pollResultsSchema: z.ZodObject<{
     totalVotes: z.ZodNumber;
     totalWeight: z.ZodNumber;
     totalEligibleVoters: z.ZodNumber;
-    winningOptionIndex: z.ZodOptional<z.ZodNumber>;
+    winningOptionIndex: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
     isResultsFinalized: z.ZodBoolean;
-    finalizedAt: z.ZodOptional<z.ZodString>;
-    finalizedBy: z.ZodOptional<z.ZodString>;
+    finalizedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    finalizedBy: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     optionResults: z.ZodArray<z.ZodObject<{
         optionIndex: z.ZodNumber;
         optionText: z.ZodString;
@@ -1972,10 +2113,10 @@ declare const paginatedPollsResponseSchema: z.ZodObject<{
         requiredConsensusPercentage: z.ZodOptional<z.ZodNumber>;
         totalVotes: z.ZodNumber;
         totalWeight: z.ZodNumber;
-        winningOptionIndex: z.ZodOptional<z.ZodNumber>;
+        winningOptionIndex: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
         isResultsFinalized: z.ZodBoolean;
-        finalizedAt: z.ZodOptional<z.ZodString>;
-        finalizedBy: z.ZodOptional<z.ZodString>;
+        finalizedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        finalizedBy: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         hasVoted: z.ZodOptional<z.ZodBoolean>;
         userVote: z.ZodOptional<z.ZodNumber>;
         files: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -2055,4 +2196,4 @@ type MaintenanceStatusSchemaType = z.infer<typeof MaintenanceStatusSchema>;
 type FailureStatusSchemaType = z.infer<typeof FailureStatusSchema>;
 type PrioritySchemaType = z.infer<typeof PrioritySchema>;
 
-export { type AddOrgMemberSchema, type Apartment, type ApartmentUser, type ApiError, ApprovalStatusSchema, type ApprovalStatusSchemaType, type ApproveFailureReportSchema, type ApproveNoticeSchema, type AssignOrgBuildingSchema, type AssignOrgMemberBuildingSchema, BUILDING_LIMITS, BUILDING_TYPES, type BaseEntitySchema, type BuildingDetailResponse, type BuildingEntitySchema, type BuildingResponse, type BuildingTypeOption, type BuildingUserEntitySchema, CHAT_LIMITS, type CommentResponse, CommonStatusSchema, type CommonStatusSchemaType, ConversationType, type CopyFaqsSchema, type CopyTransactionCategoriesSchema, type CreateBuildingSchema, type CreateConversationSchema, type CreateEventSchema, type CreateFailureReportSchema, type CreateFaqSchema, type CreateMaintenanceLogSchema, type CreateNoticeSchema, type CreateOrganizationSchema, type CreatePollSchema, type CreateTransactionCategorySchema, type CursorQuerySchema, type DateRangeParamsSchema, type DateRangeWithValidationSchema, type DateTimeSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, type EventColorOption, type EventResponse, type EventTypeOption, FAILURE_REPORT_LIMITS, FAQ_LIMITS, type FailureReportEventSchema, type FailureReportResponse, FailureStatusSchema, type FailureStatusSchemaType, type FaqResponse, type FinalizePollSchema, type ForgotPasswordSchema, type Garage, type GarageRole, type GarageUser, type GetOrgBuildingsQuerySchema, type GetOrgMembersQuerySchema, type GetTransactionCategoriesQuerySchema, type InviteOrgMemberSchema, type JoinBuildingWithOtpSchema, type LoginSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, type MaintenanceFinancedByOption, type MaintenanceLogEventSchema, type MaintenanceLogResponse, MaintenanceStatusSchema, type MaintenanceStatusSchemaType, NOTICE_LIMITS, type NoticeEventSchema, type NoticeResponse, type NotificationPreferenceCategory, type NotificationPreferenceItem, type NotificationResponse, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, type PaginatedApartmentsResponse, type PaginatedBuildingsResponse, type PaginatedEventsResponse, type PaginatedFailureReportsResponse, type PaginatedMaintenanceLogsResponse, type PaginatedNoticesResponse, type PaginatedPollsResponse, type PaginatedResponseSchema, type PaginationParamsSchema, type PermissionFieldsSchema, type PermissionsResponseSchema, type PollResponse, type PollResults, type PollTypeOption, type PollVotersResponse, PrioritySchema, type PrioritySchemaType, type RegisterSchema, type ReorderFaqsSchema, type ResetPasswordSchema, type SearchUsersQuerySchema, type SendMessageSchema, type StorageUnit, type StorageUnitRole, type StorageUnitUser, TRANSACTION_CATEGORY_LIMITS, type TimeSchema, type UpdateBuildingSchema, type UpdateConversationSchema, type UpdateEventSchema, type UpdateFailureReportSchema, type UpdateFaqSchema, type UpdateMaintenanceLogSchema, type UpdateNoticeSchema, type UpdateOrgMemberRoleSchema, type UpdateOrganizationSchema, type UpdatePasswordSchema, type UpdatePollSchema, type UpdateTransactionCategorySchema, type UpdateUserBuildingRoleSchema, type UserEntitySchema, type UuidSchema, type VerifyOtpSchema, type VotePollSchema, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, baseEntitySchema, buildingDetailResponseSchema, buildingEntitySchema, buildingResponseSchema, buildingTypeSchema, buildingUserEntitySchema, commentResponseSchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updatePasswordSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
+export { type AddOrgMemberSchema, type Apartment, type ApartmentUser, type ApiError, ApprovalStatusSchema, type ApprovalStatusSchemaType, type ApproveFailureReportSchema, type ApproveNoticeSchema, type AssignOrgBuildingSchema, type AssignOrgMemberBuildingSchema, BUILDING_LIMITS, BUILDING_TYPES, type BaseEntitySchema, type BuildingDetailResponse, type BuildingEntitySchema, type BuildingResponse, type BuildingTypeOption, type BuildingUserEntitySchema, CHAT_LIMITS, type CommentResponse, CommonStatusSchema, type CommonStatusSchemaType, ConversationType, type CopyFaqsSchema, type CopyTransactionCategoriesSchema, type CreateBuildingSchema, type CreateConversationSchema, type CreateEventSchema, type CreateFailureReportSchema, type CreateFaqSchema, type CreateMaintenanceLogSchema, type CreateNoticeSchema, type CreateOrganizationSchema, type CreatePollSchema, type CreateTransactionCategorySchema, type CursorQuerySchema, type DateRangeParamsSchema, type DateRangeWithValidationSchema, type DateTimeSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, type EventColorOption, type EventResponse, type EventTypeOption, FAILURE_REPORT_LIMITS, FAQ_LIMITS, type FailureReportEventSchema, type FailureReportResponse, FailureStatusSchema, type FailureStatusSchemaType, type FaqResponse, type FinalizePollSchema, type ForgotPasswordSchema, type Garage, type GarageRole, type GarageUser, type GetOrgBuildingsQuerySchema, type GetOrgMembersQuerySchema, type GetTransactionCategoriesQuerySchema, type InviteOrgMemberSchema, type JoinBuildingWithOtpSchema, type LoginSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, type MaintenanceFinancedByOption, type MaintenanceLogEventSchema, type MaintenanceLogResponse, MaintenanceStatusSchema, type MaintenanceStatusSchemaType, NOTICE_LIMITS, type NoticeEventSchema, type NoticeResponse, type NotificationPreferenceCategory, type NotificationPreferenceItem, type NotificationResponse, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, type PaginatedApartmentsResponse, type PaginatedBuildingsResponse, type PaginatedEventsResponse, type PaginatedFailureReportsResponse, type PaginatedMaintenanceLogsResponse, type PaginatedNoticesResponse, type PaginatedPollsResponse, type PaginatedResponseSchema, type PaginationParamsSchema, type PermissionFieldsSchema, type PermissionsResponseSchema, type PollResponse, type PollResults, type PollTypeOption, type PollVotersResponse, PrioritySchema, type PrioritySchemaType, type RegisterSchema, type ReorderFaqsSchema, type ResetPasswordSchema, type SearchUsersQuerySchema, type SendMessageSchema, type StorageUnit, type StorageUnitRole, type StorageUnitUser, TRANSACTION_CATEGORY_LIMITS, type TimeSchema, type UpdateBuildingSchema, type UpdateConversationSchema, type UpdateEventSchema, type UpdateFailureReportRequestPayload, type UpdateFailureReportSchema, type UpdateFaqSchema, type UpdateMaintenanceLogRequestPayload, type UpdateMaintenanceLogSchema, type UpdateNoticeRequestPayload, type UpdateNoticeSchema, type UpdateOrgMemberRoleSchema, type UpdateOrganizationSchema, type UpdatePasswordSchema, type UpdatePollRequestPayload, type UpdatePollSchema, type UpdateTransactionCategorySchema, type UpdateUserBuildingRoleSchema, type UserEntitySchema, type UuidSchema, type VerifyOtpSchema, type VotePollSchema, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, baseEntitySchema, buildingDetailResponseSchema, buildingEntitySchema, buildingResponseSchema, buildingTypeSchema, buildingUserEntitySchema, commentResponseSchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
