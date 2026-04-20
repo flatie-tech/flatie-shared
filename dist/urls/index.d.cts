@@ -47,6 +47,14 @@ declare const API_ROUTES: {
     readonly FUNDS_SUMMARY: (buildingId: string) => string;
     readonly DOCUMENTS: (buildingId: string) => string;
     readonly DOCUMENT: (buildingId: string, id: string) => string;
+    readonly SUBSCRIPTIONS: {
+        readonly BASE: "/subscriptions";
+        readonly PRICES: "/subscriptions/prices";
+        readonly INVOICE: "/subscriptions/invoice";
+        readonly INVOICES: "/subscriptions/invoices";
+        readonly INVOICE_BY_ID: (id: string) => string;
+        readonly MARK_PAID: (id: string) => string;
+    };
 };
 
 export { API_ROUTES, API_VERSION };

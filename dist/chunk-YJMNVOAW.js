@@ -38,9 +38,18 @@ var API_ROUTES = {
   FUNDS: (buildingId) => `/buildings/${buildingId}/funds`,
   FUNDS_SUMMARY: (buildingId) => `/buildings/${buildingId}/funds/summary`,
   DOCUMENTS: (buildingId) => `/buildings/${buildingId}/documents`,
-  DOCUMENT: (buildingId, id) => `/buildings/${buildingId}/documents/${id}`
+  DOCUMENT: (buildingId, id) => `/buildings/${buildingId}/documents/${id}`,
+  // Subscriptions & Billing
+  SUBSCRIPTIONS: {
+    BASE: "/subscriptions",
+    PRICES: "/subscriptions/prices",
+    INVOICE: "/subscriptions/invoice",
+    INVOICES: "/subscriptions/invoices",
+    INVOICE_BY_ID: (id) => `/subscriptions/invoices/${id}`,
+    MARK_PAID: (id) => `/subscriptions/invoices/${id}/mark-paid`
+  }
 };
 
 export { API_ROUTES, API_VERSION };
-//# sourceMappingURL=chunk-7JCMB6BU.js.map
-//# sourceMappingURL=chunk-7JCMB6BU.js.map
+//# sourceMappingURL=chunk-YJMNVOAW.js.map
+//# sourceMappingURL=chunk-YJMNVOAW.js.map

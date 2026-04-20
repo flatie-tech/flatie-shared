@@ -65,4 +65,14 @@ export const API_ROUTES = {
 
   DOCUMENTS: (buildingId: string) => `/buildings/${buildingId}/documents`,
   DOCUMENT: (buildingId: string, id: string) => `/buildings/${buildingId}/documents/${id}`,
+
+  // Subscriptions & Billing
+  SUBSCRIPTIONS: {
+    BASE: '/subscriptions',
+    PRICES: '/subscriptions/prices',
+    INVOICE: '/subscriptions/invoice',
+    INVOICES: '/subscriptions/invoices',
+    INVOICE_BY_ID: (id: string) => `/subscriptions/invoices/${id}`,
+    MARK_PAID: (id: string) => `/subscriptions/invoices/${id}/mark-paid`,
+  },
 } as const;
