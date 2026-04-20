@@ -38,6 +38,12 @@ export const buildingKeys = {
   otp: (id: string) => [...buildingKeys.all, 'otp', id] as const,
   users: (id: string, filters: Record<string, unknown> = {}) =>
     [...buildingKeys.all, 'users', id, { ...filters }] as const,
+  settings: (id: string) => [...buildingKeys.all, 'settings', id] as const,
+  joinRequests: (id: string) => [...buildingKeys.all, 'joinRequests', id] as const,
+  pending: () => [...buildingKeys.all, 'pending'] as const,
+  chatVisibility: () => [...buildingKeys.all, 'chatVisibility'] as const,
+  chatPermissions: (ids?: string[]) =>
+    [...buildingKeys.all, 'chatPermissions', ...(ids ? [ids] : [])] as const,
 };
 
 export const noticeKeys = {
@@ -55,7 +61,8 @@ export const pollKeys = {
   details: () => [...pollKeys.all, 'detail'] as const,
   detail: (id: string) => [...pollKeys.details(), id] as const,
   results: (id: string) => [...pollKeys.detail(id), 'results'] as const,
-  voters: (id: string) => [...pollKeys.detail(id), 'voters'] as const,
+  voters: (buildingId: string, pollId: string) =>
+    [...pollKeys.detail(pollId), 'voters', buildingId] as const,
 };
 
 export const eventKeys = {
@@ -128,6 +135,156 @@ export const adminKeys = {
     [...adminKeys.all, 'buildings', { ...filters }] as const,
 };
 
+// ── Additional query key factories ──────────────────────────────────────
+
+export const adminBuildingKeys = {
+  all: ['adminBuilding'] as const,
+  lists: () => [...adminBuildingKeys.all, 'list'] as const,
+  list: (filters: Record<string, unknown> = {}) =>
+    [...adminBuildingKeys.lists(), { ...filters }] as const,
+  details: () => [...adminBuildingKeys.all, 'detail'] as const,
+  detail: (id: string) => [...adminBuildingKeys.details(), id] as const,
+};
+
+export const apartmentKeys = {
+  all: ['apartment'] as const,
+  lists: () => [...apartmentKeys.all, 'list'] as const,
+  list: (buildingId: string, filters: Record<string, unknown> = {}) =>
+    [...apartmentKeys.lists(), buildingId, { ...filters }] as const,
+  details: () => [...apartmentKeys.all, 'detail'] as const,
+  detail: (id: string) => [...apartmentKeys.details(), id] as const,
+  floors: (buildingId: string) => [...apartmentKeys.all, 'floors', buildingId] as const,
+};
+
+export const blogKeys = {
+  all: ['blog'] as const,
+  lists: () => [...blogKeys.all, 'list'] as const,
+  list: (filters: Record<string, unknown> = {}) => [...blogKeys.lists(), { ...filters }] as const,
+  details: () => [...blogKeys.all, 'detail'] as const,
+  detail: (id: string) => [...blogKeys.details(), id] as const,
+  categories: () => [...blogKeys.all, 'categories'] as const,
+};
+
+export const chatKeys = {
+  all: ['chat'] as const,
+  conversations: (buildingId: string) => [...chatKeys.all, 'conversations', buildingId] as const,
+  conversation: (buildingId: string, conversationId: string) =>
+    [...chatKeys.all, 'conversation', buildingId, conversationId] as const,
+  messages: (conversationId: string) => [...chatKeys.all, 'messages', conversationId] as const,
+  unreadCount: (buildingId: string) => [...chatKeys.all, 'unreadCount', buildingId] as const,
+  buildingUsers: (buildingId: string, search?: string) =>
+    [...chatKeys.all, 'buildingUsers', buildingId, search] as const,
+  selfUser: (buildingId: string) => [...chatKeys.all, 'selfUser', buildingId] as const,
+};
+
+export const dashboardSummaryKeys = {
+  all: ['dashboardSummary'] as const,
+  summary: () => [...dashboardSummaryKeys.all, 'summary'] as const,
+  platform: () => [...dashboardSummaryKeys.all, 'platform'] as const,
+  representatives: () => [...dashboardSummaryKeys.all, 'representatives'] as const,
+};
+
+export const faqKeys = {
+  all: ['faq'] as const,
+  lists: () => [...faqKeys.all, 'list'] as const,
+  list: (buildingId: string) => [...faqKeys.lists(), buildingId] as const,
+  details: () => [...faqKeys.all, 'detail'] as const,
+  detail: (id: string) => [...faqKeys.details(), id] as const,
+};
+
+export const garageKeys = {
+  all: ['garage'] as const,
+  lists: () => [...garageKeys.all, 'list'] as const,
+  list: (buildingId: string) => [...garageKeys.lists(), buildingId] as const,
+  details: () => [...garageKeys.all, 'detail'] as const,
+  detail: (id: string) => [...garageKeys.details(), id] as const,
+  floors: (buildingId: string) => [...garageKeys.all, 'floors', buildingId] as const,
+};
+
+export const layoutKeys = {
+  all: ['layout'] as const,
+  sidebar: () => [...layoutKeys.all, 'sidebar'] as const,
+  config: (buildingId: string) => [...layoutKeys.all, 'config', buildingId] as const,
+  building: (buildingId: string) => [...layoutKeys.all, 'building', buildingId] as const,
+  kiosk: (buildingId: string) => [...layoutKeys.all, 'kiosk', buildingId] as const,
+};
+
+export const notificationKeys = {
+  all: ['notification'] as const,
+  lists: () => [...notificationKeys.all, 'list'] as const,
+  list: (filters: Record<string, unknown> = {}) =>
+    [...notificationKeys.lists(), { ...filters }] as const,
+  unreadCount: () => [...notificationKeys.all, 'unreadCount'] as const,
+  unreadCountByCategory: (buildingId?: string) =>
+    [
+      ...notificationKeys.all,
+      'unreadCountByCategory',
+      ...(buildingId ? [buildingId] : []),
+    ] as const,
+  preferences: () => [...notificationKeys.all, 'preferences'] as const,
+};
+
+export const platformBuildingKeys = {
+  all: ['platformBuilding'] as const,
+  lists: () => [...platformBuildingKeys.all, 'list'] as const,
+  list: (filters: Record<string, unknown> = {}) =>
+    [...platformBuildingKeys.lists(), { ...filters }] as const,
+  details: () => [...platformBuildingKeys.all, 'detail'] as const,
+  detail: (id: string) => [...platformBuildingKeys.details(), id] as const,
+};
+
+export const recurringTemplateKeys = {
+  all: ['recurringTemplate'] as const,
+  lists: () => [...recurringTemplateKeys.all, 'list'] as const,
+  list: (buildingId: string) => [...recurringTemplateKeys.lists(), buildingId] as const,
+  details: () => [...recurringTemplateKeys.all, 'detail'] as const,
+  detail: (id: string) => [...recurringTemplateKeys.details(), id] as const,
+};
+
+export const spotlightKeys = {
+  all: ['spotlight'] as const,
+  search: (query: string) => [...spotlightKeys.all, 'search', query] as const,
+  buildingSearch: (buildingId: string, query: string, limit?: number) =>
+    [...spotlightKeys.all, 'buildingSearch', buildingId, query, limit] as const,
+  platformSearch: (query: string, limit?: number) =>
+    [...spotlightKeys.all, 'platformSearch', query, limit] as const,
+};
+
+export const storageUnitKeys = {
+  all: ['storageUnit'] as const,
+  lists: () => [...storageUnitKeys.all, 'list'] as const,
+  list: (buildingId: string) => [...storageUnitKeys.lists(), buildingId] as const,
+  details: () => [...storageUnitKeys.all, 'detail'] as const,
+  detail: (id: string) => [...storageUnitKeys.details(), id] as const,
+  floors: (buildingId: string) => [...storageUnitKeys.all, 'floors', buildingId] as const,
+};
+
+export const transactionCategoryKeys = {
+  all: ['transactionCategory'] as const,
+  lists: () => [...transactionCategoryKeys.all, 'list'] as const,
+  list: (buildingId?: string, type?: string, search?: string) =>
+    [...transactionCategoryKeys.lists(), buildingId, type, search] as const,
+  details: () => [...transactionCategoryKeys.all, 'detail'] as const,
+  detail: (id: string) => [...transactionCategoryKeys.details(), id] as const,
+};
+
+export const unitSearchKeys = {
+  all: ['unitSearch'] as const,
+  search: (buildingId: string, query?: string) =>
+    [...unitSearchKeys.all, 'search', buildingId, query] as const,
+  initial: (buildingId: string, unitId?: string) =>
+    [...unitSearchKeys.all, 'initial', buildingId, unitId] as const,
+  my: (buildingId: string) => [...unitSearchKeys.all, 'my', buildingId] as const,
+};
+
+export const widgetKeys = {
+  all: ['widget'] as const,
+  config: (buildingId: string) => [...widgetKeys.all, 'config', buildingId] as const,
+  data: (buildingId: string, widgetId: string) =>
+    [...widgetKeys.all, 'data', buildingId, widgetId] as const,
+  notices: (buildingId: string) => [...widgetKeys.all, 'notices', buildingId] as const,
+};
+
 /**
  * All query keys combined for easy access
  */
@@ -144,4 +301,20 @@ export const queryKeys = {
   permission: permissionKeys,
   recent: recentKeys,
   admin: adminKeys,
+  adminBuilding: adminBuildingKeys,
+  apartment: apartmentKeys,
+  blog: blogKeys,
+  chat: chatKeys,
+  dashboardSummary: dashboardSummaryKeys,
+  faq: faqKeys,
+  garage: garageKeys,
+  layout: layoutKeys,
+  notification: notificationKeys,
+  platformBuilding: platformBuildingKeys,
+  recurringTemplate: recurringTemplateKeys,
+  spotlight: spotlightKeys,
+  storageUnit: storageUnitKeys,
+  transactionCategory: transactionCategoryKeys,
+  unitSearch: unitSearchKeys,
+  widget: widgetKeys,
 } as const;

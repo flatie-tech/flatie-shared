@@ -2,21 +2,12 @@
  * API Route Constants
  *
  * Centralized API endpoint definitions for use across frontend, mobile, and backend.
- *
- * TODO: Add API route constants from frontend/backend implementations:
- * - Auth routes (login, register, refresh-token, etc.)
- * - Building routes
- * - Notice, Poll, Event routes
- * - Maintenance, Failure report routes
- * - Financial routes
- * - Admin routes
  */
 
-// Placeholder - API routes will be added here
 export const API_VERSION = 'v1';
 
 export const API_ROUTES = {
-  // Auth
+  // ── Auth ──────────────────────────────────────────────────────────────
   AUTH: {
     LOGIN: '/auth/login',
     REGISTER: '/auth/register',
@@ -25,48 +16,279 @@ export const API_ROUTES = {
     FORGOT_PASSWORD: '/auth/forgot-password',
     RESET_PASSWORD: '/auth/reset-password',
     VERIFY_OTP: '/auth/verify-otp',
+    UPDATE_USER: '/auth/update-user',
+    UPDATE_PASSWORD: '/auth/update-password',
   },
 
-  // Users
+  // ── Users ─────────────────────────────────────────────────────────────
   USERS: {
     ME: '/users/me',
     BUILDINGS: '/users/me/buildings',
+    BY_ID: (userId: string) => `/users/${userId}`,
+    RESTORE: '/users/restore',
+    EXPORT: '/users/export',
+    LOCALE: '/users/locale',
+    PERMISSIONS: '/users/permissions',
+    PHONE_SEND_VERIFICATION: '/users/phone/send-verification',
+    PHONE_VERIFY: '/users/phone/verify',
+    BUILDING_CHAT_VISIBILITY: (buildingId: string) => `/users/${buildingId}/chat-visibility`,
   },
 
-  // Buildings
+  // ── Buildings ─────────────────────────────────────────────────────────
   BUILDINGS: {
     BASE: '/buildings',
     BY_ID: (id: string) => `/buildings/${id}`,
-    GENERATE_OTP: (id: string) => `/buildings/${id}/otp`,
-    JOIN_WITH_OTP: '/buildings/join-with-otp',
+    SETTINGS: (id: string) => `/buildings/${id}/settings`,
     USERS: (id: string) => `/buildings/${id}/users`,
+    OTP: (id: string) => `/buildings/${id}/otp`,
+    GENERATE_OTP: '/buildings/generate-otp',
+    JOIN_WITH_OTP: '/buildings/join-with-otp',
+    PENDING: '/buildings/pending',
+    RECENT: (id: string) => `/buildings/${id}/recent`,
+    SEARCH: '/buildings/search',
+    BUILDING_SEARCH: (id: string) => `/buildings/${id}/search`,
+    JOIN_REQUESTS: (id: string) => `/buildings/${id}/join-requests`,
+    JOIN_REQUEST_APPROVE: (id: string, requestId: string) =>
+      `/buildings/${id}/join-requests/${requestId}/approve`,
+    JOIN_REQUEST_REJECT: (id: string, requestId: string) =>
+      `/buildings/${id}/join-requests/${requestId}/reject`,
+    IMPORT_TEMPLATE: (id: string) => `/buildings/${id}/import/template`,
+    IMPORT_PREVIEW: (id: string) => `/buildings/${id}/import/preview`,
+    IMPORT_COMMIT: (id: string) => `/buildings/${id}/import/commit`,
   },
 
-  // Building-scoped resources
-  NOTICES: (buildingId: string) => `/buildings/${buildingId}/notices`,
-  NOTICE: (buildingId: string, id: string) => `/buildings/${buildingId}/notices/${id}`,
+  // ── Apartments ────────────────────────────────────────────────────────
+  APARTMENTS: {
+    LIST: (buildingId: string) => `/buildings/${buildingId}/apartments`,
+    DETAIL: (buildingId: string, apartmentId: string) =>
+      `/buildings/${buildingId}/apartments/${apartmentId}`,
+    RESTORE: (buildingId: string, apartmentId: string) =>
+      `/buildings/${buildingId}/apartments/${apartmentId}/restore`,
+    USERS: (buildingId: string, apartmentId: string) =>
+      `/buildings/${buildingId}/apartments/${apartmentId}/users`,
+    USER_DETAIL: (buildingId: string, apartmentId: string, userId: string) =>
+      `/buildings/${buildingId}/apartments/${apartmentId}/users/${userId}`,
+    FLOORS: (buildingId: string) => `/buildings/${buildingId}/apartments/floors`,
+  },
 
-  POLLS: (buildingId: string) => `/buildings/${buildingId}/polls`,
-  POLL: (buildingId: string, id: string) => `/buildings/${buildingId}/polls/${id}`,
+  // ── Garages ───────────────────────────────────────────────────────────
+  GARAGES: {
+    LIST: (buildingId: string) => `/buildings/${buildingId}/garages`,
+    DETAIL: (buildingId: string, garageId: string) =>
+      `/buildings/${buildingId}/garages/${garageId}`,
+    RESTORE: (buildingId: string, garageId: string) =>
+      `/buildings/${buildingId}/garages/${garageId}/restore`,
+    USERS: (buildingId: string, garageId: string) =>
+      `/buildings/${buildingId}/garages/${garageId}/users`,
+    USER_DETAIL: (buildingId: string, garageId: string, userId: string) =>
+      `/buildings/${buildingId}/garages/${garageId}/users/${userId}`,
+    FLOORS: (buildingId: string) => `/buildings/${buildingId}/garages/floors`,
+  },
 
-  EVENTS: (buildingId: string) => `/buildings/${buildingId}/events`,
-  EVENT: (buildingId: string, id: string) => `/buildings/${buildingId}/events/${id}`,
+  // ── Storage Units ─────────────────────────────────────────────────────
+  STORAGE_UNITS: {
+    LIST: (buildingId: string) => `/buildings/${buildingId}/storage-units`,
+    DETAIL: (buildingId: string, storageUnitId: string) =>
+      `/buildings/${buildingId}/storage-units/${storageUnitId}`,
+    RESTORE: (buildingId: string, storageUnitId: string) =>
+      `/buildings/${buildingId}/storage-units/${storageUnitId}/restore`,
+    USERS: (buildingId: string, storageUnitId: string) =>
+      `/buildings/${buildingId}/storage-units/${storageUnitId}/users`,
+    USER_DETAIL: (buildingId: string, storageUnitId: string, userId: string) =>
+      `/buildings/${buildingId}/storage-units/${storageUnitId}/users/${userId}`,
+    FLOORS: (buildingId: string) => `/buildings/${buildingId}/storage-units/floors`,
+  },
 
-  FAILURE_REPORTS: (buildingId: string) => `/buildings/${buildingId}/failure-reports`,
-  FAILURE_REPORT: (buildingId: string, id: string) =>
-    `/buildings/${buildingId}/failure-reports/${id}`,
+  // ── Units (generic) ──────────────────────────────────────────────────
+  UNITS: {
+    LIST: (buildingId: string) => `/buildings/${buildingId}/units`,
+    USER_UNITS: (buildingId: string) => `/buildings/${buildingId}/units/user`,
+  },
 
-  MAINTENANCE_LOGS: (buildingId: string) => `/buildings/${buildingId}/maintenance-logs`,
-  MAINTENANCE_LOG: (buildingId: string, id: string) =>
-    `/buildings/${buildingId}/maintenance-logs/${id}`,
+  // ── Notices ───────────────────────────────────────────────────────────
+  NOTICES: {
+    LIST: (buildingId: string) => `/buildings/${buildingId}/notices`,
+    DETAIL: (buildingId: string, noticeId: string) =>
+      `/buildings/${buildingId}/notices/${noticeId}`,
+    APPROVE: (buildingId: string, noticeId: string) =>
+      `/buildings/${buildingId}/notices/${noticeId}/approve`,
+    RESTORE: (buildingId: string, noticeId: string) =>
+      `/buildings/${buildingId}/notices/${noticeId}/restore`,
+  },
 
-  FUNDS: (buildingId: string) => `/buildings/${buildingId}/funds`,
-  FUNDS_SUMMARY: (buildingId: string) => `/buildings/${buildingId}/funds/summary`,
+  // ── Polls / Feedback ─────────────────────────────────────────────────
+  POLLS: {
+    LIST: (buildingId: string) => `/buildings/${buildingId}/polls`,
+    DETAIL: (buildingId: string, pollId: string) => `/buildings/${buildingId}/polls/${pollId}`,
+    APPROVE: (buildingId: string, pollId: string) =>
+      `/buildings/${buildingId}/polls/${pollId}/approve`,
+    RESTORE: (buildingId: string, pollId: string) =>
+      `/buildings/${buildingId}/polls/${pollId}/restore`,
+    VOTE: (buildingId: string, pollId: string) => `/buildings/${buildingId}/polls/${pollId}/vote`,
+    VOTERS: (buildingId: string, pollId: string) =>
+      `/buildings/${buildingId}/polls/${pollId}/voters`,
+    RESULTS: (buildingId: string) => `/buildings/${buildingId}/polls/results`,
+  },
 
-  DOCUMENTS: (buildingId: string) => `/buildings/${buildingId}/documents`,
-  DOCUMENT: (buildingId: string, id: string) => `/buildings/${buildingId}/documents/${id}`,
+  // ── Events ────────────────────────────────────────────────────────────
+  EVENTS: {
+    LIST: (buildingId: string) => `/buildings/${buildingId}/events`,
+    DETAIL: (buildingId: string, eventId: string) => `/buildings/${buildingId}/events/${eventId}`,
+    APPROVE: (buildingId: string, eventId: string) =>
+      `/buildings/${buildingId}/events/${eventId}/approve`,
+    RESTORE: (buildingId: string, eventId: string) =>
+      `/buildings/${buildingId}/events/${eventId}/restore`,
+  },
 
-  // Subscriptions & Billing
+  // ── Failure Reports ──────────────────────────────────────────────────
+  FAILURE_REPORTS: {
+    LIST: (buildingId: string) => `/buildings/${buildingId}/failure-reports`,
+    DETAIL: (buildingId: string, failureReportId: string) =>
+      `/buildings/${buildingId}/failure-reports/${failureReportId}`,
+    APPROVE: (buildingId: string, failureReportId: string) =>
+      `/buildings/${buildingId}/failure-reports/${failureReportId}/approve`,
+    RESTORE: (buildingId: string, failureReportId: string) =>
+      `/buildings/${buildingId}/failure-reports/${failureReportId}/restore`,
+  },
+
+  // ── Maintenance Logs ─────────────────────────────────────────────────
+  MAINTENANCE_LOGS: {
+    LIST: (buildingId: string) => `/buildings/${buildingId}/maintenance-logs`,
+    DETAIL: (buildingId: string, maintenanceLogId: string) =>
+      `/buildings/${buildingId}/maintenance-logs/${maintenanceLogId}`,
+    RESTORE: (buildingId: string, maintenanceLogId: string) =>
+      `/buildings/${buildingId}/maintenance-logs/${maintenanceLogId}/restore`,
+  },
+
+  // ── Documents / Files ────────────────────────────────────────────────
+  FILES: {
+    LIST: (buildingId: string) => `/buildings/${buildingId}/files`,
+    DETAIL: (buildingId: string, documentId: string) =>
+      `/buildings/${buildingId}/files/${documentId}`,
+    RESTORE: (buildingId: string, documentId: string) =>
+      `/buildings/${buildingId}/files/${documentId}/restore`,
+  },
+
+  DOCUMENTS: {
+    LIST: (buildingId: string) => `/buildings/${buildingId}/documents`,
+    DETAIL: (buildingId: string, documentId: string) =>
+      `/buildings/${buildingId}/documents/${documentId}`,
+    RESTORE: (buildingId: string, documentId: string) =>
+      `/buildings/${buildingId}/documents/${documentId}/restore`,
+  },
+
+  // ── FAQs ──────────────────────────────────────────────────────────────
+  FAQS: {
+    LIST: (buildingId: string) => `/buildings/${buildingId}/faqs`,
+    DETAIL: (buildingId: string, faqId: string) => `/buildings/${buildingId}/faqs/${faqId}`,
+    RESTORE: (buildingId: string, faqId: string) =>
+      `/buildings/${buildingId}/faqs/${faqId}/restore`,
+    REORDER: (buildingId: string) => `/buildings/${buildingId}/faqs/reorder`,
+    COPY: (targetBuildingId: string) => `/buildings/${targetBuildingId}/faqs/copy`,
+  },
+
+  // ── Funds ─────────────────────────────────────────────────────────────
+  FUNDS: {
+    BALANCE: (buildingId: string) => `/buildings/${buildingId}/funds/balance`,
+    RECALCULATE: (buildingId: string) => `/buildings/${buildingId}/funds/recalculate`,
+    SUMMARY: (buildingId: string) => `/buildings/${buildingId}/funds/summary`,
+    GRAPH: (buildingId: string) => `/buildings/${buildingId}/funds/graph`,
+    INCOME: (buildingId: string) => `/buildings/${buildingId}/funds/income`,
+    INCOME_DETAIL: (buildingId: string, incomeId: string) =>
+      `/buildings/${buildingId}/funds/income/${incomeId}`,
+    INCOME_RESTORE: (buildingId: string, incomeId: string) =>
+      `/buildings/${buildingId}/funds/income/${incomeId}/restore`,
+    RECURRING_TEMPLATES: (buildingId: string) =>
+      `/buildings/${buildingId}/funds/recurring-templates`,
+    RECURRING_TEMPLATE_DETAIL: (buildingId: string, templateId: string) =>
+      `/buildings/${buildingId}/funds/recurring-templates/${templateId}`,
+    RECURRING_TEMPLATE_RESTORE: (buildingId: string, templateId: string) =>
+      `/buildings/${buildingId}/funds/recurring-templates/${templateId}/restore`,
+  },
+
+  // ── Transaction Categories ───────────────────────────────────────────
+  TRANSACTION_CATEGORIES: {
+    LIST: (buildingId: string) => `/buildings/${buildingId}/transaction-categories`,
+    DETAIL: (buildingId: string, id: string) =>
+      `/buildings/${buildingId}/transaction-categories/${id}`,
+    RESTORE: (buildingId: string, id: string) =>
+      `/buildings/${buildingId}/transaction-categories/${id}/restore`,
+    COPY: (targetBuildingId: string) =>
+      `/buildings/${targetBuildingId}/transaction-categories/copy`,
+  },
+
+  // ── Chat ──────────────────────────────────────────────────────────────
+  CHAT: {
+    CONVERSATIONS: (buildingId: string) => `/buildings/${buildingId}/chat/conversations`,
+    CONVERSATION: (buildingId: string, conversationId: string) =>
+      `/buildings/${buildingId}/chat/conversations/${conversationId}`,
+    MESSAGES: (buildingId: string, conversationId: string) =>
+      `/buildings/${buildingId}/chat/conversations/${conversationId}/messages`,
+    MARK_READ: (buildingId: string, conversationId: string) =>
+      `/buildings/${buildingId}/chat/conversations/${conversationId}/mark-read`,
+    UNREAD_COUNT: (buildingId: string) => `/buildings/${buildingId}/chat/unread-count`,
+  },
+
+  // ── Notifications ────────────────────────────────────────────────────
+  NOTIFICATIONS: {
+    LIST: '/notifications',
+    DETAIL: (notificationId: string) => `/notifications/${notificationId}`,
+    PREFERENCES: '/notifications/preferences',
+    UNREAD_COUNT: '/notifications/unread-count',
+    UNREAD_COUNT_BY_CATEGORY: '/notifications/unread-count-by-category',
+    READ: '/notifications/read',
+    READ_ALL: '/notifications/read-all',
+    READ_CATEGORY: (category: string) => `/notifications/read/${category}`,
+    READ_CHAT: (conversationId: string) => `/notifications/read/chat/${conversationId}`,
+  },
+
+  // ── Organizations ────────────────────────────────────────────────────
+  ORGANIZATIONS: {
+    BASE: '/organizations',
+    MY: '/organizations/my',
+    BY_ID: (orgId: string) => `/organizations/${orgId}`,
+    BUILDINGS: (orgId: string) => `/organizations/${orgId}/buildings`,
+    MEMBERS: (orgId: string) => `/organizations/${orgId}/members`,
+    MEMBER_DETAIL: (orgId: string, memberId: string) =>
+      `/organizations/${orgId}/members/${memberId}`,
+    INVITE: (orgId: string) => `/organizations/${orgId}/invite`,
+    INVITATIONS: (orgId: string) => `/organizations/${orgId}/invitations`,
+  },
+
+  // ── Platform (admin) ─────────────────────────────────────────────────
+  PLATFORM: {
+    DASHBOARD_SUMMARY: '/platform/dashboard/summary',
+    BUILDINGS: '/platform/buildings',
+    USERS: '/platform/users',
+    USER_DETAIL: (userId: string) => `/platform/users/${userId}`,
+    MEMBERS: '/platform/members',
+    MEMBER_DETAIL: (memberId: string) => `/platform/members/${memberId}`,
+    ORGANIZATIONS: '/platform/organizations',
+    ORGANIZATION_DETAIL: (orgId: string) => `/platform/organizations/${orgId}`,
+    ORGANIZATION_MEMBERS: (orgId: string) => `/platform/organizations/${orgId}/members`,
+    ORGANIZATION_BUILDINGS: (orgId: string) => `/platform/organizations/${orgId}/buildings`,
+    SEARCH: '/platform/search',
+    BLOG: '/platform/blog',
+    BLOG_DETAIL: (id: string) => `/platform/blog/${id}`,
+    BLOG_PUBLISH: (id: string) => `/platform/blog/${id}/publish`,
+    BLOG_RESTORE: (id: string) => `/platform/blog/${id}/restore`,
+    BLOG_COVER_IMAGE: (id: string) => `/platform/blog/${id}/cover-image`,
+    BLOG_CATEGORIES: '/platform/blog/categories',
+  },
+
+  // ── Representatives ──────────────────────────────────────────────────
+  REPRESENTATIVES: {
+    DASHBOARD_SUMMARY: '/representatives/dashboard/summary',
+    BUILDINGS: '/representatives/buildings',
+    USERS: '/representatives/users',
+  },
+
+  // ── Addresses ────────────────────────────────────────────────────────
+  ADDRESSES: {
+    AUTOCOMPLETE: '/addresses/autocomplete',
+  },
+
+  // ── Subscriptions & Billing ──────────────────────────────────────────
   SUBSCRIPTIONS: {
     BASE: '/subscriptions',
     PRICES: '/subscriptions/prices',

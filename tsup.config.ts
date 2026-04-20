@@ -9,6 +9,7 @@ export default defineConfig({
     'types/index': 'src/types/index.ts',
     'urls/index': 'src/urls/index.ts',
     'utils/index': 'src/utils/index.ts',
+    'validation/index': 'src/validation/index.ts',
   },
   format: ['esm', 'cjs'],
   dts: true,

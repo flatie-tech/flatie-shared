@@ -76,6 +76,16 @@
         "types": "./dist/utils/index.d.cts",
         "default": "./dist/utils/index.cjs"
       }
+    },
+    "./validation": {
+      "import": {
+        "types": "./dist/validation/index.d.ts",
+        "default": "./dist/validation/index.js"
+      },
+      "require": {
+        "types": "./dist/validation/index.d.cts",
+        "default": "./dist/validation/index.cjs"
+      }
     }
   },
   "files": [
