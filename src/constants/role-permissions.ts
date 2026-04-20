@@ -75,6 +75,7 @@ const REPRESENTATIVE_PERMISSIONS = [
   'house_rules:manage',
   'building_settings:manage',
   'faq:manage:representative',
+  'apartment:update',
 ];
 
 // ─── Org Role Building Permission Mappings ──────────────────────────
