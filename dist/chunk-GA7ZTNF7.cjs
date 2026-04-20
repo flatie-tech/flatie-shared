@@ -711,6 +711,27 @@ var permissionsResponseSchema = zod.z.object({
   orgId: zod.z.string().uuid().optional(),
   chatVisibleToCoOwners: zod.z.boolean().optional()
 });
+
+// src/schemas/requests/update-failure-report.ts
+var updateFailureReportRequestSchema = updateFailureReportSchema.extend({
+  id: uuidSchema
+});
+
+// src/schemas/requests/update-maintenance-log.ts
+var updateMaintenanceLogRequestSchema = updateMaintenanceLogSchema.extend({
+  id: uuidSchema
+});
+
+// src/schemas/requests/update-notice.ts
+var updateNoticeRequestSchema = updateNoticeSchema.extend({
+  id: uuidSchema
+});
+
+// src/schemas/requests/update-poll.ts
+var updatePollRequestSchema = updatePollSchema.extend({
+  id: uuidSchema
+});
+var buildingStatusSchema = zod.z.enum(Object.values(chunk5UBJHQVX_cjs.BuildingStatus));
 var buildingManagerSchema = zod.z.looseObject({
   name: zod.z.string(),
   email: zod.z.string()
@@ -731,8 +752,10 @@ var buildingResponseSchema = zod.z.looseObject({
   address: zod.z.string(),
   coverImage: zod.z.string().optional().nullable(),
   type: buildingTypeSchema,
+  status: buildingStatusSchema.optional(),
   totalUnits: zod.z.number(),
   isStratified: zod.z.boolean(),
+  houseRulesFileUrl: zod.z.string().nullable().optional(),
   createdBy: zod.z.string().uuid().optional().nullable(),
   createdAt: zod.z.string(),
   updatedAt: zod.z.string().nullable().optional()
@@ -1012,10 +1035,10 @@ var pollResponseSchema = zod.z.looseObject({
   requiredConsensusPercentage: zod.z.number().optional(),
   totalVotes: zod.z.number(),
   totalWeight: zod.z.number(),
-  winningOptionIndex: zod.z.number().optional(),
+  winningOptionIndex: zod.z.number().nullable().optional(),
   isResultsFinalized: zod.z.boolean(),
-  finalizedAt: zod.z.string().optional(),
-  finalizedBy: zod.z.string().optional(),
+  finalizedAt: zod.z.string().nullable().optional(),
+  finalizedBy: zod.z.string().nullable().optional(),
   hasVoted: zod.z.boolean().optional(),
   userVote: zod.z.number().optional(),
   files: zod.z.array(pollDocumentReferenceSchema).optional()
@@ -1042,10 +1065,10 @@ var pollResultsSchema = zod.z.looseObject({
   totalVotes: zod.z.number(),
   totalWeight: zod.z.number(),
   totalEligibleVoters: zod.z.number(),
-  winningOptionIndex: zod.z.number().optional(),
+  winningOptionIndex: zod.z.number().nullable().optional(),
   isResultsFinalized: zod.z.boolean(),
-  finalizedAt: zod.z.string().optional(),
-  finalizedBy: zod.z.string().optional(),
+  finalizedAt: zod.z.string().nullable().optional(),
+  finalizedBy: zod.z.string().nullable().optional(),
   optionResults: zod.z.array(pollOptionResultSchema),
   consensusReached: zod.z.boolean().optional(),
   currentConsensusPercentage: zod.z.number().optional(),
@@ -1196,13 +1219,17 @@ exports.timeSchema = timeSchema;
 exports.updateBuildingSchema = updateBuildingSchema;
 exports.updateConversationSchema = updateConversationSchema;
 exports.updateEventSchema = updateEventSchema;
+exports.updateFailureReportRequestSchema = updateFailureReportRequestSchema;
 exports.updateFailureReportSchema = updateFailureReportSchema;
 exports.updateFaqSchema = updateFaqSchema;
+exports.updateMaintenanceLogRequestSchema = updateMaintenanceLogRequestSchema;
 exports.updateMaintenanceLogSchema = updateMaintenanceLogSchema;
+exports.updateNoticeRequestSchema = updateNoticeRequestSchema;
 exports.updateNoticeSchema = updateNoticeSchema;
 exports.updateOrgMemberRoleSchema = updateOrgMemberRoleSchema;
 exports.updateOrganizationSchema = updateOrganizationSchema;
 exports.updatePasswordSchema = updatePasswordSchema;
+exports.updatePollRequestSchema = updatePollRequestSchema;
 exports.updatePollSchema = updatePollSchema;
 exports.updateTransactionCategorySchema = updateTransactionCategorySchema;
 exports.updateUserBuildingRoleSchema = updateUserBuildingRoleSchema;
@@ -1210,5 +1237,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-XAYNQ4LV.cjs.map
-//# sourceMappingURL=chunk-XAYNQ4LV.cjs.map
+//# sourceMappingURL=chunk-GA7ZTNF7.cjs.map
+//# sourceMappingURL=chunk-GA7ZTNF7.cjs.map
