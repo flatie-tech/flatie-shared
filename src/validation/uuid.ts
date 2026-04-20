@@ -11,14 +11,19 @@ import { z } from 'zod';
  * The brand exists only at compile time; at runtime a `UuidString` is an
  * ordinary string with no extra properties.
  */
-type UuidString = string & {
-    readonly __brand: 'UuidString';
-};
+export type UuidString = string & { readonly __brand: 'UuidString' };
+
 /**
  * Zod schema that parses any input into a `UuidString`. Convenient when a
  * schema field needs to carry the brand into the inferred type.
  */
-declare const uuidStringSchema: z.ZodPipe<z.ZodString, z.ZodTransform<UuidString, string>>;
+export const uuidStringSchema = z
+  .string()
+  .uuid('Must be a valid UUID')
+  .transform((value): UuidString => value as UuidString);
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 /**
  * Type guard — narrows `string` to `UuidString` in a conditional branch.
  *
@@ -28,7 +33,10 @@ declare const uuidStringSchema: z.ZodPipe<z.ZodString, z.ZodTransform<UuidString
  *     API_ROUTES.BUILDINGS.BY_ID(id);
  *   }
  */
-declare function isUuid(value: string): value is UuidString;
+export function isUuid(value: string): value is UuidString {
+  return UUID_RE.test(value);
+}
+
 /**
  * Assert-cast: returns the input as `UuidString` if valid, throws otherwise.
  *
@@ -37,32 +45,18 @@ declare function isUuid(value: string): value is UuidString;
  *
  * @throws {Error} when the input is not a valid UUID.
  */
-declare function toUuid(value: string): UuidString;
+export function toUuid(value: string): UuidString {
+  if (!UUID_RE.test(value)) {
+    throw new Error(`Expected a valid UUID, got: ${value}`);
+  }
+  return value as UuidString;
+}
+
 /**
  * Cast-without-check. Use ONLY when the source is a constant known to be a
  * valid UUID (e.g. a hard-coded fixture in tests). Never use on untrusted
  * input — that's what `toUuid` is for.
  */
-declare function unsafeUuid(value: string): UuidString;
-
-/**
- * Croatian OIB (Personal Identification Number) validation.
- * OIB is an 11-digit number with a check digit (ISO 7064, MOD 11,10).
- */
-declare const oibSchema: z.ZodString;
-/**
- * Optional OIB — allows undefined, empty string, whitespace-only, or a valid OIB.
- */
-declare const optionalOibSchema: z.ZodOptional<z.ZodString>;
-/**
- * Phone number validation. Allows undefined or empty string.
- * Must be 8–20 characters with only digits, spaces, +, -, and parentheses.
- * Requires at least 8 digits.
- */
-declare const phoneSchema: z.ZodOptional<z.ZodString>;
-/**
- * Address schema. Allows empty string or a value up to 200 characters.
- */
-declare const addressSchema: z.ZodString;
-
-export { type UuidString, addressSchema, isUuid, oibSchema, optionalOibSchema, phoneSchema, toUuid, unsafeUuid, uuidStringSchema };
+export function unsafeUuid(value: string): UuidString {
+  return value as UuidString;
+}

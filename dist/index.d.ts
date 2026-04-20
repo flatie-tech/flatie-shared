@@ -10,7 +10,7 @@ export { BaseEntity, Building, BuildingEntity, BuildingFund, BuildingMember, Bui
 export { B as BuildingContextFromOrg, d as BuildingContextFromRole, e as BuildingPermissionContext, D as DateRangeParams, P as PaginatedResponse, b as PaginationParams, a as PermissionContext, c as createPaginatedResponse } from './permission-context-DP8ApK8H.js';
 export { API_ROUTES, API_VERSION } from './urls/index.js';
 export { ActionFlags, MANAGERIAL_BUILDING_ROLES, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, StatusVariant, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatText, getContextUserId, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isAdminContext, isManagerialRole, normalizePaginatedResponse, priorityVariant } from './utils/index.js';
-export { addressSchema, oibSchema, optionalOibSchema, phoneSchema } from './validation/index.js';
+export { UuidString, addressSchema, isUuid, oibSchema, optionalOibSchema, phoneSchema, toUuid, unsafeUuid, uuidStringSchema } from './validation/index.js';
 import 'zod';
 
 declare const ApartmentsTestIds: {
