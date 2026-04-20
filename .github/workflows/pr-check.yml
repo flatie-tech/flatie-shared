@@ -1,0 +1,53 @@
+name: PR check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: pr-check-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Build, test, verify dist
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type check
+        run: pnpm type-check
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      # Consumers pin this repo via `github:flatie-tech/flatie-shared#<tag>`,
+      # which means they install whatever sits in `dist/` at the tagged SHA.
+      # If a PR changes src/ without regenerating dist/ (or vice versa), the
+      # published tag would be inconsistent. Fail the PR if so.
+      - name: Verify dist/ is in sync with src/
+        run: |
+          if ! git diff --exit-code dist/; then
+            echo "::error::dist/ is out of sync with src/. Run 'pnpm build' locally and commit the result."
+            exit 1
+          fi
