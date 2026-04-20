@@ -135,6 +135,10 @@ When you add a new endpoint:
 
 If a frontend feature depends on a backend route that doesn't exist yet, **don't bypass the test** by hardcoding the URL in the consumer. Either add the backend endpoint or list the path in the `KNOWN_DRIFT` array (in `routes-contract.spec.ts`) with a comment explaining the gap. Drift entries are real bugs being tracked — keep the list short.
 
+### When to use `KNOWN_DRIFT`
+
+Add an entry only when the frontend has to ship a path before the backend route exists (rare — usually a mobile or feature-flagged rollout). Each entry must include a GitHub issue link or PR reference in a comment, and be removed within one sprint. An entry without a reference is a bug; a stale entry is tech debt. The list lives in `flatie-backend/src/shared/openapi/routes-contract.spec.ts`; the current target is `[]`.
+
 ## Versioning
 
 - Bump the patch version for non-breaking additions (new exports, new enum values).
