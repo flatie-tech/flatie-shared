@@ -1,7 +1,7 @@
 'use strict';
 
 var chunk4V4EV2A7_cjs = require('./chunk-4V4EV2A7.cjs');
-var chunkPQ65W6KL_cjs = require('./chunk-PQ65W6KL.cjs');
+var chunkC3KUWJG7_cjs = require('./chunk-C3KUWJG7.cjs');
 var chunkJ7F3EEOJ_cjs = require('./chunk-J7F3EEOJ.cjs');
 var chunkWZF5BPCQ_cjs = require('./chunk-WZF5BPCQ.cjs');
 var chunkHOGINQ3M_cjs = require('./chunk-HOGINQ3M.cjs');
@@ -9,7 +9,7 @@ var chunk5UBJHQVX_cjs = require('./chunk-5UBJHQVX.cjs');
 var chunkMTOJIOIR_cjs = require('./chunk-MTOJIOIR.cjs');
 require('./chunk-TCHOIK53.cjs');
 var chunkIGBERUWL_cjs = require('./chunk-IGBERUWL.cjs');
-var chunkOLWR7IYU_cjs = require('./chunk-OLWR7IYU.cjs');
+var chunkBVOQHJNV_cjs = require('./chunk-BVOQHJNV.cjs');
 
 // src/test-ids/apartments.ts
 var ApartmentsTestIds = {
@@ -185,19 +185,19 @@ Object.defineProperty(exports, "priorityVariant", {
 });
 Object.defineProperty(exports, "addressSchema", {
   enumerable: true,
-  get: function () { return chunkPQ65W6KL_cjs.addressSchema; }
+  get: function () { return chunkC3KUWJG7_cjs.addressSchema; }
 });
 Object.defineProperty(exports, "oibSchema", {
   enumerable: true,
-  get: function () { return chunkPQ65W6KL_cjs.oibSchema; }
+  get: function () { return chunkC3KUWJG7_cjs.oibSchema; }
 });
 Object.defineProperty(exports, "optionalOibSchema", {
   enumerable: true,
-  get: function () { return chunkPQ65W6KL_cjs.optionalOibSchema; }
+  get: function () { return chunkC3KUWJG7_cjs.optionalOibSchema; }
 });
 Object.defineProperty(exports, "phoneSchema", {
   enumerable: true,
-  get: function () { return chunkPQ65W6KL_cjs.phoneSchema; }
+  get: function () { return chunkC3KUWJG7_cjs.phoneSchema; }
 });
 Object.defineProperty(exports, "ADMIN_ORG_PERMISSIONS", {
   enumerable: true,
@@ -1013,11 +1013,11 @@ Object.defineProperty(exports, "createPaginatedResponse", {
 });
 Object.defineProperty(exports, "API_ROUTES", {
   enumerable: true,
-  get: function () { return chunkOLWR7IYU_cjs.API_ROUTES; }
+  get: function () { return chunkBVOQHJNV_cjs.API_ROUTES; }
 });
 Object.defineProperty(exports, "API_VERSION", {
   enumerable: true,
-  get: function () { return chunkOLWR7IYU_cjs.API_VERSION; }
+  get: function () { return chunkBVOQHJNV_cjs.API_VERSION; }
 });
 exports.ApartmentsTestIds = ApartmentsTestIds;
 exports.BuildingInfoTestIds = BuildingInfoTestIds;

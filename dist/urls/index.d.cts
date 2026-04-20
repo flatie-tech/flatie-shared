@@ -89,6 +89,7 @@ declare const API_ROUTES: {
         readonly VOTE: (buildingId: string, pollId: string) => string;
         readonly VOTERS: (buildingId: string, pollId: string) => string;
         readonly RESULTS: (buildingId: string) => string;
+        readonly OFFLINE_VOTES: (buildingId: string, pollId: string) => string;
     };
     readonly EVENTS: {
         readonly LIST: (buildingId: string) => string;
@@ -116,6 +117,11 @@ declare const API_ROUTES: {
         readonly LIST: (buildingId: string) => string;
         readonly DETAIL: (buildingId: string, documentId: string) => string;
         readonly RESTORE: (buildingId: string, documentId: string) => string;
+        readonly STORAGE_USAGE: (buildingId: string) => string;
+    };
+    readonly COMMENTS: {
+        readonly LIST: (buildingId: string) => string;
+        readonly DETAIL: (buildingId: string, commentId: string) => string;
     };
     readonly FAQS: {
         readonly LIST: (buildingId: string) => string;

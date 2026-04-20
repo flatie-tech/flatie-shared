@@ -1,3 +1,5 @@
+'use strict';
+
 // src/urls/index.ts
 var API_VERSION = "v1";
 var API_ROUTES = {
@@ -93,7 +95,8 @@ var API_ROUTES = {
     RESTORE: (buildingId, pollId) => `/buildings/${buildingId}/polls/${pollId}/restore`,
     VOTE: (buildingId, pollId) => `/buildings/${buildingId}/polls/${pollId}/vote`,
     VOTERS: (buildingId, pollId) => `/buildings/${buildingId}/polls/${pollId}/voters`,
-    RESULTS: (buildingId) => `/buildings/${buildingId}/polls/results`
+    RESULTS: (buildingId) => `/buildings/${buildingId}/polls/results`,
+    OFFLINE_VOTES: (buildingId, pollId) => `/buildings/${buildingId}/polls/${pollId}/offline-votes`
   },
   // ── Events ────────────────────────────────────────────────────────────
   EVENTS: {
@@ -124,7 +127,13 @@ var API_ROUTES = {
   DOCUMENTS: {
     LIST: (buildingId) => `/buildings/${buildingId}/documents`,
     DETAIL: (buildingId, documentId) => `/buildings/${buildingId}/documents/${documentId}`,
-    RESTORE: (buildingId, documentId) => `/buildings/${buildingId}/documents/${documentId}/restore`
+    RESTORE: (buildingId, documentId) => `/buildings/${buildingId}/documents/${documentId}/restore`,
+    STORAGE_USAGE: (buildingId) => `/buildings/${buildingId}/documents/storage-usage`
+  },
+  // ── Comments ─────────────────────────────────────────────────────────
+  COMMENTS: {
+    LIST: (buildingId) => `/buildings/${buildingId}/comments`,
+    DETAIL: (buildingId, commentId) => `/buildings/${buildingId}/comments/${commentId}`
   },
   // ── FAQs ──────────────────────────────────────────────────────────────
   FAQS: {
@@ -226,6 +235,7 @@ var API_ROUTES = {
   }
 };
 
-export { API_ROUTES, API_VERSION };
-//# sourceMappingURL=chunk-3YZSFFNH.js.map
-//# sourceMappingURL=chunk-3YZSFFNH.js.map
+exports.API_ROUTES = API_ROUTES;
+exports.API_VERSION = API_VERSION;
+//# sourceMappingURL=chunk-BVOQHJNV.cjs.map
+//# sourceMappingURL=chunk-BVOQHJNV.cjs.map

@@ -1,24 +1,24 @@
 'use strict';
 
-var chunkPQ65W6KL_cjs = require('../chunk-PQ65W6KL.cjs');
+var chunkC3KUWJG7_cjs = require('../chunk-C3KUWJG7.cjs');
 
 
 
 Object.defineProperty(exports, "addressSchema", {
   enumerable: true,
-  get: function () { return chunkPQ65W6KL_cjs.addressSchema; }
+  get: function () { return chunkC3KUWJG7_cjs.addressSchema; }
 });
 Object.defineProperty(exports, "oibSchema", {
   enumerable: true,
-  get: function () { return chunkPQ65W6KL_cjs.oibSchema; }
+  get: function () { return chunkC3KUWJG7_cjs.oibSchema; }
 });
 Object.defineProperty(exports, "optionalOibSchema", {
   enumerable: true,
-  get: function () { return chunkPQ65W6KL_cjs.optionalOibSchema; }
+  get: function () { return chunkC3KUWJG7_cjs.optionalOibSchema; }
 });
 Object.defineProperty(exports, "phoneSchema", {
   enumerable: true,
-  get: function () { return chunkPQ65W6KL_cjs.phoneSchema; }
+  get: function () { return chunkC3KUWJG7_cjs.phoneSchema; }
 });
 //# sourceMappingURL=index.cjs.map
 //# sourceMappingURL=index.cjs.map

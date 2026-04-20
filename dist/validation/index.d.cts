@@ -6,15 +6,17 @@ import { z } from 'zod';
  */
 declare const oibSchema: z.ZodString;
 /**
- * Optional OIB — allows empty string or valid OIB.
+ * Optional OIB — allows undefined, empty string, whitespace-only, or a valid OIB.
  */
 declare const optionalOibSchema: z.ZodOptional<z.ZodString>;
 /**
- * Phone number validation (international format).
+ * Phone number validation. Allows undefined or empty string.
+ * Must be 8–20 characters with only digits, spaces, +, -, and parentheses.
+ * Requires at least 8 digits.
  */
-declare const phoneSchema: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<"">]>;
+declare const phoneSchema: z.ZodOptional<z.ZodString>;
 /**
- * Address schema for user profile / organization.
+ * Address schema. Allows empty string or a value up to 200 characters.
  */
 declare const addressSchema: z.ZodString;
 

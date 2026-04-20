@@ -128,6 +128,8 @@ export const API_ROUTES = {
     VOTERS: (buildingId: string, pollId: string) =>
       `/buildings/${buildingId}/polls/${pollId}/voters`,
     RESULTS: (buildingId: string) => `/buildings/${buildingId}/polls/results`,
+    OFFLINE_VOTES: (buildingId: string, pollId: string) =>
+      `/buildings/${buildingId}/polls/${pollId}/offline-votes`,
   },
 
   // ── Events ────────────────────────────────────────────────────────────
@@ -175,6 +177,14 @@ export const API_ROUTES = {
       `/buildings/${buildingId}/documents/${documentId}`,
     RESTORE: (buildingId: string, documentId: string) =>
       `/buildings/${buildingId}/documents/${documentId}/restore`,
+    STORAGE_USAGE: (buildingId: string) => `/buildings/${buildingId}/documents/storage-usage`,
+  },
+
+  // ── Comments ─────────────────────────────────────────────────────────
+  COMMENTS: {
+    LIST: (buildingId: string) => `/buildings/${buildingId}/comments`,
+    DETAIL: (buildingId: string, commentId: string) =>
+      `/buildings/${buildingId}/comments/${commentId}`,
   },
 
   // ── FAQs ──────────────────────────────────────────────────────────────
