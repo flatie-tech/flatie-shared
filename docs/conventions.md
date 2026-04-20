@@ -68,6 +68,73 @@ For each resource with response-schema sharing:
 6. Backend: register in `src/shared/openapi/response-schemas.ts` with `openApiRegistry.register('XResponse', xResponseSchema)`. Update `.docs.ts` to `schema: { $ref: '#/components/schemas/XResponse' }`.
 7. Frontend: import the schema for `parseData(…)`. Define a **local** type that overrides nested `files`/`events` with the richer transformed types (`DocumentResponse[]`, `IEvent[]`) and cast the return. See `src/lib/api/failure-reports/getFailureReports.ts` for the pattern.
 
+## Error codes & `DomainException`
+
+`BACKEND_ERROR_CODES` (in `src/errors/`) is the single source of truth for machine-readable API error codes. Adding a code is the *first* step; emitting and consuming it follows.
+
+**Adding a code:**
+1. Add the entry to `BACKEND_ERROR_CODES` in `src/errors/index.ts`. Key === value, SCREAMING_SNAKE_CASE.
+2. Add a quick assertion in `tests/errors/errors.test.ts` confirming the new code is present (the "values match keys" test catches typos automatically; explicit assertions catch deletion).
+3. Bump the shared patch version, build, push.
+
+**Backend emission (Phase 3 pattern):**
+```ts
+import { DomainException } from '@shared/exceptions';
+import { BACKEND_ERROR_CODES } from '@flatie/shared';
+import { HttpStatus } from '@nestjs/common';
+
+throw new DomainException(
+  'Apartment not found',
+  HttpStatus.NOT_FOUND,
+  BACKEND_ERROR_CODES.APARTMENT_NOT_FOUND,
+);
+```
+
+`AllExceptionsFilter` automatically lifts `DomainException.code` into the JSON body (`{ statusCode, message, code, timestamp, path }`). Plain `NotFoundException` / `BadRequestException` / `ForbiddenException` etc. continue to work — they just don't emit a `code` field. Migration is per-domain and additive.
+
+**Frontend consumption:**
+```ts
+import { parseApiError } from '@/lib/api';
+import { BACKEND_ERROR_CODES } from '@flatie/shared';
+
+try { ... } catch (error) {
+  const { code, message } = parseApiError(error);
+  if (code === BACKEND_ERROR_CODES.USER_ALREADY_MEMBER) { ... }
+  // Keep the old message-string fallback during the rollout — codes
+  // are null until the relevant backend domain has been migrated.
+}
+```
+
+**Catch-block gotcha:** `DomainException` extends `HttpException` directly, **not** `BadRequestException` / `NotFoundException` / `ForbiddenException`. Code like:
+```ts
+catch (error) {
+  if (error instanceof BadRequestException ||
+      error instanceof NotFoundException ||
+      error instanceof ForbiddenException) {
+    throw error; // re-throw so the filter sees the right status
+  }
+  throw new InternalServerErrorException(...);
+}
+```
+will silently swallow `DomainException` into a 500. Use `instanceof HttpException` instead. Audit existing services for this pattern before migrating them to `DomainException`.
+
+## API_ROUTES contract
+
+`API_ROUTES` (in `src/urls/`) is the single source of truth for backend HTTP paths. The frontend imports it; the backend's controller decorators (`@Controller`, `@Get`, etc.) are the runtime truth. They must agree.
+
+A vitest in the backend (`src/shared/openapi/routes-contract.spec.ts`) walks both sides and fails CI when a path in `API_ROUTES` doesn't resolve to a backend route. Run it before adding or renaming a route:
+
+```bash
+pnpm test src/shared/openapi/routes-contract
+```
+
+When you add a new endpoint:
+1. Add the entry to `src/urls/index.ts` (string or function — function arity equals the number of `:p` params).
+2. Add the matching `@Controller` + `@Get/@Post/...` on the backend.
+3. Run the contract test — it must stay at zero drift.
+
+If a frontend feature depends on a backend route that doesn't exist yet, **don't bypass the test** by hardcoding the URL in the consumer. Either add the backend endpoint or list the path in the `KNOWN_DRIFT` array (in `routes-contract.spec.ts`) with a comment explaining the gap. Drift entries are real bugs being tracked — keep the list short.
+
 ## Versioning
 
 - Bump the patch version for non-breaking additions (new exports, new enum values).
