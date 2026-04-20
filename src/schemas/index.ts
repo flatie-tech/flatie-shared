@@ -59,7 +59,10 @@ export { permissionsResponseSchema, roleTypeSchema } from './permissions.schema'
 
 // Response schemas
 export type {
+  BuildingDetailResponse,
+  BuildingResponse,
   CommentResponse,
+  EventResponse,
   FailureReportResponse,
   FaqResponse,
   MaintenanceLogResponse,
@@ -67,12 +70,21 @@ export type {
   NotificationPreferenceCategory,
   NotificationPreferenceItem,
   NotificationResponse,
+  PaginatedBuildingsResponse,
+  PaginatedEventsResponse,
   PaginatedFailureReportsResponse,
   PaginatedMaintenanceLogsResponse,
   PaginatedNoticesResponse,
+  PaginatedPollsResponse,
+  PollResponse,
+  PollResults,
+  PollVotersResponse,
 } from './responses';
 export {
+  buildingDetailResponseSchema,
+  buildingResponseSchema,
   commentResponseSchema,
+  eventResponseSchema,
   failureReportResponseSchema,
   faqResponseSchema,
   maintenanceLogResponseSchema,
@@ -80,9 +92,15 @@ export {
   notificationPreferenceCategorySchema,
   notificationPreferenceItemSchema,
   notificationResponseSchema,
+  paginatedBuildingsResponseSchema,
+  paginatedEventsResponseSchema,
   paginatedFailureReportsResponseSchema,
   paginatedMaintenanceLogsResponseSchema,
   paginatedNoticesResponseSchema,
+  paginatedPollsResponseSchema,
+  pollResponseSchema,
+  pollResultsSchema,
+  pollVotersResponseSchema,
 } from './responses';
 
 // Status schemas

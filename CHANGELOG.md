@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.18.1
+
+### Patch Changes
+
+- Export building, events, and polls response schemas from the top-level `schemas` barrel so consumers can actually import them. v0.18.0 added the schema files but forgot to re-export them through `src/schemas/index.ts`.
+
 ## 0.18.0
 
 ### Minor Changes
