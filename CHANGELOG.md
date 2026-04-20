@@ -1,5 +1,29 @@
 # @flatie/shared
 
+## 0.20.0
+
+### Minor Changes
+
+- eea2dc9: Add `src/schemas/requests/` with canonical PATCH request schemas — `updateNoticeRequestSchema`, `updateFailureReportRequestSchema`, `updateMaintenanceLogRequestSchema`, `updatePollRequestSchema` — plus their inferred payload types (`UpdateNoticeRequestPayload`, `UpdateFailureReportRequestPayload`, `UpdateMaintenanceLogRequestPayload`, `UpdatePollRequestPayload`). Each schema composes the existing entity-level body schema (all fields optional, PATCH semantics) with a required `id` so consumers get a single shape covering "id from URL + optional body fields" in one place.
+
+  Body shapes are not duplicated: the new request schemas are `.extend({ id: uuidSchema })` on top of the entity-level schemas (e.g. `updateNoticeSchema`), so request and body stay in lockstep. For `updateFailureReportRequestSchema`, Zod's `.extend()` on a `superRefine`'d object preserves the `refineLocation` cross-field rule.
+
+  The payload types use a `*RequestPayload` suffix (rather than `*Request`) because the shared package already exposes hand-rolled legacy `UpdateNoticeRequest` / `UpdateFailureReportRequest` / `UpdateMaintenanceLogRequest` interfaces in `src/types/*.types.ts`. The Zod-inferred payload types here are the contract-of-truth going forward; the legacy interfaces have no known consumers and are candidates for removal in a future major.
+
+  No breaking change — consumers that currently hand-roll a wrapper schema in their server actions (frontend) or accept `id` from `@Param` + body from `@Body` (backend) can adopt this opportunistically. Entity-level body schemas (`updateNoticeSchema`, `updatePollSchema`, etc.) are unchanged.
+
+- 7e457a9: Tighten `notificationResponseSchema.data` from `z.record(z.string(), z.unknown())` to a union of per-notification-type payload schemas. Each `NotificationType` now maps to a concrete `data` shape (e.g. `NOTICE_CREATED` -> `{ title, content, createdAt, isPinned, actionUrl, ... }`, `CHAT_MESSAGE` -> `{ senderName, messagePreview, conversationId, actionUrl, ... }`). Shared fields (`entityType`, `entityId`, `actorId`, `actorName`, `actionUrl`) are typed on a common base. The notification `type` field itself is now a `z.enum` of `NotificationType` values instead of an open `z.string()`. Exports `notificationDataSchema`, `getNotificationDataSchema(type)`, and the `NotificationData` type for consumers who want to narrow. Existing callers that read `data?.actionUrl` are unaffected.
+
+### Patch Changes
+
+- 006c68b: Extract duplicated `nestedEventSchema`, `nestedFileSchema`, and `pollReferenceSchema` from `notices.ts`, `maintenance-logs.ts`, and `failure-reports.ts` into a single source `src/schemas/responses/_nested.ts`. Schema shapes are unchanged; consumers don't need to update.
+- eea2dc9: Fix two response-schema drifts flagged by the backend contract tests:
+
+  - `pollResponseSchema` / `pollResultsSchema`: widen `winningOptionIndex`, `finalizedAt`, `finalizedBy` to `.nullable().optional()`. The backend emits explicit `null` for non-finalised polls; schemas accepted only `undefined` before.
+  - `buildingResponseSchema` (list): add `status: buildingStatusSchema.optional()` and `houseRulesFileUrl: z.string().nullable().optional()`. Both fields were emitted by `GET /buildings` but missing from the list schema (detail schema already had `houseRulesFileUrl`).
+
+  Shape changes are additive — consumers that already tolerate the fields (all do, since responses use `z.looseObject`) need no update.
+
 ## 0.19.0
 
 ### Minor Changes
