@@ -1,25 +1,6 @@
 import { z } from 'zod';
 import { paginatedResponseSchema } from '../pagination.schema';
-
-const nestedFileSchema = z.looseObject({
-  id: z.string().uuid(),
-  title: z.string(),
-  documentUrl: z.string().optional().nullable(),
-});
-
-const nestedEventSchema = z.looseObject({
-  id: z.string(),
-  title: z.string(),
-  type: z.string().optional(),
-  description: z.string().nullable().optional(),
-  startDate: z.string(),
-  endDate: z.string(),
-  color: z.string().optional(),
-  userId: z.string().nullable().optional(),
-  buildingId: z.string().optional(),
-  createdAt: z.string().optional(),
-  updatedAt: z.string().nullable().optional(),
-});
+import { nestedEventSchema, nestedFileSchema } from './_nested';
 
 export const noticeResponseSchema = z.looseObject({
   id: z.string().uuid(),
