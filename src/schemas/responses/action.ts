@@ -11,7 +11,11 @@ import { z } from 'zod';
  * `{ message: string }` with no additional fields.
  */
 export const messageResponseSchema = z.object({
-  message: z.string(),
+  message: z
+    .string()
+    .describe(
+      'Human-readable confirmation that the action completed successfully (e.g., "Notice approved").',
+    ),
 });
 
 export type MessageResponse = z.infer<typeof messageResponseSchema>;

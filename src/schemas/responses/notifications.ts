@@ -226,27 +226,63 @@ const notificationTypeValues = Object.values(NotificationType) as [
 
 export const notificationResponseSchema = z.looseObject({
   id: z.string().uuid(),
-  title: z.string(),
-  body: z.string(),
-  type: z.enum(notificationTypeValues),
-  buildingId: z.string().uuid().nullable().optional(),
-  buildingName: z.string().nullable().optional(),
-  data: notificationDataSchema.nullable().optional(),
-  read: z.boolean(),
-  readAt: z.string().nullable().optional(),
+  title: z
+    .string()
+    .describe('Localized notification title shown in the UI list and push notification.'),
+  body: z.string().describe('Localized notification body — one or two short sentences.'),
+  type: z
+    .enum(notificationTypeValues)
+    .describe(
+      'Discriminator for the notification subtype. Determines which per-type schema governs `data` — see `getNotificationDataSchema(type)`.',
+    ),
+  buildingId: z
+    .string()
+    .uuid()
+    .nullable()
+    .optional()
+    .describe(
+      'UUID of the related building. Null for cross-building notifications (system announcements, chat DMs).',
+    ),
+  buildingName: z
+    .string()
+    .nullable()
+    .optional()
+    .describe(
+      'Denormalized building display name for convenience. Null when `buildingId` is null.',
+    ),
+  data: notificationDataSchema
+    .nullable()
+    .optional()
+    .describe(
+      'Per-type payload. Shape depends on the `type` field; use `getNotificationDataSchema(type).parse(data)` to narrow.',
+    ),
+  read: z.boolean().describe('True once the user has opened this notification.'),
+  readAt: z
+    .string()
+    .nullable()
+    .optional()
+    .describe('ISO-8601 timestamp of the first read. Null while unread.'),
   createdAt: z.string(),
 });
 
 export const notificationPreferenceItemSchema = z.looseObject({
-  type: z.string(),
-  description: z.string(),
-  enabled: z.boolean(),
-  channels: z.array(z.string()),
+  type: z
+    .string()
+    .describe('Notification type identifier (maps to a value in `NotificationType`).'),
+  description: z.string().describe('Human-readable description of what this notification signals.'),
+  enabled: z.boolean().describe('Whether the user has this notification type turned on.'),
+  channels: z
+    .array(z.string())
+    .describe('Enabled delivery channels for this type: subset of `push`, `email`, `in_app`.'),
 });
 
 export const notificationPreferenceCategorySchema = z.looseObject({
-  category: z.string(),
-  notifications: z.array(notificationPreferenceItemSchema),
+  category: z.string().describe('Category grouping (e.g. `building`, `financial`, `social`).'),
+  notifications: z
+    .array(notificationPreferenceItemSchema)
+    .describe(
+      'Items belonging to this category; each represents one toggleable notification type.',
+    ),
 });
 
 /**

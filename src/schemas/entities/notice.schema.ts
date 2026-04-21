@@ -21,14 +21,24 @@ export const NOTICE_LIMITS = {
  * omitted from the array are deleted.
  */
 export const noticeEventSchema = z.object({
-  id: uuidSchema.optional(),
-  startDate: z.coerce.date(),
-  endDate: z.coerce.date(),
+  id: uuidSchema
+    .optional()
+    .describe(
+      'UUID of an existing event to update in place. Omit to create a new event. Events absent from the update request are deleted.',
+    ),
+  startDate: z.coerce.date().describe('Event start — accepts an ISO-8601 string or Date.'),
+  endDate: z.coerce
+    .date()
+    .describe('Event end — accepts an ISO-8601 string or Date; must not precede `startDate`.'),
   title: z
     .string()
     .max(NOTICE_LIMITS.EVENT_TITLE_MAX, 'Event title must be at most 100 characters')
-    .optional(),
-  description: z.string().optional(),
+    .optional()
+    .describe('Event title, max 100 chars; defaults to the notice title when omitted.'),
+  description: z
+    .string()
+    .optional()
+    .describe('Event description; defaults to the notice content when omitted.'),
 });
 
 /**
@@ -41,18 +51,30 @@ export const createNoticeSchema = z
     title: z
       .string()
       .min(NOTICE_LIMITS.TITLE_MIN, 'Title is required')
-      .max(NOTICE_LIMITS.TITLE_MAX, `Title must be at most ${NOTICE_LIMITS.TITLE_MAX} characters`),
+      .max(NOTICE_LIMITS.TITLE_MAX, `Title must be at most ${NOTICE_LIMITS.TITLE_MAX} characters`)
+      .describe('Notice headline shown in listings, 1–100 chars.'),
     content: z
       .string()
       .min(NOTICE_LIMITS.CONTENT_MIN, 'Content is required')
       .max(
         NOTICE_LIMITS.CONTENT_MAX,
         `Content must be at most ${NOTICE_LIMITS.CONTENT_MAX} characters`,
-      ),
-    isAnonymous: multipartBoolean().optional(),
-    pinned: multipartBoolean().optional(),
-    events: multipartArray(noticeEventSchema).optional().default([]),
-    fileIds: multipartArray(uuidSchema).optional().default([]),
+      )
+      .describe('Rich-text or plain-text body of the notice, up to 2000 chars.'),
+    isAnonymous: multipartBoolean()
+      .optional()
+      .describe('When true, hides the author’s identity from other residents. Defaults to false.'),
+    pinned: multipartBoolean()
+      .optional()
+      .describe('When true, pins the notice to the top of the building feed.'),
+    events: multipartArray(noticeEventSchema)
+      .optional()
+      .default([])
+      .describe('Calendar events to create alongside the notice (e.g. meeting on a given date).'),
+    fileIds: multipartArray(uuidSchema)
+      .optional()
+      .default([])
+      .describe('UUIDs of previously-uploaded files to attach to the notice.'),
   })
   .refine(
     (data) => {
@@ -74,19 +96,41 @@ export const createNoticeSchema = z
  * events without an `id` are created).
  */
 export const updateNoticeSchema = z.object({
-  title: z.string().min(NOTICE_LIMITS.TITLE_MIN).max(NOTICE_LIMITS.TITLE_MAX).optional(),
-  content: z.string().min(NOTICE_LIMITS.CONTENT_MIN).max(NOTICE_LIMITS.CONTENT_MAX).optional(),
-  pinned: multipartBoolean().optional(),
-  events: multipartArray(noticeEventSchema).optional(),
-  fileIds: multipartArray(uuidSchema).optional(),
-  removeChildFileIds: multipartArray(uuidSchema).optional(),
+  title: z
+    .string()
+    .min(NOTICE_LIMITS.TITLE_MIN)
+    .max(NOTICE_LIMITS.TITLE_MAX)
+    .optional()
+    .describe('Revised notice headline, 1–100 chars.'),
+  content: z
+    .string()
+    .min(NOTICE_LIMITS.CONTENT_MIN)
+    .max(NOTICE_LIMITS.CONTENT_MAX)
+    .optional()
+    .describe('Revised notice body, up to 2000 chars.'),
+  pinned: multipartBoolean()
+    .optional()
+    .describe('Toggles whether the notice is pinned to the top of the feed.'),
+  events: multipartArray(noticeEventSchema)
+    .optional()
+    .describe(
+      'Replacement event set: events with an `id` are updated, new events are inserted, and existing events omitted from the list are deleted.',
+    ),
+  fileIds: multipartArray(uuidSchema)
+    .optional()
+    .describe('UUIDs of newly-uploaded files to attach.'),
+  removeChildFileIds: multipartArray(uuidSchema)
+    .optional()
+    .describe('UUIDs of previously-attached files to detach from the notice.'),
 });
 
 /**
  * Approve notice request schema
  */
 export const approveNoticeSchema = z.object({
-  approved: z.boolean(),
+  approved: z
+    .boolean()
+    .describe('True to approve the notice for public visibility, false to reject.'),
 });
 
 // Inferred types

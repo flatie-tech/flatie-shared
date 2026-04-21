@@ -8,7 +8,7 @@ import { updatePollSchema as updatePollBodySchema } from '../entities/poll.schem
  * validated by `updatePollSchema` in `entities/poll.schema.ts`.
  */
 export const updatePollRequestSchema = updatePollBodySchema.extend({
-  id: uuidSchema,
+  id: uuidSchema.describe('UUID of the poll to update, taken from the URL.'),
 });
 
 export type UpdatePollRequestPayload = z.infer<typeof updatePollRequestSchema>;

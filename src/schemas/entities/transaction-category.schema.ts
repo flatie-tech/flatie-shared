@@ -21,8 +21,13 @@ export const createTransactionCategorySchema = z.object({
     .max(
       TRANSACTION_CATEGORY_LIMITS.NAME_MAX,
       `Name must be at most ${TRANSACTION_CATEGORY_LIMITS.NAME_MAX} characters`,
+    )
+    .describe('Human-readable category name (e.g. "Cleaning", "Water utility"), 1–100 chars.'),
+  type: z
+    .enum([TransactionType.INCOME, TransactionType.EXPENSE])
+    .describe(
+      '`INCOME` for categories that receive money into the fund; `EXPENSE` for categories that spend from it.',
     ),
-  type: z.enum([TransactionType.INCOME, TransactionType.EXPENSE]),
 });
 
 /**
@@ -33,22 +38,34 @@ export const updateTransactionCategorySchema = z.object({
     .string()
     .min(TRANSACTION_CATEGORY_LIMITS.NAME_MIN)
     .max(TRANSACTION_CATEGORY_LIMITS.NAME_MAX)
-    .optional(),
+    .optional()
+    .describe('Revised category name, 1–100 chars.'),
 });
 
 /**
  * Get transaction categories query schema
  */
 export const getTransactionCategoriesQuerySchema = z.object({
-  type: z.enum([TransactionType.INCOME, TransactionType.EXPENSE]).optional(),
-  search: z.string().max(TRANSACTION_CATEGORY_LIMITS.SEARCH_MAX).optional(),
+  type: z
+    .enum([TransactionType.INCOME, TransactionType.EXPENSE])
+    .optional()
+    .describe(
+      'Filter results by category type. Omit to return both income and expense categories.',
+    ),
+  search: z
+    .string()
+    .max(TRANSACTION_CATEGORY_LIMITS.SEARCH_MAX)
+    .optional()
+    .describe('Case-insensitive substring matched against the category name.'),
 });
 
 /**
  * Copy categories (between buildings) request schema
  */
 export const copyTransactionCategoriesSchema = z.object({
-  sourceBuildingId: uuidSchema,
+  sourceBuildingId: uuidSchema.describe(
+    'UUID of the building whose categories should be copied into the target building.',
+  ),
 });
 
 // Inferred types

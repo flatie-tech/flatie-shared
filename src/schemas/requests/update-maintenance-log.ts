@@ -9,7 +9,7 @@ import { updateMaintenanceLogSchema as updateMaintenanceLogBodySchema } from '..
  * `entities/maintenance-log.schema.ts`.
  */
 export const updateMaintenanceLogRequestSchema = updateMaintenanceLogBodySchema.extend({
-  id: uuidSchema,
+  id: uuidSchema.describe('UUID of the maintenance log to update, taken from the URL.'),
 });
 
 export type UpdateMaintenanceLogRequestPayload = z.infer<typeof updateMaintenanceLogRequestSchema>;

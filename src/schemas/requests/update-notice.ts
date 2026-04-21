@@ -13,7 +13,7 @@ import { updateNoticeSchema as updateNoticeBodySchema } from '../entities/notice
  * controller because it reuses the entity-level body schema directly.
  */
 export const updateNoticeRequestSchema = updateNoticeBodySchema.extend({
-  id: uuidSchema,
+  id: uuidSchema.describe('UUID of the notice to update, taken from the URL.'),
 });
 
 export type UpdateNoticeRequestPayload = z.infer<typeof updateNoticeRequestSchema>;

@@ -14,13 +14,13 @@ export const paginationParamsSchema = z.object({
  */
 export const paginatedResponseSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
   z.object({
-    data: z.array(itemSchema),
-    count: z.number(),
-    page: z.number(),
-    limit: z.number(),
-    totalPages: z.number(),
-    hasNextPage: z.boolean(),
-    hasPreviousPage: z.boolean(),
+    data: z.array(itemSchema).describe('Items for the current page.'),
+    count: z.number().describe('Total number of matching items across all pages.'),
+    page: z.number().describe('1-based current page index.'),
+    limit: z.number().describe('Page size (items per page, max 100).'),
+    totalPages: z.number().describe('Total number of pages available for this query.'),
+    hasNextPage: z.boolean().describe('True when another page follows the current one.'),
+    hasPreviousPage: z.boolean().describe('True when a previous page exists.'),
   });
 
 // Inferred types

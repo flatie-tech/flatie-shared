@@ -11,7 +11,11 @@ export type PollTypeOption = (typeof POLL_TYPES)[number];
 /**
  * Poll type enum schema
  */
-export const pollTypeSchema = z.enum(POLL_TYPES);
+export const pollTypeSchema = z
+  .enum(POLL_TYPES)
+  .describe(
+    '`COMMUNITY` polls pass by simple majority of votes cast; `CONSENSUS` polls require an ownership-weighted approval threshold.',
+  );
 
 /**
  * Validation constants for polls
@@ -40,22 +44,54 @@ export const createPollSchema = z
       .max(
         POLL_LIMITS.QUESTION_MAX,
         `Question must be at most ${POLL_LIMITS.QUESTION_MAX} characters`,
+      )
+      .describe('Poll question presented to voters, 5–250 chars.'),
+    options: multipartArray(z.string().max(POLL_LIMITS.OPTION_MAX))
+      .pipe(z.array(z.string().min(1).max(POLL_LIMITS.OPTION_MAX)))
+      .describe(
+        'Answer options in display order. Community polls: 2–4 options. Consensus polls: exactly 1 option (voters approve or abstain).',
       ),
-    options: multipartArray(z.string().max(POLL_LIMITS.OPTION_MAX)).pipe(
-      z.array(z.string().min(1).max(POLL_LIMITS.OPTION_MAX)),
-    ),
     pollType: pollTypeSchema,
-    deadline: z.coerce.date().optional(),
+    deadline: z.coerce
+      .date()
+      .optional()
+      .describe(
+        'Cutoff date/time after which votes are rejected. Accepts an ISO-8601 string or Date. Omit for open-ended consensus polls.',
+      ),
     requiredConsensusPercentage: z.coerce
       .number()
       .min(POLL_LIMITS.CONSENSUS_PERCENTAGE_MIN)
       .max(POLL_LIMITS.CONSENSUS_PERCENTAGE_MAX)
-      .optional(),
-    consensusCategory: z.string().max(100).optional(),
-    legalBasis: z.string().max(100).optional(),
-    scopedUnitIds: multipartArray(uuidSchema).optional(),
-    scopedUserIds: multipartArray(uuidSchema).optional(),
-    fileIds: multipartArray(uuidSchema).optional().default([]),
+      .optional()
+      .describe(
+        'Ownership-weighted approval threshold (10–100) required for consensus polls to pass. Ignored for community polls.',
+      ),
+    consensusCategory: z
+      .string()
+      .max(100)
+      .optional()
+      .describe(
+        'Classification of the consensus decision (e.g. "fundUsage", "houseRules"); used to group and filter related polls.',
+      ),
+    legalBasis: z
+      .string()
+      .max(100)
+      .optional()
+      .describe(
+        'Reference to the legal article or statute that authorises the vote; shown alongside consensus results for audit.',
+      ),
+    scopedUnitIds: multipartArray(uuidSchema)
+      .optional()
+      .describe(
+        'UUIDs of units whose owners/tenants are eligible to vote. Omit for building-wide polls.',
+      ),
+    scopedUserIds: multipartArray(uuidSchema)
+      .optional()
+      .describe('UUIDs of users explicitly added to the eligible-voter list. Omit when not used.'),
+    fileIds: multipartArray(uuidSchema)
+      .optional()
+      .default([])
+      .describe('UUIDs of previously-uploaded supporting documents (proposals, receipts, specs).'),
   })
   .refine(
     (data) => {
@@ -98,20 +134,44 @@ export const createPollSchema = z
  * `removeChildFileIds` list matches the legacy `UpdatePollDto`.
  */
 export const updatePollSchema = z.object({
-  question: z.string().min(1).max(POLL_LIMITS.QUESTION_MAX).optional(),
-  options: multipartArray(z.string().max(POLL_LIMITS.OPTION_MAX)).optional(),
+  question: z
+    .string()
+    .min(1)
+    .max(POLL_LIMITS.QUESTION_MAX)
+    .optional()
+    .describe('Revised poll question, up to 250 chars.'),
+  options: multipartArray(z.string().max(POLL_LIMITS.OPTION_MAX))
+    .optional()
+    .describe('Replacement option list. Must still respect the community/consensus option counts.'),
   pollType: pollTypeSchema.optional(),
-  deadline: z.coerce.date().optional(),
+  deadline: z.coerce
+    .date()
+    .optional()
+    .describe('Revised deadline. Accepts an ISO-8601 string or Date.'),
   requiredConsensusPercentage: z.coerce
     .number()
     .min(POLL_LIMITS.CONSENSUS_PERCENTAGE_MIN)
     .max(POLL_LIMITS.CONSENSUS_PERCENTAGE_MAX)
-    .optional(),
-  status: z.enum(['active', 'inactive', 'ended']).optional(),
-  scopedUnitIds: multipartArray(uuidSchema).optional(),
-  scopedUserIds: multipartArray(uuidSchema).optional(),
-  fileIds: multipartArray(uuidSchema).optional(),
-  removeChildFileIds: multipartArray(uuidSchema).optional(),
+    .optional()
+    .describe('Revised ownership-weighted approval threshold (10–100) for consensus polls.'),
+  status: z
+    .enum(['active', 'inactive', 'ended'])
+    .optional()
+    .describe(
+      'Lifecycle override: `active` accepts votes, `inactive` pauses the poll, `ended` seals it.',
+    ),
+  scopedUnitIds: multipartArray(uuidSchema)
+    .optional()
+    .describe('Replacement list of scoped unit UUIDs. Empty array clears scoping.'),
+  scopedUserIds: multipartArray(uuidSchema)
+    .optional()
+    .describe('Replacement list of scoped user UUIDs. Empty array clears explicit-user scoping.'),
+  fileIds: multipartArray(uuidSchema)
+    .optional()
+    .describe('UUIDs of newly-uploaded supporting documents to attach.'),
+  removeChildFileIds: multipartArray(uuidSchema)
+    .optional()
+    .describe('UUIDs of previously-attached files to detach from the poll.'),
 });
 
 /**
@@ -122,7 +182,11 @@ export const updatePollSchema = z.object({
  * expects on the wire.
  */
 export const votePollSchema = z.object({
-  selectedOptionIndex: z.number().int().min(0),
+  selectedOptionIndex: z
+    .number()
+    .int()
+    .min(0)
+    .describe('Zero-based index into the poll’s `options` array identifying the chosen option.'),
 });
 
 /**
@@ -132,7 +196,11 @@ export const votePollSchema = z.object({
  * controller still accepts to match the existing API shape.
  */
 export const finalizePollSchema = z.object({
-  finalize: z.boolean(),
+  finalize: z
+    .boolean()
+    .describe(
+      'True to seal the poll and freeze its results; false is accepted as a no-op for legacy compatibility.',
+    ),
 });
 
 // Inferred types
