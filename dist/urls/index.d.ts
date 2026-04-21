@@ -188,6 +188,10 @@ declare const API_ROUTES: {
         readonly BLOG_RESTORE: (id: string) => string;
         readonly BLOG_COVER_IMAGE: (id: string) => string;
         readonly BLOG_CATEGORIES: "/platform/blog/categories";
+        readonly ARCHIVE: "/platform/archive";
+        readonly ARCHIVE_CLEANUP: "/platform/archive/cleanup/run";
+        readonly ARCHIVE_RESTORE: (type: string, id: string) => string;
+        readonly ARCHIVE_PERMANENT: (type: string, id: string) => string;
     };
     readonly REPRESENTATIVES: {
         readonly DASHBOARD_SUMMARY: "/representatives/dashboard/summary";

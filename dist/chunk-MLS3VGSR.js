@@ -1,5 +1,3 @@
-'use strict';
-
 // src/urls/index.ts
 var API_VERSION = "v1";
 var API_ROUTES = {
@@ -206,7 +204,11 @@ var API_ROUTES = {
     BLOG_PUBLISH: (id) => `/platform/blog/${id}/publish`,
     BLOG_RESTORE: (id) => `/platform/blog/${id}/restore`,
     BLOG_COVER_IMAGE: (id) => `/platform/blog/${id}/cover-image`,
-    BLOG_CATEGORIES: "/platform/blog/categories"
+    BLOG_CATEGORIES: "/platform/blog/categories",
+    ARCHIVE: "/platform/archive",
+    ARCHIVE_CLEANUP: "/platform/archive/cleanup/run",
+    ARCHIVE_RESTORE: (type, id) => `/platform/archive/${type}/${id}/restore`,
+    ARCHIVE_PERMANENT: (type, id) => `/platform/archive/${type}/${id}/permanent`
   },
   // ── Representatives ──────────────────────────────────────────────────
   REPRESENTATIVES: {
@@ -227,7 +229,6 @@ var API_ROUTES = {
   }
 };
 
-exports.API_ROUTES = API_ROUTES;
-exports.API_VERSION = API_VERSION;
-//# sourceMappingURL=chunk-KIXHDZPK.cjs.map
-//# sourceMappingURL=chunk-KIXHDZPK.cjs.map
+export { API_ROUTES, API_VERSION };
+//# sourceMappingURL=chunk-MLS3VGSR.js.map
+//# sourceMappingURL=chunk-MLS3VGSR.js.map

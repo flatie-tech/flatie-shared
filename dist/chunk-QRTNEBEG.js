@@ -832,6 +832,46 @@ var messageResponseSchema = z.object({
     'Human-readable confirmation that the action completed successfully (e.g., "Notice approved").'
   )
 });
+var ARCHIVE_TYPES = [
+  "apartments",
+  "blog_posts",
+  "building_join_requests",
+  "buildings",
+  "comments",
+  "events",
+  "failure_reports",
+  "faqs",
+  "files",
+  "garages",
+  "income_transactions",
+  "maintenance_logs",
+  "notices",
+  "organizations",
+  "polls",
+  "recurring_templates",
+  "storage_units",
+  "transaction_categories"
+];
+var archiveTypeSchema = z.enum(ARCHIVE_TYPES).describe("Name of the archived entity kind; must match a key in the backend archive registry.");
+var archivedItemSchema = z.looseObject({
+  id: z.string().uuid().describe("UUID of the archived row within its source table."),
+  type: archiveTypeSchema,
+  label: z.string().describe("Human-readable label for the archived row (e.g. apartment number, notice title)."),
+  buildingId: z.string().uuid().nullable().describe(
+    "UUID of the building the row belongs to; null for global entities like organizations."
+  ),
+  archivedAt: z.string().describe("ISO-8601 timestamp when the row was archived."),
+  archivedBy: z.string().uuid().nullable().describe(
+    "UUID of the user who archived the row; null when the original actor has been deleted."
+  ),
+  archivedByName: z.string().nullable().describe("Display name of the archiving user; null when unavailable."),
+  daysUntilPurge: z.number().int().describe(
+    "Remaining days before the automated 30-day purge removes the row; 0 means the TTL has elapsed."
+  )
+});
+z.object({
+  items: z.array(archivedItemSchema).describe("Archived rows across all registered archive types, sorted by archivedAt desc.")
+});
 var buildingStatusSchema = z.enum(Object.values(BuildingStatus)).describe(
   "Building lifecycle status \u2014 reflects where the building is in the platform onboarding pipeline (pending approval, active, rejected, etc.)."
 );
@@ -1482,5 +1522,5 @@ var pollVotersResponseSchema = z.looseObject({
 var paginatedPollsResponseSchema = paginatedResponseSchema(pollResponseSchema);
 
 export { ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, baseEntitySchema, buildingDetailResponseSchema, buildingEntitySchema, buildingResponseSchema, buildingTypeSchema, buildingUserEntitySchema, commentResponseSchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-7RLFBZKM.js.map
-//# sourceMappingURL=chunk-7RLFBZKM.js.map
+//# sourceMappingURL=chunk-QRTNEBEG.js.map
+//# sourceMappingURL=chunk-QRTNEBEG.js.map

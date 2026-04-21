@@ -1,5 +1,12 @@
 export type { MessageResponse } from './action';
 export { messageResponseSchema } from './action';
+export type { ArchivedItem, ArchiveType, ListArchivedResponse } from './archive';
+export {
+  ARCHIVE_TYPES,
+  archivedItemSchema,
+  archiveTypeSchema,
+  listArchivedResponseSchema,
+} from './archive';
 export type {
   BuildingDetailResponse,
   BuildingResponse,

@@ -1,11 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { NotificationType } from '../../src/enums/notification.enum';
 import {
+  ARCHIVE_TYPES,
+  archivedItemSchema,
   buildingDetailResponseSchema,
   buildingResponseSchema,
   eventResponseSchema,
   failureReportResponseSchema,
   getNotificationDataSchema,
+  listArchivedResponseSchema,
   maintenanceLogResponseSchema,
   noticeResponseSchema,
   notificationResponseSchema,
@@ -497,5 +500,61 @@ describe('Notification response schema', () => {
         conversationId: 'not-a-uuid',
       }),
     ).toThrow();
+  });
+});
+
+describe('Archive response schemas', () => {
+  const APARTMENT_ID = 'dd0a1e6e-8c9d-4a5b-8e7f-4d3c2e1b0a33';
+
+  it('parses a valid archived-item payload', () => {
+    const payload = {
+      id: APARTMENT_ID,
+      type: 'apartments',
+      label: 'Apartment 4B',
+      buildingId: BUILDING_ID,
+      archivedAt: TIMESTAMP,
+      archivedBy: USER_ID,
+      archivedByName: 'Iva Ivić',
+      daysUntilPurge: 12,
+    };
+    expect(archivedItemSchema.parse(payload).type).toBe('apartments');
+  });
+
+  it('allows null buildingId for global entities like organizations', () => {
+    const payload = {
+      id: APARTMENT_ID,
+      type: 'organizations',
+      label: 'Management Firm',
+      buildingId: null,
+      archivedAt: TIMESTAMP,
+      archivedBy: null,
+      archivedByName: null,
+      daysUntilPurge: 0,
+    };
+    expect(() => archivedItemSchema.parse(payload)).not.toThrow();
+  });
+
+  it('rejects an unknown archive type', () => {
+    const payload = {
+      id: APARTMENT_ID,
+      type: 'not_a_real_type',
+      label: 'Bogus',
+      buildingId: null,
+      archivedAt: TIMESTAMP,
+      archivedBy: null,
+      archivedByName: null,
+      daysUntilPurge: 0,
+    };
+    expect(() => archivedItemSchema.parse(payload)).toThrow();
+  });
+
+  it('covers all 18 types in ARCHIVE_TYPES', () => {
+    expect(ARCHIVE_TYPES).toHaveLength(18);
+    expect(new Set(ARCHIVE_TYPES).size).toBe(18);
+  });
+
+  it('parses the aggregator list response', () => {
+    const payload = { items: [] };
+    expect(listArchivedResponseSchema.parse(payload).items).toEqual([]);
   });
 });

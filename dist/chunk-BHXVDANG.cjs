@@ -834,6 +834,46 @@ var messageResponseSchema = zod.z.object({
     'Human-readable confirmation that the action completed successfully (e.g., "Notice approved").'
   )
 });
+var ARCHIVE_TYPES = [
+  "apartments",
+  "blog_posts",
+  "building_join_requests",
+  "buildings",
+  "comments",
+  "events",
+  "failure_reports",
+  "faqs",
+  "files",
+  "garages",
+  "income_transactions",
+  "maintenance_logs",
+  "notices",
+  "organizations",
+  "polls",
+  "recurring_templates",
+  "storage_units",
+  "transaction_categories"
+];
+var archiveTypeSchema = zod.z.enum(ARCHIVE_TYPES).describe("Name of the archived entity kind; must match a key in the backend archive registry.");
+var archivedItemSchema = zod.z.looseObject({
+  id: zod.z.string().uuid().describe("UUID of the archived row within its source table."),
+  type: archiveTypeSchema,
+  label: zod.z.string().describe("Human-readable label for the archived row (e.g. apartment number, notice title)."),
+  buildingId: zod.z.string().uuid().nullable().describe(
+    "UUID of the building the row belongs to; null for global entities like organizations."
+  ),
+  archivedAt: zod.z.string().describe("ISO-8601 timestamp when the row was archived."),
+  archivedBy: zod.z.string().uuid().nullable().describe(
+    "UUID of the user who archived the row; null when the original actor has been deleted."
+  ),
+  archivedByName: zod.z.string().nullable().describe("Display name of the archiving user; null when unavailable."),
+  daysUntilPurge: zod.z.number().int().describe(
+    "Remaining days before the automated 30-day purge removes the row; 0 means the TTL has elapsed."
+  )
+});
+zod.z.object({
+  items: zod.z.array(archivedItemSchema).describe("Archived rows across all registered archive types, sorted by archivedAt desc.")
+});
 var buildingStatusSchema = zod.z.enum(Object.values(chunk5UBJHQVX_cjs.BuildingStatus)).describe(
   "Building lifecycle status \u2014 reflects where the building is in the platform onboarding pipeline (pending approval, active, rejected, etc.)."
 );
@@ -1619,5 +1659,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-UFI7SSC3.cjs.map
-//# sourceMappingURL=chunk-UFI7SSC3.cjs.map
+//# sourceMappingURL=chunk-BHXVDANG.cjs.map
+//# sourceMappingURL=chunk-BHXVDANG.cjs.map

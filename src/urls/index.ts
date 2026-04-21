@@ -275,6 +275,10 @@ export const API_ROUTES = {
     BLOG_RESTORE: (id: string) => `/platform/blog/${id}/restore`,
     BLOG_COVER_IMAGE: (id: string) => `/platform/blog/${id}/cover-image`,
     BLOG_CATEGORIES: '/platform/blog/categories',
+    ARCHIVE: '/platform/archive',
+    ARCHIVE_CLEANUP: '/platform/archive/cleanup/run',
+    ARCHIVE_RESTORE: (type: string, id: string) => `/platform/archive/${type}/${id}/restore`,
+    ARCHIVE_PERMANENT: (type: string, id: string) => `/platform/archive/${type}/${id}/permanent`,
   },
 
   // ── Representatives ──────────────────────────────────────────────────

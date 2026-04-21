@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.24.0
+
+### Minor Changes
+
+- Add platform archive contract: `API_ROUTES.PLATFORM.ARCHIVE`, `ARCHIVE_CLEANUP`, `ARCHIVE_RESTORE(type, id)`, `ARCHIVE_PERMANENT(type, id)`, plus `ARCHIVE_TYPES`, `archiveTypeSchema`, `archivedItemSchema`, and `listArchivedResponseSchema`. Consumed by the frontend platform-admin archive page and mirrored by the backend `archive-registry.ts`.
+
 ## 0.23.0
 
 ### Minor Changes
