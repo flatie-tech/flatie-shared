@@ -10,6 +10,8 @@ export {
   extractPaginatedItems,
   normalizePaginatedResponse,
 } from './pagination';
+// Client-side schema validation for API responses
+export { ParseError, parseData } from './parse';
 // Permission evaluator (pure, cross-package)
 export type { ActionFlags } from './permission-evaluator';
 export {
