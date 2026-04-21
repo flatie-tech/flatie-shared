@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { z } from 'zod';
+import type { z } from 'zod';
 import * as responsesBarrel from '../../src/schemas/responses';
 
 /**
@@ -34,12 +34,26 @@ const TRIVIAL_FIELD_NAMES = new Set([
 ]);
 
 /** Descend into a Zod schema and yield `[path, description]` for every field. */
-function* fields(schema: z.ZodTypeAny, path: string[] = []): Generator<{
+function* fields(
+  schema: z.ZodTypeAny,
+  path: string[] = [],
+): Generator<{
   path: string[];
   name: string;
   description?: string;
 }> {
-  const def = (schema as unknown as { _zod?: { def?: { type?: string; shape?: Record<string, z.ZodTypeAny>; innerType?: z.ZodTypeAny; element?: z.ZodTypeAny } } })._zod?.def;
+  const def = (
+    schema as unknown as {
+      _zod?: {
+        def?: {
+          type?: string;
+          shape?: Record<string, z.ZodTypeAny>;
+          innerType?: z.ZodTypeAny;
+          element?: z.ZodTypeAny;
+        };
+      };
+    }
+  )._zod?.def;
   if (!def) return;
 
   if (def.type === 'object' && def.shape) {
@@ -51,7 +65,12 @@ function* fields(schema: z.ZodTypeAny, path: string[] = []): Generator<{
       };
       // Recurse into nested objects/arrays.
       const childDef = (child as unknown as { _zod?: { def?: { type?: string } } })._zod?.def;
-      if (childDef?.type === 'object' || childDef?.type === 'array' || childDef?.type === 'optional' || childDef?.type === 'nullable') {
+      if (
+        childDef?.type === 'object' ||
+        childDef?.type === 'array' ||
+        childDef?.type === 'optional' ||
+        childDef?.type === 'nullable'
+      ) {
         yield* fields(child, [...path, name]);
       }
     }
@@ -65,8 +84,7 @@ function* fields(schema: z.ZodTypeAny, path: string[] = []): Generator<{
 describe('response schemas — .describe() coverage', () => {
   const exports = responsesBarrel as Record<string, unknown>;
   const schemaExports = Object.entries(exports).filter(
-    ([name, value]) =>
-      name.endsWith('Schema') && typeof value === 'object' && value !== null,
+    ([name, value]) => name.endsWith('Schema') && typeof value === 'object' && value !== null,
   );
 
   // Sanity check: we actually found schemas to inspect. If the barrel is

@@ -107,7 +107,9 @@ export const eventResponseSchema = z.looseObject({
     .string()
     .nullable()
     .optional()
-    .describe('UUID of the user assigned to record minutes; null for events that do not require one.'),
+    .describe(
+      'UUID of the user assigned to record minutes; null for events that do not require one.',
+    ),
   usedAsScheduleBy: z
     .array(entityScheduleReferenceSchema)
     .optional()

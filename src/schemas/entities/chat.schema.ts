@@ -39,9 +39,7 @@ export const sendMessageSchema = z.object({
 export const createConversationSchema = z.object({
   type: z
     .enum([ConversationType.DIRECT, ConversationType.GROUP])
-    .describe(
-      '`direct` for a one-to-one thread, `group` for a named multi-user conversation.',
-    ),
+    .describe('`direct` for a one-to-one thread, `group` for a named multi-user conversation.'),
   participantIds: z
     .array(uuidSchema)
     .min(CHAT_LIMITS.PARTICIPANTS_MIN, 'At least one participant is required')

@@ -53,11 +53,9 @@ export const maintenanceLogEventSchema = z.object({
     .describe(
       'UUID of an existing event to update in place. Omit to create a new event. Events absent from the update request are deleted.',
     ),
-  startDate: z
-    .coerce.date()
-    .describe('Event start — accepts an ISO-8601 string or Date.'),
-  endDate: z
-    .coerce.date()
+  startDate: z.coerce.date().describe('Event start — accepts an ISO-8601 string or Date.'),
+  endDate: z.coerce
+    .date()
     .describe('Event end — accepts an ISO-8601 string or Date; must not precede `startDate`.'),
   title: z
     .string()
@@ -105,10 +103,9 @@ export const createMaintenanceLogSchema = z.object({
     .optional()
     .describe('True when the work is covered by an active warranty.'),
   events: multipartArray(maintenanceLogEventSchema)
-    .refine(
-      (events) => events.length >= MAINTENANCE_LOG_LIMITS.EVENTS_MIN,
-      { message: 'At least one event is required' },
-    )
+    .refine((events) => events.length >= MAINTENANCE_LOG_LIMITS.EVENTS_MIN, {
+      message: 'At least one event is required',
+    })
     .describe('Calendar events associated with the work; at least one is required on create.'),
   fileIds: multipartArray(uuidSchema)
     .optional()
@@ -118,7 +115,9 @@ export const createMaintenanceLogSchema = z.object({
     .describe('UUID of a single poll to associate with this log. Legacy field — prefer `pollIds`.'),
   pollIds: multipartArray(uuidSchema)
     .optional()
-    .describe('UUIDs of polls to associate with this log (e.g. the vote that authorised the work).'),
+    .describe(
+      'UUIDs of polls to associate with this log (e.g. the vote that authorised the work).',
+    ),
 });
 
 /**
@@ -139,9 +138,7 @@ export const updateMaintenanceLogSchema = z.object({
     .max(MAINTENANCE_LOG_LIMITS.DESCRIPTION_MAX)
     .optional()
     .describe('Revised description, up to 2000 chars.'),
-  categoryId: uuidSchema
-    .optional()
-    .describe('Revised expense-category UUID.'),
+  categoryId: uuidSchema.optional().describe('Revised expense-category UUID.'),
   contractor: z
     .string()
     .min(MAINTENANCE_LOG_LIMITS.CONTRACTOR_MIN)
@@ -152,12 +149,8 @@ export const updateMaintenanceLogSchema = z.object({
     .describe(
       'Revised total cost as a decimal string with up to two decimal places (e.g. "250.50").',
     ),
-  financedBy: maintenanceFinancedBySchema
-    .optional()
-    .describe('Revised funding source.'),
-  warranty: multipartBoolean()
-    .optional()
-    .describe('Toggles whether the work is under warranty.'),
+  financedBy: maintenanceFinancedBySchema.optional().describe('Revised funding source.'),
+  warranty: multipartBoolean().optional().describe('Toggles whether the work is under warranty.'),
   events: multipartArray(maintenanceLogEventSchema)
     .optional()
     .describe(

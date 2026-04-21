@@ -26,11 +26,9 @@ export const noticeEventSchema = z.object({
     .describe(
       'UUID of an existing event to update in place. Omit to create a new event. Events absent from the update request are deleted.',
     ),
-  startDate: z
-    .coerce.date()
-    .describe('Event start — accepts an ISO-8601 string or Date.'),
-  endDate: z
-    .coerce.date()
+  startDate: z.coerce.date().describe('Event start — accepts an ISO-8601 string or Date.'),
+  endDate: z.coerce
+    .date()
     .describe('Event end — accepts an ISO-8601 string or Date; must not precede `startDate`.'),
   title: z
     .string()

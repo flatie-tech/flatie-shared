@@ -54,16 +54,8 @@ export const eventColorSchema = z
  * Time object schema (for form inputs)
  */
 export const timeSchema = z.object({
-  hour: z
-    .number()
-    .min(0)
-    .max(23)
-    .describe('Hour component in 24-hour format, 0–23.'),
-  minute: z
-    .number()
-    .min(0)
-    .max(59)
-    .describe('Minute component, 0–59.'),
+  hour: z.number().min(0).max(23).describe('Hour component in 24-hour format, 0–23.'),
+  minute: z.number().min(0).max(59).describe('Minute component, 0–59.'),
 });
 
 /**
@@ -82,11 +74,11 @@ export const createEventSchema = z.object({
     .max(2000, 'Description must be at most 2000 characters')
     .optional()
     .describe('Free-text details about the event; omitted when the event is self-explanatory.'),
-  startDate: z
-    .coerce.date({ error: 'Start date is required' })
+  startDate: z.coerce
+    .date({ error: 'Start date is required' })
     .describe('Event start — accepts an ISO-8601 string or Date, stored as a timestamp.'),
-  endDate: z
-    .coerce.date({ error: 'End date is required' })
+  endDate: z.coerce
+    .date({ error: 'End date is required' })
     .describe('Event end — accepts an ISO-8601 string or Date; must not precede `startDate`.'),
   color: eventColorSchema,
 });
@@ -96,25 +88,13 @@ export const createEventSchema = z.object({
  */
 export const updateEventSchema = z.object({
   type: eventTypeSchema.optional(),
-  title: z
-    .string()
-    .min(1)
-    .max(100)
-    .optional()
-    .describe('Revised title, 1–100 chars.'),
-  description: z
-    .string()
-    .max(2000)
-    .optional()
-    .describe('Revised description, max 2000 chars.'),
-  startDate: z
-    .coerce.date()
+  title: z.string().min(1).max(100).optional().describe('Revised title, 1–100 chars.'),
+  description: z.string().max(2000).optional().describe('Revised description, max 2000 chars.'),
+  startDate: z.coerce
+    .date()
     .optional()
     .describe('Revised start — accepts an ISO-8601 string or Date.'),
-  endDate: z
-    .coerce.date()
-    .optional()
-    .describe('Revised end — accepts an ISO-8601 string or Date.'),
+  endDate: z.coerce.date().optional().describe('Revised end — accepts an ISO-8601 string or Date.'),
   color: eventColorSchema.optional(),
 });
 

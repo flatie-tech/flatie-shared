@@ -52,8 +52,8 @@ export const createPollSchema = z
         'Answer options in display order. Community polls: 2–4 options. Consensus polls: exactly 1 option (voters approve or abstain).',
       ),
     pollType: pollTypeSchema,
-    deadline: z
-      .coerce.date()
+    deadline: z.coerce
+      .date()
       .optional()
       .describe(
         'Cutoff date/time after which votes are rejected. Accepts an ISO-8601 string or Date. Omit for open-ended consensus polls.',
@@ -144,8 +144,8 @@ export const updatePollSchema = z.object({
     .optional()
     .describe('Replacement option list. Must still respect the community/consensus option counts.'),
   pollType: pollTypeSchema.optional(),
-  deadline: z
-    .coerce.date()
+  deadline: z.coerce
+    .date()
     .optional()
     .describe('Revised deadline. Accepts an ISO-8601 string or Date.'),
   requiredConsensusPercentage: z.coerce

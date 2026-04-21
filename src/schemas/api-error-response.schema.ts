@@ -27,8 +27,6 @@ export const apiErrorResponseSchema = apiErrorSchema
           'HTTP errors (network failures, unhandled exceptions, validation-pipe rejections).',
       ),
   })
-  .describe(
-    'Standard error envelope returned by the Flatie backend on 4xx and 5xx responses.',
-  );
+  .describe('Standard error envelope returned by the Flatie backend on 4xx and 5xx responses.');
 
 export type ApiErrorResponse = z.infer<typeof apiErrorResponseSchema>;

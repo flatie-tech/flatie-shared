@@ -2,9 +2,7 @@ import { z } from 'zod';
 
 export const storageUnitRoleSchema = z
   .enum(['OWNER', 'TENANT'])
-  .describe(
-    '`OWNER` for the title-deed holder, `TENANT` for a resident renting from the owner.',
-  );
+  .describe('`OWNER` for the title-deed holder, `TENANT` for a resident renting from the owner.');
 export type StorageUnitRole = z.infer<typeof storageUnitRoleSchema>;
 
 export const storageUnitUserSchema = z.looseObject({

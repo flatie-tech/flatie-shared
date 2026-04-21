@@ -13,12 +13,7 @@ export const ORGANIZATION_LIMITS = {
 } as const;
 
 const orgRoleSchema = z
-  .enum([
-    OrgRole.ORG_ADMIN,
-    OrgRole.SUPERVISOR,
-    OrgRole.REFERENT,
-    OrgRole.OPERATIVE,
-  ])
+  .enum([OrgRole.ORG_ADMIN, OrgRole.SUPERVISOR, OrgRole.REFERENT, OrgRole.OPERATIVE])
   .describe(
     'Organization role, from highest to lowest authority: `ORG_ADMIN` (manages the org), `SUPERVISOR` (oversees operations), `REFERENT` (day-to-day member interactions), `OPERATIVE` (field work).',
   );
@@ -44,16 +39,15 @@ export const createOrganizationSchema = z.object({
     .string()
     .max(ORGANIZATION_LIMITS.OIB_LENGTH, `OIB must be ${ORGANIZATION_LIMITS.OIB_LENGTH} characters`)
     .optional()
-    .describe('Croatian OIB (tax identification number), 11 digits. Required for firms but optional at creation.'),
+    .describe(
+      'Croatian OIB (tax identification number), 11 digits. Required for firms but optional at creation.',
+    ),
   contactEmail: z
     .string()
     .email('Invalid email')
     .optional()
     .describe('Public contact email for the organization.'),
-  contactPhone: z
-    .string()
-    .optional()
-    .describe('Public contact phone number.'),
+  contactPhone: z.string().optional().describe('Public contact phone number.'),
 });
 
 /**
@@ -66,15 +60,8 @@ export const updateOrganizationSchema = z.object({
     .max(ORGANIZATION_LIMITS.NAME_MAX)
     .optional()
     .describe('Revised organization name, 1–200 chars.'),
-  contactEmail: z
-    .string()
-    .email('Invalid email')
-    .optional()
-    .describe('Revised contact email.'),
-  contactPhone: z
-    .string()
-    .optional()
-    .describe('Revised contact phone number.'),
+  contactEmail: z.string().email('Invalid email').optional().describe('Revised contact email.'),
+  contactPhone: z.string().optional().describe('Revised contact phone number.'),
   oib: z
     .string()
     .max(ORGANIZATION_LIMITS.OIB_LENGTH)
@@ -160,10 +147,7 @@ export const getOrgBuildingsQuerySchema = z.object({
     .optional()
     .default(10)
     .describe('Maximum number of items to return per page. Defaults to 10.'),
-  search: z
-    .string()
-    .optional()
-    .describe('Substring matched against building name or address.'),
+  search: z.string().optional().describe('Substring matched against building name or address.'),
   sortBy: z
     .enum(['name', 'address', 'createdAt'])
     .optional()
@@ -190,10 +174,7 @@ export const getOrgMembersQuerySchema = z.object({
     .optional()
     .default(10)
     .describe('Maximum number of items to return per page. Defaults to 10.'),
-  search: z
-    .string()
-    .optional()
-    .describe('Substring matched against member name or email.'),
+  search: z.string().optional().describe('Substring matched against member name or email.'),
   sortBy: z
     .enum(['userName', 'orgRole', 'createdAt'])
     .optional()

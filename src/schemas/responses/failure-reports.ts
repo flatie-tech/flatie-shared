@@ -83,9 +83,7 @@ export const failureReportResponseSchema = z.looseObject({
     .describe('ISO-8601 timestamp of the last edit; null when never edited.'),
   canEdit: z.boolean().describe('True when the calling user is allowed to edit this report.'),
   canDelete: z.boolean().describe('True when the calling user is allowed to delete this report.'),
-  canApprove: z
-    .boolean()
-    .describe('True when the calling user may approve or reject the report.'),
+  canApprove: z.boolean().describe('True when the calling user may approve or reject the report.'),
   canStatus: z
     .boolean()
     .describe(

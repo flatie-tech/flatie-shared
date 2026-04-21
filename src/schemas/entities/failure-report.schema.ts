@@ -19,11 +19,9 @@ export const FAILURE_REPORT_LIMITS = {
  * optional title/description that default to the report title).
  */
 export const failureReportEventSchema = z.object({
-  startDate: z
-    .coerce.date()
-    .describe('Event start — accepts an ISO-8601 string or Date.'),
-  endDate: z
-    .coerce.date()
+  startDate: z.coerce.date().describe('Event start — accepts an ISO-8601 string or Date.'),
+  endDate: z.coerce
+    .date()
     .describe('Event end — accepts an ISO-8601 string or Date; must not precede `startDate`.'),
   title: z
     .string()
@@ -112,15 +110,11 @@ export const createFailureReportSchema = refineLocation(
       .string()
       .max(FAILURE_REPORT_LIMITS.COMMON_AREA_DESCRIPTION_MAX)
       .optional()
-      .describe(
-        'Free-text location description. Required when `locationType` is `common_area`.',
-      ),
+      .describe('Free-text location description. Required when `locationType` is `common_area`.'),
     unitType: z
       .enum([FailureUnitType.APARTMENT, FailureUnitType.GARAGE, FailureUnitType.STORAGE_UNIT])
       .optional()
-      .describe(
-        'Kind of unit when `locationType` is `own_unit`. Required in that case.',
-      ),
+      .describe('Kind of unit when `locationType` is `own_unit`. Required in that case.'),
     unitId: uuidSchema
       .optional()
       .describe('UUID of the specific unit. Required when `locationType` is `own_unit`.'),
@@ -129,7 +123,9 @@ export const createFailureReportSchema = refineLocation(
       .describe('UUIDs of previously-uploaded files to attach to this report.'),
     maintenanceLogIds: multipartArray(uuidSchema)
       .optional()
-      .describe('UUIDs of maintenance logs to associate with this report (e.g. related past work).'),
+      .describe(
+        'UUIDs of maintenance logs to associate with this report (e.g. related past work).',
+      ),
     events: multipartArray(failureReportEventSchema)
       .optional()
       .describe('Calendar events to create alongside the report (inspections, scheduled fixes).'),
@@ -189,7 +185,9 @@ export const updateFailureReportSchema = refineLocation(
       .describe('UUIDs of previously-attached files to detach from the report.'),
     maintenanceLogIds: multipartArray(uuidSchema)
       .optional()
-      .describe('Full list of maintenance-log UUIDs to associate with the report (replaces existing links).'),
+      .describe(
+        'Full list of maintenance-log UUIDs to associate with the report (replaces existing links).',
+      ),
     events: multipartArray(failureReportEventSchema)
       .optional()
       .describe('Full list of events for the report — replaces the existing event set.'),

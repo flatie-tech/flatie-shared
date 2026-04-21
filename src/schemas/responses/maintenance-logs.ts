@@ -7,9 +7,7 @@ const failureReportReferenceSchema = z
   .looseObject({
     id: z.string().uuid(),
     title: z.string().describe('Failure report title for quick UI display.'),
-    status: z
-      .string()
-      .describe('Report lifecycle status (`pending`, `inProgress`, `resolved`).'),
+    status: z.string().describe('Report lifecycle status (`pending`, `inProgress`, `resolved`).'),
     createdAt: z.string().describe('ISO-8601 timestamp when the failure report was filed.'),
   })
   .describe(
@@ -75,7 +73,9 @@ export const maintenanceLogResponseSchema = z.looseObject({
   failureReports: z
     .array(failureReportReferenceSchema)
     .optional()
-    .describe('Failure reports this log was produced to resolve; absent when the log is standalone.'),
+    .describe(
+      'Failure reports this log was produced to resolve; absent when the log is standalone.',
+    ),
 });
 
 export const paginatedMaintenanceLogsResponseSchema = paginatedResponseSchema(

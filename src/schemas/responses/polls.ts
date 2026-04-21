@@ -216,9 +216,7 @@ export const pollResultsSchema = z.looseObject({
   currentConsensusPercentage: z
     .number()
     .optional()
-    .describe(
-      'Current cumulative weight in favour, in percent. Only present for consensus polls.',
-    ),
+    .describe('Current cumulative weight in favour, in percent. Only present for consensus polls.'),
   approved: z
     .boolean()
     .describe('True when a representative has approved the poll for public visibility.'),
@@ -230,14 +228,14 @@ export const pollResultsSchema = z.looseObject({
     .describe(
       'True when the calling user is eligible to vote and has not yet voted (and the poll is still active).',
     ),
-  hasUserVoted: z
-    .boolean()
-    .describe('True when the calling user has already voted on this poll.'),
+  hasUserVoted: z.boolean().describe('True when the calling user has already voted on this poll.'),
   userVotedOptionIndex: z
     .number()
     .nullable()
     .optional()
-    .describe('Zero-based index of the option the calling user voted for; null when they have not voted.'),
+    .describe(
+      'Zero-based index of the option the calling user voted for; null when they have not voted.',
+    ),
   scopedUnits: z
     .array(pollScopedUnitSchema)
     .optional()

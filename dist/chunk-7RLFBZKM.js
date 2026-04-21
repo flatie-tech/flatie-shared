@@ -12,9 +12,7 @@ var apiErrorResponseSchema = apiErrorSchema.extend({
   code: z.enum(Object.values(BACKEND_ERROR_CODES)).optional().describe(
     "Canonical error code from `@flatie/shared/errors` (`BACKEND_ERROR_CODES`). Present when the backend raised a `DomainException`; absent for generic HTTP errors (network failures, unhandled exceptions, validation-pipe rejections)."
   )
-}).describe(
-  "Standard error envelope returned by the Flatie backend on 4xx and 5xx responses."
-);
+}).describe("Standard error envelope returned by the Flatie backend on 4xx and 5xx responses.");
 var emailSchema = z.string().email("Invalid email address");
 var passwordSchema = z.string().min(8, "Password must be at least 8 characters long").max(100, "Password must not exceed 100 characters");
 var strongPasswordSchema = passwordSchema.regex(/[A-Z]/, "Password must contain at least one uppercase letter").regex(/[a-z]/, "Password must contain at least one lowercase letter").regex(/[0-9]/, "Password must contain at least one number");
@@ -100,9 +98,7 @@ var dateRangeWithValidationSchema = z.object({
     path: ["fromDate"]
   }
 );
-var apartmentRoleSchema = z.enum([ApartmentRole.OWNER, ApartmentRole.TENANT]).describe(
-  "`OWNER` for the title-deed holder, `TENANT` for a resident renting from the owner."
-);
+var apartmentRoleSchema = z.enum([ApartmentRole.OWNER, ApartmentRole.TENANT]).describe("`OWNER` for the title-deed holder, `TENANT` for a resident renting from the owner.");
 var apartmentUserSchema = z.looseObject({
   id: z.string(),
   name: z.string().describe("Display name of the apartment member."),
@@ -127,9 +123,7 @@ var apartmentSchema = z.looseObject({
   surnameOnDoor: z.string().nullable().optional().describe(
     "Surname displayed on the apartment door, used for deliveries; null when not provided."
   ),
-  surnameOnIntercom: z.string().nullable().optional().describe(
-    "Surname listed on the building intercom; null when not provided."
-  ),
+  surnameOnIntercom: z.string().nullable().optional().describe("Surname listed on the building intercom; null when not provided."),
   createdAt: z.string(),
   updatedAt: z.string(),
   users: z.array(apartmentUserSchema).describe("Owners and tenants currently attached to the apartment."),
@@ -161,9 +155,7 @@ var sendMessageSchema = z.object({
   content: z.string().min(CHAT_LIMITS.MESSAGE_MIN, "Message is required").max(CHAT_LIMITS.MESSAGE_MAX, `Message must be at most ${CHAT_LIMITS.MESSAGE_MAX} characters`).describe("Plain-text message body, 1\u20135000 characters. Trimmed and stored verbatim.")
 });
 var createConversationSchema = z.object({
-  type: z.enum([ConversationType.DIRECT, ConversationType.GROUP]).describe(
-    "`direct` for a one-to-one thread, `group` for a named multi-user conversation."
-  ),
+  type: z.enum([ConversationType.DIRECT, ConversationType.GROUP]).describe("`direct` for a one-to-one thread, `group` for a named multi-user conversation."),
   participantIds: z.array(uuidSchema).min(CHAT_LIMITS.PARTICIPANTS_MIN, "At least one participant is required").max(CHAT_LIMITS.PARTICIPANTS_MAX, `Maximum ${CHAT_LIMITS.PARTICIPANTS_MAX} participants`).describe(
     "UUIDs of the other participants. The caller is added automatically; direct conversations must have exactly one other participant."
   ),
@@ -208,12 +200,7 @@ var ORGANIZATION_LIMITS = {
   NAME_MAX: 200,
   OIB_LENGTH: 11
 };
-var orgRoleSchema = z.enum([
-  OrgRole.ORG_ADMIN,
-  OrgRole.SUPERVISOR,
-  OrgRole.REFERENT,
-  OrgRole.OPERATIVE
-]).describe(
+var orgRoleSchema = z.enum([OrgRole.ORG_ADMIN, OrgRole.SUPERVISOR, OrgRole.REFERENT, OrgRole.OPERATIVE]).describe(
   "Organization role, from highest to lowest authority: `ORG_ADMIN` (manages the org), `SUPERVISOR` (oversees operations), `REFERENT` (day-to-day member interactions), `OPERATIVE` (field work)."
 );
 var createOrganizationSchema = z.object({
@@ -224,7 +211,9 @@ var createOrganizationSchema = z.object({
   type: z.enum([OrgType.MANAGEMENT_FIRM, OrgType.PLATFORM]).describe(
     "`MANAGEMENT_FIRM` for external building-management firms, `PLATFORM` for the Flatie platform organization itself."
   ),
-  oib: z.string().max(ORGANIZATION_LIMITS.OIB_LENGTH, `OIB must be ${ORGANIZATION_LIMITS.OIB_LENGTH} characters`).optional().describe("Croatian OIB (tax identification number), 11 digits. Required for firms but optional at creation."),
+  oib: z.string().max(ORGANIZATION_LIMITS.OIB_LENGTH, `OIB must be ${ORGANIZATION_LIMITS.OIB_LENGTH} characters`).optional().describe(
+    "Croatian OIB (tax identification number), 11 digits. Required for firms but optional at creation."
+  ),
   contactEmail: z.string().email("Invalid email").optional().describe("Public contact email for the organization."),
   contactPhone: z.string().optional().describe("Public contact phone number.")
 });
@@ -471,15 +460,13 @@ var createFailureReportSchema = refineLocation(
     locationType: z.enum([FailureLocationType.COMMON_AREA, FailureLocationType.OWN_UNIT]).optional().describe(
       "`common_area` for shared spaces (hallway, roof, etc.) or `own_unit` for a specific apartment/garage/storage unit."
     ),
-    commonAreaDescription: z.string().max(FAILURE_REPORT_LIMITS.COMMON_AREA_DESCRIPTION_MAX).optional().describe(
-      "Free-text location description. Required when `locationType` is `common_area`."
-    ),
-    unitType: z.enum([FailureUnitType.APARTMENT, FailureUnitType.GARAGE, FailureUnitType.STORAGE_UNIT]).optional().describe(
-      "Kind of unit when `locationType` is `own_unit`. Required in that case."
-    ),
+    commonAreaDescription: z.string().max(FAILURE_REPORT_LIMITS.COMMON_AREA_DESCRIPTION_MAX).optional().describe("Free-text location description. Required when `locationType` is `common_area`."),
+    unitType: z.enum([FailureUnitType.APARTMENT, FailureUnitType.GARAGE, FailureUnitType.STORAGE_UNIT]).optional().describe("Kind of unit when `locationType` is `own_unit`. Required in that case."),
     unitId: uuidSchema.optional().describe("UUID of the specific unit. Required when `locationType` is `own_unit`."),
     fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-uploaded files to attach to this report."),
-    maintenanceLogIds: multipartArray(uuidSchema).optional().describe("UUIDs of maintenance logs to associate with this report (e.g. related past work)."),
+    maintenanceLogIds: multipartArray(uuidSchema).optional().describe(
+      "UUIDs of maintenance logs to associate with this report (e.g. related past work)."
+    ),
     events: multipartArray(failureReportEventSchema).optional().describe("Calendar events to create alongside the report (inspections, scheduled fixes).")
   })
 );
@@ -497,16 +484,16 @@ var updateFailureReportSchema = refineLocation(
     unitId: uuidSchema.optional().describe("Revised unit UUID. Required when `locationType` is `own_unit`."),
     fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of newly-uploaded files to add to the report."),
     removeChildFileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-attached files to detach from the report."),
-    maintenanceLogIds: multipartArray(uuidSchema).optional().describe("Full list of maintenance-log UUIDs to associate with the report (replaces existing links)."),
+    maintenanceLogIds: multipartArray(uuidSchema).optional().describe(
+      "Full list of maintenance-log UUIDs to associate with the report (replaces existing links)."
+    ),
     events: multipartArray(failureReportEventSchema).optional().describe("Full list of events for the report \u2014 replaces the existing event set.")
   })
 );
 var approveFailureReportSchema = z.object({
   approved: z.boolean().describe("True to approve the report for public visibility, false to reject.")
 });
-var garageRoleSchema = z.enum(["OWNER", "TENANT"]).describe(
-  "`OWNER` for the title-deed holder, `TENANT` for a resident renting from the owner."
-);
+var garageRoleSchema = z.enum(["OWNER", "TENANT"]).describe("`OWNER` for the title-deed holder, `TENANT` for a resident renting from the owner.");
 var garageUserSchema = z.looseObject({
   id: z.string(),
   name: z.string().describe("Display name of the garage member."),
@@ -573,13 +560,14 @@ var createMaintenanceLogSchema = z.object({
   ),
   financedBy: maintenanceFinancedBySchema.optional().describe("Funding source; omit when unknown at the time of logging."),
   warranty: multipartBoolean().optional().describe("True when the work is covered by an active warranty."),
-  events: multipartArray(maintenanceLogEventSchema).refine(
-    (events) => events.length >= MAINTENANCE_LOG_LIMITS.EVENTS_MIN,
-    { message: "At least one event is required" }
-  ).describe("Calendar events associated with the work; at least one is required on create."),
+  events: multipartArray(maintenanceLogEventSchema).refine((events) => events.length >= MAINTENANCE_LOG_LIMITS.EVENTS_MIN, {
+    message: "At least one event is required"
+  }).describe("Calendar events associated with the work; at least one is required on create."),
   fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-uploaded files (invoices, photos) to attach."),
   pollId: uuidSchema.optional().describe("UUID of a single poll to associate with this log. Legacy field \u2014 prefer `pollIds`."),
-  pollIds: multipartArray(uuidSchema).optional().describe("UUIDs of polls to associate with this log (e.g. the vote that authorised the work).")
+  pollIds: multipartArray(uuidSchema).optional().describe(
+    "UUIDs of polls to associate with this log (e.g. the vote that authorised the work)."
+  )
 });
 var updateMaintenanceLogSchema = z.object({
   title: z.string().min(MAINTENANCE_LOG_LIMITS.TITLE_MIN).max(MAINTENANCE_LOG_LIMITS.TITLE_MAX).optional().describe("Revised title, 1\u2013100 chars."),
@@ -738,9 +726,7 @@ var finalizePollSchema = z.object({
     "True to seal the poll and freeze its results; false is accepted as a no-op for legacy compatibility."
   )
 });
-var storageUnitRoleSchema = z.enum(["OWNER", "TENANT"]).describe(
-  "`OWNER` for the title-deed holder, `TENANT` for a resident renting from the owner."
-);
+var storageUnitRoleSchema = z.enum(["OWNER", "TENANT"]).describe("`OWNER` for the title-deed holder, `TENANT` for a resident renting from the owner.");
 var storageUnitUserSchema = z.looseObject({
   id: z.string(),
   name: z.string().describe("Display name of the storage-unit member."),
@@ -784,7 +770,9 @@ var updateTransactionCategorySchema = z.object({
   name: z.string().min(TRANSACTION_CATEGORY_LIMITS.NAME_MIN).max(TRANSACTION_CATEGORY_LIMITS.NAME_MAX).optional().describe("Revised category name, 1\u2013100 chars.")
 });
 var getTransactionCategoriesQuerySchema = z.object({
-  type: z.enum([TransactionType.INCOME, TransactionType.EXPENSE]).optional().describe("Filter results by category type. Omit to return both income and expense categories."),
+  type: z.enum([TransactionType.INCOME, TransactionType.EXPENSE]).optional().describe(
+    "Filter results by category type. Omit to return both income and expense categories."
+  ),
   search: z.string().max(TRANSACTION_CATEGORY_LIMITS.SEARCH_MAX).optional().describe("Case-insensitive substring matched against the category name.")
 });
 var copyTransactionCategoriesSchema = z.object({
@@ -856,9 +844,7 @@ var buildingRepresentativeSchema = z.looseObject({
   name: z.string().describe("Representative display name."),
   email: z.string().describe("Representative contact email."),
   phone: z.string().optional().nullable().describe("Contact phone in E.164 format, or null when the representative has not set one.")
-}).describe(
-  "Building representative (owner or deputy) nested inside building detail responses."
-);
+}).describe("Building representative (owner or deputy) nested inside building detail responses.");
 var buildingFundsSchema = z.looseObject({
   currentBalance: z.string().describe(
     'Current building-fund balance, serialized as a decimal string (e.g. "27820.54") to preserve precision from the numeric column.'
@@ -900,8 +886,12 @@ var buildingDetailResponseSchema = z.looseObject({
   houseRulesFileUrl: z.string().nullable().optional().describe("Absolute URL to the uploaded house-rules PDF, or null when none has been uploaded."),
   numberOfFloors: z.number().nullable().optional().describe("Floor count above ground, or null when the information is not set."),
   description: z.string().nullable().optional().describe("Free-form description shown on the building page; null when not provided."),
-  latitude: z.number().nullable().optional().describe("Geographic latitude in decimal degrees (WGS 84); null when geocoding not performed."),
-  longitude: z.number().nullable().optional().describe("Geographic longitude in decimal degrees (WGS 84); null when geocoding not performed."),
+  latitude: z.number().nullable().optional().describe(
+    "Geographic latitude in decimal degrees (WGS 84); null when geocoding not performed."
+  ),
+  longitude: z.number().nullable().optional().describe(
+    "Geographic longitude in decimal degrees (WGS 84); null when geocoding not performed."
+  ),
   createdBy: z.string().describe("UUID of the user who registered the building."),
   createdAt: z.string().describe("ISO-8601 timestamp when the building record was created."),
   updatedAt: z.string().nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited."),
@@ -979,7 +969,9 @@ var eventResponseSchema = z.looseObject({
   meetingMinutes: z.string().nullable().optional().describe(
     "Rich-text minutes captured during the meeting; null until the minute-taker submits them."
   ),
-  minuteTakerId: z.string().nullable().optional().describe("UUID of the user assigned to record minutes; null for events that do not require one."),
+  minuteTakerId: z.string().nullable().optional().describe(
+    "UUID of the user assigned to record minutes; null for events that do not require one."
+  ),
   usedAsScheduleBy: z.array(entityScheduleReferenceSchema).optional().describe(
     "Entities (failure reports, maintenance logs, notices) that reference this event as their schedule; empty when none do."
   )
@@ -1136,7 +1128,9 @@ var maintenanceLogResponseSchema = z.looseObject({
   canEdit: z.boolean().describe("True when the calling user may edit this log."),
   canDelete: z.boolean().describe("True when the calling user may delete this log."),
   polls: z.array(pollReferenceSchema).default([]).describe("Polls linked to this log (e.g. consensus to authorise the expense); empty if none."),
-  failureReports: z.array(failureReportReferenceSchema).optional().describe("Failure reports this log was produced to resolve; absent when the log is standalone.")
+  failureReports: z.array(failureReportReferenceSchema).optional().describe(
+    "Failure reports this log was produced to resolve; absent when the log is standalone."
+  )
 });
 var paginatedMaintenanceLogsResponseSchema = paginatedResponseSchema(
   maintenanceLogResponseSchema
@@ -1324,8 +1318,12 @@ var notificationResponseSchema = z.looseObject({
   type: z.enum(notificationTypeValues).describe(
     "Discriminator for the notification subtype. Determines which per-type schema governs `data` \u2014 see `getNotificationDataSchema(type)`."
   ),
-  buildingId: z.string().uuid().nullable().optional().describe("UUID of the related building. Null for cross-building notifications (system announcements, chat DMs)."),
-  buildingName: z.string().nullable().optional().describe("Denormalized building display name for convenience. Null when `buildingId` is null."),
+  buildingId: z.string().uuid().nullable().optional().describe(
+    "UUID of the related building. Null for cross-building notifications (system announcements, chat DMs)."
+  ),
+  buildingName: z.string().nullable().optional().describe(
+    "Denormalized building display name for convenience. Null when `buildingId` is null."
+  ),
   data: notificationDataSchema.nullable().optional().describe(
     "Per-type payload. Shape depends on the `type` field; use `getNotificationDataSchema(type).parse(data)` to narrow."
   ),
@@ -1341,7 +1339,9 @@ var notificationPreferenceItemSchema = z.looseObject({
 });
 var notificationPreferenceCategorySchema = z.looseObject({
   category: z.string().describe("Category grouping (e.g. `building`, `financial`, `social`)."),
-  notifications: z.array(notificationPreferenceItemSchema).describe("Items belonging to this category; each represents one toggleable notification type.")
+  notifications: z.array(notificationPreferenceItemSchema).describe(
+    "Items belonging to this category; each represents one toggleable notification type."
+  )
 });
 var pollStatusSchema = z.enum(["active", "completed", "cancelled"]).describe(
   "Poll lifecycle: `active` while accepting votes, `completed` once finalised, `cancelled` when archived before completion."
@@ -1441,9 +1441,7 @@ var pollResultsSchema = z.looseObject({
   consensusReached: z.boolean().optional().describe(
     "True when the ownership-weighted approval threshold has been reached. Only present for consensus polls."
   ),
-  currentConsensusPercentage: z.number().optional().describe(
-    "Current cumulative weight in favour, in percent. Only present for consensus polls."
-  ),
+  currentConsensusPercentage: z.number().optional().describe("Current cumulative weight in favour, in percent. Only present for consensus polls."),
   approved: z.boolean().describe("True when a representative has approved the poll for public visibility."),
   canApprove: z.boolean().describe("True when the calling user may approve or reject the poll."),
   canEdit: z.boolean().describe("True when the calling user may edit this poll."),
@@ -1452,7 +1450,9 @@ var pollResultsSchema = z.looseObject({
     "True when the calling user is eligible to vote and has not yet voted (and the poll is still active)."
   ),
   hasUserVoted: z.boolean().describe("True when the calling user has already voted on this poll."),
-  userVotedOptionIndex: z.number().nullable().optional().describe("Zero-based index of the option the calling user voted for; null when they have not voted."),
+  userVotedOptionIndex: z.number().nullable().optional().describe(
+    "Zero-based index of the option the calling user voted for; null when they have not voted."
+  ),
   scopedUnits: z.array(pollScopedUnitSchema).optional().describe("Units scoped into eligibility; absent when the poll is building-wide."),
   eligibleTotalWeight: z.number().optional().describe(
     "Cached sum of eligible voters\u2019 ownership percentages captured at poll creation. Used to normalise `totalWeight` against the full eligible weight."
@@ -1482,5 +1482,5 @@ var pollVotersResponseSchema = z.looseObject({
 var paginatedPollsResponseSchema = paginatedResponseSchema(pollResponseSchema);
 
 export { ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, baseEntitySchema, buildingDetailResponseSchema, buildingEntitySchema, buildingResponseSchema, buildingTypeSchema, buildingUserEntitySchema, commentResponseSchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-BLCSWZOS.js.map
-//# sourceMappingURL=chunk-BLCSWZOS.js.map
+//# sourceMappingURL=chunk-7RLFBZKM.js.map
+//# sourceMappingURL=chunk-7RLFBZKM.js.map

@@ -226,7 +226,9 @@ const notificationTypeValues = Object.values(NotificationType) as [
 
 export const notificationResponseSchema = z.looseObject({
   id: z.string().uuid(),
-  title: z.string().describe('Localized notification title shown in the UI list and push notification.'),
+  title: z
+    .string()
+    .describe('Localized notification title shown in the UI list and push notification.'),
   body: z.string().describe('Localized notification body — one or two short sentences.'),
   type: z
     .enum(notificationTypeValues)
@@ -238,12 +240,16 @@ export const notificationResponseSchema = z.looseObject({
     .uuid()
     .nullable()
     .optional()
-    .describe('UUID of the related building. Null for cross-building notifications (system announcements, chat DMs).'),
+    .describe(
+      'UUID of the related building. Null for cross-building notifications (system announcements, chat DMs).',
+    ),
   buildingName: z
     .string()
     .nullable()
     .optional()
-    .describe('Denormalized building display name for convenience. Null when `buildingId` is null.'),
+    .describe(
+      'Denormalized building display name for convenience. Null when `buildingId` is null.',
+    ),
   data: notificationDataSchema
     .nullable()
     .optional()
@@ -274,7 +280,9 @@ export const notificationPreferenceCategorySchema = z.looseObject({
   category: z.string().describe('Category grouping (e.g. `building`, `financial`, `social`).'),
   notifications: z
     .array(notificationPreferenceItemSchema)
-    .describe('Items belonging to this category; each represents one toggleable notification type.'),
+    .describe(
+      'Items belonging to this category; each represents one toggleable notification type.',
+    ),
 });
 
 /**

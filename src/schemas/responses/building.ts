@@ -27,9 +27,7 @@ const buildingRepresentativeSchema = z
       .nullable()
       .describe('Contact phone in E.164 format, or null when the representative has not set one.'),
   })
-  .describe(
-    'Building representative (owner or deputy) nested inside building detail responses.',
-  );
+  .describe('Building representative (owner or deputy) nested inside building detail responses.');
 
 const buildingFundsSchema = z
   .looseObject({
@@ -134,12 +132,16 @@ export const buildingDetailResponseSchema = z.looseObject({
     .number()
     .nullable()
     .optional()
-    .describe('Geographic latitude in decimal degrees (WGS 84); null when geocoding not performed.'),
+    .describe(
+      'Geographic latitude in decimal degrees (WGS 84); null when geocoding not performed.',
+    ),
   longitude: z
     .number()
     .nullable()
     .optional()
-    .describe('Geographic longitude in decimal degrees (WGS 84); null when geocoding not performed.'),
+    .describe(
+      'Geographic longitude in decimal degrees (WGS 84); null when geocoding not performed.',
+    ),
   createdBy: z.string().describe('UUID of the user who registered the building.'),
   createdAt: z.string().describe('ISO-8601 timestamp when the building record was created.'),
   updatedAt: z

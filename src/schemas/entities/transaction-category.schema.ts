@@ -49,7 +49,9 @@ export const getTransactionCategoriesQuerySchema = z.object({
   type: z
     .enum([TransactionType.INCOME, TransactionType.EXPENSE])
     .optional()
-    .describe('Filter results by category type. Omit to return both income and expense categories.'),
+    .describe(
+      'Filter results by category type. Omit to return both income and expense categories.',
+    ),
   search: z
     .string()
     .max(TRANSACTION_CATEGORY_LIMITS.SEARCH_MAX)

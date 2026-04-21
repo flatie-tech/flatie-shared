@@ -3,9 +3,7 @@ import { ApartmentRole } from '../../enums/apartment-role.enum';
 
 export const apartmentRoleSchema = z
   .enum([ApartmentRole.OWNER, ApartmentRole.TENANT])
-  .describe(
-    '`OWNER` for the title-deed holder, `TENANT` for a resident renting from the owner.',
-  );
+  .describe('`OWNER` for the title-deed holder, `TENANT` for a resident renting from the owner.');
 
 export const apartmentUserSchema = z.looseObject({
   id: z.string(),
@@ -19,9 +17,7 @@ export const apartmentUserSchema = z.looseObject({
   roleType: apartmentRoleSchema.describe(
     'Relationship of this user to the apartment (`OWNER` or `TENANT`).',
   ),
-  joinedAt: z
-    .string()
-    .describe('ISO-8601 timestamp when the user was attached to the apartment.'),
+  joinedAt: z.string().describe('ISO-8601 timestamp when the user was attached to the apartment.'),
   ownershipPercentage: z
     .number()
     .nullable()
@@ -61,28 +57,20 @@ export const apartmentSchema = z.looseObject({
     .string()
     .nullable()
     .optional()
-    .describe(
-      'Surname listed on the building intercom; null when not provided.',
-    ),
+    .describe('Surname listed on the building intercom; null when not provided.'),
   createdAt: z.string(),
   updatedAt: z.string(),
   users: z
     .array(apartmentUserSchema)
     .describe('Owners and tenants currently attached to the apartment.'),
   userCount: z.number().describe('Total number of users linked to this apartment.'),
-  canEdit: z
-    .boolean()
-    .describe('True when the calling user may edit this apartment’s metadata.'),
-  canDelete: z
-    .boolean()
-    .describe('True when the calling user may delete this apartment.'),
+  canEdit: z.boolean().describe('True when the calling user may edit this apartment’s metadata.'),
+  canDelete: z.boolean().describe('True when the calling user may delete this apartment.'),
 });
 export type Apartment = z.infer<typeof apartmentSchema>;
 
 export const paginatedApartmentsResponseSchema = z.looseObject({
-  data: z
-    .array(apartmentSchema)
-    .describe('Apartments on the current page, ordered as requested.'),
+  data: z.array(apartmentSchema).describe('Apartments on the current page, ordered as requested.'),
   count: z
     .number()
     .optional()
