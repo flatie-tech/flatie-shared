@@ -49,6 +49,24 @@ function calculatePaginationMeta(total, offset, limit) {
   };
 }
 
+// src/utils/parse.ts
+var ParseError = class extends Error {
+  code = "RESPONSE_CONTRACT_DRIFT";
+  issues;
+  constructor(message, zodError) {
+    super(message, { cause: zodError });
+    this.name = "ParseError";
+    this.issues = zodError.issues;
+  }
+};
+var parseData = (schema, data, errorMessage = "Response failed schema validation") => {
+  const result = schema.safeParse(data);
+  if (!result.success) {
+    throw new ParseError(errorMessage, result.error);
+  }
+  return result.data;
+};
+
 // src/utils/permission-evaluator.ts
 function canDo(ctx, permission) {
   if (ctx.kind === "admin") return true;
@@ -206,6 +224,7 @@ function debounce(func, delay) {
 }
 
 exports.MANAGERIAL_BUILDING_ROLES = MANAGERIAL_BUILDING_ROLES;
+exports.ParseError = ParseError;
 exports.ROLE_DESCRIPTION_KEYS = ROLE_DESCRIPTION_KEYS;
 exports.ROLE_TRANSLATION_KEYS = ROLE_TRANSLATION_KEYS;
 exports.calculatePaginationMeta = calculatePaginationMeta;
@@ -225,6 +244,7 @@ exports.hasPermission = hasPermission;
 exports.isAdminContext = isAdminContext;
 exports.isManagerialRole = isManagerialRole;
 exports.normalizePaginatedResponse = normalizePaginatedResponse;
+exports.parseData = parseData;
 exports.priorityVariant = priorityVariant;
-//# sourceMappingURL=chunk-4V4EV2A7.cjs.map
-//# sourceMappingURL=chunk-4V4EV2A7.cjs.map
+//# sourceMappingURL=chunk-IZCL2KGL.cjs.map
+//# sourceMappingURL=chunk-IZCL2KGL.cjs.map

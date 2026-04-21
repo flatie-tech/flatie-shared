@@ -47,6 +47,24 @@ function calculatePaginationMeta(total, offset, limit) {
   };
 }
 
+// src/utils/parse.ts
+var ParseError = class extends Error {
+  code = "RESPONSE_CONTRACT_DRIFT";
+  issues;
+  constructor(message, zodError) {
+    super(message, { cause: zodError });
+    this.name = "ParseError";
+    this.issues = zodError.issues;
+  }
+};
+var parseData = (schema, data, errorMessage = "Response failed schema validation") => {
+  const result = schema.safeParse(data);
+  if (!result.success) {
+    throw new ParseError(errorMessage, result.error);
+  }
+  return result.data;
+};
+
 // src/utils/permission-evaluator.ts
 function canDo(ctx, permission) {
   if (ctx.kind === "admin") return true;
@@ -203,6 +221,6 @@ function debounce(func, delay) {
   };
 }
 
-export { MANAGERIAL_BUILDING_ROLES, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatText, getContextUserId, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isAdminContext, isManagerialRole, normalizePaginatedResponse, priorityVariant };
-//# sourceMappingURL=chunk-5HNVZNT6.js.map
-//# sourceMappingURL=chunk-5HNVZNT6.js.map
+export { MANAGERIAL_BUILDING_ROLES, ParseError, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatText, getContextUserId, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isAdminContext, isManagerialRole, normalizePaginatedResponse, parseData, priorityVariant };
+//# sourceMappingURL=chunk-EQKPQ2NZ.js.map
+//# sourceMappingURL=chunk-EQKPQ2NZ.js.map
