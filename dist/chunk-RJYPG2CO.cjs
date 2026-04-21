@@ -871,7 +871,7 @@ var archivedItemSchema = zod.z.looseObject({
     "Remaining days before the automated 30-day purge removes the row; 0 means the TTL has elapsed."
   )
 });
-zod.z.object({
+var listArchivedResponseSchema = zod.z.object({
   items: zod.z.array(archivedItemSchema).describe("Archived rows across all registered archive types, sorted by archivedAt desc.")
 });
 var buildingStatusSchema = zod.z.enum(Object.values(chunk5UBJHQVX_cjs.BuildingStatus)).describe(
@@ -1523,6 +1523,7 @@ var pollVotersResponseSchema = zod.z.looseObject({
 });
 var paginatedPollsResponseSchema = paginatedResponseSchema(pollResponseSchema);
 
+exports.ARCHIVE_TYPES = ARCHIVE_TYPES;
 exports.ApprovalStatusSchema = ApprovalStatusSchema;
 exports.BUILDING_LIMITS = BUILDING_LIMITS;
 exports.BUILDING_TYPES = BUILDING_TYPES;
@@ -1552,6 +1553,8 @@ exports.apiErrorSchema = apiErrorSchema;
 exports.approvalStatusOptions = approvalStatusOptions;
 exports.approveFailureReportSchema = approveFailureReportSchema;
 exports.approveNoticeSchema = approveNoticeSchema;
+exports.archiveTypeSchema = archiveTypeSchema;
+exports.archivedItemSchema = archivedItemSchema;
 exports.assignOrgBuildingSchema = assignOrgBuildingSchema;
 exports.assignOrgMemberBuildingSchema = assignOrgMemberBuildingSchema;
 exports.baseEntitySchema = baseEntitySchema;
@@ -1596,6 +1599,7 @@ exports.getOrgMembersQuerySchema = getOrgMembersQuerySchema;
 exports.getTransactionCategoriesQuerySchema = getTransactionCategoriesQuerySchema;
 exports.inviteOrgMemberSchema = inviteOrgMemberSchema;
 exports.joinBuildingWithOtpSchema = joinBuildingWithOtpSchema;
+exports.listArchivedResponseSchema = listArchivedResponseSchema;
 exports.loginSchema = loginSchema;
 exports.maintenanceFinancedBySchema = maintenanceFinancedBySchema;
 exports.maintenanceLogEventSchema = maintenanceLogEventSchema;
@@ -1659,5 +1663,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-BHXVDANG.cjs.map
-//# sourceMappingURL=chunk-BHXVDANG.cjs.map
+//# sourceMappingURL=chunk-RJYPG2CO.cjs.map
+//# sourceMappingURL=chunk-RJYPG2CO.cjs.map

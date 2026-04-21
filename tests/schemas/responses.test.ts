@@ -557,4 +557,12 @@ describe('Archive response schemas', () => {
     const payload = { items: [] };
     expect(listArchivedResponseSchema.parse(payload).items).toEqual([]);
   });
+
+  it('surfaces archive exports at the top-level @flatie/shared barrel', async () => {
+    const top = await import('../../src/index');
+    expect(top.ARCHIVE_TYPES).toBeDefined();
+    expect(top.archivedItemSchema).toBeDefined();
+    expect(top.archiveTypeSchema).toBeDefined();
+    expect(top.listArchivedResponseSchema).toBeDefined();
+  });
 });

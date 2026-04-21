@@ -77,12 +77,15 @@ export {
 
 // Response schemas
 export type {
+  ArchivedItem,
+  ArchiveType,
   BuildingDetailResponse,
   BuildingResponse,
   CommentResponse,
   EventResponse,
   FailureReportResponse,
   FaqResponse,
+  ListArchivedResponse,
   MaintenanceLogResponse,
   MessageResponse,
   NoticeResponse,
@@ -100,12 +103,16 @@ export type {
   PollVotersResponse,
 } from './responses';
 export {
+  ARCHIVE_TYPES,
+  archivedItemSchema,
+  archiveTypeSchema,
   buildingDetailResponseSchema,
   buildingResponseSchema,
   commentResponseSchema,
   eventResponseSchema,
   failureReportResponseSchema,
   faqResponseSchema,
+  listArchivedResponseSchema,
   maintenanceLogResponseSchema,
   messageResponseSchema,
   noticeResponseSchema,

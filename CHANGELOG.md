@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.24.1
+
+### Patch Changes
+
+- Surface archive schema exports at the top-level barrel. `ARCHIVE_TYPES`, `archiveTypeSchema`, `archivedItemSchema`, and `listArchivedResponseSchema` were added to `src/schemas/responses/` in v0.24.0 but missing from `src/schemas/index.ts`, so consumers importing from `@flatie/shared` saw them as `undefined`.
+
 ## 0.24.0
 
 ### Minor Changes
