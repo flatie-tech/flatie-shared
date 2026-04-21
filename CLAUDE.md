@@ -9,7 +9,9 @@ Look here before re-deriving from code:
 | For... | Read |
 |--------|------|
 | Naming, `looseObject` vs `object`, subpath exports, what belongs in shared, response schema pattern, error codes & `DomainException`, API_ROUTES contract, versioning, tests | [`docs/conventions.md`](docs/conventions.md) |
+| Field-level `.describe()` on schemas, how it surfaces in OpenAPI, `.meta({ id })` pattern, coverage test | [`docs/schema-conventions.md`](docs/schema-conventions.md) |
 | Mobile (React Native) consumer setup | [`docs/mobile-migration-guide.md`](docs/mobile-migration-guide.md) |
+| Semver policy, coordinated consumer bumps, rollback | [`docs/versioning.md`](docs/versioning.md) |
 
 ## Tech Stack
 
