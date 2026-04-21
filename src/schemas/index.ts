@@ -3,6 +3,10 @@
 // API error envelope
 export type { ApiError } from './api-error.schema';
 export { apiErrorSchema } from './api-error.schema';
+// Typed error envelope — apiErrorSchema + optional `code` from BACKEND_ERROR_CODES.
+// Referenced by the backend's @ApiTypedErrorResponse decorator as `ApiErrorResponse`.
+export type { ApiErrorResponse } from './api-error-response.schema';
+export { apiErrorResponseSchema } from './api-error-response.schema';
 export type {
   ForgotPasswordSchema,
   LoginSchema,

@@ -60,7 +60,12 @@ export const buildingResponseSchema = z.looseObject({
   type: buildingTypeSchema.describe(
     'Usage type: `RESIDENTIAL`, `COMMERCIAL`, or `RESIDENTIAL_COMMERCIAL`.',
   ),
-  status: buildingStatusSchema.optional(),
+  status: buildingStatusSchema
+    .optional()
+    .describe(
+      'Platform onboarding status (`pending`, `active`, `rejected`). Optional on list ' +
+        'responses where all buildings returned are known-active.',
+    ),
   totalUnits: z
     .number()
     .describe('Declared number of individual units (apartments, garages, storage units).'),
