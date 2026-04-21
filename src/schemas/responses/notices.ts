@@ -4,21 +4,53 @@ import { nestedEventSchema, nestedFileSchema } from './_nested';
 
 export const noticeResponseSchema = z.looseObject({
   id: z.string().uuid(),
-  buildingId: z.string().uuid(),
-  title: z.string(),
-  content: z.string(),
-  files: z.array(nestedFileSchema).default([]),
-  createdBy: z.string().uuid().nullable(),
-  approved: z.boolean(),
-  isAnonymous: z.boolean().optional().default(false),
-  pinned: z.boolean().optional().default(false),
-  createdAt: z.string(),
-  updatedAt: z.string().nullable().optional(),
-  createdByName: z.string().nullable().optional(),
-  canApprove: z.boolean(),
-  canEdit: z.boolean(),
-  canDelete: z.boolean(),
-  events: z.array(nestedEventSchema).default([]),
+  buildingId: z.string().uuid().describe('UUID of the building this notice was posted in.'),
+  title: z.string().describe('Notice title shown in lists and the notice detail view.'),
+  content: z.string().describe('Notice body text (rich-text / HTML allowed).'),
+  files: z
+    .array(nestedFileSchema)
+    .default([])
+    .describe('Attached documents or images; empty array when none are uploaded.'),
+  createdBy: z
+    .string()
+    .uuid()
+    .nullable()
+    .describe('UUID of the notice author; null when the authoring user has been deleted.'),
+  approved: z
+    .boolean()
+    .describe('True once a representative has approved the notice for public visibility.'),
+  isAnonymous: z
+    .boolean()
+    .optional()
+    .default(false)
+    .describe('True when the author opted to hide their identity from other residents.'),
+  pinned: z
+    .boolean()
+    .optional()
+    .default(false)
+    .describe('True when the notice is pinned to the top of the notice board.'),
+  createdAt: z.string().describe('ISO-8601 timestamp when the notice was created.'),
+  updatedAt: z
+    .string()
+    .nullable()
+    .optional()
+    .describe('ISO-8601 timestamp of the last edit; null when never edited.'),
+  createdByName: z
+    .string()
+    .nullable()
+    .optional()
+    .describe(
+      'Author display name. Null when `isAnonymous` is true or the author has been deleted.',
+    ),
+  canApprove: z
+    .boolean()
+    .describe('True when the calling user may approve or reject the notice.'),
+  canEdit: z.boolean().describe('True when the calling user may edit the notice.'),
+  canDelete: z.boolean().describe('True when the calling user may delete the notice.'),
+  events: z
+    .array(nestedEventSchema)
+    .default([])
+    .describe('Calendar events linked to the notice (e.g. planned works window); empty when none.'),
 });
 
 export const paginatedNoticesResponseSchema = paginatedResponseSchema(noticeResponseSchema);

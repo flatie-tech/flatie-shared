@@ -2,38 +2,67 @@ import { z } from 'zod';
 import { pollTypeSchema } from '../entities/poll.schema';
 import { paginatedResponseSchema } from '../pagination.schema';
 
-const pollStatusSchema = z.enum(['active', 'completed', 'cancelled']);
+const pollStatusSchema = z
+  .enum(['active', 'completed', 'cancelled'])
+  .describe(
+    'Poll lifecycle: `active` while accepting votes, `completed` once finalised, `cancelled` when archived before completion.',
+  );
 
-const pollDocumentReferenceSchema = z.looseObject({
-  id: z.string().uuid(),
-  title: z.string(),
-  description: z.string().nullable().optional(),
-  documentUrl: z.string(),
-  fileType: z.enum(['image', 'document']),
-  uploadedBy: z.string(),
-  createdAt: z.string(),
-  updatedAt: z.string().nullable().optional(),
-});
+const pollDocumentReferenceSchema = z
+  .looseObject({
+    id: z.string().uuid(),
+    title: z.string().describe('Document title displayed in the file list.'),
+    description: z
+      .string()
+      .nullable()
+      .optional()
+      .describe('Optional short description; null when none was provided.'),
+    documentUrl: z.string().describe('Absolute URL to download or preview the file.'),
+    fileType: z
+      .enum(['image', 'document'])
+      .describe('Coarse file category used to pick the viewer (image preview vs document reader).'),
+    uploadedBy: z
+      .string()
+      .describe('Display name or UUID of the uploader, depending on the endpoint.'),
+    createdAt: z.string().describe('ISO-8601 timestamp when the file was attached to the poll.'),
+    updatedAt: z
+      .string()
+      .nullable()
+      .optional()
+      .describe('ISO-8601 timestamp of the last file update; null when never updated.'),
+  })
+  .describe('Supporting document attached to a poll (proposal, receipt, spec, etc.).');
 
-const pollMaintenanceLogReferenceSchema = z.looseObject({
-  id: z.string().uuid(),
-  title: z.string(),
-  contractor: z.string(),
-  cost: z.number(),
-  createdAt: z.string(),
-});
+const pollMaintenanceLogReferenceSchema = z
+  .looseObject({
+    id: z.string().uuid(),
+    title: z.string().describe('Linked maintenance-log title.'),
+    contractor: z.string().describe('Contractor who performed the underlying work.'),
+    cost: z.number().describe('Total cost of the underlying work.'),
+    createdAt: z.string().describe('ISO-8601 timestamp when the maintenance log was created.'),
+  })
+  .describe('Maintenance log linked to this poll (e.g. a quote being voted on).');
 
-const pollScopedUnitSchema = z.looseObject({
-  unitType: z.string(),
-  unitId: z.string(),
-  label: z.string(),
-  floor: z.string().optional(),
-});
+const pollScopedUnitSchema = z
+  .looseObject({
+    unitType: z
+      .string()
+      .describe('Kind of unit eligible to vote (`apartment`, `garage`, `storage_unit`).'),
+    unitId: z.string().describe('UUID of the scoped unit.'),
+    label: z.string().describe('Human-readable unit label (e.g. "Apartment 4B").'),
+    floor: z
+      .string()
+      .optional()
+      .describe('Floor label where the unit is located; absent when not recorded.'),
+  })
+  .describe('Unit whose owners/tenants are eligible to participate in a scoped poll.');
 
-const pollScopedUserSchema = z.looseObject({
-  userId: z.string(),
-  name: z.string(),
-});
+const pollScopedUserSchema = z
+  .looseObject({
+    userId: z.string().describe('UUID of the explicitly-eligible user.'),
+    name: z.string().describe('Display name of the scoped user.'),
+  })
+  .describe('User explicitly added to the poll’s eligible-voter list.');
 
 /**
  * Per-user poll response — shape returned from poll list / detail
@@ -42,35 +71,92 @@ const pollScopedUserSchema = z.looseObject({
  */
 export const pollResponseSchema = z.looseObject({
   id: z.string().uuid(),
-  buildingId: z.string().uuid(),
-  question: z.string(),
-  options: z.array(z.string()),
-  createdBy: z.string(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-  deadline: z.string().optional(),
-  pollType: pollTypeSchema,
+  buildingId: z.string().uuid().describe('UUID of the building this poll belongs to.'),
+  question: z.string().describe('Poll question displayed to voters.'),
+  options: z
+    .array(z.string())
+    .describe(
+      'Answer options in display order. Community polls: 2–4 options. Consensus polls: always a single option (voters approve or abstain).',
+    ),
+  createdBy: z
+    .string()
+    .describe('UUID of the user who created the poll; preserved even after user deletion.'),
+  createdAt: z.string().describe('ISO-8601 timestamp when the poll was created.'),
+  updatedAt: z.string().describe('ISO-8601 timestamp of the last poll mutation.'),
+  deadline: z
+    .string()
+    .optional()
+    .describe(
+      'ISO-8601 datetime after which votes are rejected. Absent for open-ended consensus polls.',
+    ),
+  pollType: pollTypeSchema.describe(
+    '`COMMUNITY` polls pass by simple majority; `CONSENSUS` polls require an ownership-weighted threshold.',
+  ),
   status: pollStatusSchema,
-  requiredConsensusPercentage: z.number().optional(),
-  totalVotes: z.number(),
-  totalWeight: z.number(),
-  winningOptionIndex: z.number().nullable().optional(),
-  isResultsFinalized: z.boolean(),
-  finalizedAt: z.string().nullable().optional(),
-  finalizedBy: z.string().nullable().optional(),
-  hasVoted: z.boolean().optional(),
-  userVote: z.number().optional(),
-  files: z.array(pollDocumentReferenceSchema).optional(),
+  requiredConsensusPercentage: z
+    .number()
+    .optional()
+    .describe(
+      'Ownership-weighted approval threshold (10–100) required for consensus polls; absent for community polls.',
+    ),
+  totalVotes: z.number().describe('Number of distinct voters who have voted so far.'),
+  totalWeight: z
+    .number()
+    .describe(
+      'Sum of vote weights cast so far. Equal to `totalVotes` for community polls; varies by ownership for consensus polls.',
+    ),
+  winningOptionIndex: z
+    .number()
+    .nullable()
+    .optional()
+    .describe(
+      'Zero-based index of the winning option once the poll is finalised; null while still active or if no option won.',
+    ),
+  isResultsFinalized: z
+    .boolean()
+    .describe('True once results have been sealed and no further votes are accepted.'),
+  finalizedAt: z
+    .string()
+    .nullable()
+    .optional()
+    .describe('ISO-8601 timestamp when the poll was finalised; null while active.'),
+  finalizedBy: z
+    .string()
+    .nullable()
+    .optional()
+    .describe('UUID of the user who finalised the poll; null while active.'),
+  hasVoted: z
+    .boolean()
+    .optional()
+    .describe('True when the calling user has already cast a vote on this poll.'),
+  userVote: z
+    .number()
+    .optional()
+    .describe(
+      'Zero-based index of the option the calling user voted for; absent when the user has not voted.',
+    ),
+  files: z
+    .array(pollDocumentReferenceSchema)
+    .optional()
+    .describe('Supporting documents uploaded with the poll; absent when none.'),
 });
 
-const pollOptionResultSchema = z.looseObject({
-  optionIndex: z.number(),
-  optionText: z.string(),
-  voteCount: z.number(),
-  totalWeight: z.number(),
-  percentage: z.number(),
-  weightPercentage: z.number(),
-});
+const pollOptionResultSchema = z
+  .looseObject({
+    optionIndex: z.number().describe('Zero-based index into the poll `options` array.'),
+    optionText: z.string().describe('Text of the option (denormalised for convenience).'),
+    voteCount: z.number().describe('Number of distinct voters that chose this option.'),
+    totalWeight: z
+      .number()
+      .describe('Sum of vote weights for this option (ownership-weighted for consensus polls).'),
+    percentage: z
+      .number()
+      .describe('Share of `totalVotes` that chose this option, in percent (0–100).'),
+    weightPercentage: z
+      .number()
+      .describe('Share of `totalWeight` that chose this option, in percent (0–100).'),
+  })
+  .describe('Per-option tally produced after finalising a poll.');
 
 /**
  * Poll results response — fuller shape with per-option breakdown,
@@ -78,58 +164,129 @@ const pollOptionResultSchema = z.looseObject({
  */
 export const pollResultsSchema = z.looseObject({
   id: z.string().uuid(),
-  buildingId: z.string().uuid(),
-  question: z.string(),
-  options: z.array(z.string()),
-  createdBy: z.string(),
-  createdAt: z.string(),
-  deadline: z.string().optional(),
-  pollType: pollTypeSchema,
+  buildingId: z.string().uuid().describe('UUID of the building this poll belongs to.'),
+  question: z.string().describe('Poll question displayed to voters.'),
+  options: z.array(z.string()).describe('Answer options in display order.'),
+  createdBy: z.string().describe('UUID of the user who created the poll.'),
+  createdAt: z.string().describe('ISO-8601 timestamp when the poll was created.'),
+  deadline: z
+    .string()
+    .optional()
+    .describe('ISO-8601 datetime after which votes are rejected. Absent for open-ended polls.'),
+  pollType: pollTypeSchema.describe('`COMMUNITY` for majority polls, `CONSENSUS` for weighted.'),
   status: pollStatusSchema,
-  requiredConsensusPercentage: z.number().optional(),
-  totalVotes: z.number(),
-  totalWeight: z.number(),
-  totalEligibleVoters: z.number(),
-  winningOptionIndex: z.number().nullable().optional(),
-  isResultsFinalized: z.boolean(),
-  finalizedAt: z.string().nullable().optional(),
-  finalizedBy: z.string().nullable().optional(),
-  optionResults: z.array(pollOptionResultSchema),
-  consensusReached: z.boolean().optional(),
-  currentConsensusPercentage: z.number().optional(),
-  approved: z.boolean(),
-  canApprove: z.boolean(),
-  canEdit: z.boolean(),
-  canDelete: z.boolean(),
-  canVote: z.boolean(),
-  hasUserVoted: z.boolean(),
-  userVotedOptionIndex: z.number().nullable().optional(),
-  scopedUnits: z.array(pollScopedUnitSchema).optional(),
-  eligibleTotalWeight: z.number().optional(),
-  scopedUsers: z.array(pollScopedUserSchema).optional(),
-  maintenanceLogs: z.array(pollMaintenanceLogReferenceSchema).optional(),
-  files: z.array(pollDocumentReferenceSchema).optional(),
+  requiredConsensusPercentage: z
+    .number()
+    .optional()
+    .describe('Consensus approval threshold in percent (10–100) for consensus polls.'),
+  totalVotes: z.number().describe('Number of distinct voters who have voted so far.'),
+  totalWeight: z
+    .number()
+    .describe('Sum of vote weights cast so far (ownership-weighted for consensus polls).'),
+  totalEligibleVoters: z
+    .number()
+    .describe('Number of distinct users eligible to vote on this poll (based on scope).'),
+  winningOptionIndex: z
+    .number()
+    .nullable()
+    .optional()
+    .describe(
+      'Zero-based index of the winning option once finalised; null while active or if no option won.',
+    ),
+  isResultsFinalized: z
+    .boolean()
+    .describe('True once results are sealed and no further votes are accepted.'),
+  finalizedAt: z
+    .string()
+    .nullable()
+    .optional()
+    .describe('ISO-8601 timestamp when the poll was finalised; null while active.'),
+  finalizedBy: z
+    .string()
+    .nullable()
+    .optional()
+    .describe('UUID of the user who finalised the poll; null while active.'),
+  optionResults: z.array(pollOptionResultSchema).describe('Per-option vote tallies.'),
+  consensusReached: z
+    .boolean()
+    .optional()
+    .describe(
+      'True when the ownership-weighted approval threshold has been reached. Only present for consensus polls.',
+    ),
+  currentConsensusPercentage: z
+    .number()
+    .optional()
+    .describe(
+      'Current cumulative weight in favour, in percent. Only present for consensus polls.',
+    ),
+  approved: z
+    .boolean()
+    .describe('True when a representative has approved the poll for public visibility.'),
+  canApprove: z.boolean().describe('True when the calling user may approve or reject the poll.'),
+  canEdit: z.boolean().describe('True when the calling user may edit this poll.'),
+  canDelete: z.boolean().describe('True when the calling user may delete this poll.'),
+  canVote: z
+    .boolean()
+    .describe(
+      'True when the calling user is eligible to vote and has not yet voted (and the poll is still active).',
+    ),
+  hasUserVoted: z
+    .boolean()
+    .describe('True when the calling user has already voted on this poll.'),
+  userVotedOptionIndex: z
+    .number()
+    .nullable()
+    .optional()
+    .describe('Zero-based index of the option the calling user voted for; null when they have not voted.'),
+  scopedUnits: z
+    .array(pollScopedUnitSchema)
+    .optional()
+    .describe('Units scoped into eligibility; absent when the poll is building-wide.'),
+  eligibleTotalWeight: z
+    .number()
+    .optional()
+    .describe(
+      'Cached sum of eligible voters’ ownership percentages captured at poll creation. Used to normalise `totalWeight` against the full eligible weight.',
+    ),
+  scopedUsers: z
+    .array(pollScopedUserSchema)
+    .optional()
+    .describe('Users scoped into eligibility by explicit selection; absent when not used.'),
+  maintenanceLogs: z
+    .array(pollMaintenanceLogReferenceSchema)
+    .optional()
+    .describe('Maintenance logs linked to the poll (for context); absent when none.'),
+  files: z
+    .array(pollDocumentReferenceSchema)
+    .optional()
+    .describe('Supporting documents uploaded with the poll; absent when none.'),
 });
 
-const pollVoterSchema = z.looseObject({
-  userId: z.string(),
-  name: z.string(),
-  email: z.string(),
-  selectedOptionIndex: z.number(),
-  selectedOptionText: z.string(),
-  voteWeight: z.number(),
-  votedAt: z.string(),
-});
+const pollVoterSchema = z
+  .looseObject({
+    userId: z.string().describe('UUID of the voter.'),
+    name: z.string().describe('Voter display name.'),
+    email: z.string().describe('Voter contact email.'),
+    selectedOptionIndex: z.number().describe('Zero-based index of the option the voter chose.'),
+    selectedOptionText: z.string().describe('Text of the chosen option (denormalised).'),
+    voteWeight: z
+      .number()
+      .describe(
+        'Weight contributed by this vote. 1.00 for community polls; the voter’s ownership percentage for consensus polls.',
+      ),
+    votedAt: z.string().describe('ISO-8601 timestamp when the vote was recorded.'),
+  })
+  .describe('Individual voter entry returned by the poll voters endpoint.');
 
 /**
  * Poll voters response — voter list returned from the voters endpoint.
  */
 export const pollVotersResponseSchema = z.looseObject({
-  pollId: z.string().uuid(),
-  question: z.string(),
-  options: z.array(z.string()),
-  totalVotes: z.number(),
-  voters: z.array(pollVoterSchema),
+  pollId: z.string().uuid().describe('UUID of the poll these voters belong to.'),
+  question: z.string().describe('Poll question, repeated for convenience.'),
+  options: z.array(z.string()).describe('Poll options in display order.'),
+  totalVotes: z.number().describe('Total number of distinct voters represented in `voters`.'),
+  voters: z.array(pollVoterSchema).describe('Individual voter entries with their chosen option.'),
 });
 
 export const paginatedPollsResponseSchema = paginatedResponseSchema(pollResponseSchema);
