@@ -14,7 +14,11 @@ export type BuildingTypeOption = (typeof BUILDING_TYPES)[number];
 /**
  * Building type schema
  */
-export const buildingTypeSchema = z.enum(BUILDING_TYPES);
+export const buildingTypeSchema = z
+  .enum(BUILDING_TYPES)
+  .describe(
+    'Usage of the building: `RESIDENTIAL` (homes only), `COMMERCIAL` (business only), or `RESIDENTIAL_COMMERCIAL` (mixed use).',
+  );
 
 /**
  * Validation constants for buildings
@@ -41,19 +45,24 @@ export const createBuildingSchema = z.object({
   name: z
     .string()
     .min(BUILDING_LIMITS.NAME_MIN, 'Name is required')
-    .max(BUILDING_LIMITS.NAME_MAX, `Name must be at most ${BUILDING_LIMITS.NAME_MAX} characters`),
+    .max(BUILDING_LIMITS.NAME_MAX, `Name must be at most ${BUILDING_LIMITS.NAME_MAX} characters`)
+    .describe('Display name of the building shown throughout the UI.'),
   address: z
     .string()
     .min(BUILDING_LIMITS.ADDRESS_MIN, 'Address is required')
     .max(
       BUILDING_LIMITS.ADDRESS_MAX,
       `Address must be at most ${BUILDING_LIMITS.ADDRESS_MAX} characters`,
-    ),
-  streetId: uuidSchema,
+    )
+    .describe('Full postal address including street and city.'),
+  streetId: uuidSchema.describe(
+    'UUID of the street record the building belongs to; used to normalise address data.',
+  ),
   houseNumber: z
     .string()
     .min(BUILDING_LIMITS.HOUSE_NUMBER_MIN, 'House number is required')
-    .max(BUILDING_LIMITS.HOUSE_NUMBER_MAX),
+    .max(BUILDING_LIMITS.HOUSE_NUMBER_MAX)
+    .describe('Street/house number including any suffix (e.g. "12A", "5B").'),
   type: buildingTypeSchema,
   totalUnits: z.coerce
     .number()
@@ -62,15 +71,23 @@ export const createBuildingSchema = z.object({
     .max(
       BUILDING_LIMITS.UNITS_MAX,
       `Building cannot have more than ${BUILDING_LIMITS.UNITS_MAX} units`,
+    )
+    .describe('Total number of individual units (apartments, garages, storage).'),
+  isStratified: multipartBoolean()
+    .optional()
+    .describe(
+      'True when the building is stratified (each unit has its own title deed). Defaults to false when omitted.',
     ),
-  isStratified: multipartBoolean().optional(),
   role: z
     .enum([
       BuildingRole.OWNER_REPRESENTATIVE,
       BuildingRole.DEPUTY_REPRESENTATIVE,
       BuildingRole.CO_OWNER,
     ])
-    .optional(),
+    .optional()
+    .describe(
+      'Role the creating user should claim for themselves in the new building; omitted creates the building without assigning the caller a role.',
+    ),
 });
 
 /**
@@ -80,17 +97,34 @@ export const createBuildingSchema = z.object({
  * existing house-rules attachment.
  */
 export const updateBuildingSchema = z.object({
-  name: z.string().min(BUILDING_LIMITS.NAME_MIN).max(BUILDING_LIMITS.NAME_MAX).optional(),
-  address: z.string().min(BUILDING_LIMITS.ADDRESS_MIN).max(BUILDING_LIMITS.ADDRESS_MAX).optional(),
+  name: z
+    .string()
+    .min(BUILDING_LIMITS.NAME_MIN)
+    .max(BUILDING_LIMITS.NAME_MAX)
+    .optional()
+    .describe('New display name of the building.'),
+  address: z
+    .string()
+    .min(BUILDING_LIMITS.ADDRESS_MIN)
+    .max(BUILDING_LIMITS.ADDRESS_MAX)
+    .optional()
+    .describe('New full postal address.'),
   type: buildingTypeSchema.optional(),
   totalUnits: z.coerce
     .number()
     .int()
     .min(BUILDING_LIMITS.UNITS_MIN)
     .max(BUILDING_LIMITS.UNITS_MAX)
-    .optional(),
-  isStratified: multipartBoolean().optional(),
-  removeHouseRulesFile: multipartBoolean().optional(),
+    .optional()
+    .describe('Revised total unit count.'),
+  isStratified: multipartBoolean()
+    .optional()
+    .describe('Toggles whether the building is stratified (per-unit title deeds).'),
+  removeHouseRulesFile: multipartBoolean()
+    .optional()
+    .describe(
+      'When true, clears the existing house-rules attachment. Submit independently of `houseRulesFile` uploads.',
+    ),
 });
 
 /**
@@ -105,23 +139,37 @@ export const joinBuildingWithOtpSchema = z.object({
       BUILDING_LIMITS.OTP_LENGTH,
       `OTP must be a ${BUILDING_LIMITS.OTP_LENGTH}-character code`,
     )
-    .regex(/^[A-Z0-9]{6}$/, 'OTP must be a 6-character alphanumeric code'),
+    .regex(/^[A-Z0-9]{6}$/, 'OTP must be a 6-character alphanumeric code')
+    .describe('Six-character alphanumeric invite code shared by a building representative.'),
 });
 
 /**
  * Update user building role schema (admin endpoint)
  */
 export const updateUserBuildingRoleSchema = z.object({
-  userId: uuidSchema,
+  userId: uuidSchema.describe('UUID of the user whose building role is being updated.'),
   roleType: z
     .enum([
       BuildingRole.OWNER_REPRESENTATIVE,
       BuildingRole.DEPUTY_REPRESENTATIVE,
       BuildingRole.CO_OWNER,
     ])
-    .optional(),
-  buildingSurfacePercentage: z.coerce.number().min(0).max(100).optional(),
-  chatVisibleToCoOwners: z.boolean().optional(),
+    .optional()
+    .describe(
+      'New building role for the user; omit to leave the role unchanged while updating other fields.',
+    ),
+  buildingSurfacePercentage: z.coerce
+    .number()
+    .min(0)
+    .max(100)
+    .optional()
+    .describe(
+      'User’s weighted share of the building surface, 0–100. Used to compute vote weight for consensus polls.',
+    ),
+  chatVisibleToCoOwners: z
+    .boolean()
+    .optional()
+    .describe('Controls whether this user appears in chat directories visible to co-owners.'),
 });
 
 // Inferred types

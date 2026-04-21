@@ -19,10 +19,20 @@ export const FAILURE_REPORT_LIMITS = {
  * optional title/description that default to the report title).
  */
 export const failureReportEventSchema = z.object({
-  startDate: z.coerce.date(),
-  endDate: z.coerce.date(),
-  title: z.string().optional(),
-  description: z.string().optional(),
+  startDate: z
+    .coerce.date()
+    .describe('Event start — accepts an ISO-8601 string or Date.'),
+  endDate: z
+    .coerce.date()
+    .describe('Event end — accepts an ISO-8601 string or Date; must not precede `startDate`.'),
+  title: z
+    .string()
+    .optional()
+    .describe('Event title; defaults to the failure report title when omitted.'),
+  description: z
+    .string()
+    .optional()
+    .describe('Event description; defaults to the failure report description when omitted.'),
 });
 
 /**
@@ -73,30 +83,56 @@ export const createFailureReportSchema = refineLocation(
       .max(
         FAILURE_REPORT_LIMITS.TITLE_MAX,
         `Title must be at most ${FAILURE_REPORT_LIMITS.TITLE_MAX} characters`,
-      ),
+      )
+      .describe('Short summary of the failure, 1–100 chars.'),
     description: z
       .string()
       .min(1, 'Description is required')
       .max(
         FAILURE_REPORT_LIMITS.DESCRIPTION_MAX,
         `Description must be at most ${FAILURE_REPORT_LIMITS.DESCRIPTION_MAX} characters`,
+      )
+      .describe('Detailed description of the failure, up to 2000 chars.'),
+    isAnonymous: multipartBoolean()
+      .optional()
+      .describe(
+        'When true, hides the reporter’s identity from other residents. Defaults to false.',
       ),
-    isAnonymous: multipartBoolean().optional(),
-    priority: z.enum([Priority.NORMAL, Priority.URGENT]).optional(),
+    priority: z
+      .enum([Priority.NORMAL, Priority.URGENT])
+      .optional()
+      .describe('`normal` for standard reports, `urgent` to flag immediate attention.'),
     locationType: z
       .enum([FailureLocationType.COMMON_AREA, FailureLocationType.OWN_UNIT])
-      .optional(),
+      .optional()
+      .describe(
+        '`common_area` for shared spaces (hallway, roof, etc.) or `own_unit` for a specific apartment/garage/storage unit.',
+      ),
     commonAreaDescription: z
       .string()
       .max(FAILURE_REPORT_LIMITS.COMMON_AREA_DESCRIPTION_MAX)
-      .optional(),
+      .optional()
+      .describe(
+        'Free-text location description. Required when `locationType` is `common_area`.',
+      ),
     unitType: z
       .enum([FailureUnitType.APARTMENT, FailureUnitType.GARAGE, FailureUnitType.STORAGE_UNIT])
-      .optional(),
-    unitId: uuidSchema.optional(),
-    fileIds: multipartArray(uuidSchema).optional(),
-    maintenanceLogIds: multipartArray(uuidSchema).optional(),
-    events: multipartArray(failureReportEventSchema).optional(),
+      .optional()
+      .describe(
+        'Kind of unit when `locationType` is `own_unit`. Required in that case.',
+      ),
+    unitId: uuidSchema
+      .optional()
+      .describe('UUID of the specific unit. Required when `locationType` is `own_unit`.'),
+    fileIds: multipartArray(uuidSchema)
+      .optional()
+      .describe('UUIDs of previously-uploaded files to attach to this report.'),
+    maintenanceLogIds: multipartArray(uuidSchema)
+      .optional()
+      .describe('UUIDs of maintenance logs to associate with this report (e.g. related past work).'),
+    events: multipartArray(failureReportEventSchema)
+      .optional()
+      .describe('Calendar events to create alongside the report (inspections, scheduled fixes).'),
   }),
 );
 
@@ -111,25 +147,52 @@ export const updateFailureReportSchema = refineLocation(
       .string()
       .min(FAILURE_REPORT_LIMITS.TITLE_MIN)
       .max(FAILURE_REPORT_LIMITS.TITLE_MAX)
-      .optional(),
-    description: z.string().min(1).max(FAILURE_REPORT_LIMITS.DESCRIPTION_MAX).optional(),
-    status: z.enum(['pending', 'inProgress', 'resolved']).optional(),
-    priority: z.enum([Priority.NORMAL, Priority.URGENT]).optional(),
+      .optional()
+      .describe('Revised report title, 1–100 chars.'),
+    description: z
+      .string()
+      .min(1)
+      .max(FAILURE_REPORT_LIMITS.DESCRIPTION_MAX)
+      .optional()
+      .describe('Revised description, up to 2000 chars.'),
+    status: z
+      .enum(['pending', 'inProgress', 'resolved'])
+      .optional()
+      .describe(
+        'Lifecycle status: `pending` (newly filed), `inProgress` (assigned work), `resolved` (closed out).',
+      ),
+    priority: z
+      .enum([Priority.NORMAL, Priority.URGENT])
+      .optional()
+      .describe('Revised priority: `normal` or `urgent`.'),
     locationType: z
       .enum([FailureLocationType.COMMON_AREA, FailureLocationType.OWN_UNIT])
-      .optional(),
+      .optional()
+      .describe('Revised location classification: `common_area` or `own_unit`.'),
     commonAreaDescription: z
       .string()
       .max(FAILURE_REPORT_LIMITS.COMMON_AREA_DESCRIPTION_MAX)
-      .optional(),
+      .optional()
+      .describe('Revised common-area description. Required when `locationType` is `common_area`.'),
     unitType: z
       .enum([FailureUnitType.APARTMENT, FailureUnitType.GARAGE, FailureUnitType.STORAGE_UNIT])
-      .optional(),
-    unitId: uuidSchema.optional(),
-    fileIds: multipartArray(uuidSchema).optional(),
-    removeChildFileIds: multipartArray(uuidSchema).optional(),
-    maintenanceLogIds: multipartArray(uuidSchema).optional(),
-    events: multipartArray(failureReportEventSchema).optional(),
+      .optional()
+      .describe('Revised unit kind. Required when `locationType` is `own_unit`.'),
+    unitId: uuidSchema
+      .optional()
+      .describe('Revised unit UUID. Required when `locationType` is `own_unit`.'),
+    fileIds: multipartArray(uuidSchema)
+      .optional()
+      .describe('UUIDs of newly-uploaded files to add to the report.'),
+    removeChildFileIds: multipartArray(uuidSchema)
+      .optional()
+      .describe('UUIDs of previously-attached files to detach from the report.'),
+    maintenanceLogIds: multipartArray(uuidSchema)
+      .optional()
+      .describe('Full list of maintenance-log UUIDs to associate with the report (replaces existing links).'),
+    events: multipartArray(failureReportEventSchema)
+      .optional()
+      .describe('Full list of events for the report — replaces the existing event set.'),
   }),
 );
 
@@ -137,7 +200,9 @@ export const updateFailureReportSchema = refineLocation(
  * Approve failure report request schema
  */
 export const approveFailureReportSchema = z.object({
-  approved: z.boolean(),
+  approved: z
+    .boolean()
+    .describe('True to approve the report for public visibility, false to reject.'),
 });
 
 // Inferred types

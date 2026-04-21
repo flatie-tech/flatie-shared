@@ -29,35 +29,64 @@ export const sendMessageSchema = z.object({
   content: z
     .string()
     .min(CHAT_LIMITS.MESSAGE_MIN, 'Message is required')
-    .max(CHAT_LIMITS.MESSAGE_MAX, `Message must be at most ${CHAT_LIMITS.MESSAGE_MAX} characters`),
+    .max(CHAT_LIMITS.MESSAGE_MAX, `Message must be at most ${CHAT_LIMITS.MESSAGE_MAX} characters`)
+    .describe('Plain-text message body, 1–5000 characters. Trimmed and stored verbatim.'),
 });
 
 /**
  * Create conversation request schema
  */
 export const createConversationSchema = z.object({
-  type: z.enum([ConversationType.DIRECT, ConversationType.GROUP]),
+  type: z
+    .enum([ConversationType.DIRECT, ConversationType.GROUP])
+    .describe(
+      '`direct` for a one-to-one thread, `group` for a named multi-user conversation.',
+    ),
   participantIds: z
     .array(uuidSchema)
     .min(CHAT_LIMITS.PARTICIPANTS_MIN, 'At least one participant is required')
-    .max(CHAT_LIMITS.PARTICIPANTS_MAX, `Maximum ${CHAT_LIMITS.PARTICIPANTS_MAX} participants`),
-  name: z.string().max(CHAT_LIMITS.GROUP_NAME_MAX).optional(),
+    .max(CHAT_LIMITS.PARTICIPANTS_MAX, `Maximum ${CHAT_LIMITS.PARTICIPANTS_MAX} participants`)
+    .describe(
+      'UUIDs of the other participants. The caller is added automatically; direct conversations must have exactly one other participant.',
+    ),
+  name: z
+    .string()
+    .max(CHAT_LIMITS.GROUP_NAME_MAX)
+    .optional()
+    .describe('Group display name, max 100 chars. Ignored for direct conversations.'),
 });
 
 /**
  * Update conversation request schema (rename or add/remove participants)
  */
 export const updateConversationSchema = z.object({
-  name: z.string().max(CHAT_LIMITS.GROUP_NAME_MAX).optional(),
-  addParticipantIds: z.array(uuidSchema).max(CHAT_LIMITS.PARTICIPANTS_MAX).optional(),
-  removeParticipantIds: z.array(uuidSchema).max(CHAT_LIMITS.PARTICIPANTS_MAX).optional(),
+  name: z
+    .string()
+    .max(CHAT_LIMITS.GROUP_NAME_MAX)
+    .optional()
+    .describe('New group name, max 100 chars. Omit to leave the name unchanged.'),
+  addParticipantIds: z
+    .array(uuidSchema)
+    .max(CHAT_LIMITS.PARTICIPANTS_MAX)
+    .optional()
+    .describe('UUIDs of users to add to the conversation. Omit or pass [] to add no one.'),
+  removeParticipantIds: z
+    .array(uuidSchema)
+    .max(CHAT_LIMITS.PARTICIPANTS_MAX)
+    .optional()
+    .describe('UUIDs of users to remove from the conversation. Omit or pass [] to remove no one.'),
 });
 
 /**
  * Cursor-based pagination query schema (conversations / messages)
  */
 export const cursorQuerySchema = z.object({
-  cursor: z.string().optional(),
+  cursor: z
+    .string()
+    .optional()
+    .describe(
+      'Opaque pagination cursor returned by a previous response. Omit to fetch the first page.',
+    ),
 });
 
 // Inferred types

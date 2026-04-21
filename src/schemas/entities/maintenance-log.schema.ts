@@ -11,7 +11,11 @@ export type MaintenanceFinancedByOption = (typeof MAINTENANCE_FINANCED_BY)[numbe
 /**
  * Maintenance financed by schema
  */
-export const maintenanceFinancedBySchema = z.enum(MAINTENANCE_FINANCED_BY);
+export const maintenanceFinancedBySchema = z
+  .enum(MAINTENANCE_FINANCED_BY)
+  .describe(
+    'Funding source of the work: `building_funds` (paid from the common fund), `insurance` (covered by an insurance claim), or `co_owner` (paid directly by an individual co-owner).',
+  );
 
 /**
  * Validation constants for maintenance logs
@@ -44,11 +48,25 @@ const costSchema = z.preprocess(
  * create (min 1), optional on update.
  */
 export const maintenanceLogEventSchema = z.object({
-  id: uuidSchema.optional(),
-  startDate: z.coerce.date(),
-  endDate: z.coerce.date(),
-  title: z.string().optional(),
-  description: z.string().optional(),
+  id: uuidSchema
+    .optional()
+    .describe(
+      'UUID of an existing event to update in place. Omit to create a new event. Events absent from the update request are deleted.',
+    ),
+  startDate: z
+    .coerce.date()
+    .describe('Event start — accepts an ISO-8601 string or Date.'),
+  endDate: z
+    .coerce.date()
+    .describe('Event end — accepts an ISO-8601 string or Date; must not precede `startDate`.'),
+  title: z
+    .string()
+    .optional()
+    .describe('Event title; defaults to the maintenance-log title when omitted.'),
+  description: z
+    .string()
+    .optional()
+    .describe('Event description; defaults to the maintenance-log description when omitted.'),
 });
 
 /**
@@ -63,20 +81,44 @@ export const createMaintenanceLogSchema = z.object({
     .max(
       MAINTENANCE_LOG_LIMITS.TITLE_MAX,
       `Title must be at most ${MAINTENANCE_LOG_LIMITS.TITLE_MAX} characters`,
-    ),
-  description: z.string().max(MAINTENANCE_LOG_LIMITS.DESCRIPTION_MAX).optional(),
-  categoryId: uuidSchema.optional(),
-  contractor: z.string().min(MAINTENANCE_LOG_LIMITS.CONTRACTOR_MIN, 'Contractor is required'),
-  cost: costSchema,
-  financedBy: maintenanceFinancedBySchema.optional(),
-  warranty: multipartBoolean().optional(),
-  events: multipartArray(maintenanceLogEventSchema).refine(
-    (events) => events.length >= MAINTENANCE_LOG_LIMITS.EVENTS_MIN,
-    { message: 'At least one event is required' },
+    )
+    .describe('Short title of the maintenance work, 1–100 chars.'),
+  description: z
+    .string()
+    .max(MAINTENANCE_LOG_LIMITS.DESCRIPTION_MAX)
+    .optional()
+    .describe('Detailed description of the work performed, up to 2000 chars.'),
+  categoryId: uuidSchema
+    .optional()
+    .describe('UUID of the expense category the cost should be booked under.'),
+  contractor: z
+    .string()
+    .min(MAINTENANCE_LOG_LIMITS.CONTRACTOR_MIN, 'Contractor is required')
+    .describe('Name of the contractor or vendor who performed the work.'),
+  cost: costSchema.describe(
+    'Total cost as a decimal string with up to two decimal places (e.g. "250.50"). Numeric input is coerced to a string.',
   ),
-  fileIds: multipartArray(uuidSchema).optional(),
-  pollId: uuidSchema.optional(),
-  pollIds: multipartArray(uuidSchema).optional(),
+  financedBy: maintenanceFinancedBySchema
+    .optional()
+    .describe('Funding source; omit when unknown at the time of logging.'),
+  warranty: multipartBoolean()
+    .optional()
+    .describe('True when the work is covered by an active warranty.'),
+  events: multipartArray(maintenanceLogEventSchema)
+    .refine(
+      (events) => events.length >= MAINTENANCE_LOG_LIMITS.EVENTS_MIN,
+      { message: 'At least one event is required' },
+    )
+    .describe('Calendar events associated with the work; at least one is required on create.'),
+  fileIds: multipartArray(uuidSchema)
+    .optional()
+    .describe('UUIDs of previously-uploaded files (invoices, photos) to attach.'),
+  pollId: uuidSchema
+    .optional()
+    .describe('UUID of a single poll to associate with this log. Legacy field — prefer `pollIds`.'),
+  pollIds: multipartArray(uuidSchema)
+    .optional()
+    .describe('UUIDs of polls to associate with this log (e.g. the vote that authorised the work).'),
 });
 
 /**
@@ -90,18 +132,49 @@ export const updateMaintenanceLogSchema = z.object({
     .string()
     .min(MAINTENANCE_LOG_LIMITS.TITLE_MIN)
     .max(MAINTENANCE_LOG_LIMITS.TITLE_MAX)
-    .optional(),
-  description: z.string().max(MAINTENANCE_LOG_LIMITS.DESCRIPTION_MAX).optional(),
-  categoryId: uuidSchema.optional(),
-  contractor: z.string().min(MAINTENANCE_LOG_LIMITS.CONTRACTOR_MIN).optional(),
-  cost: costSchema.optional(),
-  financedBy: maintenanceFinancedBySchema.optional(),
-  warranty: multipartBoolean().optional(),
-  events: multipartArray(maintenanceLogEventSchema).optional(),
-  fileIds: multipartArray(uuidSchema).optional(),
-  removeChildFileIds: multipartArray(uuidSchema).optional(),
-  pollId: uuidSchema.optional(),
-  pollIds: multipartArray(uuidSchema).optional(),
+    .optional()
+    .describe('Revised title, 1–100 chars.'),
+  description: z
+    .string()
+    .max(MAINTENANCE_LOG_LIMITS.DESCRIPTION_MAX)
+    .optional()
+    .describe('Revised description, up to 2000 chars.'),
+  categoryId: uuidSchema
+    .optional()
+    .describe('Revised expense-category UUID.'),
+  contractor: z
+    .string()
+    .min(MAINTENANCE_LOG_LIMITS.CONTRACTOR_MIN)
+    .optional()
+    .describe('Revised contractor or vendor name.'),
+  cost: costSchema
+    .optional()
+    .describe(
+      'Revised total cost as a decimal string with up to two decimal places (e.g. "250.50").',
+    ),
+  financedBy: maintenanceFinancedBySchema
+    .optional()
+    .describe('Revised funding source.'),
+  warranty: multipartBoolean()
+    .optional()
+    .describe('Toggles whether the work is under warranty.'),
+  events: multipartArray(maintenanceLogEventSchema)
+    .optional()
+    .describe(
+      'Replacement event set: events with an `id` are updated, new events are inserted, and existing events omitted from the list are deleted.',
+    ),
+  fileIds: multipartArray(uuidSchema)
+    .optional()
+    .describe('UUIDs of newly-uploaded files to attach.'),
+  removeChildFileIds: multipartArray(uuidSchema)
+    .optional()
+    .describe('UUIDs of previously-attached files to detach from the log.'),
+  pollId: uuidSchema
+    .optional()
+    .describe('Single poll UUID to associate. Legacy field — prefer `pollIds`.'),
+  pollIds: multipartArray(uuidSchema)
+    .optional()
+    .describe('Full list of poll UUIDs to associate with this log (replaces existing links).'),
 });
 
 // Inferred types
