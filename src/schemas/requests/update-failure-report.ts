@@ -13,7 +13,7 @@ import { updateFailureReportSchema as updateFailureReportBodySchema } from '../e
  * is preserved by Zod's `.extend()` on a refined object.
  */
 export const updateFailureReportRequestSchema = updateFailureReportBodySchema.extend({
-  id: uuidSchema,
+  id: uuidSchema.describe('UUID of the failure report to update, taken from the URL.'),
 });
 
 export type UpdateFailureReportRequestPayload = z.infer<typeof updateFailureReportRequestSchema>;
