@@ -33,6 +33,33 @@ declare const FailureUnitType: {
 };
 type FailureUnitType = (typeof FailureUnitType)[keyof typeof FailureUnitType];
 
+/**
+ * How a building's fund transactions are populated.
+ *
+ * - `MANUAL` — representatives record income/expense by hand through the
+ *   regular funds UI. Default for all new buildings.
+ * - `CAMT` — funds are ingested from the bank's CAMT.053 XML statements
+ *   by a platform admin; manual add/edit endpoints return 403 while the
+ *   building is in this mode. Switching back to `MANUAL` is allowed and
+ *   leaves prior CAMT-sourced rows intact.
+ */
+declare const FundsSource: {
+    readonly MANUAL: "manual";
+    readonly CAMT: "camt";
+};
+type FundsSource = (typeof FundsSource)[keyof typeof FundsSource];
+/**
+ * Per-row provenance on income/expense transactions. Mirrors
+ * `FundsSource` but is applied at the transaction level so the UI can
+ * render a source badge and so CAMT re-imports can dedupe against
+ * `bankRef`.
+ */
+declare const TransactionSource: {
+    readonly MANUAL: "manual";
+    readonly CAMT: "camt";
+};
+type TransactionSource = (typeof TransactionSource)[keyof typeof TransactionSource];
+
 declare const MaintenanceLogFinancedBy: {
     readonly BUILDING_FUNDS: "building_funds";
     readonly INSURANCE: "insurance";
@@ -138,4 +165,4 @@ declare const PollStatus: {
 };
 type PollStatus = (typeof PollStatus)[keyof typeof PollStatus];
 
-export { ApartmentRole, BuildingStatus, DevicePlatform, FailureLocationType, FailureUnitType, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, OrgStatus, OrgType, PollStatus, UNIMPLEMENTED_NOTIFICATION_TYPES, WASTE_SUBTYPE_NOTIFICATION_MAP };
+export { ApartmentRole, BuildingStatus, DevicePlatform, FailureLocationType, FailureUnitType, FundsSource, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, OrgStatus, OrgType, PollStatus, TransactionSource, UNIMPLEMENTED_NOTIFICATION_TYPES, WASTE_SUBTYPE_NOTIFICATION_MAP };

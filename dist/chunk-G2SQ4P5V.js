@@ -1,4 +1,5 @@
-import { ApartmentRole, OrgRole, OrgType, BuildingRole, FailureUnitType, FailureLocationType, Priority, TransactionType, Role, PlatformRole, BuildingStatus, NotificationType } from './chunk-P25WSM2I.js';
+import { optionalIbanSchema } from './chunk-NOZET4W7.js';
+import { ApartmentRole, OrgRole, OrgType, BuildingRole, FundsSource, FailureUnitType, FailureLocationType, Priority, TransactionType, Role, PlatformRole, BuildingStatus, NotificationType } from './chunk-BTW3L77A.js';
 import { BACKEND_ERROR_CODES } from './chunk-E45VMJJC.js';
 import { z } from 'zod';
 
@@ -326,7 +327,8 @@ var createBuildingSchema = z.object({
     BuildingRole.CO_OWNER
   ]).optional().describe(
     "Role the creating user should claim for themselves in the new building; omitted creates the building without assigning the caller a role."
-  )
+  ),
+  iban: optionalIbanSchema
 });
 var updateBuildingSchema = z.object({
   name: z.string().min(BUILDING_LIMITS.NAME_MIN).max(BUILDING_LIMITS.NAME_MAX).optional().describe("New display name of the building."),
@@ -336,6 +338,10 @@ var updateBuildingSchema = z.object({
   isStratified: multipartBoolean().optional().describe("Toggles whether the building is stratified (per-unit title deeds)."),
   removeHouseRulesFile: multipartBoolean().optional().describe(
     "When true, clears the existing house-rules attachment. Submit independently of `houseRulesFile` uploads."
+  ),
+  iban: optionalIbanSchema,
+  fundsSource: z.enum([FundsSource.MANUAL, FundsSource.CAMT]).optional().describe(
+    "Switches how the building's fund transactions are populated. `manual` (default) keeps the representative-facing add/edit flow; `camt` locks manual writes and only a platform admin can ingest CAMT.053 XML statements."
   )
 });
 var joinBuildingWithOtpSchema = z.object({
@@ -939,6 +945,12 @@ var buildingDetailResponseSchema = z.looseObject({
     "Assigned management-firm contact, or null when the building has no manager assigned."
   ),
   funds: buildingFundsSchema.nullable().optional().describe("Current fund balance summary, or null when funds have not been initialised."),
+  iban: z.string().nullable().optional().describe(
+    "IBAN of the building fund bank account, or null when unset. Required on the building before a CAMT.053 import can match statements to this building."
+  ),
+  fundsSource: z.enum([FundsSource.MANUAL, FundsSource.CAMT]).optional().describe(
+    "Current funding-entry mode for this building. `manual` = representatives add income/expense through the UI; `camt` = platform admin ingests CAMT.053 XML statements and manual writes are blocked."
+  ),
   ownerRepresentatives: z.array(buildingRepresentativeSchema).default([]).describe("Users with the owner-representative role for this building."),
   deputyRepresentatives: z.array(buildingRepresentativeSchema).default([]).describe("Users with the deputy-representative role, if any.")
 });
@@ -1137,6 +1149,47 @@ var faqResponseSchema = z.looseObject({
   createdAt: z.string().describe("ISO-8601 timestamp when the FAQ was created."),
   updatedAt: z.string().nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited.")
 });
+var camtImportedEntrySchema = z.looseObject({
+  transactionId: z.string().uuid().describe("UUID of the newly inserted income_transactions or expense_transactions row."),
+  type: z.enum([TransactionType.INCOME, TransactionType.EXPENSE]).describe(
+    "`INCOME` when the CAMT entry was a credit (money into the fund); `EXPENSE` when it was a debit."
+  ),
+  bankRef: z.string().describe(
+    "Bank-assigned unique reference (`AcctSvcrRef` from CAMT.053) used as the idempotency key. Re-importing the same file will skip rows that already have this ref."
+  ),
+  amount: z.string().describe('Entry amount serialized as a decimal string (e.g. "1234.56").'),
+  bookingDate: z.string().describe("ISO-8601 date (YYYY-MM-DD) the entry was booked, taken from `BookgDt`."),
+  description: z.string().nullable().describe(
+    "Unstructured remittance info (`RmtInf/Ustrd`) concatenated into a single string, or null when the entry carried none."
+  )
+}).describe("One imported CAMT entry persisted to the building's fund transactions.");
+var camtImportErrorSchema = z.looseObject({
+  bankRef: z.string().nullable().describe(
+    "`AcctSvcrRef` of the offending entry, or null when the entry lacked one (which itself is an error)."
+  ),
+  reason: z.string().describe(
+    "Human-readable explanation of why this entry was rejected. Surfaced directly in the upload-result toast."
+  )
+}).describe("A CAMT entry that failed to import, with the reason.");
+var camtImportResponseSchema = z.looseObject({
+  statementId: z.string().describe(
+    "Statement identifier from the CAMT `<Stmt><Id>` field, echoed back so the admin can correlate with the source file."
+  ),
+  statementIban: z.string().describe(
+    "IBAN of the account the statement was issued against. Validated to match `building.iban` before any row is persisted."
+  ),
+  periodFrom: z.string().nullable().describe(
+    "ISO-8601 timestamp of the statement start (`FrToDt/FrDtTm`), or null when the bank omitted the period block."
+  ),
+  periodTo: z.string().nullable().describe("ISO-8601 timestamp of the statement end (`FrToDt/ToDtTm`), or null."),
+  importedCount: z.number().int().nonnegative().describe("Number of CAMT entries that produced a new transaction row in this call."),
+  skippedCount: z.number().int().nonnegative().describe(
+    "Number of CAMT entries whose `bankRef` already existed for this building (idempotent re-import)."
+  ),
+  errorCount: z.number().int().nonnegative().describe("Number of CAMT entries that were rejected for the reasons listed in `errors`."),
+  imported: z.array(camtImportedEntrySchema).describe("Detail rows for each newly persisted transaction."),
+  errors: z.array(camtImportErrorSchema).describe("Detail rows for each rejected entry, matched 1:1 against `errorCount`.")
+}).describe("Outcome summary for a CAMT.053 statement import.");
 var failureReportReferenceSchema = z.looseObject({
   id: z.string().uuid(),
   title: z.string().describe("Failure report title for quick UI display."),
@@ -1521,6 +1574,6 @@ var pollVotersResponseSchema = z.looseObject({
 });
 var paginatedPollsResponseSchema = paginatedResponseSchema(pollResponseSchema);
 
-export { ARCHIVE_TYPES, ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, baseEntitySchema, buildingDetailResponseSchema, buildingEntitySchema, buildingResponseSchema, buildingTypeSchema, buildingUserEntitySchema, commentResponseSchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-N7OITI2V.js.map
-//# sourceMappingURL=chunk-N7OITI2V.js.map
+export { ARCHIVE_TYPES, ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, baseEntitySchema, buildingDetailResponseSchema, buildingEntitySchema, buildingResponseSchema, buildingTypeSchema, buildingUserEntitySchema, camtImportResponseSchema, commentResponseSchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
+//# sourceMappingURL=chunk-G2SQ4P5V.js.map
+//# sourceMappingURL=chunk-G2SQ4P5V.js.map

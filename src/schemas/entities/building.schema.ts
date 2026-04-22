@@ -1,5 +1,7 @@
 import { z } from 'zod';
+import { FundsSource } from '../../enums/funds-source.enum';
 import { BuildingRole } from '../../enums/role.enum';
+import { optionalIbanSchema } from '../../validation/iban';
 import { uuidSchema } from '../base.schema';
 import { multipartBoolean } from '../multipart.schema';
 
@@ -88,6 +90,7 @@ export const createBuildingSchema = z.object({
     .describe(
       'Role the creating user should claim for themselves in the new building; omitted creates the building without assigning the caller a role.',
     ),
+  iban: optionalIbanSchema,
 });
 
 /**
@@ -124,6 +127,13 @@ export const updateBuildingSchema = z.object({
     .optional()
     .describe(
       'When true, clears the existing house-rules attachment. Submit independently of `houseRulesFile` uploads.',
+    ),
+  iban: optionalIbanSchema,
+  fundsSource: z
+    .enum([FundsSource.MANUAL, FundsSource.CAMT])
+    .optional()
+    .describe(
+      "Switches how the building's fund transactions are populated. `manual` (default) keeps the representative-facing add/edit flow; `camt` locks manual writes and only a platform admin can ingest CAMT.053 XML statements.",
     ),
 });
 

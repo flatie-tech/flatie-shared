@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+export { ibanSchema, optionalIbanSchema } from './iban';
 // Re-export UUID brand + helpers so consumers can `import { toUuid, UuidString }
 // from '@flatie/shared/validation'` alongside OIB/phone/address validators.
 export { isUuid, toUuid, type UuidString, unsafeUuid, uuidStringSchema } from './uuid';

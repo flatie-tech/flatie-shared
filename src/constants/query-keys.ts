@@ -107,6 +107,7 @@ export const fundsKeys = {
   summary: (buildingId: string) => [...fundsKeys.all, 'summary', buildingId] as const,
   graph: (buildingId: string) => [...fundsKeys.all, 'graph', buildingId] as const,
   income: (buildingId: string) => [...fundsKeys.all, 'income', buildingId] as const,
+  expenses: (buildingId: string) => [...fundsKeys.all, 'expenses', buildingId] as const,
   transactions: (buildingId: string, filters: Record<string, unknown> = {}) =>
     [...fundsKeys.all, 'transactions', buildingId, { ...filters }] as const,
 };

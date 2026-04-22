@@ -1,6 +1,7 @@
 'use strict';
 
-var chunk5UBJHQVX_cjs = require('./chunk-5UBJHQVX.cjs');
+var chunk4XM3CU4C_cjs = require('./chunk-4XM3CU4C.cjs');
+var chunkMTL7OQUB_cjs = require('./chunk-MTL7OQUB.cjs');
 var chunkIW2SD4F6_cjs = require('./chunk-IW2SD4F6.cjs');
 var zod = require('zod');
 
@@ -100,7 +101,7 @@ var dateRangeWithValidationSchema = zod.z.object({
     path: ["fromDate"]
   }
 );
-var apartmentRoleSchema = zod.z.enum([chunk5UBJHQVX_cjs.ApartmentRole.OWNER, chunk5UBJHQVX_cjs.ApartmentRole.TENANT]).describe("`OWNER` for the title-deed holder, `TENANT` for a resident renting from the owner.");
+var apartmentRoleSchema = zod.z.enum([chunkMTL7OQUB_cjs.ApartmentRole.OWNER, chunkMTL7OQUB_cjs.ApartmentRole.TENANT]).describe("`OWNER` for the title-deed holder, `TENANT` for a resident renting from the owner.");
 var apartmentUserSchema = zod.z.looseObject({
   id: zod.z.string(),
   name: zod.z.string().describe("Display name of the apartment member."),
@@ -202,7 +203,7 @@ var ORGANIZATION_LIMITS = {
   NAME_MAX: 200,
   OIB_LENGTH: 11
 };
-var orgRoleSchema = zod.z.enum([chunk5UBJHQVX_cjs.OrgRole.ORG_ADMIN, chunk5UBJHQVX_cjs.OrgRole.SUPERVISOR, chunk5UBJHQVX_cjs.OrgRole.REFERENT, chunk5UBJHQVX_cjs.OrgRole.OPERATIVE]).describe(
+var orgRoleSchema = zod.z.enum([chunkMTL7OQUB_cjs.OrgRole.ORG_ADMIN, chunkMTL7OQUB_cjs.OrgRole.SUPERVISOR, chunkMTL7OQUB_cjs.OrgRole.REFERENT, chunkMTL7OQUB_cjs.OrgRole.OPERATIVE]).describe(
   "Organization role, from highest to lowest authority: `ORG_ADMIN` (manages the org), `SUPERVISOR` (oversees operations), `REFERENT` (day-to-day member interactions), `OPERATIVE` (field work)."
 );
 var createOrganizationSchema = zod.z.object({
@@ -210,7 +211,7 @@ var createOrganizationSchema = zod.z.object({
     ORGANIZATION_LIMITS.NAME_MAX,
     `Name must be at most ${ORGANIZATION_LIMITS.NAME_MAX} characters`
   ).describe("Legal or display name of the organization, 1\u2013200 chars."),
-  type: zod.z.enum([chunk5UBJHQVX_cjs.OrgType.MANAGEMENT_FIRM, chunk5UBJHQVX_cjs.OrgType.PLATFORM]).describe(
+  type: zod.z.enum([chunkMTL7OQUB_cjs.OrgType.MANAGEMENT_FIRM, chunkMTL7OQUB_cjs.OrgType.PLATFORM]).describe(
     "`MANAGEMENT_FIRM` for external building-management firms, `PLATFORM` for the Flatie platform organization itself."
   ),
   oib: zod.z.string().max(ORGANIZATION_LIMITS.OIB_LENGTH, `OIB must be ${ORGANIZATION_LIMITS.OIB_LENGTH} characters`).optional().describe(
@@ -323,12 +324,13 @@ var createBuildingSchema = zod.z.object({
     "True when the building is stratified (each unit has its own title deed). Defaults to false when omitted."
   ),
   role: zod.z.enum([
-    chunk5UBJHQVX_cjs.BuildingRole.OWNER_REPRESENTATIVE,
-    chunk5UBJHQVX_cjs.BuildingRole.DEPUTY_REPRESENTATIVE,
-    chunk5UBJHQVX_cjs.BuildingRole.CO_OWNER
+    chunkMTL7OQUB_cjs.BuildingRole.OWNER_REPRESENTATIVE,
+    chunkMTL7OQUB_cjs.BuildingRole.DEPUTY_REPRESENTATIVE,
+    chunkMTL7OQUB_cjs.BuildingRole.CO_OWNER
   ]).optional().describe(
     "Role the creating user should claim for themselves in the new building; omitted creates the building without assigning the caller a role."
-  )
+  ),
+  iban: chunk4XM3CU4C_cjs.optionalIbanSchema
 });
 var updateBuildingSchema = zod.z.object({
   name: zod.z.string().min(BUILDING_LIMITS.NAME_MIN).max(BUILDING_LIMITS.NAME_MAX).optional().describe("New display name of the building."),
@@ -338,6 +340,10 @@ var updateBuildingSchema = zod.z.object({
   isStratified: multipartBoolean().optional().describe("Toggles whether the building is stratified (per-unit title deeds)."),
   removeHouseRulesFile: multipartBoolean().optional().describe(
     "When true, clears the existing house-rules attachment. Submit independently of `houseRulesFile` uploads."
+  ),
+  iban: chunk4XM3CU4C_cjs.optionalIbanSchema,
+  fundsSource: zod.z.enum([chunkMTL7OQUB_cjs.FundsSource.MANUAL, chunkMTL7OQUB_cjs.FundsSource.CAMT]).optional().describe(
+    "Switches how the building's fund transactions are populated. `manual` (default) keeps the representative-facing add/edit flow; `camt` locks manual writes and only a platform admin can ingest CAMT.053 XML statements."
   )
 });
 var joinBuildingWithOtpSchema = zod.z.object({
@@ -349,9 +355,9 @@ var joinBuildingWithOtpSchema = zod.z.object({
 var updateUserBuildingRoleSchema = zod.z.object({
   userId: uuidSchema.describe("UUID of the user whose building role is being updated."),
   roleType: zod.z.enum([
-    chunk5UBJHQVX_cjs.BuildingRole.OWNER_REPRESENTATIVE,
-    chunk5UBJHQVX_cjs.BuildingRole.DEPUTY_REPRESENTATIVE,
-    chunk5UBJHQVX_cjs.BuildingRole.CO_OWNER
+    chunkMTL7OQUB_cjs.BuildingRole.OWNER_REPRESENTATIVE,
+    chunkMTL7OQUB_cjs.BuildingRole.DEPUTY_REPRESENTATIVE,
+    chunkMTL7OQUB_cjs.BuildingRole.CO_OWNER
   ]).optional().describe(
     "New building role for the user; omit to leave the role unchanged while updating other fields."
   ),
@@ -418,7 +424,7 @@ var failureReportEventSchema = zod.z.object({
 });
 function refineLocation(schema) {
   return schema.superRefine((data, ctx) => {
-    if (data.locationType === chunk5UBJHQVX_cjs.FailureLocationType.COMMON_AREA) {
+    if (data.locationType === chunkMTL7OQUB_cjs.FailureLocationType.COMMON_AREA) {
       if (!data.commonAreaDescription || data.commonAreaDescription.trim() === "") {
         ctx.addIssue({
           code: "custom",
@@ -427,7 +433,7 @@ function refineLocation(schema) {
         });
       }
     }
-    if (data.locationType === chunk5UBJHQVX_cjs.FailureLocationType.OWN_UNIT) {
+    if (data.locationType === chunkMTL7OQUB_cjs.FailureLocationType.OWN_UNIT) {
       if (!data.unitType) {
         ctx.addIssue({
           code: "custom",
@@ -458,12 +464,12 @@ var createFailureReportSchema = refineLocation(
     isAnonymous: multipartBoolean().optional().describe(
       "When true, hides the reporter\u2019s identity from other residents. Defaults to false."
     ),
-    priority: zod.z.enum([chunk5UBJHQVX_cjs.Priority.NORMAL, chunk5UBJHQVX_cjs.Priority.URGENT]).optional().describe("`normal` for standard reports, `urgent` to flag immediate attention."),
-    locationType: zod.z.enum([chunk5UBJHQVX_cjs.FailureLocationType.COMMON_AREA, chunk5UBJHQVX_cjs.FailureLocationType.OWN_UNIT]).optional().describe(
+    priority: zod.z.enum([chunkMTL7OQUB_cjs.Priority.NORMAL, chunkMTL7OQUB_cjs.Priority.URGENT]).optional().describe("`normal` for standard reports, `urgent` to flag immediate attention."),
+    locationType: zod.z.enum([chunkMTL7OQUB_cjs.FailureLocationType.COMMON_AREA, chunkMTL7OQUB_cjs.FailureLocationType.OWN_UNIT]).optional().describe(
       "`common_area` for shared spaces (hallway, roof, etc.) or `own_unit` for a specific apartment/garage/storage unit."
     ),
     commonAreaDescription: zod.z.string().max(FAILURE_REPORT_LIMITS.COMMON_AREA_DESCRIPTION_MAX).optional().describe("Free-text location description. Required when `locationType` is `common_area`."),
-    unitType: zod.z.enum([chunk5UBJHQVX_cjs.FailureUnitType.APARTMENT, chunk5UBJHQVX_cjs.FailureUnitType.GARAGE, chunk5UBJHQVX_cjs.FailureUnitType.STORAGE_UNIT]).optional().describe("Kind of unit when `locationType` is `own_unit`. Required in that case."),
+    unitType: zod.z.enum([chunkMTL7OQUB_cjs.FailureUnitType.APARTMENT, chunkMTL7OQUB_cjs.FailureUnitType.GARAGE, chunkMTL7OQUB_cjs.FailureUnitType.STORAGE_UNIT]).optional().describe("Kind of unit when `locationType` is `own_unit`. Required in that case."),
     unitId: uuidSchema.optional().describe("UUID of the specific unit. Required when `locationType` is `own_unit`."),
     fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-uploaded files to attach to this report."),
     maintenanceLogIds: multipartArray(uuidSchema).optional().describe(
@@ -479,10 +485,10 @@ var updateFailureReportSchema = refineLocation(
     status: zod.z.enum(["pending", "inProgress", "resolved"]).optional().describe(
       "Lifecycle status: `pending` (newly filed), `inProgress` (assigned work), `resolved` (closed out)."
     ),
-    priority: zod.z.enum([chunk5UBJHQVX_cjs.Priority.NORMAL, chunk5UBJHQVX_cjs.Priority.URGENT]).optional().describe("Revised priority: `normal` or `urgent`."),
-    locationType: zod.z.enum([chunk5UBJHQVX_cjs.FailureLocationType.COMMON_AREA, chunk5UBJHQVX_cjs.FailureLocationType.OWN_UNIT]).optional().describe("Revised location classification: `common_area` or `own_unit`."),
+    priority: zod.z.enum([chunkMTL7OQUB_cjs.Priority.NORMAL, chunkMTL7OQUB_cjs.Priority.URGENT]).optional().describe("Revised priority: `normal` or `urgent`."),
+    locationType: zod.z.enum([chunkMTL7OQUB_cjs.FailureLocationType.COMMON_AREA, chunkMTL7OQUB_cjs.FailureLocationType.OWN_UNIT]).optional().describe("Revised location classification: `common_area` or `own_unit`."),
     commonAreaDescription: zod.z.string().max(FAILURE_REPORT_LIMITS.COMMON_AREA_DESCRIPTION_MAX).optional().describe("Revised common-area description. Required when `locationType` is `common_area`."),
-    unitType: zod.z.enum([chunk5UBJHQVX_cjs.FailureUnitType.APARTMENT, chunk5UBJHQVX_cjs.FailureUnitType.GARAGE, chunk5UBJHQVX_cjs.FailureUnitType.STORAGE_UNIT]).optional().describe("Revised unit kind. Required when `locationType` is `own_unit`."),
+    unitType: zod.z.enum([chunkMTL7OQUB_cjs.FailureUnitType.APARTMENT, chunkMTL7OQUB_cjs.FailureUnitType.GARAGE, chunkMTL7OQUB_cjs.FailureUnitType.STORAGE_UNIT]).optional().describe("Revised unit kind. Required when `locationType` is `own_unit`."),
     unitId: uuidSchema.optional().describe("Revised unit UUID. Required when `locationType` is `own_unit`."),
     fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of newly-uploaded files to add to the report."),
     removeChildFileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-attached files to detach from the report."),
@@ -764,7 +770,7 @@ var createTransactionCategorySchema = zod.z.object({
     TRANSACTION_CATEGORY_LIMITS.NAME_MAX,
     `Name must be at most ${TRANSACTION_CATEGORY_LIMITS.NAME_MAX} characters`
   ).describe('Human-readable category name (e.g. "Cleaning", "Water utility"), 1\u2013100 chars.'),
-  type: zod.z.enum([chunk5UBJHQVX_cjs.TransactionType.INCOME, chunk5UBJHQVX_cjs.TransactionType.EXPENSE]).describe(
+  type: zod.z.enum([chunkMTL7OQUB_cjs.TransactionType.INCOME, chunkMTL7OQUB_cjs.TransactionType.EXPENSE]).describe(
     "`INCOME` for categories that receive money into the fund; `EXPENSE` for categories that spend from it."
   )
 });
@@ -772,7 +778,7 @@ var updateTransactionCategorySchema = zod.z.object({
   name: zod.z.string().min(TRANSACTION_CATEGORY_LIMITS.NAME_MIN).max(TRANSACTION_CATEGORY_LIMITS.NAME_MAX).optional().describe("Revised category name, 1\u2013100 chars.")
 });
 var getTransactionCategoriesQuerySchema = zod.z.object({
-  type: zod.z.enum([chunk5UBJHQVX_cjs.TransactionType.INCOME, chunk5UBJHQVX_cjs.TransactionType.EXPENSE]).optional().describe(
+  type: zod.z.enum([chunkMTL7OQUB_cjs.TransactionType.INCOME, chunkMTL7OQUB_cjs.TransactionType.EXPENSE]).optional().describe(
     "Filter results by category type. Omit to return both income and expense categories."
   ),
   search: zod.z.string().max(TRANSACTION_CATEGORY_LIMITS.SEARCH_MAX).optional().describe("Case-insensitive substring matched against the category name.")
@@ -796,10 +802,10 @@ var paginatedResponseSchema = (itemSchema) => zod.z.object({
   hasPreviousPage: zod.z.boolean().describe("True when a previous page exists.")
 });
 var roleTypeSchema = zod.z.enum([
-  ...Object.values(chunk5UBJHQVX_cjs.Role),
-  ...Object.values(chunk5UBJHQVX_cjs.BuildingRole),
-  ...Object.values(chunk5UBJHQVX_cjs.OrgRole),
-  ...Object.values(chunk5UBJHQVX_cjs.PlatformRole)
+  ...Object.values(chunkMTL7OQUB_cjs.Role),
+  ...Object.values(chunkMTL7OQUB_cjs.BuildingRole),
+  ...Object.values(chunkMTL7OQUB_cjs.OrgRole),
+  ...Object.values(chunkMTL7OQUB_cjs.PlatformRole)
 ]);
 var permissionsResponseSchema = zod.z.object({
   scope: zod.z.enum(["building", "organization", "platform"]),
@@ -874,7 +880,7 @@ var archivedItemSchema = zod.z.looseObject({
 var listArchivedResponseSchema = zod.z.object({
   items: zod.z.array(archivedItemSchema).describe("Archived rows across all registered archive types, sorted by archivedAt desc.")
 });
-var buildingStatusSchema = zod.z.enum(Object.values(chunk5UBJHQVX_cjs.BuildingStatus)).describe(
+var buildingStatusSchema = zod.z.enum(Object.values(chunkMTL7OQUB_cjs.BuildingStatus)).describe(
   "Building lifecycle status \u2014 reflects where the building is in the platform onboarding pipeline (pending approval, active, rejected, etc.)."
 );
 var buildingManagerSchema = zod.z.looseObject({
@@ -941,6 +947,12 @@ var buildingDetailResponseSchema = zod.z.looseObject({
     "Assigned management-firm contact, or null when the building has no manager assigned."
   ),
   funds: buildingFundsSchema.nullable().optional().describe("Current fund balance summary, or null when funds have not been initialised."),
+  iban: zod.z.string().nullable().optional().describe(
+    "IBAN of the building fund bank account, or null when unset. Required on the building before a CAMT.053 import can match statements to this building."
+  ),
+  fundsSource: zod.z.enum([chunkMTL7OQUB_cjs.FundsSource.MANUAL, chunkMTL7OQUB_cjs.FundsSource.CAMT]).optional().describe(
+    "Current funding-entry mode for this building. `manual` = representatives add income/expense through the UI; `camt` = platform admin ingests CAMT.053 XML statements and manual writes are blocked."
+  ),
   ownerRepresentatives: zod.z.array(buildingRepresentativeSchema).default([]).describe("Users with the owner-representative role for this building."),
   deputyRepresentatives: zod.z.array(buildingRepresentativeSchema).default([]).describe("Users with the deputy-representative role, if any.")
 });
@@ -1139,6 +1151,47 @@ var faqResponseSchema = zod.z.looseObject({
   createdAt: zod.z.string().describe("ISO-8601 timestamp when the FAQ was created."),
   updatedAt: zod.z.string().nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited.")
 });
+var camtImportedEntrySchema = zod.z.looseObject({
+  transactionId: zod.z.string().uuid().describe("UUID of the newly inserted income_transactions or expense_transactions row."),
+  type: zod.z.enum([chunkMTL7OQUB_cjs.TransactionType.INCOME, chunkMTL7OQUB_cjs.TransactionType.EXPENSE]).describe(
+    "`INCOME` when the CAMT entry was a credit (money into the fund); `EXPENSE` when it was a debit."
+  ),
+  bankRef: zod.z.string().describe(
+    "Bank-assigned unique reference (`AcctSvcrRef` from CAMT.053) used as the idempotency key. Re-importing the same file will skip rows that already have this ref."
+  ),
+  amount: zod.z.string().describe('Entry amount serialized as a decimal string (e.g. "1234.56").'),
+  bookingDate: zod.z.string().describe("ISO-8601 date (YYYY-MM-DD) the entry was booked, taken from `BookgDt`."),
+  description: zod.z.string().nullable().describe(
+    "Unstructured remittance info (`RmtInf/Ustrd`) concatenated into a single string, or null when the entry carried none."
+  )
+}).describe("One imported CAMT entry persisted to the building's fund transactions.");
+var camtImportErrorSchema = zod.z.looseObject({
+  bankRef: zod.z.string().nullable().describe(
+    "`AcctSvcrRef` of the offending entry, or null when the entry lacked one (which itself is an error)."
+  ),
+  reason: zod.z.string().describe(
+    "Human-readable explanation of why this entry was rejected. Surfaced directly in the upload-result toast."
+  )
+}).describe("A CAMT entry that failed to import, with the reason.");
+var camtImportResponseSchema = zod.z.looseObject({
+  statementId: zod.z.string().describe(
+    "Statement identifier from the CAMT `<Stmt><Id>` field, echoed back so the admin can correlate with the source file."
+  ),
+  statementIban: zod.z.string().describe(
+    "IBAN of the account the statement was issued against. Validated to match `building.iban` before any row is persisted."
+  ),
+  periodFrom: zod.z.string().nullable().describe(
+    "ISO-8601 timestamp of the statement start (`FrToDt/FrDtTm`), or null when the bank omitted the period block."
+  ),
+  periodTo: zod.z.string().nullable().describe("ISO-8601 timestamp of the statement end (`FrToDt/ToDtTm`), or null."),
+  importedCount: zod.z.number().int().nonnegative().describe("Number of CAMT entries that produced a new transaction row in this call."),
+  skippedCount: zod.z.number().int().nonnegative().describe(
+    "Number of CAMT entries whose `bankRef` already existed for this building (idempotent re-import)."
+  ),
+  errorCount: zod.z.number().int().nonnegative().describe("Number of CAMT entries that were rejected for the reasons listed in `errors`."),
+  imported: zod.z.array(camtImportedEntrySchema).describe("Detail rows for each newly persisted transaction."),
+  errors: zod.z.array(camtImportErrorSchema).describe("Detail rows for each rejected entry, matched 1:1 against `errorCount`.")
+}).describe("Outcome summary for a CAMT.053 statement import.");
 var failureReportReferenceSchema = zod.z.looseObject({
   id: zod.z.string().uuid(),
   title: zod.z.string().describe("Failure report title for quick UI display."),
@@ -1297,38 +1350,38 @@ var chatMessageDataSchema = baseNotificationDataSchema.extend({
 });
 var unimplementedDataSchema = baseNotificationDataSchema;
 ({
-  [chunk5UBJHQVX_cjs.NotificationType.NOTICE_CREATED]: noticeCreatedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.NOTICE_APPROVED]: noticeApprovedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.NOTICE_REJECTED]: noticeRejectedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.POLL_CREATED]: pollCreatedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.POLL_DEADLINE_24H]: unimplementedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.POLL_DEADLINE_1H]: unimplementedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.POLL_FINALIZED]: pollFinalizedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.EVENT_CREATED]: eventCreatedOrUpdatedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.EVENT_UPDATED]: eventCreatedOrUpdatedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.EVENT_CANCELLED]: eventCancelledDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.EVENT_REMINDER_24H]: unimplementedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.EVENT_REMINDER_1H]: unimplementedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.WASTE_REMINDER_MIXED]: wasteReminderDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.WASTE_REMINDER_BIO]: wasteReminderDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.WASTE_REMINDER_PLASTIC_METAL]: wasteReminderDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.WASTE_REMINDER_PAPER_CARDBOARD]: wasteReminderDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.FAILURE_REPORT_CREATED]: failureReportCreatedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.FAILURE_REPORT_STATUS_CHANGED]: failureReportStatusDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.FAILURE_REPORT_RESOLVED]: failureReportStatusDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.MAINTENANCE_LOG_CREATED]: maintenanceLogCreatedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.PAYMENT_DUE]: unimplementedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.PAYMENT_RECEIVED]: unimplementedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.BUILDING_JOIN_REQUEST_RECEIVED]: buildingJoinRequestReceivedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.BUILDING_JOIN_REQUEST_APPROVED]: buildingJoinRequestDecidedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.BUILDING_JOIN_REQUEST_REJECTED]: buildingJoinRequestDecidedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.BUILDING_MEMBER_JOINED]: buildingMemberJoinedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.BUILDING_ROLE_CHANGED]: buildingRoleChangedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.BUILDING_PENDING_APPROVAL]: buildingPendingApprovalDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.BUILDING_APPROVED]: buildingApprovedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.BUILDING_REJECTED]: buildingRejectedDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.CHAT_MESSAGE]: chatMessageDataSchema,
-  [chunk5UBJHQVX_cjs.NotificationType.SYSTEM_ANNOUNCEMENT]: unimplementedDataSchema
+  [chunkMTL7OQUB_cjs.NotificationType.NOTICE_CREATED]: noticeCreatedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.NOTICE_APPROVED]: noticeApprovedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.NOTICE_REJECTED]: noticeRejectedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.POLL_CREATED]: pollCreatedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.POLL_DEADLINE_24H]: unimplementedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.POLL_DEADLINE_1H]: unimplementedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.POLL_FINALIZED]: pollFinalizedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.EVENT_CREATED]: eventCreatedOrUpdatedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.EVENT_UPDATED]: eventCreatedOrUpdatedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.EVENT_CANCELLED]: eventCancelledDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.EVENT_REMINDER_24H]: unimplementedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.EVENT_REMINDER_1H]: unimplementedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.WASTE_REMINDER_MIXED]: wasteReminderDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.WASTE_REMINDER_BIO]: wasteReminderDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.WASTE_REMINDER_PLASTIC_METAL]: wasteReminderDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.WASTE_REMINDER_PAPER_CARDBOARD]: wasteReminderDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.FAILURE_REPORT_CREATED]: failureReportCreatedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.FAILURE_REPORT_STATUS_CHANGED]: failureReportStatusDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.FAILURE_REPORT_RESOLVED]: failureReportStatusDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.MAINTENANCE_LOG_CREATED]: maintenanceLogCreatedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.PAYMENT_DUE]: unimplementedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.PAYMENT_RECEIVED]: unimplementedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.BUILDING_JOIN_REQUEST_RECEIVED]: buildingJoinRequestReceivedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.BUILDING_JOIN_REQUEST_APPROVED]: buildingJoinRequestDecidedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.BUILDING_JOIN_REQUEST_REJECTED]: buildingJoinRequestDecidedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.BUILDING_MEMBER_JOINED]: buildingMemberJoinedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.BUILDING_ROLE_CHANGED]: buildingRoleChangedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.BUILDING_PENDING_APPROVAL]: buildingPendingApprovalDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.BUILDING_APPROVED]: buildingApprovedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.BUILDING_REJECTED]: buildingRejectedDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.CHAT_MESSAGE]: chatMessageDataSchema,
+  [chunkMTL7OQUB_cjs.NotificationType.SYSTEM_ANNOUNCEMENT]: unimplementedDataSchema
 });
 var notificationDataSchema = zod.z.union([
   noticeCreatedDataSchema,
@@ -1352,7 +1405,7 @@ var notificationDataSchema = zod.z.union([
   chatMessageDataSchema,
   unimplementedDataSchema
 ]);
-var notificationTypeValues = Object.values(chunk5UBJHQVX_cjs.NotificationType);
+var notificationTypeValues = Object.values(chunkMTL7OQUB_cjs.NotificationType);
 var notificationResponseSchema = zod.z.looseObject({
   id: zod.z.string().uuid(),
   title: zod.z.string().describe("Localized notification title shown in the UI list and push notification."),
@@ -1563,6 +1616,7 @@ exports.buildingEntitySchema = buildingEntitySchema;
 exports.buildingResponseSchema = buildingResponseSchema;
 exports.buildingTypeSchema = buildingTypeSchema;
 exports.buildingUserEntitySchema = buildingUserEntitySchema;
+exports.camtImportResponseSchema = camtImportResponseSchema;
 exports.commentResponseSchema = commentResponseSchema;
 exports.commonStatusOptions = commonStatusOptions;
 exports.copyFaqsSchema = copyFaqsSchema;
@@ -1663,5 +1717,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-RJYPG2CO.cjs.map
-//# sourceMappingURL=chunk-RJYPG2CO.cjs.map
+//# sourceMappingURL=chunk-DCJ6X3A2.cjs.map
+//# sourceMappingURL=chunk-DCJ6X3A2.cjs.map

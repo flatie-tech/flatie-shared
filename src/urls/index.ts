@@ -200,6 +200,10 @@ export const API_ROUTES = {
       `/buildings/${buildingId}/income/${incomeId}`,
     INCOME_RESTORE: (buildingId: string, incomeId: string) =>
       `/buildings/${buildingId}/income/${incomeId}/restore`,
+    EXPENSES: (buildingId: string) => `/buildings/${buildingId}/expenses`,
+    EXPENSE_DETAIL: (buildingId: string, expenseId: string) =>
+      `/buildings/${buildingId}/expenses/${expenseId}`,
+    IMPORT_CAMT: (buildingId: string) => `/buildings/${buildingId}/funds/import/camt`,
     RECURRING_TEMPLATES: (buildingId: string) => `/buildings/${buildingId}/recurring-templates`,
     RECURRING_TEMPLATE_DETAIL: (buildingId: string, templateId: string) =>
       `/buildings/${buildingId}/recurring-templates/${templateId}`,

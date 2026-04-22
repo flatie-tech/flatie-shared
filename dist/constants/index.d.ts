@@ -120,6 +120,7 @@ declare const fundsKeys: {
     summary: (buildingId: string) => readonly ["funds", "summary", string];
     graph: (buildingId: string) => readonly ["funds", "graph", string];
     income: (buildingId: string) => readonly ["funds", "income", string];
+    expenses: (buildingId: string) => readonly ["funds", "expenses", string];
     transactions: (buildingId: string, filters?: Record<string, unknown>) => readonly ["funds", "transactions", string, {
         readonly [x: string]: unknown;
     }];
@@ -370,6 +371,7 @@ declare const queryKeys: {
         summary: (buildingId: string) => readonly ["funds", "summary", string];
         graph: (buildingId: string) => readonly ["funds", "graph", string];
         income: (buildingId: string) => readonly ["funds", "income", string];
+        expenses: (buildingId: string) => readonly ["funds", "expenses", string];
         transactions: (buildingId: string, filters?: Record<string, unknown>) => readonly ["funds", "transactions", string, {
             readonly [x: string]: unknown;
         }];
