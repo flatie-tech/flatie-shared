@@ -1,4 +1,5 @@
 import { P as PaginatedResponse, a as PermissionContext } from '../permission-context-DP8ApK8H.js';
+import { z } from 'zod';
 import { P as Permission, S as ScopedDomain, b as ScopedAction, B as BuildingRole, O as OrgRole, a as PlatformRole } from '../role.enum-Cr_Ex5DH.js';
 import { F as FailureStatus, P as Priority } from '../status.enum-D4pAcU1b.js';
 
@@ -43,6 +44,32 @@ declare function calculatePaginationMeta(total: number, offset: number, limit: n
     isFirstPage: boolean;
     isLastPage: boolean;
 };
+
+/**
+ * Error thrown by `parseData` when a value fails schema validation.
+ *
+ * Carries the underlying `ZodError` on `cause` (per the ES2022 spec),
+ * a stable `code` that matches the `BACKEND_ERROR_CODES` naming
+ * convention so fetch interceptors / toasts can discriminate it the
+ * same way they discriminate server-side codes, and the flat
+ * `issues` array for quick inspection.
+ */
+declare class ParseError extends Error {
+    readonly code: "RESPONSE_CONTRACT_DRIFT";
+    readonly issues: z.core.$ZodIssue[];
+    constructor(message: string, zodError: z.ZodError);
+}
+/**
+ * Validates `data` against a Zod schema and returns the inferred type.
+ *
+ * Throws `ParseError` on shape drift so contract mismatches surface as
+ * loud, toast-able errors at the client boundary — instead of cascading
+ * `undefined` access downstream.
+ *
+ * Designed for response-parsing on the client (mobile, web). Server code
+ * should use schema `.parse()` directly.
+ */
+declare const parseData: <T extends z.ZodType>(schema: T, data: unknown, errorMessage?: string) => z.infer<T>;
 
 interface ActionFlags {
     canEdit: boolean;
@@ -174,4 +201,4 @@ declare function getDateRange(filter: 'today' | 'yesterday' | 'week' | 'month'):
  */
 declare function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(func: T, delay: number): (...args: Parameters<T>) => void;
 
-export { type ActionFlags, MANAGERIAL_BUILDING_ROLES, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type StatusVariant, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatText, getContextUserId, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isAdminContext, isManagerialRole, normalizePaginatedResponse, priorityVariant };
+export { type ActionFlags, MANAGERIAL_BUILDING_ROLES, ParseError, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type StatusVariant, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatText, getContextUserId, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isAdminContext, isManagerialRole, normalizePaginatedResponse, parseData, priorityVariant };

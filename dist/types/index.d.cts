@@ -125,17 +125,6 @@ interface CreateEventRequest {
     endDate: string;
     color: EventColor;
 }
-/**
- * Update event request
- */
-interface UpdateEventRequest {
-    title?: string;
-    type?: EventType;
-    description?: string;
-    startDate?: string;
-    endDate?: string;
-    color?: EventColor;
-}
 
 /**
  * Failure report entity
@@ -165,14 +154,6 @@ interface FailureReportWithCreator extends FailureReport, PermissionFields {
 interface CreateFailureReportRequest {
     title: string;
     description?: string;
-}
-/**
- * Update failure report request
- */
-interface UpdateFailureReportRequest {
-    title?: string;
-    description?: string;
-    status?: FailureStatus;
 }
 
 /**
@@ -234,24 +215,6 @@ interface CreateTransactionRequest {
     frequency?: string;
 }
 /**
- * Update transaction request
- */
-interface UpdateTransactionRequest {
-    description?: string;
-    amount?: number;
-    date?: string;
-    type?: TransactionType;
-    category?: TransactionCategory;
-    title?: string;
-    frequency?: string;
-}
-/**
- * Update fund balance request
- */
-interface UpdateFundRequest {
-    initialBalance: number;
-}
-/**
  * Recurring transaction template
  */
 interface RecurringTemplate extends BaseEntity {
@@ -280,20 +243,6 @@ interface CreateRecurringTemplateRequest {
     frequency: string;
     startDate: string;
     endDate?: string;
-}
-/**
- * Update recurring template request
- */
-interface UpdateRecurringTemplateRequest {
-    title?: string;
-    description?: string;
-    amount?: number;
-    type?: TransactionType;
-    category?: TransactionCategory;
-    frequency?: string;
-    startDate?: string;
-    endDate?: string | null;
-    isActive?: boolean;
 }
 
 /**
@@ -333,17 +282,6 @@ interface CreateMaintenanceLogRequest {
     financedBy?: MaintenanceFinancedBy;
     warranty?: boolean;
 }
-/**
- * Update maintenance log request
- */
-interface UpdateMaintenanceLogRequest {
-    title?: string;
-    description?: string;
-    contractor?: string;
-    cost?: string;
-    financedBy?: MaintenanceFinancedBy;
-    warranty?: boolean;
-}
 
 /**
  * Notice entity
@@ -369,13 +307,6 @@ interface NoticeWithCreator extends Notice, PermissionFields {
 interface CreateNoticeRequest {
     title: string;
     content: string;
-}
-/**
- * Update notice request
- */
-interface UpdateNoticeRequest {
-    title?: string;
-    content?: string;
 }
 
 /** Scope for permission resolution. */
@@ -496,4 +427,4 @@ interface UserBuildingRole {
     permissions: string[];
 }
 
-export type { BaseEntity, Building, BuildingEntity, BuildingFund, BuildingMember, BuildingOTPResponse, BuildingUser, BuildingUserEntity, BuildingWithRole, CreateEventRequest, CreateFailureReportRequest, CreateMaintenanceLogRequest, CreateNoticeRequest, CreatePollRequest, CreateRecurringTemplateRequest, CreateTransactionRequest, Event, EventColor, EventType, EventWithCreator, FailureReport, FailureReportWithCreator, FinancialGraphData, FinancialSummary, MaintenanceFinancedBy, MaintenanceLog, MaintenanceLogWithCreator, Notice, NoticeWithCreator, PermissionFields, PermissionScope, PermissionsResponse, Poll, PollOptionResult, PollVote, PollWithResults, RecurringTemplate, Session, Transaction, UpdateEventRequest, UpdateFailureReportRequest, UpdateFundRequest, UpdateMaintenanceLogRequest, UpdateNoticeRequest, UpdateRecurringTemplateRequest, UpdateTransactionRequest, User, UserBuildingRole, UserCreatedEntity, UserWithBuildings, VoteRequest };
+export type { BaseEntity, Building, BuildingEntity, BuildingFund, BuildingMember, BuildingOTPResponse, BuildingUser, BuildingUserEntity, BuildingWithRole, CreateEventRequest, CreateFailureReportRequest, CreateMaintenanceLogRequest, CreateNoticeRequest, CreatePollRequest, CreateRecurringTemplateRequest, CreateTransactionRequest, Event, EventColor, EventType, EventWithCreator, FailureReport, FailureReportWithCreator, FinancialGraphData, FinancialSummary, MaintenanceFinancedBy, MaintenanceLog, MaintenanceLogWithCreator, Notice, NoticeWithCreator, PermissionFields, PermissionScope, PermissionsResponse, Poll, PollOptionResult, PollVote, PollWithResults, RecurringTemplate, Session, Transaction, User, UserBuildingRole, UserCreatedEntity, UserWithBuildings, VoteRequest };

@@ -1,5 +1,13 @@
 import { z } from 'zod';
 
+declare const ibanSchema: z.ZodString;
+/**
+ * Optional IBAN — accepts undefined/null/empty string, or a valid IBAN.
+ * Used on update endpoints where the caller can clear the field by
+ * submitting an empty string.
+ */
+declare const optionalIbanSchema: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+
 /**
  * Branded UUID string.
  *
@@ -44,14 +52,6 @@ declare function toUuid(value: string): UuidString;
  * input — that's what `toUuid` is for.
  */
 declare function unsafeUuid(value: string): UuidString;
-
-declare const ibanSchema: z.ZodString;
-/**
- * Optional IBAN — accepts undefined/null/empty string, or a valid IBAN.
- * Used on update endpoints where the caller can clear the field by
- * submitting an empty string.
- */
-declare const optionalIbanSchema: z.ZodNullable<z.ZodOptional<z.ZodString>>;
 
 /**
  * Croatian OIB (Personal Identification Number) validation.
