@@ -132,6 +132,9 @@ declare const API_ROUTES: {
         readonly INCOME: (buildingId: string) => string;
         readonly INCOME_DETAIL: (buildingId: string, incomeId: string) => string;
         readonly INCOME_RESTORE: (buildingId: string, incomeId: string) => string;
+        readonly EXPENSES: (buildingId: string) => string;
+        readonly EXPENSE_DETAIL: (buildingId: string, expenseId: string) => string;
+        readonly IMPORT_CAMT: (buildingId: string) => string;
         readonly RECURRING_TEMPLATES: (buildingId: string) => string;
         readonly RECURRING_TEMPLATE_DETAIL: (buildingId: string, templateId: string) => string;
         readonly RECURRING_TEMPLATE_RESTORE: (buildingId: string, templateId: string) => string;

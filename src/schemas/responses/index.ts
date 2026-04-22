@@ -31,6 +31,8 @@ export {
 } from './failure-reports';
 export type { FaqResponse } from './faqs';
 export { faqResponseSchema } from './faqs';
+export type { CamtImportResponse } from './funds-camt-import';
+export { camtImportResponseSchema } from './funds-camt-import';
 export type { MaintenanceLogResponse, PaginatedMaintenanceLogsResponse } from './maintenance-logs';
 export {
   maintenanceLogResponseSchema,

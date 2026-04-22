@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { BuildingStatus } from '../../enums/building-status.enum';
+import { FundsSource } from '../../enums/funds-source.enum';
 import { buildingTypeSchema } from '../entities/building.schema';
 import { paginatedResponseSchema } from '../pagination.schema';
 
@@ -159,6 +160,19 @@ export const buildingDetailResponseSchema = z.looseObject({
     .nullable()
     .optional()
     .describe('Current fund balance summary, or null when funds have not been initialised.'),
+  iban: z
+    .string()
+    .nullable()
+    .optional()
+    .describe(
+      'IBAN of the building fund bank account, or null when unset. Required on the building before a CAMT.053 import can match statements to this building.',
+    ),
+  fundsSource: z
+    .enum([FundsSource.MANUAL, FundsSource.CAMT])
+    .optional()
+    .describe(
+      'Current funding-entry mode for this building. `manual` = representatives add income/expense through the UI; `camt` = platform admin ingests CAMT.053 XML statements and manual writes are blocked.',
+    ),
   ownerRepresentatives: z
     .array(buildingRepresentativeSchema)
     .default([])

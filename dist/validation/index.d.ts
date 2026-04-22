@@ -45,6 +45,14 @@ declare function toUuid(value: string): UuidString;
  */
 declare function unsafeUuid(value: string): UuidString;
 
+declare const ibanSchema: z.ZodString;
+/**
+ * Optional IBAN — accepts undefined/null/empty string, or a valid IBAN.
+ * Used on update endpoints where the caller can clear the field by
+ * submitting an empty string.
+ */
+declare const optionalIbanSchema: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+
 /**
  * Croatian OIB (Personal Identification Number) validation.
  * OIB is an 11-digit number with a check digit (ISO 7064, MOD 11,10).
@@ -65,4 +73,4 @@ declare const phoneSchema: z.ZodOptional<z.ZodString>;
  */
 declare const addressSchema: z.ZodString;
 
-export { type UuidString, addressSchema, isUuid, oibSchema, optionalOibSchema, phoneSchema, toUuid, unsafeUuid, uuidStringSchema };
+export { type UuidString, addressSchema, ibanSchema, isUuid, oibSchema, optionalIbanSchema, optionalOibSchema, phoneSchema, toUuid, unsafeUuid, uuidStringSchema };

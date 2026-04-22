@@ -1,3 +1,5 @@
+'use strict';
+
 // src/urls/index.ts
 var API_VERSION = "v1";
 var API_ROUTES = {
@@ -144,6 +146,9 @@ var API_ROUTES = {
     INCOME: (buildingId) => `/buildings/${buildingId}/income`,
     INCOME_DETAIL: (buildingId, incomeId) => `/buildings/${buildingId}/income/${incomeId}`,
     INCOME_RESTORE: (buildingId, incomeId) => `/buildings/${buildingId}/income/${incomeId}/restore`,
+    EXPENSES: (buildingId) => `/buildings/${buildingId}/expenses`,
+    EXPENSE_DETAIL: (buildingId, expenseId) => `/buildings/${buildingId}/expenses/${expenseId}`,
+    IMPORT_CAMT: (buildingId) => `/buildings/${buildingId}/funds/import/camt`,
     RECURRING_TEMPLATES: (buildingId) => `/buildings/${buildingId}/recurring-templates`,
     RECURRING_TEMPLATE_DETAIL: (buildingId, templateId) => `/buildings/${buildingId}/recurring-templates/${templateId}`,
     RECURRING_TEMPLATE_RESTORE: (buildingId, templateId) => `/buildings/${buildingId}/recurring-templates/${templateId}/restore`
@@ -229,6 +234,7 @@ var API_ROUTES = {
   }
 };
 
-export { API_ROUTES, API_VERSION };
-//# sourceMappingURL=chunk-MLS3VGSR.js.map
-//# sourceMappingURL=chunk-MLS3VGSR.js.map
+exports.API_ROUTES = API_ROUTES;
+exports.API_VERSION = API_VERSION;
+//# sourceMappingURL=chunk-J7RHXV4V.cjs.map
+//# sourceMappingURL=chunk-J7RHXV4V.cjs.map
