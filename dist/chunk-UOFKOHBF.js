@@ -45,6 +45,15 @@ var API_ROUTES = {
     IMPORT_PREVIEW: (id) => `/buildings/${id}/import/preview`,
     IMPORT_COMMIT: (id) => `/buildings/${id}/import/commit`
   },
+  // ── Building Email (per-building inbox, representative-only) ────────────
+  BUILDING_EMAIL: {
+    THREADS: (buildingId) => `/buildings/${buildingId}/email/threads`,
+    THREAD: (buildingId, threadId) => `/buildings/${buildingId}/email/threads/${threadId}`,
+    REPLY: (buildingId, threadId) => `/buildings/${buildingId}/email/threads/${threadId}/reply`,
+    ARCHIVE: (buildingId, threadId) => `/buildings/${buildingId}/email/threads/${threadId}/archive`,
+    UNARCHIVE: (buildingId, threadId) => `/buildings/${buildingId}/email/threads/${threadId}/unarchive`,
+    INBOUND_WEBHOOK: "/webhooks/mail/inbound"
+  },
   // ── Apartments ────────────────────────────────────────────────────────
   APARTMENTS: {
     LIST: (buildingId) => `/buildings/${buildingId}/apartments`,
@@ -230,5 +239,5 @@ var API_ROUTES = {
 };
 
 export { API_ROUTES, API_VERSION };
-//# sourceMappingURL=chunk-MLS3VGSR.js.map
-//# sourceMappingURL=chunk-MLS3VGSR.js.map
+//# sourceMappingURL=chunk-UOFKOHBF.js.map
+//# sourceMappingURL=chunk-UOFKOHBF.js.map

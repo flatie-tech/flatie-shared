@@ -17,6 +17,19 @@ export {
   buildingResponseSchema,
   paginatedBuildingsResponseSchema,
 } from './building';
+export type {
+  EmailDirection,
+  EmailMessage,
+  EmailThread,
+  EmailThreadDetail,
+  PaginatedEmailThreadsResponse,
+} from './building-email';
+export {
+  emailMessageSchema,
+  emailThreadDetailSchema,
+  emailThreadSchema,
+  paginatedEmailThreadsResponseSchema,
+} from './building-email';
 export type { CommentResponse } from './comments';
 export { commentResponseSchema } from './comments';
 export type { EventResponse, PaginatedEventsResponse } from './events';

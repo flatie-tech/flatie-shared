@@ -13,6 +13,10 @@
 // Zod-inferred payload types here are the contract-of-truth going
 // forward.
 
+export type { CreateEmailThreadRequestPayload } from './create-email-thread';
+export { createEmailThreadRequestSchema } from './create-email-thread';
+export type { ReplyEmailThreadRequestPayload } from './reply-email-thread';
+export { replyEmailThreadRequestSchema } from './reply-email-thread';
 export type { UpdateFailureReportRequestPayload } from './update-failure-report';
 export { updateFailureReportRequestSchema } from './update-failure-report';
 export type { UpdateMaintenanceLogRequestPayload } from './update-maintenance-log';

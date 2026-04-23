@@ -46,6 +46,14 @@ declare const API_ROUTES: {
         readonly IMPORT_PREVIEW: (id: string) => string;
         readonly IMPORT_COMMIT: (id: string) => string;
     };
+    readonly BUILDING_EMAIL: {
+        readonly THREADS: (buildingId: string) => string;
+        readonly THREAD: (buildingId: string, threadId: string) => string;
+        readonly REPLY: (buildingId: string, threadId: string) => string;
+        readonly ARCHIVE: (buildingId: string, threadId: string) => string;
+        readonly UNARCHIVE: (buildingId: string, threadId: string) => string;
+        readonly INBOUND_WEBHOOK: "/webhooks/mail/inbound";
+    };
     readonly APARTMENTS: {
         readonly LIST: (buildingId: string) => string;
         readonly DETAIL: (buildingId: string, apartmentId: string) => string;

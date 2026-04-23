@@ -57,6 +57,20 @@ export const API_ROUTES = {
     IMPORT_COMMIT: (id: string) => `/buildings/${id}/import/commit`,
   },
 
+  // ── Building Email (per-building inbox, representative-only) ────────────
+  BUILDING_EMAIL: {
+    THREADS: (buildingId: string) => `/buildings/${buildingId}/email/threads`,
+    THREAD: (buildingId: string, threadId: string) =>
+      `/buildings/${buildingId}/email/threads/${threadId}`,
+    REPLY: (buildingId: string, threadId: string) =>
+      `/buildings/${buildingId}/email/threads/${threadId}/reply`,
+    ARCHIVE: (buildingId: string, threadId: string) =>
+      `/buildings/${buildingId}/email/threads/${threadId}/archive`,
+    UNARCHIVE: (buildingId: string, threadId: string) =>
+      `/buildings/${buildingId}/email/threads/${threadId}/unarchive`,
+    INBOUND_WEBHOOK: '/webhooks/mail/inbound',
+  },
+
   // ── Apartments ────────────────────────────────────────────────────────
   APARTMENTS: {
     LIST: (buildingId: string) => `/buildings/${buildingId}/apartments`,

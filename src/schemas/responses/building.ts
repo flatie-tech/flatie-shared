@@ -149,6 +149,13 @@ export const buildingDetailResponseSchema = z.looseObject({
     .nullable()
     .optional()
     .describe('ISO-8601 timestamp of the last edit; null when never edited.'),
+  inboxAddress: z
+    .string()
+    .nullable()
+    .optional()
+    .describe(
+      'Unique per-building email address on `mail.flatie.app`, generated at building creation from a slug of the building name. Managers sending to or replying from this address have their messages routed into this building’s email thread feature.',
+    ),
   manager: buildingManagerSchema
     .nullable()
     .optional()
