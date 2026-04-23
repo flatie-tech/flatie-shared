@@ -35,6 +35,12 @@ var noticeKeys = {
   details: () => [...noticeKeys.all, "detail"],
   detail: (id) => [...noticeKeys.details(), id]
 };
+var buildingEmailKeys = {
+  all: ["buildingEmail"],
+  threads: (buildingId) => [...buildingEmailKeys.all, "threads", buildingId],
+  threadList: (buildingId, filters = {}) => [...buildingEmailKeys.threads(buildingId), { ...filters }],
+  thread: (buildingId, threadId) => [...buildingEmailKeys.threads(buildingId), threadId]
+};
 var pollKeys = {
   all: ["poll"],
   lists: () => [...pollKeys.all, "list"],
@@ -396,6 +402,6 @@ var ALL_PERMISSIONS = unique(Object.values(Permission));
 var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[OrgRole.ORG_ADMIN];
 var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_ADMIN];
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminBuildingKeys, adminKeys, apartmentKeys, blogKeys, buildingKeys, chatKeys, dashboardSummaryKeys, documentKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };
-//# sourceMappingURL=chunk-C6OHDQ5I.js.map
-//# sourceMappingURL=chunk-C6OHDQ5I.js.map
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminBuildingKeys, adminKeys, apartmentKeys, blogKeys, buildingEmailKeys, buildingKeys, chatKeys, dashboardSummaryKeys, documentKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };
+//# sourceMappingURL=chunk-JGMO5X3J.js.map
+//# sourceMappingURL=chunk-JGMO5X3J.js.map

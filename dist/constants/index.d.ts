@@ -67,6 +67,14 @@ declare const noticeKeys: {
     details: () => readonly ["notice", "detail"];
     detail: (id: string) => readonly ["notice", "detail", string];
 };
+declare const buildingEmailKeys: {
+    all: readonly ["buildingEmail"];
+    threads: (buildingId: string) => readonly ["buildingEmail", "threads", string];
+    threadList: (buildingId: string, filters?: Record<string, unknown>) => readonly ["buildingEmail", "threads", string, {
+        readonly [x: string]: unknown;
+    }];
+    thread: (buildingId: string, threadId: string) => readonly ["buildingEmail", "threads", string, string];
+};
 declare const pollKeys: {
     all: readonly ["poll"];
     lists: () => readonly ["poll", "list"];
@@ -537,4 +545,4 @@ declare const ADMIN_ORG_PERMISSIONS: Permission[];
 /** Admin platform-scope permissions — same as PLATFORM_ADMIN. */
 declare const ADMIN_PLATFORM_PERMISSIONS: Permission[];
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminBuildingKeys, adminKeys, apartmentKeys, blogKeys, buildingKeys, chatKeys, dashboardSummaryKeys, documentKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminBuildingKeys, adminKeys, apartmentKeys, blogKeys, buildingEmailKeys, buildingKeys, chatKeys, dashboardSummaryKeys, documentKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };

@@ -6,6 +6,7 @@ export {
   adminKeys,
   apartmentKeys,
   blogKeys,
+  buildingEmailKeys,
   buildingKeys,
   chatKeys,
   dashboardSummaryKeys,

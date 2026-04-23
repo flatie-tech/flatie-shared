@@ -37,6 +37,12 @@ var noticeKeys = {
   details: () => [...noticeKeys.all, "detail"],
   detail: (id) => [...noticeKeys.details(), id]
 };
+var buildingEmailKeys = {
+  all: ["buildingEmail"],
+  threads: (buildingId) => [...buildingEmailKeys.all, "threads", buildingId],
+  threadList: (buildingId, filters = {}) => [...buildingEmailKeys.threads(buildingId), { ...filters }],
+  thread: (buildingId, threadId) => [...buildingEmailKeys.threads(buildingId), threadId]
+};
 var pollKeys = {
   all: ["poll"],
   lists: () => [...pollKeys.all, "list"],
@@ -410,6 +416,7 @@ exports.adminBuildingKeys = adminBuildingKeys;
 exports.adminKeys = adminKeys;
 exports.apartmentKeys = apartmentKeys;
 exports.blogKeys = blogKeys;
+exports.buildingEmailKeys = buildingEmailKeys;
 exports.buildingKeys = buildingKeys;
 exports.chatKeys = chatKeys;
 exports.dashboardSummaryKeys = dashboardSummaryKeys;
@@ -435,5 +442,5 @@ exports.transactionCategoryKeys = transactionCategoryKeys;
 exports.unitSearchKeys = unitSearchKeys;
 exports.userKeys = userKeys;
 exports.widgetKeys = widgetKeys;
-//# sourceMappingURL=chunk-4DLVKGR7.cjs.map
-//# sourceMappingURL=chunk-4DLVKGR7.cjs.map
+//# sourceMappingURL=chunk-HHDGGDQU.cjs.map
+//# sourceMappingURL=chunk-HHDGGDQU.cjs.map
