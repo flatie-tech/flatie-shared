@@ -1,4 +1,4 @@
-import { P as Permission, B as BuildingRole, O as OrgRole, a as PlatformRole } from '../role.enum-Cr_Ex5DH.js';
+import { P as Permission, B as BuildingRole, O as OrgRole, a as PlatformRole } from '../role.enum-B_pBlMJd.js';
 
 /**
  * Default pagination page size used across the stack.

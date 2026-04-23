@@ -35,7 +35,6 @@ export {
   OrgRole,
   PLATFORM_ROLE_RANK,
   PlatformRole,
-  Role,
 } from './role.enum';
 export {
   ApprovalStatus,

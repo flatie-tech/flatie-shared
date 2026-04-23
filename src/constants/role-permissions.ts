@@ -29,6 +29,25 @@ const ALL_READS = [
 
 // ─── Building Role Permission Mappings ──────────────────────────────
 
+/**
+ * RESIDENT: default building-level membership for anyone who lives in the
+ * building but hasn't been confirmed as a co-owner. Covers tenants, family
+ * members of co-owners, pre-land-book-registration buyers, and similar.
+ *
+ * Reads community content and files their own failure reports. Cannot see
+ * fund finances or vote — under Croatian ZUOZ / NN 152/2024, pričuva and
+ * voting are co-ownership rights.
+ */
+const RESIDENT_PERMISSIONS = [
+  // ALL_READS minus financial:read — residents don't see fund balances.
+  ...ALL_READS.filter((p) => p !== 'financial:read'),
+  // File their own issue reports (plumbing, heating, common-area issues).
+  'failure_report:create',
+  'failure_report:update:own',
+  'failure_report:delete:own',
+  'user:delete:own',
+];
+
 // CO_OWNER: own content for scoped domains + voting
 const CO_OWNER_PERMISSIONS = [
   ...ALL_READS,
@@ -144,6 +163,7 @@ const OPERATIVE_ORG_PERMISSIONS = ['org:view_buildings'];
 // ─── Final Role → Permission Records ────────────────────────────────
 
 export const BUILDING_ROLE_PERMISSIONS: Record<BuildingRole, Permission[]> = {
+  [BuildingRole.RESIDENT]: unique(RESIDENT_PERMISSIONS),
   [BuildingRole.CO_OWNER]: unique(CO_OWNER_PERMISSIONS),
   [BuildingRole.DEPUTY_REPRESENTATIVE]: unique(REPRESENTATIVE_PERMISSIONS),
   [BuildingRole.OWNER_REPRESENTATIVE]: unique(REPRESENTATIVE_PERMISSIONS),
@@ -168,6 +188,7 @@ export const PLATFORM_ROLE_PERMISSIONS: Record<PlatformRole, Permission[]> = {
     'platform:moderate_content',
     'platform:manage_settings',
     'platform:manage_operatives',
+    'platform:manage_subscriptions',
     'platform:purge',
     'system:delete_user',
     'system:create_organization',

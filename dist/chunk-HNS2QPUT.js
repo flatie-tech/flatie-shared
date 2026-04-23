@@ -297,6 +297,7 @@ var Permission = {
   PLATFORM_MODERATE_CONTENT: "platform:moderate_content",
   PLATFORM_MANAGE_SETTINGS: "platform:manage_settings",
   PLATFORM_MANAGE_OPERATIVES: "platform:manage_operatives",
+  PLATFORM_MANAGE_SUBSCRIPTIONS: "platform:manage_subscriptions",
   PLATFORM_PURGE: "platform:purge"
 };
 function buildScopedPermissions() {
@@ -337,19 +338,17 @@ var PollType = {
 };
 
 // src/enums/role.enum.ts
-var Role = {
-  USER: "USER",
-  ADMIN: "ADMIN"
-};
 var BuildingRole = {
   OWNER_REPRESENTATIVE: "OWNER_REPRESENTATIVE",
   DEPUTY_REPRESENTATIVE: "DEPUTY_REPRESENTATIVE",
-  CO_OWNER: "CO_OWNER"
+  CO_OWNER: "CO_OWNER",
+  RESIDENT: "RESIDENT"
 };
 var BUILDING_ROLE_RANK = {
-  [BuildingRole.CO_OWNER]: 0,
-  [BuildingRole.DEPUTY_REPRESENTATIVE]: 1,
-  [BuildingRole.OWNER_REPRESENTATIVE]: 1
+  [BuildingRole.RESIDENT]: 0,
+  [BuildingRole.CO_OWNER]: 1,
+  [BuildingRole.DEPUTY_REPRESENTATIVE]: 2,
+  [BuildingRole.OWNER_REPRESENTATIVE]: 2
 };
 function canAssignRole(assignerRole, targetRole) {
   return BUILDING_ROLE_RANK[assignerRole] > BUILDING_ROLE_RANK[targetRole];
@@ -449,6 +448,6 @@ var FileCategory = {
   OTHER: "other"
 };
 
-export { APPROVE_PERMISSIONS, ApartmentRole, ApprovalStatus, BUILDING_ROLE_RANK, BuildingRole, BuildingStatus, BuildingType, CommonStatus, DevicePlatform, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_ROLE_RANK, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, Permission, PlatformRole, PollStatus, PollType, Priority, Role, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions };
-//# sourceMappingURL=chunk-P25WSM2I.js.map
-//# sourceMappingURL=chunk-P25WSM2I.js.map
+export { APPROVE_PERMISSIONS, ApartmentRole, ApprovalStatus, BUILDING_ROLE_RANK, BuildingRole, BuildingStatus, BuildingType, CommonStatus, DevicePlatform, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_ROLE_RANK, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, Permission, PlatformRole, PollStatus, PollType, Priority, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions };
+//# sourceMappingURL=chunk-HNS2QPUT.js.map
+//# sourceMappingURL=chunk-HNS2QPUT.js.map

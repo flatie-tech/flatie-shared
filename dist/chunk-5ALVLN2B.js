@@ -1,4 +1,4 @@
-import { BuildingRole, PlatformRole, OrgRole, SCOPED_PERMISSIONS, APPROVE_PERMISSIONS, FailureStatus, Priority } from './chunk-P25WSM2I.js';
+import { BuildingRole, PlatformRole, OrgRole, SCOPED_PERMISSIONS, APPROVE_PERMISSIONS, FailureStatus, Priority } from './chunk-HNS2QPUT.js';
 import { createPaginatedResponse } from './chunk-W3SU22LA.js';
 
 // src/utils/pagination.ts
@@ -117,6 +117,7 @@ var ROLE_TRANSLATION_KEYS = {
   [BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
   [BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
   [BuildingRole.CO_OWNER]: "roles.CO_OWNER",
+  [BuildingRole.RESIDENT]: "roles.RESIDENT",
   // Org roles
   [OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
   [OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
@@ -132,6 +133,7 @@ var ROLE_DESCRIPTION_KEYS = {
   [BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
   [BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
   [BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
+  [BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
   [OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
   [OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
   [OrgRole.REFERENT]: "roles.REFERENT_DESC",
@@ -222,5 +224,5 @@ function debounce(func, delay) {
 }
 
 export { MANAGERIAL_BUILDING_ROLES, ParseError, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatText, getContextUserId, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isAdminContext, isManagerialRole, normalizePaginatedResponse, parseData, priorityVariant };
-//# sourceMappingURL=chunk-EQKPQ2NZ.js.map
-//# sourceMappingURL=chunk-EQKPQ2NZ.js.map
+//# sourceMappingURL=chunk-5ALVLN2B.js.map
+//# sourceMappingURL=chunk-5ALVLN2B.js.map
