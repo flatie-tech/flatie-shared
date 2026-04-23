@@ -107,6 +107,7 @@ declare const Permission: {
     readonly PLATFORM_MODERATE_CONTENT: "platform:moderate_content";
     readonly PLATFORM_MANAGE_SETTINGS: "platform:manage_settings";
     readonly PLATFORM_MANAGE_OPERATIVES: "platform:manage_operatives";
+    readonly PLATFORM_MANAGE_SUBSCRIPTIONS: "platform:manage_subscriptions";
     readonly PLATFORM_PURGE: "platform:purge";
 };
 type Permission = (typeof Permission)[keyof typeof Permission];
@@ -117,15 +118,11 @@ declare const SCOPED_PERMISSIONS: Record<"notice" | "poll" | "event" | "document
 /** Approve permissions per domain (not all domains have approve). */
 declare const APPROVE_PERMISSIONS: Partial<Record<ScopedDomain, Permission>>;
 
-declare const Role: {
-    readonly USER: "USER";
-    readonly ADMIN: "ADMIN";
-};
-type Role = (typeof Role)[keyof typeof Role];
 declare const BuildingRole: {
     readonly OWNER_REPRESENTATIVE: "OWNER_REPRESENTATIVE";
     readonly DEPUTY_REPRESENTATIVE: "DEPUTY_REPRESENTATIVE";
     readonly CO_OWNER: "CO_OWNER";
+    readonly RESIDENT: "RESIDENT";
 };
 type BuildingRole = (typeof BuildingRole)[keyof typeof BuildingRole];
 declare const BUILDING_ROLE_RANK: Record<BuildingRole, number>;
@@ -149,4 +146,4 @@ type PlatformRole = (typeof PlatformRole)[keyof typeof PlatformRole];
 declare const PLATFORM_ROLE_RANK: Record<PlatformRole, number>;
 declare function canAssignPlatformRole(assignerRole: PlatformRole, targetRole: PlatformRole): boolean;
 
-export { APPROVE_PERMISSIONS as A, BuildingRole as B, OrgRole as O, Permission as P, Role as R, type ScopedDomain as S, PlatformRole as a, type ScopedAction as b, SCOPED_DOMAINS as c, domainPermissions as d, SCOPED_PERMISSIONS as e, BUILDING_ROLE_RANK as f, canAssignOrgRole as g, canAssignPlatformRole as h, canAssignRole as i, ORG_ROLE_RANK as j, PLATFORM_ROLE_RANK as k };
+export { APPROVE_PERMISSIONS as A, BuildingRole as B, OrgRole as O, Permission as P, type ScopedDomain as S, PlatformRole as a, type ScopedAction as b, SCOPED_DOMAINS as c, domainPermissions as d, SCOPED_PERMISSIONS as e, BUILDING_ROLE_RANK as f, canAssignOrgRole as g, canAssignPlatformRole as h, canAssignRole as i, ORG_ROLE_RANK as j, PLATFORM_ROLE_RANK as k };

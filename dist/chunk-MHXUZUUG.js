@@ -1,4 +1,4 @@
-import { domainPermissions, BuildingRole, OrgRole, PlatformRole, Permission } from './chunk-D3JDWTOD.js';
+import { domainPermissions, BuildingRole, OrgRole, PlatformRole, Permission } from './chunk-PAQRGNTI.js';
 
 // src/constants/defaults.ts
 var DEFAULT_PAGINATION_LIMIT = 10;
@@ -289,6 +289,15 @@ var ALL_READS = [
   "house_rules:read",
   "faq:read"
 ];
+var RESIDENT_PERMISSIONS = [
+  // ALL_READS minus financial:read — residents don't see fund balances.
+  ...ALL_READS.filter((p) => p !== "financial:read"),
+  // File their own issue reports (plumbing, heating, common-area issues).
+  "failure_report:create",
+  "failure_report:update:own",
+  "failure_report:delete:own",
+  "user:delete:own"
+];
 var CO_OWNER_PERMISSIONS = [
   ...ALL_READS,
   ...domainPermissions("notice", "own"),
@@ -381,6 +390,7 @@ var SUPERVISOR_ORG_PERMISSIONS = [
 var REFERENT_ORG_PERMISSIONS = ["org:view_buildings", "org:view_partners"];
 var OPERATIVE_ORG_PERMISSIONS = ["org:view_buildings", "org:view_partners"];
 var BUILDING_ROLE_PERMISSIONS = {
+  [BuildingRole.RESIDENT]: unique(RESIDENT_PERMISSIONS),
   [BuildingRole.CO_OWNER]: unique(CO_OWNER_PERMISSIONS),
   [BuildingRole.DEPUTY_REPRESENTATIVE]: unique(REPRESENTATIVE_PERMISSIONS),
   [BuildingRole.OWNER_REPRESENTATIVE]: unique(REPRESENTATIVE_PERMISSIONS)
@@ -401,6 +411,7 @@ var PLATFORM_ROLE_PERMISSIONS = {
     "platform:moderate_content",
     "platform:manage_settings",
     "platform:manage_operatives",
+    "platform:manage_subscriptions",
     "platform:purge",
     "system:delete_user",
     "system:create_organization"
@@ -426,5 +437,5 @@ var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[OrgRole.ORG_ADMIN];
 var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_ADMIN];
 
 export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminBuildingKeys, adminKeys, apartmentKeys, blogKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };
-//# sourceMappingURL=chunk-L5ZYFDUF.js.map
-//# sourceMappingURL=chunk-L5ZYFDUF.js.map
+//# sourceMappingURL=chunk-MHXUZUUG.js.map
+//# sourceMappingURL=chunk-MHXUZUUG.js.map

@@ -1,7 +1,7 @@
 import { B as BuildingType, P as PollType } from '../poll-type.enum-Cz_42Pj9.cjs';
-import { B as BuildingRole, P as Permission, R as Role } from '../role.enum-B3dkJjAq.cjs';
+import { B as BuildingRole, P as Permission } from '../role.enum-C3r7jyty.cjs';
 import { F as FailureStatus, e as TransactionType, T as TransactionCategory, C as CommonStatus } from '../status.enum-D4pAcU1b.cjs';
-export { B as BuildingContextFromOrg, d as BuildingContextFromRole, e as BuildingPermissionContext, D as DateRangeParams, P as PaginatedResponse, b as PaginationParams, a as PermissionContext, c as createPaginatedResponse } from '../permission-context-CJE_vykQ.cjs';
+export { B as BuildingContextFromOrg, d as BuildingContextFromRole, e as BuildingPermissionContext, D as DateRangeParams, P as PaginatedResponse, b as PaginationParams, a as PermissionContext, c as createPaginatedResponse } from '../permission-context-C7y_YaGI.cjs';
 
 /**
  * Base entity with common fields for all database entities
@@ -398,7 +398,6 @@ interface User extends BaseEntity {
     image?: string | null;
     phone?: string | null;
     address?: string | null;
-    role: Role;
     agreedToTermsAndConditions?: boolean | null;
     termsAgreedAt?: Date | string | null;
 }

@@ -36,6 +36,7 @@ export const ROLE_TRANSLATION_KEYS: Record<BuildingRole | OrgRole | PlatformRole
   [BuildingRole.OWNER_REPRESENTATIVE]: 'roles.OWNER_REPRESENTATIVE',
   [BuildingRole.DEPUTY_REPRESENTATIVE]: 'roles.DEPUTY_REPRESENTATIVE',
   [BuildingRole.CO_OWNER]: 'roles.CO_OWNER',
+  [BuildingRole.RESIDENT]: 'roles.RESIDENT',
 
   // Org roles
   [OrgRole.ORG_ADMIN]: 'roles.ORG_ADMIN',
@@ -60,6 +61,7 @@ export const ROLE_DESCRIPTION_KEYS: Record<BuildingRole | OrgRole | PlatformRole
   [BuildingRole.OWNER_REPRESENTATIVE]: 'roles.OWNER_REPRESENTATIVE_DESC',
   [BuildingRole.DEPUTY_REPRESENTATIVE]: 'roles.DEPUTY_REPRESENTATIVE_DESC',
   [BuildingRole.CO_OWNER]: 'roles.CO_OWNER_DESC',
+  [BuildingRole.RESIDENT]: 'roles.RESIDENT_DESC',
 
   [OrgRole.ORG_ADMIN]: 'roles.ORG_ADMIN_DESC',
   [OrgRole.SUPERVISOR]: 'roles.SUPERVISOR_DESC',
