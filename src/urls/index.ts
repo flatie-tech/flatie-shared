@@ -55,6 +55,7 @@ export const API_ROUTES = {
     IMPORT_TEMPLATE: (id: string) => `/buildings/${id}/import/template`,
     IMPORT_PREVIEW: (id: string) => `/buildings/${id}/import/preview`,
     IMPORT_COMMIT: (id: string) => `/buildings/${id}/import/commit`,
+    QUOTAS: (id: string) => `/buildings/${id}/quotas`,
   },
 
   // ── Apartments ────────────────────────────────────────────────────────
