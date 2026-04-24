@@ -39,6 +39,16 @@ declare const userKeys: {
     detail: (id: string) => readonly ["user", "detail", string];
     info: () => readonly ["user", "detail", string];
 };
+declare const organizationKeys: {
+    all: readonly ["organization"];
+    lists: () => readonly ["organization", "list"];
+    list: (filters?: Record<string, unknown>) => readonly ["organization", "list", {
+        readonly [x: string]: unknown;
+    }];
+    details: () => readonly ["organization", "detail"];
+    detail: (id: string) => readonly ["organization", "detail", string];
+    quotas: (id: string) => readonly ["organization", "quotas", string];
+};
 declare const buildingKeys: {
     all: readonly ["building"];
     lists: () => readonly ["building", "list"];
@@ -52,6 +62,7 @@ declare const buildingKeys: {
         readonly [x: string]: unknown;
     }];
     settings: (id: string) => readonly ["building", "settings", string];
+    quotas: (id: string) => readonly ["building", "quotas", string];
     joinRequests: (id: string) => readonly ["building", "joinRequests", string];
     pending: () => readonly ["building", "pending"];
     chatVisibility: () => readonly ["building", "chatVisibility"];
@@ -302,6 +313,7 @@ declare const queryKeys: {
             readonly [x: string]: unknown;
         }];
         settings: (id: string) => readonly ["building", "settings", string];
+        quotas: (id: string) => readonly ["building", "quotas", string];
         joinRequests: (id: string) => readonly ["building", "joinRequests", string];
         pending: () => readonly ["building", "pending"];
         chatVisibility: () => readonly ["building", "chatVisibility"];
@@ -537,4 +549,4 @@ declare const ADMIN_ORG_PERMISSIONS: Permission[];
 /** Admin platform-scope permissions — same as PLATFORM_ADMIN. */
 declare const ADMIN_PLATFORM_PERMISSIONS: Permission[];
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminBuildingKeys, adminKeys, apartmentKeys, blogKeys, buildingKeys, chatKeys, dashboardSummaryKeys, documentKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminBuildingKeys, adminKeys, apartmentKeys, blogKeys, buildingKeys, chatKeys, dashboardSummaryKeys, documentKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };

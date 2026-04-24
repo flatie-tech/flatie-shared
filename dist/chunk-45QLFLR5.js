@@ -337,6 +337,36 @@ var PollType = {
   COMMUNITY: "COMMUNITY"
 };
 
+// src/enums/quota.enum.ts
+var QuotaResourceType = {
+  COMMENT: "COMMENT",
+  MAINTENANCE_REQUEST: "MAINTENANCE_REQUEST",
+  INVITE: "INVITE",
+  NOTIFICATION: "NOTIFICATION"
+};
+var QUOTA_RESOURCE_TYPES = Object.values(
+  QuotaResourceType
+);
+var QUOTA_DEFAULT_DAILY_LIMITS = {
+  [QuotaResourceType.COMMENT]: 50,
+  [QuotaResourceType.MAINTENANCE_REQUEST]: 10,
+  [QuotaResourceType.INVITE]: 20,
+  [QuotaResourceType.NOTIFICATION]: null
+};
+var OrgQuotaResourceType = {
+  MEMBER_INVITE: "MEMBER_INVITE",
+  BUILDING_CREATE: "BUILDING_CREATE",
+  NOTIFICATION: "NOTIFICATION"
+};
+var ORG_QUOTA_RESOURCE_TYPES = Object.values(
+  OrgQuotaResourceType
+);
+var ORG_QUOTA_DEFAULT_DAILY_LIMITS = {
+  [OrgQuotaResourceType.MEMBER_INVITE]: 30,
+  [OrgQuotaResourceType.BUILDING_CREATE]: 10,
+  [OrgQuotaResourceType.NOTIFICATION]: null
+};
+
 // src/enums/role.enum.ts
 var BuildingRole = {
   OWNER_REPRESENTATIVE: "OWNER_REPRESENTATIVE",
@@ -448,6 +478,6 @@ var FileCategory = {
   OTHER: "other"
 };
 
-export { APPROVE_PERMISSIONS, ApartmentRole, ApprovalStatus, BUILDING_ROLE_RANK, BuildingRole, BuildingStatus, BuildingType, CommonStatus, DevicePlatform, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_ROLE_RANK, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, Permission, PlatformRole, PollStatus, PollType, Priority, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions };
-//# sourceMappingURL=chunk-HNS2QPUT.js.map
-//# sourceMappingURL=chunk-HNS2QPUT.js.map
+export { APPROVE_PERMISSIONS, ApartmentRole, ApprovalStatus, BUILDING_ROLE_RANK, BuildingRole, BuildingStatus, BuildingType, CommonStatus, DevicePlatform, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, ORG_ROLE_RANK, OrgQuotaResourceType, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, Permission, PlatformRole, PollStatus, PollType, Priority, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions };
+//# sourceMappingURL=chunk-45QLFLR5.js.map
+//# sourceMappingURL=chunk-45QLFLR5.js.map
