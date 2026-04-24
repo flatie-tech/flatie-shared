@@ -1,10 +1,12 @@
-import { BuildingRole, PlatformRole, OrgRole, SCOPED_PERMISSIONS, APPROVE_PERMISSIONS, FailureStatus, Priority } from './chunk-YXJBZCY5.js';
-import { createPaginatedResponse } from './chunk-W3SU22LA.js';
+'use strict';
+
+var chunkM5MT3THT_cjs = require('./chunk-M5MT3THT.cjs');
+var chunkIGBERUWL_cjs = require('./chunk-IGBERUWL.cjs');
 
 // src/utils/pagination.ts
 function normalizePaginatedResponse(input, fallbackLimit = 10) {
   if (Array.isArray(input)) {
-    return createPaginatedResponse(input, input.length, 0, input.length);
+    return chunkIGBERUWL_cjs.createPaginatedResponse(input, input.length, 0, input.length);
   }
   if (input && typeof input === "object") {
     const response = input;
@@ -13,9 +15,9 @@ function normalizePaginatedResponse(input, fallbackLimit = 10) {
     const count = response.count ?? response.total ?? response.totalCount ?? (Array.isArray(data) ? data.length : 0);
     const page = response.page ?? response.currentPage ?? (response.offset !== void 0 && limit ? Math.floor(response.offset / limit) + 1 : 1);
     const offset = response.offset !== void 0 ? response.offset : limit && page ? (page - 1) * limit : 0;
-    return createPaginatedResponse(Array.isArray(data) ? data : [], count, offset, limit);
+    return chunkIGBERUWL_cjs.createPaginatedResponse(Array.isArray(data) ? data : [], count, offset, limit);
   }
-  return createPaginatedResponse([], 0, 0, fallbackLimit);
+  return chunkIGBERUWL_cjs.createPaginatedResponse([], 0, 0, fallbackLimit);
 }
 function extractPaginatedItems(response, itemsKey) {
   if (Array.isArray(response)) {
@@ -72,13 +74,13 @@ function canDo(ctx, permission) {
 }
 function canDoOnResource(ctx, domain, action, resourceOwnerId) {
   if (ctx.kind === "admin") return true;
-  const scopedPerms = SCOPED_PERMISSIONS[domain]?.[action];
+  const scopedPerms = chunkM5MT3THT_cjs.SCOPED_PERMISSIONS[domain]?.[action];
   if (!scopedPerms) return false;
   if (ctx.permissions.includes(scopedPerms.any)) return true;
   return ctx.permissions.includes(scopedPerms.own) && resourceOwnerId === ctx.userId;
 }
 function computeActionFlags(ctx, domain, resourceOwnerId) {
-  const approvePermission = APPROVE_PERMISSIONS[domain];
+  const approvePermission = chunkM5MT3THT_cjs.APPROVE_PERMISSIONS[domain];
   return {
     canEdit: canDoOnResource(ctx, domain, "update", resourceOwnerId),
     canDelete: canDoOnResource(ctx, domain, "delete", resourceOwnerId),
@@ -106,50 +108,50 @@ function hasAllPermissions(userPermissions, permissions) {
 
 // src/utils/role-helpers.ts
 var MANAGERIAL_BUILDING_ROLES = [
-  BuildingRole.OWNER_REPRESENTATIVE,
-  BuildingRole.DEPUTY_REPRESENTATIVE
+  chunkM5MT3THT_cjs.BuildingRole.OWNER_REPRESENTATIVE,
+  chunkM5MT3THT_cjs.BuildingRole.DEPUTY_REPRESENTATIVE
 ];
 function isManagerialRole(role) {
   return MANAGERIAL_BUILDING_ROLES.includes(role);
 }
 var ROLE_TRANSLATION_KEYS = {
   // Building roles
-  [BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
-  [BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
-  [BuildingRole.CO_OWNER]: "roles.CO_OWNER",
+  [chunkM5MT3THT_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
+  [chunkM5MT3THT_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
+  [chunkM5MT3THT_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER",
   // Org roles
-  [OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
-  [OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
-  [OrgRole.REFERENT]: "roles.REFERENT",
-  [OrgRole.OPERATIVE]: "roles.OPERATIVE",
+  [chunkM5MT3THT_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
+  [chunkM5MT3THT_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
+  [chunkM5MT3THT_cjs.OrgRole.REFERENT]: "roles.REFERENT",
+  [chunkM5MT3THT_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE",
   // Platform roles
-  [PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
-  [PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
-  [PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
-  [PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
+  [chunkM5MT3THT_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
+  [chunkM5MT3THT_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
+  [chunkM5MT3THT_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
+  [chunkM5MT3THT_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
 };
 var ROLE_DESCRIPTION_KEYS = {
-  [BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
-  [BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
-  [BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
-  [OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
-  [OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
-  [OrgRole.REFERENT]: "roles.REFERENT_DESC",
-  [OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
-  [PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
-  [PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
-  [PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
-  [PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
+  [chunkM5MT3THT_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
+  [chunkM5MT3THT_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
+  [chunkM5MT3THT_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
+  [chunkM5MT3THT_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
+  [chunkM5MT3THT_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
+  [chunkM5MT3THT_cjs.OrgRole.REFERENT]: "roles.REFERENT_DESC",
+  [chunkM5MT3THT_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
+  [chunkM5MT3THT_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
+  [chunkM5MT3THT_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
+  [chunkM5MT3THT_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
+  [chunkM5MT3THT_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
 };
 
 // src/utils/status-variants.ts
 function failureStatusVariant(status) {
   switch (status) {
-    case FailureStatus.PENDING:
+    case chunkM5MT3THT_cjs.FailureStatus.PENDING:
       return "info";
-    case FailureStatus.IN_PROGRESS:
+    case chunkM5MT3THT_cjs.FailureStatus.IN_PROGRESS:
       return "warning";
-    case FailureStatus.RESOLVED:
+    case chunkM5MT3THT_cjs.FailureStatus.RESOLVED:
       return "success";
     default:
       return "neutral";
@@ -157,9 +159,9 @@ function failureStatusVariant(status) {
 }
 function priorityVariant(priority) {
   switch (priority) {
-    case Priority.URGENT:
+    case chunkM5MT3THT_cjs.Priority.URGENT:
       return "danger";
-    case Priority.NORMAL:
+    case chunkM5MT3THT_cjs.Priority.NORMAL:
       return "neutral";
     default:
       return "neutral";
@@ -221,6 +223,28 @@ function debounce(func, delay) {
   };
 }
 
-export { MANAGERIAL_BUILDING_ROLES, ParseError, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatText, getContextUserId, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isAdminContext, isManagerialRole, normalizePaginatedResponse, parseData, priorityVariant };
-//# sourceMappingURL=chunk-E2KT6P3D.js.map
-//# sourceMappingURL=chunk-E2KT6P3D.js.map
+exports.MANAGERIAL_BUILDING_ROLES = MANAGERIAL_BUILDING_ROLES;
+exports.ParseError = ParseError;
+exports.ROLE_DESCRIPTION_KEYS = ROLE_DESCRIPTION_KEYS;
+exports.ROLE_TRANSLATION_KEYS = ROLE_TRANSLATION_KEYS;
+exports.calculatePaginationMeta = calculatePaginationMeta;
+exports.canDo = canDo;
+exports.canDoOnResource = canDoOnResource;
+exports.computeActionFlags = computeActionFlags;
+exports.debounce = debounce;
+exports.extractPaginatedItems = extractPaginatedItems;
+exports.failureStatusVariant = failureStatusVariant;
+exports.formatCurrency = formatCurrency;
+exports.formatText = formatText;
+exports.getContextUserId = getContextUserId;
+exports.getDateRange = getDateRange;
+exports.hasAllPermissions = hasAllPermissions;
+exports.hasAnyPermission = hasAnyPermission;
+exports.hasPermission = hasPermission;
+exports.isAdminContext = isAdminContext;
+exports.isManagerialRole = isManagerialRole;
+exports.normalizePaginatedResponse = normalizePaginatedResponse;
+exports.parseData = parseData;
+exports.priorityVariant = priorityVariant;
+//# sourceMappingURL=chunk-QSS4ZQZC.cjs.map
+//# sourceMappingURL=chunk-QSS4ZQZC.cjs.map

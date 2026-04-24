@@ -83,6 +83,17 @@ export {
   updateBuildingSchema,
   updateUserBuildingRoleSchema,
 } from './building.schema';
+// Business partner schemas
+export type {
+  BusinessPartnerResponse,
+  CreateBusinessPartnerInput,
+  UpdateBusinessPartnerInput,
+} from './business-partner.schema';
+export {
+  businessPartnerResponseSchema,
+  createBusinessPartnerSchema,
+  updateBusinessPartnerSchema,
+} from './business-partner.schema';
 export type {
   CreateEventSchema,
   EventColorOption,
@@ -147,6 +158,20 @@ export {
   noticeEventSchema,
   updateNoticeSchema,
 } from './notice.schema';
+
+// Owner schemas
+export type {
+  AssignOwnerInput,
+  CreateOwnerInput,
+  OwnerResponse,
+  UpdateOwnerInput,
+} from './owner.schema';
+export {
+  assignOwnerSchema,
+  createOwnerSchema,
+  ownerResponseSchema,
+  updateOwnerSchema,
+} from './owner.schema';
 export type {
   CreatePollSchema,
   FinalizePollSchema,

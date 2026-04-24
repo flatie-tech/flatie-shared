@@ -1,4 +1,4 @@
-import { domainPermissions, BuildingRole, OrgRole, PlatformRole, Permission } from './chunk-YXJBZCY5.js';
+import { domainPermissions, BuildingRole, OrgRole, PlatformRole, Permission } from './chunk-D3JDWTOD.js';
 
 // src/constants/defaults.ts
 var DEFAULT_PAGINATION_LIMIT = 10;
@@ -199,6 +199,30 @@ var storageUnitKeys = {
   detail: (id) => [...storageUnitKeys.details(), id],
   floors: (buildingId) => [...storageUnitKeys.all, "floors", buildingId]
 };
+var ownerKeys = {
+  all: ["owner"],
+  lists: () => [...ownerKeys.all, "list"],
+  list: (buildingId, search) => [...ownerKeys.lists(), buildingId, search ?? null],
+  details: () => [...ownerKeys.all, "detail"],
+  detail: (buildingId, ownerId) => [...ownerKeys.details(), buildingId, ownerId],
+  assignments: (buildingId, unitKind, unitId) => [...ownerKeys.all, "assignments", buildingId, unitKind, unitId]
+};
+var unitReminderKeys = {
+  all: ["unitReminder"],
+  list: (buildingId, unitKind, unitId) => [...unitReminderKeys.all, "list", buildingId, unitKind, unitId]
+};
+var businessPartnerKeys = {
+  all: ["businessPartner"],
+  lists: () => [...businessPartnerKeys.all, "list"],
+  list: (orgId, params) => [
+    ...businessPartnerKeys.lists(),
+    orgId,
+    params?.search ?? null,
+    params?.activeOnly ?? null
+  ],
+  details: () => [...businessPartnerKeys.all, "detail"],
+  detail: (orgId, partnerId) => [...businessPartnerKeys.details(), orgId, partnerId]
+};
 var transactionCategoryKeys = {
   all: ["transactionCategory"],
   lists: () => [...transactionCategoryKeys.all, "list"],
@@ -343,15 +367,19 @@ var ORG_ADMIN_ORG_PERMISSIONS = [
   "org:manage_settings",
   "org:view_analytics",
   "org:manage_contracts",
-  "org:view_buildings"
+  "org:view_buildings",
+  "org:view_partners",
+  "org:manage_partners"
 ];
 var SUPERVISOR_ORG_PERMISSIONS = [
   "org:view_buildings",
   "org:view_analytics",
-  "org:assign_referents"
+  "org:assign_referents",
+  "org:view_partners",
+  "org:manage_partners"
 ];
-var REFERENT_ORG_PERMISSIONS = ["org:view_buildings"];
-var OPERATIVE_ORG_PERMISSIONS = ["org:view_buildings"];
+var REFERENT_ORG_PERMISSIONS = ["org:view_buildings", "org:view_partners"];
+var OPERATIVE_ORG_PERMISSIONS = ["org:view_buildings", "org:view_partners"];
 var BUILDING_ROLE_PERMISSIONS = {
   [BuildingRole.CO_OWNER]: unique(CO_OWNER_PERMISSIONS),
   [BuildingRole.DEPUTY_REPRESENTATIVE]: unique(REPRESENTATIVE_PERMISSIONS),
@@ -397,6 +425,6 @@ var ALL_PERMISSIONS = unique(Object.values(Permission));
 var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[OrgRole.ORG_ADMIN];
 var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_ADMIN];
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminBuildingKeys, adminKeys, apartmentKeys, blogKeys, buildingKeys, chatKeys, dashboardSummaryKeys, documentKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };
-//# sourceMappingURL=chunk-YDX7YRV4.js.map
-//# sourceMappingURL=chunk-YDX7YRV4.js.map
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminBuildingKeys, adminKeys, apartmentKeys, blogKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };
+//# sourceMappingURL=chunk-L5ZYFDUF.js.map
+//# sourceMappingURL=chunk-L5ZYFDUF.js.map

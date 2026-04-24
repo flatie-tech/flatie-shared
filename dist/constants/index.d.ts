@@ -1,4 +1,4 @@
-import { P as Permission, B as BuildingRole, O as OrgRole, a as PlatformRole } from '../role.enum-Cr_Ex5DH.js';
+import { P as Permission, B as BuildingRole, O as OrgRole, a as PlatformRole } from '../role.enum-B3dkJjAq.js';
 
 /**
  * Default pagination page size used across the stack.
@@ -256,6 +256,28 @@ declare const storageUnitKeys: {
     details: () => readonly ["storageUnit", "detail"];
     detail: (id: string) => readonly ["storageUnit", "detail", string];
     floors: (buildingId: string) => readonly ["storageUnit", "floors", string];
+};
+declare const ownerKeys: {
+    all: readonly ["owner"];
+    lists: () => readonly ["owner", "list"];
+    list: (buildingId: string, search?: string) => readonly ["owner", "list", string, string | null];
+    details: () => readonly ["owner", "detail"];
+    detail: (buildingId: string, ownerId: string) => readonly ["owner", "detail", string, string];
+    assignments: (buildingId: string, unitKind: string, unitId: string) => readonly ["owner", "assignments", string, string, string];
+};
+declare const unitReminderKeys: {
+    all: readonly ["unitReminder"];
+    list: (buildingId: string, unitKind: string, unitId: string) => readonly ["unitReminder", "list", string, string, string];
+};
+declare const businessPartnerKeys: {
+    all: readonly ["businessPartner"];
+    lists: () => readonly ["businessPartner", "list"];
+    list: (orgId: string, params?: {
+        search?: string;
+        activeOnly?: boolean;
+    }) => readonly ["businessPartner", "list", string, string | null, boolean | null];
+    details: () => readonly ["businessPartner", "detail"];
+    detail: (orgId: string, partnerId: string) => readonly ["businessPartner", "detail", string, string];
 };
 declare const transactionCategoryKeys: {
     all: readonly ["transactionCategory"];
@@ -539,4 +561,4 @@ declare const ADMIN_ORG_PERMISSIONS: Permission[];
 /** Admin platform-scope permissions — same as PLATFORM_ADMIN. */
 declare const ADMIN_PLATFORM_PERMISSIONS: Permission[];
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminBuildingKeys, adminKeys, apartmentKeys, blogKeys, buildingKeys, chatKeys, dashboardSummaryKeys, documentKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminBuildingKeys, adminKeys, apartmentKeys, blogKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };

@@ -52,3 +52,4 @@ export {
   TransactionCategory,
   TransactionType,
 } from './status.enum';
+export { UnitType } from './unit-type.enum';

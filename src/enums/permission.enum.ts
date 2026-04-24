@@ -159,6 +159,8 @@ export const Permission = {
   ORG_VIEW_ANALYTICS: 'org:view_analytics',
   ORG_MANAGE_CONTRACTS: 'org:manage_contracts',
   ORG_VIEW_BUILDINGS: 'org:view_buildings',
+  ORG_VIEW_PARTNERS: 'org:view_partners',
+  ORG_MANAGE_PARTNERS: 'org:manage_partners',
 
   // Platform (global scope)
   PLATFORM_APPROVE_BUILDINGS: 'platform:approve_buildings',

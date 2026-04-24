@@ -1,196 +1,200 @@
 'use strict';
 
-var chunk3V4EFJQX_cjs = require('../chunk-3V4EFJQX.cjs');
+var chunkM5MT3THT_cjs = require('../chunk-M5MT3THT.cjs');
 
 
 
 Object.defineProperty(exports, "APPROVE_PERMISSIONS", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.APPROVE_PERMISSIONS; }
+  get: function () { return chunkM5MT3THT_cjs.APPROVE_PERMISSIONS; }
 });
 Object.defineProperty(exports, "ApartmentRole", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.ApartmentRole; }
+  get: function () { return chunkM5MT3THT_cjs.ApartmentRole; }
 });
 Object.defineProperty(exports, "ApprovalStatus", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.ApprovalStatus; }
+  get: function () { return chunkM5MT3THT_cjs.ApprovalStatus; }
 });
 Object.defineProperty(exports, "BUILDING_ROLE_RANK", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.BUILDING_ROLE_RANK; }
+  get: function () { return chunkM5MT3THT_cjs.BUILDING_ROLE_RANK; }
 });
 Object.defineProperty(exports, "BuildingRole", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.BuildingRole; }
+  get: function () { return chunkM5MT3THT_cjs.BuildingRole; }
 });
 Object.defineProperty(exports, "BuildingStatus", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.BuildingStatus; }
+  get: function () { return chunkM5MT3THT_cjs.BuildingStatus; }
 });
 Object.defineProperty(exports, "BuildingType", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.BuildingType; }
+  get: function () { return chunkM5MT3THT_cjs.BuildingType; }
 });
 Object.defineProperty(exports, "CommonStatus", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.CommonStatus; }
+  get: function () { return chunkM5MT3THT_cjs.CommonStatus; }
 });
 Object.defineProperty(exports, "DevicePlatform", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.DevicePlatform; }
+  get: function () { return chunkM5MT3THT_cjs.DevicePlatform; }
 });
 Object.defineProperty(exports, "FailureLocationType", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.FailureLocationType; }
+  get: function () { return chunkM5MT3THT_cjs.FailureLocationType; }
 });
 Object.defineProperty(exports, "FailureStatus", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.FailureStatus; }
+  get: function () { return chunkM5MT3THT_cjs.FailureStatus; }
 });
 Object.defineProperty(exports, "FailureType", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.FailureType; }
+  get: function () { return chunkM5MT3THT_cjs.FailureType; }
 });
 Object.defineProperty(exports, "FailureUnitType", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.FailureUnitType; }
+  get: function () { return chunkM5MT3THT_cjs.FailureUnitType; }
 });
 Object.defineProperty(exports, "FileCategory", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.FileCategory; }
+  get: function () { return chunkM5MT3THT_cjs.FileCategory; }
 });
 Object.defineProperty(exports, "Frequency", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.Frequency; }
+  get: function () { return chunkM5MT3THT_cjs.Frequency; }
 });
 Object.defineProperty(exports, "FundsSource", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.FundsSource; }
+  get: function () { return chunkM5MT3THT_cjs.FundsSource; }
 });
 Object.defineProperty(exports, "MaintenanceLogFinancedBy", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.MaintenanceLogFinancedBy; }
+  get: function () { return chunkM5MT3THT_cjs.MaintenanceLogFinancedBy; }
 });
 Object.defineProperty(exports, "MaintenanceStatus", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.MaintenanceStatus; }
+  get: function () { return chunkM5MT3THT_cjs.MaintenanceStatus; }
 });
 Object.defineProperty(exports, "MaintenanceType", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.MaintenanceType; }
+  get: function () { return chunkM5MT3THT_cjs.MaintenanceType; }
 });
 Object.defineProperty(exports, "NOTIFICATION_TYPE_CATEGORY", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.NOTIFICATION_TYPE_CATEGORY; }
+  get: function () { return chunkM5MT3THT_cjs.NOTIFICATION_TYPE_CATEGORY; }
 });
 Object.defineProperty(exports, "NotificationCategory", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.NotificationCategory; }
+  get: function () { return chunkM5MT3THT_cjs.NotificationCategory; }
 });
 Object.defineProperty(exports, "NotificationChannel", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.NotificationChannel; }
+  get: function () { return chunkM5MT3THT_cjs.NotificationChannel; }
 });
 Object.defineProperty(exports, "NotificationDeliveryStatus", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.NotificationDeliveryStatus; }
+  get: function () { return chunkM5MT3THT_cjs.NotificationDeliveryStatus; }
 });
 Object.defineProperty(exports, "NotificationType", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.NotificationType; }
+  get: function () { return chunkM5MT3THT_cjs.NotificationType; }
 });
 Object.defineProperty(exports, "ORG_ROLE_RANK", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.ORG_ROLE_RANK; }
+  get: function () { return chunkM5MT3THT_cjs.ORG_ROLE_RANK; }
 });
 Object.defineProperty(exports, "OrgRole", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.OrgRole; }
+  get: function () { return chunkM5MT3THT_cjs.OrgRole; }
 });
 Object.defineProperty(exports, "OrgStatus", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.OrgStatus; }
+  get: function () { return chunkM5MT3THT_cjs.OrgStatus; }
 });
 Object.defineProperty(exports, "OrgType", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.OrgType; }
+  get: function () { return chunkM5MT3THT_cjs.OrgType; }
 });
 Object.defineProperty(exports, "PLATFORM_ROLE_RANK", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.PLATFORM_ROLE_RANK; }
+  get: function () { return chunkM5MT3THT_cjs.PLATFORM_ROLE_RANK; }
 });
 Object.defineProperty(exports, "Permission", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.Permission; }
+  get: function () { return chunkM5MT3THT_cjs.Permission; }
 });
 Object.defineProperty(exports, "PlatformRole", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.PlatformRole; }
+  get: function () { return chunkM5MT3THT_cjs.PlatformRole; }
 });
 Object.defineProperty(exports, "PollStatus", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.PollStatus; }
+  get: function () { return chunkM5MT3THT_cjs.PollStatus; }
 });
 Object.defineProperty(exports, "PollType", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.PollType; }
+  get: function () { return chunkM5MT3THT_cjs.PollType; }
 });
 Object.defineProperty(exports, "PricuvaRefMode", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.PricuvaRefMode; }
+  get: function () { return chunkM5MT3THT_cjs.PricuvaRefMode; }
 });
 Object.defineProperty(exports, "Priority", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.Priority; }
+  get: function () { return chunkM5MT3THT_cjs.Priority; }
 });
 Object.defineProperty(exports, "Role", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.Role; }
+  get: function () { return chunkM5MT3THT_cjs.Role; }
 });
 Object.defineProperty(exports, "SCOPED_DOMAINS", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.SCOPED_DOMAINS; }
+  get: function () { return chunkM5MT3THT_cjs.SCOPED_DOMAINS; }
 });
 Object.defineProperty(exports, "SCOPED_PERMISSIONS", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.SCOPED_PERMISSIONS; }
+  get: function () { return chunkM5MT3THT_cjs.SCOPED_PERMISSIONS; }
 });
 Object.defineProperty(exports, "TransactionCategory", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.TransactionCategory; }
+  get: function () { return chunkM5MT3THT_cjs.TransactionCategory; }
 });
 Object.defineProperty(exports, "TransactionSource", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.TransactionSource; }
+  get: function () { return chunkM5MT3THT_cjs.TransactionSource; }
 });
 Object.defineProperty(exports, "TransactionType", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.TransactionType; }
+  get: function () { return chunkM5MT3THT_cjs.TransactionType; }
 });
 Object.defineProperty(exports, "UNIMPLEMENTED_NOTIFICATION_TYPES", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.UNIMPLEMENTED_NOTIFICATION_TYPES; }
+  get: function () { return chunkM5MT3THT_cjs.UNIMPLEMENTED_NOTIFICATION_TYPES; }
+});
+Object.defineProperty(exports, "UnitType", {
+  enumerable: true,
+  get: function () { return chunkM5MT3THT_cjs.UnitType; }
 });
 Object.defineProperty(exports, "WASTE_SUBTYPE_NOTIFICATION_MAP", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.WASTE_SUBTYPE_NOTIFICATION_MAP; }
+  get: function () { return chunkM5MT3THT_cjs.WASTE_SUBTYPE_NOTIFICATION_MAP; }
 });
 Object.defineProperty(exports, "canAssignOrgRole", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.canAssignOrgRole; }
+  get: function () { return chunkM5MT3THT_cjs.canAssignOrgRole; }
 });
 Object.defineProperty(exports, "canAssignPlatformRole", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.canAssignPlatformRole; }
+  get: function () { return chunkM5MT3THT_cjs.canAssignPlatformRole; }
 });
 Object.defineProperty(exports, "canAssignRole", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.canAssignRole; }
+  get: function () { return chunkM5MT3THT_cjs.canAssignRole; }
 });
 Object.defineProperty(exports, "domainPermissions", {
   enumerable: true,
-  get: function () { return chunk3V4EFJQX_cjs.domainPermissions; }
+  get: function () { return chunkM5MT3THT_cjs.domainPermissions; }
 });
 //# sourceMappingURL=index.cjs.map
 //# sourceMappingURL=index.cjs.map

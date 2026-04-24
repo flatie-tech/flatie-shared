@@ -105,8 +105,21 @@ export const createBuildingSchema = z.object({
     .nonnegative()
     .optional()
     .describe(
-      'Monthly fund contribution rate in EUR per m² of owned floor area. Used to derive each co-owner’s expected pričuva from their apartment/garage/storage area.',
+      'Monthly fund contribution rate in EUR per m² for RESIDENTIAL units. Multiplied by each co-owner’s owned residential area (apartments/garages/storage of type `residential`) to derive their expected pričuva.',
     ),
+  monthlyFeeCommercialPerSqm: z.coerce
+    .number()
+    .nonnegative()
+    .optional()
+    .describe(
+      'Monthly fund contribution rate in EUR per m² for COMMERCIAL units. Applied to owned area of any unit with `type = commercial`. Leave unset when the building has no commercial units.',
+    ),
+  apartmentResidentialCoef: z.coerce.number().nonnegative().optional(),
+  apartmentCommercialCoef: z.coerce.number().nonnegative().optional(),
+  garageResidentialCoef: z.coerce.number().nonnegative().optional(),
+  garageCommercialCoef: z.coerce.number().nonnegative().optional(),
+  storageResidentialCoef: z.coerce.number().nonnegative().optional(),
+  storageCommercialCoef: z.coerce.number().nonnegative().optional(),
   billingBuildingCode: z
     .string()
     .trim()
@@ -171,8 +184,22 @@ export const updateBuildingSchema = z.object({
     .nonnegative()
     .optional()
     .describe(
-      'New monthly fund contribution rate in EUR per m². Pass a value to update, omit to leave unchanged.',
+      'New monthly residential fund contribution rate in EUR per m². Pass a value to update, omit to leave unchanged.',
     ),
+  monthlyFeeCommercialPerSqm: z.coerce
+    .number()
+    .nonnegative()
+    .optional()
+    .nullable()
+    .describe(
+      'New monthly commercial fund contribution rate in EUR per m². Pass null to clear; omit to leave unchanged.',
+    ),
+  apartmentResidentialCoef: z.coerce.number().nonnegative().optional(),
+  apartmentCommercialCoef: z.coerce.number().nonnegative().optional(),
+  garageResidentialCoef: z.coerce.number().nonnegative().optional(),
+  garageCommercialCoef: z.coerce.number().nonnegative().optional(),
+  storageResidentialCoef: z.coerce.number().nonnegative().optional(),
+  storageCommercialCoef: z.coerce.number().nonnegative().optional(),
   billingBuildingCode: z
     .string()
     .trim()
