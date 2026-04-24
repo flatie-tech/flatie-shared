@@ -80,6 +80,8 @@ export type {
   ArchivedItem,
   ArchiveType,
   BuildingDetailResponse,
+  BuildingFundsLedgerResponse,
+  BuildingFundsLedgerRow,
   BuildingResponse,
   CamtImportResponse,
   CommentResponse,
@@ -102,14 +104,14 @@ export type {
   PollResponse,
   PollResults,
   PollVotersResponse,
-  PricuvaLedgerResponse,
-  PricuvaLedgerRow,
 } from './responses';
 export {
   ARCHIVE_TYPES,
   archivedItemSchema,
   archiveTypeSchema,
   buildingDetailResponseSchema,
+  buildingFundsLedgerResponseSchema,
+  buildingFundsLedgerRowSchema,
   buildingResponseSchema,
   camtImportResponseSchema,
   commentResponseSchema,
@@ -132,8 +134,6 @@ export {
   pollResponseSchema,
   pollResultsSchema,
   pollVotersResponseSchema,
-  pricuvaLedgerResponseSchema,
-  pricuvaLedgerRowSchema,
 } from './responses';
 
 // Status schemas

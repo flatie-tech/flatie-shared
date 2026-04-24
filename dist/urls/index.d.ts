@@ -70,6 +70,20 @@ declare const API_ROUTES: {
         readonly USER_DETAIL: (buildingId: string, storageUnitId: string, userId: string) => string;
         readonly FLOORS: (buildingId: string) => string;
     };
+    readonly UNIT_REMINDERS: {
+        readonly LIST: (buildingId: string) => string;
+        readonly DETAIL: (buildingId: string, reminderId: string) => string;
+    };
+    readonly OWNERS: {
+        readonly LIST: (buildingId: string) => string;
+        readonly DETAIL: (buildingId: string, ownerId: string) => string;
+        readonly APARTMENT_ASSIGNMENTS: (buildingId: string, apartmentId: string) => string;
+        readonly APARTMENT_ASSIGNMENT_DETAIL: (buildingId: string, apartmentId: string, ownerId: string) => string;
+        readonly GARAGE_ASSIGNMENTS: (buildingId: string, garageId: string) => string;
+        readonly GARAGE_ASSIGNMENT_DETAIL: (buildingId: string, garageId: string, ownerId: string) => string;
+        readonly STORAGE_ASSIGNMENTS: (buildingId: string, storageUnitId: string) => string;
+        readonly STORAGE_ASSIGNMENT_DETAIL: (buildingId: string, storageUnitId: string, ownerId: string) => string;
+    };
     readonly UNITS: {
         readonly LIST: (buildingId: string) => string;
         readonly USER_UNITS: (buildingId: string) => string;
@@ -135,7 +149,7 @@ declare const API_ROUTES: {
         readonly EXPENSES: (buildingId: string) => string;
         readonly EXPENSE_DETAIL: (buildingId: string, expenseId: string) => string;
         readonly IMPORT_CAMT: (buildingId: string) => string;
-        readonly PRICUVA_LEDGER: (buildingId: string) => string;
+        readonly BUILDING_FUNDS_LEDGER: (buildingId: string) => string;
         readonly UPLATNICAS: (buildingId: string) => string;
         readonly RECURRING_TEMPLATES: (buildingId: string) => string;
         readonly RECURRING_TEMPLATE_DETAIL: (buildingId: string, templateId: string) => string;
@@ -174,6 +188,8 @@ declare const API_ROUTES: {
         readonly MEMBER_DETAIL: (orgId: string, memberId: string) => string;
         readonly INVITE: (orgId: string) => string;
         readonly INVITATIONS: (orgId: string) => string;
+        readonly BUSINESS_PARTNERS: (orgId: string) => string;
+        readonly BUSINESS_PARTNER_DETAIL: (orgId: string, partnerId: string) => string;
     };
     readonly PLATFORM: {
         readonly DASHBOARD_SUMMARY: "/platform/dashboard/summary";

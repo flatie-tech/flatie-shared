@@ -1,5 +1,5 @@
 export { B as BuildingType, P as PollType } from '../poll-type.enum-Cz_42Pj9.js';
-export { A as APPROVE_PERMISSIONS, f as BUILDING_ROLE_RANK, B as BuildingRole, j as ORG_ROLE_RANK, O as OrgRole, k as PLATFORM_ROLE_RANK, P as Permission, a as PlatformRole, R as Role, c as SCOPED_DOMAINS, e as SCOPED_PERMISSIONS, b as ScopedAction, S as ScopedDomain, g as canAssignOrgRole, h as canAssignPlatformRole, i as canAssignRole, d as domainPermissions } from '../role.enum-Cr_Ex5DH.js';
+export { A as APPROVE_PERMISSIONS, f as BUILDING_ROLE_RANK, B as BuildingRole, j as ORG_ROLE_RANK, O as OrgRole, k as PLATFORM_ROLE_RANK, P as Permission, a as PlatformRole, R as Role, c as SCOPED_DOMAINS, e as SCOPED_PERMISSIONS, b as ScopedAction, S as ScopedDomain, g as canAssignOrgRole, h as canAssignPlatformRole, i as canAssignRole, d as domainPermissions } from '../role.enum-B3dkJjAq.js';
 export { A as ApprovalStatus, C as CommonStatus, F as FailureStatus, a as FailureType, b as FileCategory, c as Frequency, M as MaintenanceStatus, d as MaintenanceType, P as Priority, T as TransactionCategory, e as TransactionType } from '../status.enum-D4pAcU1b.js';
 
 declare const ApartmentRole: {
@@ -185,4 +185,18 @@ declare const PricuvaRefMode: {
 };
 type PricuvaRefMode = (typeof PricuvaRefMode)[keyof typeof PricuvaRefMode];
 
-export { ApartmentRole, BuildingStatus, DevicePlatform, FailureLocationType, FailureUnitType, FundsSource, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, OrgStatus, OrgType, PollStatus, PricuvaRefMode, TransactionSource, UNIMPLEMENTED_NOTIFICATION_TYPES, WASTE_SUBTYPE_NOTIFICATION_MAP };
+/**
+ * Usage classification for a physical unit (apartment, garage, or
+ * storage). Drives split pričuva rates — a building can carry a
+ * residential rate per m² and a commercial rate per m², and expected
+ * contributions are computed per-unit against the matching rate.
+ *
+ * Added late; existing rows default to `residential` via backfill.
+ */
+declare const UnitType: {
+    readonly RESIDENTIAL: "residential";
+    readonly COMMERCIAL: "commercial";
+};
+type UnitType = (typeof UnitType)[keyof typeof UnitType];
+
+export { ApartmentRole, BuildingStatus, DevicePlatform, FailureLocationType, FailureUnitType, FundsSource, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, OrgStatus, OrgType, PollStatus, PricuvaRefMode, TransactionSource, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, WASTE_SUBTYPE_NOTIFICATION_MAP };

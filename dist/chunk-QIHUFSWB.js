@@ -1,5 +1,5 @@
 import { optionalIbanSchema } from './chunk-WK7VOCOE.js';
-import { ApartmentRole, OrgRole, OrgType, BuildingRole, PricuvaRefMode, FundsSource, FailureUnitType, FailureLocationType, Priority, TransactionType, Role, PlatformRole, BuildingStatus, NotificationType } from './chunk-YXJBZCY5.js';
+import { ApartmentRole, OrgRole, OrgType, BuildingRole, PricuvaRefMode, FundsSource, FailureUnitType, FailureLocationType, Priority, TransactionType, Role, PlatformRole, BuildingStatus, NotificationType } from './chunk-D3JDWTOD.js';
 import { BACKEND_ERROR_CODES } from './chunk-E45VMJJC.js';
 import { z } from 'zod';
 
@@ -336,8 +336,17 @@ var createBuildingSchema = z.object({
     "Croatian tax ID (OIB) of the building (Zajednica suvlasnika). Used as the payee OIB on generated uplatnicas."
   ),
   monthlyFeePerSqm: z.coerce.number().nonnegative().optional().describe(
-    "Monthly fund contribution rate in EUR per m\xB2 of owned floor area. Used to derive each co-owner\u2019s expected pri\u010Duva from their apartment/garage/storage area."
+    "Monthly fund contribution rate in EUR per m\xB2 for RESIDENTIAL units. Multiplied by each co-owner\u2019s owned residential area (apartments/garages/storage of type `residential`) to derive their expected pri\u010Duva."
   ),
+  monthlyFeeCommercialPerSqm: z.coerce.number().nonnegative().optional().describe(
+    "Monthly fund contribution rate in EUR per m\xB2 for COMMERCIAL units. Applied to owned area of any unit with `type = commercial`. Leave unset when the building has no commercial units."
+  ),
+  apartmentResidentialCoef: z.coerce.number().nonnegative().optional(),
+  apartmentCommercialCoef: z.coerce.number().nonnegative().optional(),
+  garageResidentialCoef: z.coerce.number().nonnegative().optional(),
+  garageCommercialCoef: z.coerce.number().nonnegative().optional(),
+  storageResidentialCoef: z.coerce.number().nonnegative().optional(),
+  storageCommercialCoef: z.coerce.number().nonnegative().optional(),
   billingBuildingCode: z.string().trim().min(1).max(22).optional().describe(
     "Short code identifying this building in HR01 poziv-na-broj references. Forms the first segment of `{billingBuildingCode}-{paymentRefCode}-{YYYYMM}`. Independent of the street house number."
   )
@@ -355,8 +364,17 @@ var updateBuildingSchema = z.object({
   iban: optionalIbanSchema,
   oib: z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").optional().nullable().describe("Croatian tax ID (OIB) of the building. Pass null to clear."),
   monthlyFeePerSqm: z.coerce.number().nonnegative().optional().describe(
-    "New monthly fund contribution rate in EUR per m\xB2. Pass a value to update, omit to leave unchanged."
+    "New monthly residential fund contribution rate in EUR per m\xB2. Pass a value to update, omit to leave unchanged."
   ),
+  monthlyFeeCommercialPerSqm: z.coerce.number().nonnegative().optional().nullable().describe(
+    "New monthly commercial fund contribution rate in EUR per m\xB2. Pass null to clear; omit to leave unchanged."
+  ),
+  apartmentResidentialCoef: z.coerce.number().nonnegative().optional(),
+  apartmentCommercialCoef: z.coerce.number().nonnegative().optional(),
+  garageResidentialCoef: z.coerce.number().nonnegative().optional(),
+  garageCommercialCoef: z.coerce.number().nonnegative().optional(),
+  storageResidentialCoef: z.coerce.number().nonnegative().optional(),
+  storageCommercialCoef: z.coerce.number().nonnegative().optional(),
   billingBuildingCode: z.string().trim().min(1).max(22).optional().nullable().describe(
     "New poziv-na-broj building identifier. Pass null to clear; omit to leave unchanged."
   ),
@@ -387,6 +405,45 @@ var updateUserBuildingRoleSchema = z.object({
   ),
   chatVisibleToCoOwners: z.boolean().optional().describe("Controls whether this user appears in chat directories visible to co-owners.")
 });
+var businessPartnerResponseSchema = z.object({
+  id: z.string().uuid(),
+  organizationId: z.string().uuid(),
+  name: z.string(),
+  code: z.string().nullable().optional(),
+  city: z.string().nullable().optional(),
+  email: z.string().nullable().optional(),
+  address: z.string().nullable().optional(),
+  postalCode: z.string().nullable().optional(),
+  phone: z.string().nullable().optional(),
+  mobile: z.string().nullable().optional(),
+  contactPerson: z.string().nullable().optional(),
+  iban: z.string().nullable().optional(),
+  bankAccount: z.string().nullable().optional(),
+  taxNumber: z.string().nullable().optional(),
+  oib: z.string().nullable().optional(),
+  isVatPayer: z.boolean(),
+  isActive: z.boolean(),
+  createdAt: z.union([z.string(), z.date()]),
+  updatedAt: z.union([z.string(), z.date()]).nullable().optional()
+}).meta({ id: "BusinessPartnerResponse" });
+var createBusinessPartnerSchema = z.object({
+  name: z.string().trim().min(1).max(200),
+  code: z.string().trim().max(50).optional().nullable(),
+  city: z.string().trim().max(100).optional().nullable(),
+  email: z.string().trim().email().optional().nullable(),
+  address: z.string().trim().max(500).optional().nullable(),
+  postalCode: z.string().trim().max(20).optional().nullable(),
+  phone: z.string().trim().max(50).optional().nullable(),
+  mobile: z.string().trim().max(50).optional().nullable(),
+  contactPerson: z.string().trim().max(200).optional().nullable(),
+  iban: z.string().trim().max(50).optional().nullable(),
+  bankAccount: z.string().trim().max(50).optional().nullable(),
+  taxNumber: z.string().trim().max(50).optional().nullable(),
+  oib: z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").optional().nullable(),
+  isVatPayer: z.boolean().optional(),
+  isActive: z.boolean().optional()
+}).meta({ id: "CreateBusinessPartner" });
+var updateBusinessPartnerSchema = createBusinessPartnerSchema.partial().meta({ id: "UpdateBusinessPartner" });
 var EVENT_TYPES = [
   "service",
   "inspection",
@@ -673,6 +730,33 @@ var updateNoticeSchema = z.object({
 var approveNoticeSchema = z.object({
   approved: z.boolean().describe("True to approve the notice for public visibility, false to reject.")
 });
+var ownerResponseSchema = z.object({
+  id: z.string().uuid(),
+  buildingId: z.string().uuid(),
+  userId: z.string().uuid().nullable().optional(),
+  fullName: z.string(),
+  email: z.string().nullable().optional(),
+  phone: z.string().nullable().optional(),
+  oib: z.string().nullable().optional(),
+  address: z.string().nullable().optional(),
+  paymentRefCode: z.string().nullable().optional(),
+  createdAt: z.union([z.string(), z.date()]),
+  updatedAt: z.union([z.string(), z.date()]).nullable().optional()
+}).meta({ id: "OwnerResponse" });
+var createOwnerSchema = z.object({
+  fullName: z.string().trim().min(1).max(200),
+  email: z.string().trim().email().optional().nullable(),
+  phone: z.string().trim().max(50).optional().nullable(),
+  oib: z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").optional().nullable(),
+  address: z.string().trim().max(500).optional().nullable(),
+  paymentRefCode: z.string().trim().max(22).optional().nullable(),
+  userId: z.string().uuid().optional().nullable()
+}).meta({ id: "CreateOwner" });
+var updateOwnerSchema = createOwnerSchema.partial().meta({ id: "UpdateOwner" });
+var assignOwnerSchema = z.object({
+  ownerId: z.string().uuid(),
+  ownershipPercentage: z.number().min(0).max(100).nullable().optional()
+}).meta({ id: "AssignOwner" });
 var POLL_TYPES = ["CONSENSUS", "COMMUNITY"];
 var pollTypeSchema = z.enum(POLL_TYPES).describe(
   "`COMMUNITY` polls pass by simple majority of votes cast; `CONSENSUS` polls require an ownership-weighted approval threshold."
@@ -986,7 +1070,24 @@ var buildingDetailResponseSchema = z.looseObject({
   fundsSource: z.enum([FundsSource.MANUAL, FundsSource.CAMT]).optional().describe(
     "Current funding-entry mode for this building. `manual` = representatives add income/expense through the UI; `camt` = platform admin ingests CAMT.053 XML statements and manual writes are blocked."
   ),
-  monthlyFeePerSqm: z.number().nullable().optional().describe("Monthly pri\u010Duva rate in EUR per m\xB2 of owned area. Null when not yet configured."),
+  monthlyFeePerSqm: z.number().nullable().optional().describe(
+    "Monthly RESIDENTIAL pri\u010Duva rate in EUR per m\xB2 of owned residential area. Null when not yet configured."
+  ),
+  monthlyFeeCommercialPerSqm: z.number().nullable().optional().describe(
+    "Monthly COMMERCIAL pri\u010Duva rate in EUR per m\xB2 of owned commercial area. Null when the building has no commercial units or the rate has not been configured."
+  ),
+  hasResidentialUnits: z.boolean().optional().describe(
+    "True when the building has at least one unit (apartment/garage/storage) with `type = residential`. Lets the UI decide whether to show the residential rate input."
+  ),
+  hasCommercialUnits: z.boolean().optional().describe(
+    "True when the building has at least one unit (apartment/garage/storage) with `type = commercial`. Lets the UI decide whether to show the commercial rate input."
+  ),
+  apartmentResidentialCoef: z.number().optional().describe("Multiplier on the residential rate for apartment areas. Defaults to 1."),
+  apartmentCommercialCoef: z.number().optional().describe("Multiplier on the commercial rate for apartment areas. Defaults to 1."),
+  garageResidentialCoef: z.number().optional().describe("Multiplier on the residential rate for garage areas. Defaults to 1."),
+  garageCommercialCoef: z.number().optional().describe("Multiplier on the commercial rate for garage areas. Defaults to 1."),
+  storageResidentialCoef: z.number().optional().describe("Multiplier on the residential rate for storage areas. Defaults to 1."),
+  storageCommercialCoef: z.number().optional().describe("Multiplier on the commercial rate for storage areas. Defaults to 1."),
   billingBuildingCode: z.string().nullable().optional().describe(
     "Building identifier used as the first segment of HR01 poziv-na-broj references. Null until the managing org assigns one."
   ),
@@ -997,6 +1098,33 @@ var buildingDetailResponseSchema = z.looseObject({
   deputyRepresentatives: z.array(buildingRepresentativeSchema).default([]).describe("Users with the deputy-representative role, if any.")
 });
 var paginatedBuildingsResponseSchema = paginatedResponseSchema(buildingResponseSchema);
+var buildingFundsLedgerRowSchema = z.object({
+  ownerId: z.string().uuid().describe("ID of the owner record this row attributes to."),
+  ownerName: z.string().describe("Full name of the owner this row attributes to."),
+  linkedUserId: z.string().uuid().nullable().optional().describe("Registered user ID linked to this owner, when one exists."),
+  ownedApartmentArea: z.number().describe("\u03A3 apartment.area \xD7 ownershipPercentage / 100, in m\xB2."),
+  ownedGarageArea: z.number().describe("\u03A3 garage.area \xD7 ownershipPercentage / 100, in m\xB2."),
+  ownedStorageArea: z.number().describe("\u03A3 storage_unit.area \xD7 ownershipPercentage / 100, in m\xB2."),
+  totalOwnedArea: z.number().describe("Sum of the three area fields, for convenience."),
+  residentialArea: z.number().describe("\u03A3 owned-share-weighted area of RESIDENTIAL-typed units, in m\xB2."),
+  commercialArea: z.number().describe("\u03A3 owned-share-weighted area of COMMERCIAL-typed units, in m\xB2."),
+  expected: z.number().describe("\u03A3 area \xD7 kindTypeCoef \xD7 rate[type] across the user\u2019s units, in EUR."),
+  paid: z.number().describe(
+    "Attributed apartment income for the period, in EUR. Does not include garage/storage."
+  ),
+  diff: z.number().describe("paid \u2212 expected, in EUR.")
+}).meta({ id: "BuildingFundsLedgerRow" });
+var buildingFundsLedgerResponseSchema = z.object({
+  buildingId: z.string().uuid(),
+  period: z.string().regex(/^\d{4}-\d{2}$/).describe("Reporting month, `YYYY-MM`."),
+  monthlyFeePerSqm: z.number().nullable().describe(
+    "Residential rate in EUR per m\xB2 used for this report; null when the building has none set."
+  ),
+  monthlyFeeCommercialPerSqm: z.number().nullable().describe(
+    "Commercial rate in EUR per m\xB2 used for this report; null when the building has no commercial rate."
+  ),
+  rows: z.array(buildingFundsLedgerRowSchema).describe("One entry per co-owner with any owned area on the building.")
+}).meta({ id: "BuildingFundsLedgerResponse" });
 var commentResponseSchema = z.looseObject({
   id: z.string().uuid(),
   entityType: z.string().describe(
@@ -1626,26 +1754,7 @@ var pollVotersResponseSchema = z.looseObject({
   voters: z.array(pollVoterSchema).describe("Individual voter entries with their chosen option.")
 });
 var paginatedPollsResponseSchema = paginatedResponseSchema(pollResponseSchema);
-var pricuvaLedgerRowSchema = z.object({
-  userId: z.string().uuid(),
-  userName: z.string().describe("Display name of the co-owner this row attributes to."),
-  ownedApartmentArea: z.number().describe("\u03A3 apartment.area \xD7 ownershipPercentage / 100, in m\xB2."),
-  ownedGarageArea: z.number().describe("\u03A3 garage.area \xD7 ownershipPercentage / 100, in m\xB2."),
-  ownedStorageArea: z.number().describe("\u03A3 storage_unit.area \xD7 ownershipPercentage / 100, in m\xB2."),
-  totalOwnedArea: z.number().describe("Sum of the three area fields, for convenience."),
-  expected: z.number().describe("Rate \xD7 totalOwnedArea, in EUR."),
-  paid: z.number().describe(
-    "Attributed apartment income for the period, in EUR. Does not include garage/storage."
-  ),
-  diff: z.number().describe("paid \u2212 expected, in EUR.")
-}).meta({ id: "PricuvaLedgerRow" });
-var pricuvaLedgerResponseSchema = z.object({
-  buildingId: z.string().uuid(),
-  period: z.string().regex(/^\d{4}-\d{2}$/).describe("Reporting month, `YYYY-MM`."),
-  monthlyFeePerSqm: z.number().nullable().describe("Rate in EUR per m\xB2 used for this report; null when the building has none set."),
-  rows: z.array(pricuvaLedgerRowSchema).describe("One entry per co-owner with any owned area on the building.")
-}).meta({ id: "PricuvaLedgerResponse" });
 
-export { ARCHIVE_TYPES, ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, baseEntitySchema, buildingDetailResponseSchema, buildingEntitySchema, buildingResponseSchema, buildingTypeSchema, buildingUserEntitySchema, camtImportResponseSchema, commentResponseSchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, pricuvaLedgerResponseSchema, pricuvaLedgerRowSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-G3HHW3EB.js.map
-//# sourceMappingURL=chunk-G3HHW3EB.js.map
+export { ARCHIVE_TYPES, ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, baseEntitySchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, commentResponseSchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createOwnerSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, ownerResponseSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateBusinessPartnerSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
+//# sourceMappingURL=chunk-QIHUFSWB.js.map
+//# sourceMappingURL=chunk-QIHUFSWB.js.map

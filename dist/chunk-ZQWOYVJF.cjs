@@ -74,6 +74,22 @@ var API_ROUTES = {
     USER_DETAIL: (buildingId, storageUnitId, userId) => `/buildings/${buildingId}/storage-units/${storageUnitId}/users/${userId}`,
     FLOORS: (buildingId) => `/buildings/${buildingId}/storage-units/floors`
   },
+  // ── Unit Reminders (polymorphic — apartment/garage/storage) ─────────
+  UNIT_REMINDERS: {
+    LIST: (buildingId) => `/buildings/${buildingId}/unit-reminders`,
+    DETAIL: (buildingId, reminderId) => `/buildings/${buildingId}/unit-reminders/${reminderId}`
+  },
+  // ── Owners (building-scoped, user-link optional) ────────────────────
+  OWNERS: {
+    LIST: (buildingId) => `/buildings/${buildingId}/owners`,
+    DETAIL: (buildingId, ownerId) => `/buildings/${buildingId}/owners/${ownerId}`,
+    APARTMENT_ASSIGNMENTS: (buildingId, apartmentId) => `/buildings/${buildingId}/apartments/${apartmentId}/owners`,
+    APARTMENT_ASSIGNMENT_DETAIL: (buildingId, apartmentId, ownerId) => `/buildings/${buildingId}/apartments/${apartmentId}/owners/${ownerId}`,
+    GARAGE_ASSIGNMENTS: (buildingId, garageId) => `/buildings/${buildingId}/garages/${garageId}/owners`,
+    GARAGE_ASSIGNMENT_DETAIL: (buildingId, garageId, ownerId) => `/buildings/${buildingId}/garages/${garageId}/owners/${ownerId}`,
+    STORAGE_ASSIGNMENTS: (buildingId, storageUnitId) => `/buildings/${buildingId}/storage-units/${storageUnitId}/owners`,
+    STORAGE_ASSIGNMENT_DETAIL: (buildingId, storageUnitId, ownerId) => `/buildings/${buildingId}/storage-units/${storageUnitId}/owners/${ownerId}`
+  },
   // ── Units (generic) ──────────────────────────────────────────────────
   UNITS: {
     LIST: (buildingId) => `/buildings/${buildingId}/units`,
@@ -149,7 +165,7 @@ var API_ROUTES = {
     EXPENSES: (buildingId) => `/buildings/${buildingId}/expenses`,
     EXPENSE_DETAIL: (buildingId, expenseId) => `/buildings/${buildingId}/expenses/${expenseId}`,
     IMPORT_CAMT: (buildingId) => `/buildings/${buildingId}/funds/import/camt`,
-    PRICUVA_LEDGER: (buildingId) => `/buildings/${buildingId}/funds/pricuva-ledger`,
+    BUILDING_FUNDS_LEDGER: (buildingId) => `/buildings/${buildingId}/funds/building-funds-ledger`,
     UPLATNICAS: (buildingId) => `/buildings/${buildingId}/funds/uplatnicas`,
     RECURRING_TEMPLATES: (buildingId) => `/buildings/${buildingId}/recurring-templates`,
     RECURRING_TEMPLATE_DETAIL: (buildingId, templateId) => `/buildings/${buildingId}/recurring-templates/${templateId}`,
@@ -191,7 +207,9 @@ var API_ROUTES = {
     MEMBERS: (orgId) => `/organizations/${orgId}/members`,
     MEMBER_DETAIL: (orgId, memberId) => `/organizations/${orgId}/members/${memberId}`,
     INVITE: (orgId) => `/organizations/${orgId}/invite`,
-    INVITATIONS: (orgId) => `/organizations/${orgId}/invitations`
+    INVITATIONS: (orgId) => `/organizations/${orgId}/invitations`,
+    BUSINESS_PARTNERS: (orgId) => `/organizations/${orgId}/business-partners`,
+    BUSINESS_PARTNER_DETAIL: (orgId, partnerId) => `/organizations/${orgId}/business-partners/${partnerId}`
   },
   // ── Platform (admin) ─────────────────────────────────────────────────
   PLATFORM: {
@@ -238,5 +256,5 @@ var API_ROUTES = {
 
 exports.API_ROUTES = API_ROUTES;
 exports.API_VERSION = API_VERSION;
-//# sourceMappingURL=chunk-63EUZ2KZ.cjs.map
-//# sourceMappingURL=chunk-63EUZ2KZ.cjs.map
+//# sourceMappingURL=chunk-ZQWOYVJF.cjs.map
+//# sourceMappingURL=chunk-ZQWOYVJF.cjs.map

@@ -298,6 +298,8 @@ var Permission = {
   ORG_VIEW_ANALYTICS: "org:view_analytics",
   ORG_MANAGE_CONTRACTS: "org:manage_contracts",
   ORG_VIEW_BUILDINGS: "org:view_buildings",
+  ORG_VIEW_PARTNERS: "org:view_partners",
+  ORG_MANAGE_PARTNERS: "org:manage_partners",
   // Platform (global scope)
   PLATFORM_APPROVE_BUILDINGS: "platform:approve_buildings",
   PLATFORM_MANAGE_USERS: "platform:manage_users",
@@ -465,6 +467,12 @@ var FileCategory = {
   OTHER: "other"
 };
 
-export { APPROVE_PERMISSIONS, ApartmentRole, ApprovalStatus, BUILDING_ROLE_RANK, BuildingRole, BuildingStatus, BuildingType, CommonStatus, DevicePlatform, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_ROLE_RANK, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, Permission, PlatformRole, PollStatus, PollType, PricuvaRefMode, Priority, Role, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions };
-//# sourceMappingURL=chunk-YXJBZCY5.js.map
-//# sourceMappingURL=chunk-YXJBZCY5.js.map
+// src/enums/unit-type.enum.ts
+var UnitType = {
+  RESIDENTIAL: "residential",
+  COMMERCIAL: "commercial"
+};
+
+export { APPROVE_PERMISSIONS, ApartmentRole, ApprovalStatus, BUILDING_ROLE_RANK, BuildingRole, BuildingStatus, BuildingType, CommonStatus, DevicePlatform, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_ROLE_RANK, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, Permission, PlatformRole, PollStatus, PollType, PricuvaRefMode, Priority, Role, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions };
+//# sourceMappingURL=chunk-D3JDWTOD.js.map
+//# sourceMappingURL=chunk-D3JDWTOD.js.map

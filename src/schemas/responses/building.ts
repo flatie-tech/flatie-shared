@@ -192,7 +192,52 @@ export const buildingDetailResponseSchema = z.looseObject({
     .number()
     .nullable()
     .optional()
-    .describe('Monthly pričuva rate in EUR per m² of owned area. Null when not yet configured.'),
+    .describe(
+      'Monthly RESIDENTIAL pričuva rate in EUR per m² of owned residential area. Null when not yet configured.',
+    ),
+  monthlyFeeCommercialPerSqm: z
+    .number()
+    .nullable()
+    .optional()
+    .describe(
+      'Monthly COMMERCIAL pričuva rate in EUR per m² of owned commercial area. Null when the building has no commercial units or the rate has not been configured.',
+    ),
+  hasResidentialUnits: z
+    .boolean()
+    .optional()
+    .describe(
+      'True when the building has at least one unit (apartment/garage/storage) with `type = residential`. Lets the UI decide whether to show the residential rate input.',
+    ),
+  hasCommercialUnits: z
+    .boolean()
+    .optional()
+    .describe(
+      'True when the building has at least one unit (apartment/garage/storage) with `type = commercial`. Lets the UI decide whether to show the commercial rate input.',
+    ),
+  apartmentResidentialCoef: z
+    .number()
+    .optional()
+    .describe('Multiplier on the residential rate for apartment areas. Defaults to 1.'),
+  apartmentCommercialCoef: z
+    .number()
+    .optional()
+    .describe('Multiplier on the commercial rate for apartment areas. Defaults to 1.'),
+  garageResidentialCoef: z
+    .number()
+    .optional()
+    .describe('Multiplier on the residential rate for garage areas. Defaults to 1.'),
+  garageCommercialCoef: z
+    .number()
+    .optional()
+    .describe('Multiplier on the commercial rate for garage areas. Defaults to 1.'),
+  storageResidentialCoef: z
+    .number()
+    .optional()
+    .describe('Multiplier on the residential rate for storage areas. Defaults to 1.'),
+  storageCommercialCoef: z
+    .number()
+    .optional()
+    .describe('Multiplier on the commercial rate for storage areas. Defaults to 1.'),
   billingBuildingCode: z
     .string()
     .nullable()

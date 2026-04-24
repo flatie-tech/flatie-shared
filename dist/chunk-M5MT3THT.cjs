@@ -300,6 +300,8 @@ var Permission = {
   ORG_VIEW_ANALYTICS: "org:view_analytics",
   ORG_MANAGE_CONTRACTS: "org:manage_contracts",
   ORG_VIEW_BUILDINGS: "org:view_buildings",
+  ORG_VIEW_PARTNERS: "org:view_partners",
+  ORG_MANAGE_PARTNERS: "org:manage_partners",
   // Platform (global scope)
   PLATFORM_APPROVE_BUILDINGS: "platform:approve_buildings",
   PLATFORM_MANAGE_USERS: "platform:manage_users",
@@ -467,6 +469,12 @@ var FileCategory = {
   OTHER: "other"
 };
 
+// src/enums/unit-type.enum.ts
+var UnitType = {
+  RESIDENTIAL: "residential",
+  COMMERCIAL: "commercial"
+};
+
 exports.APPROVE_PERMISSIONS = APPROVE_PERMISSIONS;
 exports.ApartmentRole = ApartmentRole;
 exports.ApprovalStatus = ApprovalStatus;
@@ -509,10 +517,11 @@ exports.TransactionCategory = TransactionCategory;
 exports.TransactionSource = TransactionSource;
 exports.TransactionType = TransactionType;
 exports.UNIMPLEMENTED_NOTIFICATION_TYPES = UNIMPLEMENTED_NOTIFICATION_TYPES;
+exports.UnitType = UnitType;
 exports.WASTE_SUBTYPE_NOTIFICATION_MAP = WASTE_SUBTYPE_NOTIFICATION_MAP;
 exports.canAssignOrgRole = canAssignOrgRole;
 exports.canAssignPlatformRole = canAssignPlatformRole;
 exports.canAssignRole = canAssignRole;
 exports.domainPermissions = domainPermissions;
-//# sourceMappingURL=chunk-3V4EFJQX.cjs.map
-//# sourceMappingURL=chunk-3V4EFJQX.cjs.map
+//# sourceMappingURL=chunk-M5MT3THT.cjs.map
+//# sourceMappingURL=chunk-M5MT3THT.cjs.map

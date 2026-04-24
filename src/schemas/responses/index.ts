@@ -17,6 +17,14 @@ export {
   buildingResponseSchema,
   paginatedBuildingsResponseSchema,
 } from './building';
+export type {
+  BuildingFundsLedgerResponse,
+  BuildingFundsLedgerRow,
+} from './building-funds-ledger';
+export {
+  buildingFundsLedgerResponseSchema,
+  buildingFundsLedgerRowSchema,
+} from './building-funds-ledger';
 export type { CommentResponse } from './comments';
 export { commentResponseSchema } from './comments';
 export type { EventResponse, PaginatedEventsResponse } from './events';
@@ -65,8 +73,3 @@ export {
   pollResultsSchema,
   pollVotersResponseSchema,
 } from './polls';
-export type { PricuvaLedgerResponse, PricuvaLedgerRow } from './pricuva-ledger';
-export {
-  pricuvaLedgerResponseSchema,
-  pricuvaLedgerRowSchema,
-} from './pricuva-ledger';

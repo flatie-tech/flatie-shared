@@ -545,6 +545,13 @@ declare const createBuildingSchema: z.ZodObject<{
     iban: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     oib: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     monthlyFeePerSqm: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    monthlyFeeCommercialPerSqm: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    apartmentResidentialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    apartmentCommercialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    garageResidentialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    garageCommercialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    storageResidentialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    storageCommercialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
     billingBuildingCode: z.ZodOptional<z.ZodString>;
 }, z.core.$strip>;
 /**
@@ -568,6 +575,13 @@ declare const updateBuildingSchema: z.ZodObject<{
     iban: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     oib: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     monthlyFeePerSqm: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    monthlyFeeCommercialPerSqm: z.ZodNullable<z.ZodOptional<z.ZodCoercedNumber<unknown>>>;
+    apartmentResidentialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    apartmentCommercialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    garageResidentialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    garageCommercialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    storageResidentialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    storageCommercialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
     billingBuildingCode: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     fundsSource: z.ZodOptional<z.ZodEnum<{
         manual: "manual";
@@ -603,6 +617,74 @@ type CreateBuildingSchema = z.infer<typeof createBuildingSchema>;
 type UpdateBuildingSchema = z.infer<typeof updateBuildingSchema>;
 type JoinBuildingWithOtpSchema = z.infer<typeof joinBuildingWithOtpSchema>;
 type UpdateUserBuildingRoleSchema = z.infer<typeof updateUserBuildingRoleSchema>;
+
+/**
+ * Business partner (Croatian "poslovni partner") scoped to an
+ * organization. Address-book with bookkeeping fields — later linkable
+ * to expense transactions via `expense_transactions.partner_id`.
+ *
+ * `oib` and `taxNumber` are separate on purpose: `oib` is the 11-digit
+ * Croatian tax ID, while `taxNumber` ("broj poreznog obveznika") is a
+ * free-form field used for foreign partners with non-HR tax IDs.
+ */
+declare const businessPartnerResponseSchema: z.ZodObject<{
+    id: z.ZodString;
+    organizationId: z.ZodString;
+    name: z.ZodString;
+    code: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    city: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    email: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    address: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    postalCode: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    phone: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    mobile: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    contactPerson: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    iban: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    bankAccount: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    taxNumber: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    oib: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    isVatPayer: z.ZodBoolean;
+    isActive: z.ZodBoolean;
+    createdAt: z.ZodUnion<readonly [z.ZodString, z.ZodDate]>;
+    updatedAt: z.ZodOptional<z.ZodNullable<z.ZodUnion<readonly [z.ZodString, z.ZodDate]>>>;
+}, z.core.$strip>;
+type BusinessPartnerResponse = z.infer<typeof businessPartnerResponseSchema>;
+declare const createBusinessPartnerSchema: z.ZodObject<{
+    name: z.ZodString;
+    code: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    city: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    email: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    address: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    postalCode: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    phone: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    mobile: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    contactPerson: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    iban: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    bankAccount: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    taxNumber: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    oib: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    isVatPayer: z.ZodOptional<z.ZodBoolean>;
+    isActive: z.ZodOptional<z.ZodBoolean>;
+}, z.core.$strip>;
+type CreateBusinessPartnerInput = z.infer<typeof createBusinessPartnerSchema>;
+declare const updateBusinessPartnerSchema: z.ZodObject<{
+    name: z.ZodOptional<z.ZodString>;
+    code: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    city: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    email: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    address: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    postalCode: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    phone: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    mobile: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    contactPerson: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    iban: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    bankAccount: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    taxNumber: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    oib: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    isVatPayer: z.ZodOptional<z.ZodOptional<z.ZodBoolean>>;
+    isActive: z.ZodOptional<z.ZodOptional<z.ZodBoolean>>;
+}, z.core.$strip>;
+type UpdateBusinessPartnerInput = z.infer<typeof updateBusinessPartnerSchema>;
 
 /**
  * Event type options
@@ -1023,6 +1105,62 @@ type UpdateNoticeSchema = z.infer<typeof updateNoticeSchema>;
 type ApproveNoticeSchema = z.infer<typeof approveNoticeSchema>;
 
 /**
+ * Owner entity. Decoupled from `user` — `userId` is nullable and set
+ * only when the physical person has registered on Flatie (auto-linked
+ * by email match across buildings, or manually via the admin UI).
+ */
+declare const ownerResponseSchema: z.ZodObject<{
+    id: z.ZodString;
+    buildingId: z.ZodString;
+    userId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    fullName: z.ZodString;
+    email: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    phone: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    oib: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    address: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    paymentRefCode: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    createdAt: z.ZodUnion<readonly [z.ZodString, z.ZodDate]>;
+    updatedAt: z.ZodOptional<z.ZodNullable<z.ZodUnion<readonly [z.ZodString, z.ZodDate]>>>;
+}, z.core.$strip>;
+type OwnerResponse = z.infer<typeof ownerResponseSchema>;
+/**
+ * Create-owner request. `fullName` is the only hard requirement; the
+ * rest are optional because the org may record just what they have.
+ * If an email is given and it matches an existing user, the backend
+ * auto-links the new owner to that user.
+ */
+declare const createOwnerSchema: z.ZodObject<{
+    fullName: z.ZodString;
+    email: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    phone: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    oib: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    address: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    paymentRefCode: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    userId: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+}, z.core.$strip>;
+type CreateOwnerInput = z.infer<typeof createOwnerSchema>;
+declare const updateOwnerSchema: z.ZodObject<{
+    fullName: z.ZodOptional<z.ZodString>;
+    email: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    phone: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    oib: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    address: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    paymentRefCode: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    userId: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+}, z.core.$strip>;
+type UpdateOwnerInput = z.infer<typeof updateOwnerSchema>;
+/**
+ * Assign an owner to a unit (apartment/garage/storage). Closes any
+ * existing open assignment on that unit by owner-id via the service
+ * (not modeled in this schema — purely a request shape).
+ */
+declare const assignOwnerSchema: z.ZodObject<{
+    ownerId: z.ZodString;
+    ownershipPercentage: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
+}, z.core.$strip>;
+type AssignOwnerInput = z.infer<typeof assignOwnerSchema>;
+
+/**
  * Poll type options
  */
 declare const POLL_TYPES: readonly ["CONSENSUS", "COMMUNITY"];
@@ -1359,6 +1497,7 @@ declare const updateMaintenanceLogRequestSchema: z.ZodObject<{
     removeChildFileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
     pollId: z.ZodOptional<z.ZodString>;
     pollIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
+    expenseIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
     id: z.ZodString;
 }, z.core.$strip>;
 type UpdateMaintenanceLogRequestPayload = z.infer<typeof updateMaintenanceLogRequestSchema>;
@@ -1581,6 +1720,15 @@ declare const buildingDetailResponseSchema: z.ZodObject<{
         camt: "camt";
     }>>;
     monthlyFeePerSqm: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
+    monthlyFeeCommercialPerSqm: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
+    hasResidentialUnits: z.ZodOptional<z.ZodBoolean>;
+    hasCommercialUnits: z.ZodOptional<z.ZodBoolean>;
+    apartmentResidentialCoef: z.ZodOptional<z.ZodNumber>;
+    apartmentCommercialCoef: z.ZodOptional<z.ZodNumber>;
+    garageResidentialCoef: z.ZodOptional<z.ZodNumber>;
+    garageCommercialCoef: z.ZodOptional<z.ZodNumber>;
+    storageResidentialCoef: z.ZodOptional<z.ZodNumber>;
+    storageCommercialCoef: z.ZodOptional<z.ZodNumber>;
     billingBuildingCode: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     pricuvaRefMode: z.ZodOptional<z.ZodEnum<{
         apartment: "apartment";
@@ -1630,6 +1778,72 @@ declare const paginatedBuildingsResponseSchema: z.ZodObject<{
 type BuildingResponse = z.infer<typeof buildingResponseSchema>;
 type BuildingDetailResponse = z.infer<typeof buildingDetailResponseSchema>;
 type PaginatedBuildingsResponse = z.infer<typeof paginatedBuildingsResponseSchema>;
+
+/**
+ * Expected-vs-paid building-funds ledger for a building over a single
+ * month (also known as pričuva in the Croatian domain).
+ *
+ * The server computes one row per co-owner that holds any share of an
+ * apartment, garage, or storage unit in the building. For each row:
+ *
+ * - Residential area is the sum of each residential unit's area
+ *   weighted by the user's ownership share; commercial area is the
+ *   same for commercial-typed units.
+ * - `expected` = Σ over the user's units of
+ *     area × ownershipShare × kindTypeCoef × rate[type]
+ *   where `kindTypeCoef` picks the multiplier matching the unit's
+ *   kind (apartment/garage/storage) and type (residential/commercial).
+ *   Either rate can be null if the building has no units of that
+ *   type — matching area is then priced at 0 and contributes nothing.
+ * - `paid` = Σ over the apartments this user co-owns of (that
+ *   apartment's matched income in the selected period × the user's
+ *   ownership share of that apartment).
+ * - `diff` = paid − expected. Negative = the user owes, positive =
+ *   the user over-paid (credit).
+ *
+ * Garage and storage areas feed `expected` but not `paid`: only
+ * apartment payments carry the HR01 poziv-na-broj that links bank
+ * entries to a unit.
+ *
+ * Both rates are null when neither has been configured. In that case
+ * `rows` is empty — the server can't compute expected amounts.
+ */
+declare const buildingFundsLedgerRowSchema: z.ZodObject<{
+    ownerId: z.ZodString;
+    ownerName: z.ZodString;
+    linkedUserId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    ownedApartmentArea: z.ZodNumber;
+    ownedGarageArea: z.ZodNumber;
+    ownedStorageArea: z.ZodNumber;
+    totalOwnedArea: z.ZodNumber;
+    residentialArea: z.ZodNumber;
+    commercialArea: z.ZodNumber;
+    expected: z.ZodNumber;
+    paid: z.ZodNumber;
+    diff: z.ZodNumber;
+}, z.core.$strip>;
+declare const buildingFundsLedgerResponseSchema: z.ZodObject<{
+    buildingId: z.ZodString;
+    period: z.ZodString;
+    monthlyFeePerSqm: z.ZodNullable<z.ZodNumber>;
+    monthlyFeeCommercialPerSqm: z.ZodNullable<z.ZodNumber>;
+    rows: z.ZodArray<z.ZodObject<{
+        ownerId: z.ZodString;
+        ownerName: z.ZodString;
+        linkedUserId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        ownedApartmentArea: z.ZodNumber;
+        ownedGarageArea: z.ZodNumber;
+        ownedStorageArea: z.ZodNumber;
+        totalOwnedArea: z.ZodNumber;
+        residentialArea: z.ZodNumber;
+        commercialArea: z.ZodNumber;
+        expected: z.ZodNumber;
+        paid: z.ZodNumber;
+        diff: z.ZodNumber;
+    }, z.core.$strip>>;
+}, z.core.$strip>;
+type BuildingFundsLedgerRow = z.infer<typeof buildingFundsLedgerRowSchema>;
+type BuildingFundsLedgerResponse = z.infer<typeof buildingFundsLedgerResponseSchema>;
 
 declare const commentResponseSchema: z.ZodObject<{
     id: z.ZodString;
@@ -1916,58 +2130,6 @@ declare const camtImportResponseSchema: z.ZodObject<{
     }, z.core.$loose>>;
 }, z.core.$loose>;
 type CamtImportResponse = z.infer<typeof camtImportResponseSchema>;
-
-/**
- * Expected-vs-paid pričuva ledger for a building over a single month.
- *
- * The server computes one row per co-owner that holds any share of an
- * apartment, garage, or storage unit in the building. For each row:
- *
- * - `expected` = building.monthlyFeePerSqm × Σ over units owned by
- *   this user of (unit.area × ownershipPercentage / 100).
- * - `paid` = Σ over the apartments this user co-owns of (that
- *   apartment's matched income in the selected period × the user's
- *   ownership share of that apartment).
- * - `diff` = paid − expected. Negative = the user owes, positive =
- *   the user over-paid (credit).
- *
- * Garage and storage areas feed `expected` but not `paid`: only
- * apartment payments carry the HR01 poziv-na-broj that links bank
- * entries to a unit.
- *
- * `monthlyFeePerSqm` is null when the building hasn't configured a
- * rate yet. In that case `rows` is empty — the server can't compute
- * expected amounts without it.
- */
-declare const pricuvaLedgerRowSchema: z.ZodObject<{
-    userId: z.ZodString;
-    userName: z.ZodString;
-    ownedApartmentArea: z.ZodNumber;
-    ownedGarageArea: z.ZodNumber;
-    ownedStorageArea: z.ZodNumber;
-    totalOwnedArea: z.ZodNumber;
-    expected: z.ZodNumber;
-    paid: z.ZodNumber;
-    diff: z.ZodNumber;
-}, z.core.$strip>;
-declare const pricuvaLedgerResponseSchema: z.ZodObject<{
-    buildingId: z.ZodString;
-    period: z.ZodString;
-    monthlyFeePerSqm: z.ZodNullable<z.ZodNumber>;
-    rows: z.ZodArray<z.ZodObject<{
-        userId: z.ZodString;
-        userName: z.ZodString;
-        ownedApartmentArea: z.ZodNumber;
-        ownedGarageArea: z.ZodNumber;
-        ownedStorageArea: z.ZodNumber;
-        totalOwnedArea: z.ZodNumber;
-        expected: z.ZodNumber;
-        paid: z.ZodNumber;
-        diff: z.ZodNumber;
-    }, z.core.$strip>>;
-}, z.core.$strip>;
-type PricuvaLedgerRow = z.infer<typeof pricuvaLedgerRowSchema>;
-type PricuvaLedgerResponse = z.infer<typeof pricuvaLedgerResponseSchema>;
 
 declare const maintenanceLogResponseSchema: z.ZodObject<{
     id: z.ZodString;
@@ -2660,4 +2822,4 @@ type MaintenanceStatusSchemaType = z.infer<typeof MaintenanceStatusSchema>;
 type FailureStatusSchemaType = z.infer<typeof FailureStatusSchema>;
 type PrioritySchemaType = z.infer<typeof PrioritySchema>;
 
-export { ARCHIVE_TYPES, type AddOrgMemberSchema, type Apartment, type ApartmentUser, type ApiError, type ApiErrorResponse, ApprovalStatusSchema, type ApprovalStatusSchemaType, type ApproveFailureReportSchema, type ApproveNoticeSchema, type ArchiveType, type ArchivedItem, type AssignOrgBuildingSchema, type AssignOrgMemberBuildingSchema, BUILDING_LIMITS, BUILDING_TYPES, type BaseEntitySchema, type BuildingDetailResponse, type BuildingEntitySchema, type BuildingResponse, type BuildingTypeOption, type BuildingUserEntitySchema, CHAT_LIMITS, type CamtImportResponse, type CommentResponse, CommonStatusSchema, type CommonStatusSchemaType, ConversationType, type CopyFaqsSchema, type CopyTransactionCategoriesSchema, type CreateBuildingSchema, type CreateConversationSchema, type CreateEventSchema, type CreateFailureReportSchema, type CreateFaqSchema, type CreateMaintenanceLogSchema, type CreateNoticeSchema, type CreateOrganizationSchema, type CreatePollSchema, type CreateTransactionCategorySchema, type CursorQuerySchema, type DateRangeParamsSchema, type DateRangeWithValidationSchema, type DateTimeSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, type EventColorOption, type EventResponse, type EventTypeOption, FAILURE_REPORT_LIMITS, FAQ_LIMITS, type FailureReportEventSchema, type FailureReportResponse, FailureStatusSchema, type FailureStatusSchemaType, type FaqResponse, type FinalizePollSchema, type ForgotPasswordSchema, type Garage, type GarageRole, type GarageUser, type GetOrgBuildingsQuerySchema, type GetOrgMembersQuerySchema, type GetTransactionCategoriesQuerySchema, type InviteOrgMemberSchema, type JoinBuildingWithOtpSchema, type ListArchivedResponse, type LoginSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, type MaintenanceFinancedByOption, type MaintenanceLogEventSchema, type MaintenanceLogResponse, MaintenanceStatusSchema, type MaintenanceStatusSchemaType, type MessageResponse, NOTICE_LIMITS, type NoticeEventSchema, type NoticeResponse, type NotificationPreferenceCategory, type NotificationPreferenceItem, type NotificationResponse, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, type PaginatedApartmentsResponse, type PaginatedBuildingsResponse, type PaginatedEventsResponse, type PaginatedFailureReportsResponse, type PaginatedMaintenanceLogsResponse, type PaginatedNoticesResponse, type PaginatedPollsResponse, type PaginatedResponseSchema, type PaginationParamsSchema, type PermissionFieldsSchema, type PermissionsResponseSchema, type PollResponse, type PollResults, type PollTypeOption, type PollVotersResponse, type PricuvaLedgerResponse, type PricuvaLedgerRow, PrioritySchema, type PrioritySchemaType, type RegisterSchema, type ReorderFaqsSchema, type ResetPasswordSchema, type SearchUsersQuerySchema, type SendMessageSchema, type StorageUnit, type StorageUnitRole, type StorageUnitUser, TRANSACTION_CATEGORY_LIMITS, type TimeSchema, type UpdateBuildingSchema, type UpdateConversationSchema, type UpdateEventSchema, type UpdateFailureReportRequestPayload, type UpdateFailureReportSchema, type UpdateFaqSchema, type UpdateMaintenanceLogRequestPayload, type UpdateMaintenanceLogSchema, type UpdateNoticeRequestPayload, type UpdateNoticeSchema, type UpdateOrgMemberRoleSchema, type UpdateOrganizationSchema, type UpdatePasswordSchema, type UpdatePollRequestPayload, type UpdatePollSchema, type UpdateTransactionCategorySchema, type UpdateUserBuildingRoleSchema, type UserEntitySchema, type UuidSchema, type VerifyOtpSchema, type VotePollSchema, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, baseEntitySchema, buildingDetailResponseSchema, buildingEntitySchema, buildingResponseSchema, buildingTypeSchema, buildingUserEntitySchema, camtImportResponseSchema, commentResponseSchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, pricuvaLedgerResponseSchema, pricuvaLedgerRowSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
+export { ARCHIVE_TYPES, type AddOrgMemberSchema, type Apartment, type ApartmentUser, type ApiError, type ApiErrorResponse, ApprovalStatusSchema, type ApprovalStatusSchemaType, type ApproveFailureReportSchema, type ApproveNoticeSchema, type ArchiveType, type ArchivedItem, type AssignOrgBuildingSchema, type AssignOrgMemberBuildingSchema, type AssignOwnerInput, BUILDING_LIMITS, BUILDING_TYPES, type BaseEntitySchema, type BuildingDetailResponse, type BuildingEntitySchema, type BuildingFundsLedgerResponse, type BuildingFundsLedgerRow, type BuildingResponse, type BuildingTypeOption, type BuildingUserEntitySchema, type BusinessPartnerResponse, CHAT_LIMITS, type CamtImportResponse, type CommentResponse, CommonStatusSchema, type CommonStatusSchemaType, ConversationType, type CopyFaqsSchema, type CopyTransactionCategoriesSchema, type CreateBuildingSchema, type CreateBusinessPartnerInput, type CreateConversationSchema, type CreateEventSchema, type CreateFailureReportSchema, type CreateFaqSchema, type CreateMaintenanceLogSchema, type CreateNoticeSchema, type CreateOrganizationSchema, type CreateOwnerInput, type CreatePollSchema, type CreateTransactionCategorySchema, type CursorQuerySchema, type DateRangeParamsSchema, type DateRangeWithValidationSchema, type DateTimeSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, type EventColorOption, type EventResponse, type EventTypeOption, FAILURE_REPORT_LIMITS, FAQ_LIMITS, type FailureReportEventSchema, type FailureReportResponse, FailureStatusSchema, type FailureStatusSchemaType, type FaqResponse, type FinalizePollSchema, type ForgotPasswordSchema, type Garage, type GarageRole, type GarageUser, type GetOrgBuildingsQuerySchema, type GetOrgMembersQuerySchema, type GetTransactionCategoriesQuerySchema, type InviteOrgMemberSchema, type JoinBuildingWithOtpSchema, type ListArchivedResponse, type LoginSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, type MaintenanceFinancedByOption, type MaintenanceLogEventSchema, type MaintenanceLogResponse, MaintenanceStatusSchema, type MaintenanceStatusSchemaType, type MessageResponse, NOTICE_LIMITS, type NoticeEventSchema, type NoticeResponse, type NotificationPreferenceCategory, type NotificationPreferenceItem, type NotificationResponse, ORGANIZATION_LIMITS, type OwnerResponse, POLL_LIMITS, POLL_TYPES, type PaginatedApartmentsResponse, type PaginatedBuildingsResponse, type PaginatedEventsResponse, type PaginatedFailureReportsResponse, type PaginatedMaintenanceLogsResponse, type PaginatedNoticesResponse, type PaginatedPollsResponse, type PaginatedResponseSchema, type PaginationParamsSchema, type PermissionFieldsSchema, type PermissionsResponseSchema, type PollResponse, type PollResults, type PollTypeOption, type PollVotersResponse, PrioritySchema, type PrioritySchemaType, type RegisterSchema, type ReorderFaqsSchema, type ResetPasswordSchema, type SearchUsersQuerySchema, type SendMessageSchema, type StorageUnit, type StorageUnitRole, type StorageUnitUser, TRANSACTION_CATEGORY_LIMITS, type TimeSchema, type UpdateBuildingSchema, type UpdateBusinessPartnerInput, type UpdateConversationSchema, type UpdateEventSchema, type UpdateFailureReportRequestPayload, type UpdateFailureReportSchema, type UpdateFaqSchema, type UpdateMaintenanceLogRequestPayload, type UpdateMaintenanceLogSchema, type UpdateNoticeRequestPayload, type UpdateNoticeSchema, type UpdateOrgMemberRoleSchema, type UpdateOrganizationSchema, type UpdateOwnerInput, type UpdatePasswordSchema, type UpdatePollRequestPayload, type UpdatePollSchema, type UpdateTransactionCategorySchema, type UpdateUserBuildingRoleSchema, type UserEntitySchema, type UuidSchema, type VerifyOtpSchema, type VotePollSchema, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, baseEntitySchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, commentResponseSchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createOwnerSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, ownerResponseSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateBusinessPartnerSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };

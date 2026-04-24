@@ -130,16 +130,20 @@ const ORG_ADMIN_ORG_PERMISSIONS = [
   'org:view_analytics',
   'org:manage_contracts',
   'org:view_buildings',
+  'org:view_partners',
+  'org:manage_partners',
 ];
 
 const SUPERVISOR_ORG_PERMISSIONS = [
   'org:view_buildings',
   'org:view_analytics',
   'org:assign_referents',
+  'org:view_partners',
+  'org:manage_partners',
 ];
 
-const REFERENT_ORG_PERMISSIONS = ['org:view_buildings'];
-const OPERATIVE_ORG_PERMISSIONS = ['org:view_buildings'];
+const REFERENT_ORG_PERMISSIONS = ['org:view_buildings', 'org:view_partners'];
+const OPERATIVE_ORG_PERMISSIONS = ['org:view_buildings', 'org:view_partners'];
 
 // ─── Final Role → Permission Records ────────────────────────────────
 
