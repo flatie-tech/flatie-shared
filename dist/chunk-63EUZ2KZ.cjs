@@ -1,3 +1,5 @@
+'use strict';
+
 // src/urls/index.ts
 var API_VERSION = "v1";
 var API_ROUTES = {
@@ -147,6 +149,8 @@ var API_ROUTES = {
     EXPENSES: (buildingId) => `/buildings/${buildingId}/expenses`,
     EXPENSE_DETAIL: (buildingId, expenseId) => `/buildings/${buildingId}/expenses/${expenseId}`,
     IMPORT_CAMT: (buildingId) => `/buildings/${buildingId}/funds/import/camt`,
+    PRICUVA_LEDGER: (buildingId) => `/buildings/${buildingId}/funds/pricuva-ledger`,
+    UPLATNICAS: (buildingId) => `/buildings/${buildingId}/funds/uplatnicas`,
     RECURRING_TEMPLATES: (buildingId) => `/buildings/${buildingId}/recurring-templates`,
     RECURRING_TEMPLATE_DETAIL: (buildingId, templateId) => `/buildings/${buildingId}/recurring-templates/${templateId}`,
     RECURRING_TEMPLATE_RESTORE: (buildingId, templateId) => `/buildings/${buildingId}/recurring-templates/${templateId}/restore`
@@ -232,6 +236,7 @@ var API_ROUTES = {
   }
 };
 
-export { API_ROUTES, API_VERSION };
-//# sourceMappingURL=chunk-KMBSBQQZ.js.map
-//# sourceMappingURL=chunk-KMBSBQQZ.js.map
+exports.API_ROUTES = API_ROUTES;
+exports.API_VERSION = API_VERSION;
+//# sourceMappingURL=chunk-63EUZ2KZ.cjs.map
+//# sourceMappingURL=chunk-63EUZ2KZ.cjs.map

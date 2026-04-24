@@ -14,6 +14,25 @@ const failureReportReferenceSchema = z
     'Lightweight failure-report reference embedded in maintenance-log responses (the report this work resolved).',
   );
 
+const expenseReferenceSchema = z
+  .looseObject({
+    id: z.string().uuid(),
+    amount: z.number().describe('Transaction amount in EUR.'),
+    description: z
+      .string()
+      .nullable()
+      .optional()
+      .describe('Free-form description; null when not set.'),
+    period: z
+      .string()
+      .nullable()
+      .optional()
+      .describe('Reporting period as `YYYY-MM`; null when unset.'),
+    source: z.string().describe('Provenance tag: `manual` or `camt`.'),
+    createdAt: z.string().describe('ISO-8601 timestamp when the expense row was created.'),
+  })
+  .describe('Expense transaction linked via `expense_for`.');
+
 export const maintenanceLogResponseSchema = z.looseObject({
   id: z.string().uuid(),
   buildingId: z.string().uuid().describe('UUID of the building the work was performed in.'),
@@ -75,6 +94,12 @@ export const maintenanceLogResponseSchema = z.looseObject({
     .optional()
     .describe(
       'Failure reports this log was produced to resolve; absent when the log is standalone.',
+    ),
+  expenses: z
+    .array(expenseReferenceSchema)
+    .optional()
+    .describe(
+      'Expense transactions linked to this log via `entity_links` (linkType `expense_for`). Populated on detail views.',
     ),
 });
 

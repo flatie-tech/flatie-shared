@@ -346,6 +346,12 @@ var PollType = {
   COMMUNITY: "COMMUNITY"
 };
 
+// src/enums/pricuva-ref-mode.enum.ts
+var PricuvaRefMode = {
+  APARTMENT: "apartment",
+  OWNER: "owner"
+};
+
 // src/enums/role.enum.ts
 var Role = {
   USER: "USER",
@@ -459,6 +465,6 @@ var FileCategory = {
   OTHER: "other"
 };
 
-export { APPROVE_PERMISSIONS, ApartmentRole, ApprovalStatus, BUILDING_ROLE_RANK, BuildingRole, BuildingStatus, BuildingType, CommonStatus, DevicePlatform, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_ROLE_RANK, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, Permission, PlatformRole, PollStatus, PollType, Priority, Role, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions };
-//# sourceMappingURL=chunk-BTW3L77A.js.map
-//# sourceMappingURL=chunk-BTW3L77A.js.map
+export { APPROVE_PERMISSIONS, ApartmentRole, ApprovalStatus, BUILDING_ROLE_RANK, BuildingRole, BuildingStatus, BuildingType, CommonStatus, DevicePlatform, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_ROLE_RANK, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, Permission, PlatformRole, PollStatus, PollType, PricuvaRefMode, Priority, Role, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions };
+//# sourceMappingURL=chunk-YXJBZCY5.js.map
+//# sourceMappingURL=chunk-YXJBZCY5.js.map

@@ -1,5 +1,5 @@
 import { optionalIbanSchema } from './chunk-WK7VOCOE.js';
-import { ApartmentRole, OrgRole, OrgType, BuildingRole, FundsSource, FailureUnitType, FailureLocationType, Priority, TransactionType, Role, PlatformRole, BuildingStatus, NotificationType } from './chunk-BTW3L77A.js';
+import { ApartmentRole, OrgRole, OrgType, BuildingRole, PricuvaRefMode, FundsSource, FailureUnitType, FailureLocationType, Priority, TransactionType, Role, PlatformRole, BuildingStatus, NotificationType } from './chunk-YXJBZCY5.js';
 import { BACKEND_ERROR_CODES } from './chunk-E45VMJJC.js';
 import { z } from 'zod';
 
@@ -117,6 +117,9 @@ var apartmentSchema = z.looseObject({
   id: z.string(),
   buildingId: z.string(),
   number: z.string().describe('Apartment identifier as used by residents and mail (e.g. "12A", "3.5").'),
+  paymentRefCode: z.string().nullable().optional().describe(
+    "Apartment code used as the middle segment of the HR01 poziv-na-broj in `apartment` ref mode. Auto-assigned on create (sequential per building, zero-padded e.g. `001`); editable. Null is allowed on legacy rows that pre-date the column."
+  ),
   floor: z.string().nullable().optional().describe(
     'Floor label where the apartment is located (e.g. "1", "Ground", "Basement"); null when not recorded.'
   ),
@@ -328,20 +331,40 @@ var createBuildingSchema = z.object({
   ]).optional().describe(
     "Role the creating user should claim for themselves in the new building; omitted creates the building without assigning the caller a role."
   ),
-  iban: optionalIbanSchema
+  iban: optionalIbanSchema,
+  oib: z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").optional().nullable().describe(
+    "Croatian tax ID (OIB) of the building (Zajednica suvlasnika). Used as the payee OIB on generated uplatnicas."
+  ),
+  monthlyFeePerSqm: z.coerce.number().nonnegative().optional().describe(
+    "Monthly fund contribution rate in EUR per m\xB2 of owned floor area. Used to derive each co-owner\u2019s expected pri\u010Duva from their apartment/garage/storage area."
+  ),
+  billingBuildingCode: z.string().trim().min(1).max(22).optional().describe(
+    "Short code identifying this building in HR01 poziv-na-broj references. Forms the first segment of `{billingBuildingCode}-{paymentRefCode}-{YYYYMM}`. Independent of the street house number."
+  )
 });
 var updateBuildingSchema = z.object({
   name: z.string().min(BUILDING_LIMITS.NAME_MIN).max(BUILDING_LIMITS.NAME_MAX).optional().describe("New display name of the building."),
   address: z.string().min(BUILDING_LIMITS.ADDRESS_MIN).max(BUILDING_LIMITS.ADDRESS_MAX).optional().describe("New full postal address."),
   type: buildingTypeSchema.optional(),
+  houseNumber: z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN).max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).optional().describe('Street/house number (e.g. "12A"). Used as first HR01 reference segment.'),
   totalUnits: z.coerce.number().int().min(BUILDING_LIMITS.UNITS_MIN).max(BUILDING_LIMITS.UNITS_MAX).optional().describe("Revised total unit count."),
   isStratified: multipartBoolean().optional().describe("Toggles whether the building is stratified (per-unit title deeds)."),
   removeHouseRulesFile: multipartBoolean().optional().describe(
     "When true, clears the existing house-rules attachment. Submit independently of `houseRulesFile` uploads."
   ),
   iban: optionalIbanSchema,
+  oib: z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").optional().nullable().describe("Croatian tax ID (OIB) of the building. Pass null to clear."),
+  monthlyFeePerSqm: z.coerce.number().nonnegative().optional().describe(
+    "New monthly fund contribution rate in EUR per m\xB2. Pass a value to update, omit to leave unchanged."
+  ),
+  billingBuildingCode: z.string().trim().min(1).max(22).optional().nullable().describe(
+    "New poziv-na-broj building identifier. Pass null to clear; omit to leave unchanged."
+  ),
   fundsSource: z.enum([FundsSource.MANUAL, FundsSource.CAMT]).optional().describe(
     "Switches how the building's fund transactions are populated. `manual` (default) keeps the representative-facing add/edit flow; `camt` locks manual writes and only a platform admin can ingest CAMT.053 XML statements."
+  ),
+  pricuvaRefMode: z.enum([PricuvaRefMode.APARTMENT, PricuvaRefMode.OWNER]).optional().describe(
+    "Selects whether the HR01 poziv-na-broj middle segment identifies the apartment (`apartment`, default) or the individual co-owner (`owner`). Changes how CAMT imports match payments to units/users."
   )
 });
 var joinBuildingWithOtpSchema = z.object({
@@ -573,6 +596,9 @@ var createMaintenanceLogSchema = z.object({
   pollId: uuidSchema.optional().describe("UUID of a single poll to associate with this log. Legacy field \u2014 prefer `pollIds`."),
   pollIds: multipartArray(uuidSchema).optional().describe(
     "UUIDs of polls to associate with this log (e.g. the vote that authorised the work)."
+  ),
+  expenseIds: multipartArray(uuidSchema).optional().describe(
+    "UUIDs of existing `expense_transactions` to link to this log via `entity_links` (linkType `expense_for`). The expenses must belong to the same building."
   )
 });
 var updateMaintenanceLogSchema = z.object({
@@ -591,7 +617,10 @@ var updateMaintenanceLogSchema = z.object({
   fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of newly-uploaded files to attach."),
   removeChildFileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-attached files to detach from the log."),
   pollId: uuidSchema.optional().describe("Single poll UUID to associate. Legacy field \u2014 prefer `pollIds`."),
-  pollIds: multipartArray(uuidSchema).optional().describe("Full list of poll UUIDs to associate with this log (replaces existing links).")
+  pollIds: multipartArray(uuidSchema).optional().describe("Full list of poll UUIDs to associate with this log (replaces existing links)."),
+  expenseIds: multipartArray(uuidSchema).optional().describe(
+    "Replacement set of linked expense UUIDs. Existing `expense_for` links not in this list are removed; new ones are inserted."
+  )
 });
 var NOTICE_LIMITS = {
   TITLE_MIN: 1,
@@ -948,8 +977,21 @@ var buildingDetailResponseSchema = z.looseObject({
   iban: z.string().nullable().optional().describe(
     "IBAN of the building fund bank account, or null when unset. Required on the building before a CAMT.053 import can match statements to this building."
   ),
+  oib: z.string().nullable().optional().describe(
+    "Croatian tax ID (OIB) of the building (Zajednica suvlasnika), or null when unset. Used as the payee OIB on generated uplatnicas."
+  ),
+  houseNumber: z.string().nullable().optional().describe(
+    "Street/house number as stored on the building row. Address data only \u2014 the HR01 reference uses `billingBuildingCode`."
+  ),
   fundsSource: z.enum([FundsSource.MANUAL, FundsSource.CAMT]).optional().describe(
     "Current funding-entry mode for this building. `manual` = representatives add income/expense through the UI; `camt` = platform admin ingests CAMT.053 XML statements and manual writes are blocked."
+  ),
+  monthlyFeePerSqm: z.number().nullable().optional().describe("Monthly pri\u010Duva rate in EUR per m\xB2 of owned area. Null when not yet configured."),
+  billingBuildingCode: z.string().nullable().optional().describe(
+    "Building identifier used as the first segment of HR01 poziv-na-broj references. Null until the managing org assigns one."
+  ),
+  pricuvaRefMode: z.enum([PricuvaRefMode.APARTMENT, PricuvaRefMode.OWNER]).optional().describe(
+    "Which middle-segment identifier the HR01 poziv-na-broj uses: `apartment` (per-apartment code) or `owner` (per-co-owner code)."
   ),
   ownerRepresentatives: z.array(buildingRepresentativeSchema).default([]).describe("Users with the owner-representative role for this building."),
   deputyRepresentatives: z.array(buildingRepresentativeSchema).default([]).describe("Users with the deputy-representative role, if any.")
@@ -1198,6 +1240,14 @@ var failureReportReferenceSchema = z.looseObject({
 }).describe(
   "Lightweight failure-report reference embedded in maintenance-log responses (the report this work resolved)."
 );
+var expenseReferenceSchema = z.looseObject({
+  id: z.string().uuid(),
+  amount: z.number().describe("Transaction amount in EUR."),
+  description: z.string().nullable().optional().describe("Free-form description; null when not set."),
+  period: z.string().nullable().optional().describe("Reporting period as `YYYY-MM`; null when unset."),
+  source: z.string().describe("Provenance tag: `manual` or `camt`."),
+  createdAt: z.string().describe("ISO-8601 timestamp when the expense row was created.")
+}).describe("Expense transaction linked via `expense_for`.");
 var maintenanceLogResponseSchema = z.looseObject({
   id: z.string().uuid(),
   buildingId: z.string().uuid().describe("UUID of the building the work was performed in."),
@@ -1223,6 +1273,9 @@ var maintenanceLogResponseSchema = z.looseObject({
   polls: z.array(pollReferenceSchema).default([]).describe("Polls linked to this log (e.g. consensus to authorise the expense); empty if none."),
   failureReports: z.array(failureReportReferenceSchema).optional().describe(
     "Failure reports this log was produced to resolve; absent when the log is standalone."
+  ),
+  expenses: z.array(expenseReferenceSchema).optional().describe(
+    "Expense transactions linked to this log via `entity_links` (linkType `expense_for`). Populated on detail views."
   )
 });
 var paginatedMaintenanceLogsResponseSchema = paginatedResponseSchema(
@@ -1573,7 +1626,26 @@ var pollVotersResponseSchema = z.looseObject({
   voters: z.array(pollVoterSchema).describe("Individual voter entries with their chosen option.")
 });
 var paginatedPollsResponseSchema = paginatedResponseSchema(pollResponseSchema);
+var pricuvaLedgerRowSchema = z.object({
+  userId: z.string().uuid(),
+  userName: z.string().describe("Display name of the co-owner this row attributes to."),
+  ownedApartmentArea: z.number().describe("\u03A3 apartment.area \xD7 ownershipPercentage / 100, in m\xB2."),
+  ownedGarageArea: z.number().describe("\u03A3 garage.area \xD7 ownershipPercentage / 100, in m\xB2."),
+  ownedStorageArea: z.number().describe("\u03A3 storage_unit.area \xD7 ownershipPercentage / 100, in m\xB2."),
+  totalOwnedArea: z.number().describe("Sum of the three area fields, for convenience."),
+  expected: z.number().describe("Rate \xD7 totalOwnedArea, in EUR."),
+  paid: z.number().describe(
+    "Attributed apartment income for the period, in EUR. Does not include garage/storage."
+  ),
+  diff: z.number().describe("paid \u2212 expected, in EUR.")
+}).meta({ id: "PricuvaLedgerRow" });
+var pricuvaLedgerResponseSchema = z.object({
+  buildingId: z.string().uuid(),
+  period: z.string().regex(/^\d{4}-\d{2}$/).describe("Reporting month, `YYYY-MM`."),
+  monthlyFeePerSqm: z.number().nullable().describe("Rate in EUR per m\xB2 used for this report; null when the building has none set."),
+  rows: z.array(pricuvaLedgerRowSchema).describe("One entry per co-owner with any owned area on the building.")
+}).meta({ id: "PricuvaLedgerResponse" });
 
-export { ARCHIVE_TYPES, ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, baseEntitySchema, buildingDetailResponseSchema, buildingEntitySchema, buildingResponseSchema, buildingTypeSchema, buildingUserEntitySchema, camtImportResponseSchema, commentResponseSchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-VEVRT6KL.js.map
-//# sourceMappingURL=chunk-VEVRT6KL.js.map
+export { ARCHIVE_TYPES, ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, baseEntitySchema, buildingDetailResponseSchema, buildingEntitySchema, buildingResponseSchema, buildingTypeSchema, buildingUserEntitySchema, camtImportResponseSchema, commentResponseSchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, pricuvaLedgerResponseSchema, pricuvaLedgerRowSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
+//# sourceMappingURL=chunk-G3HHW3EB.js.map
+//# sourceMappingURL=chunk-G3HHW3EB.js.map

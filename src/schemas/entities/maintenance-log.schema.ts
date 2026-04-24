@@ -118,6 +118,11 @@ export const createMaintenanceLogSchema = z.object({
     .describe(
       'UUIDs of polls to associate with this log (e.g. the vote that authorised the work).',
     ),
+  expenseIds: multipartArray(uuidSchema)
+    .optional()
+    .describe(
+      'UUIDs of existing `expense_transactions` to link to this log via `entity_links` (linkType `expense_for`). The expenses must belong to the same building.',
+    ),
 });
 
 /**
@@ -168,6 +173,11 @@ export const updateMaintenanceLogSchema = z.object({
   pollIds: multipartArray(uuidSchema)
     .optional()
     .describe('Full list of poll UUIDs to associate with this log (replaces existing links).'),
+  expenseIds: multipartArray(uuidSchema)
+    .optional()
+    .describe(
+      'Replacement set of linked expense UUIDs. Existing `expense_for` links not in this list are removed; new ones are inserted.',
+    ),
 });
 
 // Inferred types

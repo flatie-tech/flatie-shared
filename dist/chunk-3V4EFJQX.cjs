@@ -348,6 +348,12 @@ var PollType = {
   COMMUNITY: "COMMUNITY"
 };
 
+// src/enums/pricuva-ref-mode.enum.ts
+var PricuvaRefMode = {
+  APARTMENT: "apartment",
+  OWNER: "owner"
+};
+
 // src/enums/role.enum.ts
 var Role = {
   USER: "USER",
@@ -494,6 +500,7 @@ exports.Permission = Permission;
 exports.PlatformRole = PlatformRole;
 exports.PollStatus = PollStatus;
 exports.PollType = PollType;
+exports.PricuvaRefMode = PricuvaRefMode;
 exports.Priority = Priority;
 exports.Role = Role;
 exports.SCOPED_DOMAINS = SCOPED_DOMAINS;
@@ -507,5 +514,5 @@ exports.canAssignOrgRole = canAssignOrgRole;
 exports.canAssignPlatformRole = canAssignPlatformRole;
 exports.canAssignRole = canAssignRole;
 exports.domainPermissions = domainPermissions;
-//# sourceMappingURL=chunk-MTL7OQUB.cjs.map
-//# sourceMappingURL=chunk-MTL7OQUB.cjs.map
+//# sourceMappingURL=chunk-3V4EFJQX.cjs.map
+//# sourceMappingURL=chunk-3V4EFJQX.cjs.map
