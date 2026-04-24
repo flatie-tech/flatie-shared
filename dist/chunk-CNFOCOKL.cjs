@@ -45,7 +45,8 @@ var API_ROUTES = {
     JOIN_REQUEST_REJECT: (id, requestId) => `/buildings/${id}/join-requests/${requestId}/reject`,
     IMPORT_TEMPLATE: (id) => `/buildings/${id}/import/template`,
     IMPORT_PREVIEW: (id) => `/buildings/${id}/import/preview`,
-    IMPORT_COMMIT: (id) => `/buildings/${id}/import/commit`
+    IMPORT_COMMIT: (id) => `/buildings/${id}/import/commit`,
+    QUOTAS: (id) => `/buildings/${id}/quotas`
   },
   // ── Apartments ────────────────────────────────────────────────────────
   APARTMENTS: {
@@ -186,7 +187,8 @@ var API_ROUTES = {
     MEMBERS: (orgId) => `/organizations/${orgId}/members`,
     MEMBER_DETAIL: (orgId, memberId) => `/organizations/${orgId}/members/${memberId}`,
     INVITE: (orgId) => `/organizations/${orgId}/invite`,
-    INVITATIONS: (orgId) => `/organizations/${orgId}/invitations`
+    INVITATIONS: (orgId) => `/organizations/${orgId}/invitations`,
+    QUOTAS: (orgId) => `/organizations/${orgId}/quotas`
   },
   // ── Platform (admin) ─────────────────────────────────────────────────
   PLATFORM: {
@@ -233,5 +235,5 @@ var API_ROUTES = {
 
 exports.API_ROUTES = API_ROUTES;
 exports.API_VERSION = API_VERSION;
-//# sourceMappingURL=chunk-TBU2WD33.cjs.map
-//# sourceMappingURL=chunk-TBU2WD33.cjs.map
+//# sourceMappingURL=chunk-CNFOCOKL.cjs.map
+//# sourceMappingURL=chunk-CNFOCOKL.cjs.map

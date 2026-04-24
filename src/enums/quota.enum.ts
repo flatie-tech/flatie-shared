@@ -1,3 +1,5 @@
+// ─── Building-scoped quota resources ───────────────────────────────
+
 export const QuotaResourceType = {
   COMMENT: 'COMMENT',
   MAINTENANCE_REQUEST: 'MAINTENANCE_REQUEST',
@@ -16,4 +18,28 @@ export const QUOTA_DEFAULT_DAILY_LIMITS: Record<QuotaResourceType, number | null
   [QuotaResourceType.MAINTENANCE_REQUEST]: 10,
   [QuotaResourceType.INVITE]: 20,
   [QuotaResourceType.NOTIFICATION]: null,
+};
+
+// ─── Organization-scoped quota resources ───────────────────────────
+//
+// Separate from building quotas: an org admin inviting ten co-workers is
+// not the same action as a resident posting ten comments. The org scope
+// guards members/buildings bulk-actions and platform-ish blast radius.
+
+export const OrgQuotaResourceType = {
+  MEMBER_INVITE: 'MEMBER_INVITE',
+  BUILDING_CREATE: 'BUILDING_CREATE',
+  NOTIFICATION: 'NOTIFICATION',
+} as const;
+
+export type OrgQuotaResourceType = (typeof OrgQuotaResourceType)[keyof typeof OrgQuotaResourceType];
+
+export const ORG_QUOTA_RESOURCE_TYPES = Object.values(
+  OrgQuotaResourceType,
+) as readonly OrgQuotaResourceType[];
+
+export const ORG_QUOTA_DEFAULT_DAILY_LIMITS: Record<OrgQuotaResourceType, number | null> = {
+  [OrgQuotaResourceType.MEMBER_INVITE]: 30,
+  [OrgQuotaResourceType.BUILDING_CREATE]: 10,
+  [OrgQuotaResourceType.NOTIFICATION]: null,
 };

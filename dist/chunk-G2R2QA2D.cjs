@@ -339,6 +339,36 @@ var PollType = {
   COMMUNITY: "COMMUNITY"
 };
 
+// src/enums/quota.enum.ts
+var QuotaResourceType = {
+  COMMENT: "COMMENT",
+  MAINTENANCE_REQUEST: "MAINTENANCE_REQUEST",
+  INVITE: "INVITE",
+  NOTIFICATION: "NOTIFICATION"
+};
+var QUOTA_RESOURCE_TYPES = Object.values(
+  QuotaResourceType
+);
+var QUOTA_DEFAULT_DAILY_LIMITS = {
+  [QuotaResourceType.COMMENT]: 50,
+  [QuotaResourceType.MAINTENANCE_REQUEST]: 10,
+  [QuotaResourceType.INVITE]: 20,
+  [QuotaResourceType.NOTIFICATION]: null
+};
+var OrgQuotaResourceType = {
+  MEMBER_INVITE: "MEMBER_INVITE",
+  BUILDING_CREATE: "BUILDING_CREATE",
+  NOTIFICATION: "NOTIFICATION"
+};
+var ORG_QUOTA_RESOURCE_TYPES = Object.values(
+  OrgQuotaResourceType
+);
+var ORG_QUOTA_DEFAULT_DAILY_LIMITS = {
+  [OrgQuotaResourceType.MEMBER_INVITE]: 30,
+  [OrgQuotaResourceType.BUILDING_CREATE]: 10,
+  [OrgQuotaResourceType.NOTIFICATION]: null
+};
+
 // src/enums/role.enum.ts
 var BuildingRole = {
   OWNER_REPRESENTATIVE: "OWNER_REPRESENTATIVE",
@@ -473,7 +503,10 @@ exports.NotificationCategory = NotificationCategory;
 exports.NotificationChannel = NotificationChannel;
 exports.NotificationDeliveryStatus = NotificationDeliveryStatus;
 exports.NotificationType = NotificationType;
+exports.ORG_QUOTA_DEFAULT_DAILY_LIMITS = ORG_QUOTA_DEFAULT_DAILY_LIMITS;
+exports.ORG_QUOTA_RESOURCE_TYPES = ORG_QUOTA_RESOURCE_TYPES;
 exports.ORG_ROLE_RANK = ORG_ROLE_RANK;
+exports.OrgQuotaResourceType = OrgQuotaResourceType;
 exports.OrgRole = OrgRole;
 exports.OrgStatus = OrgStatus;
 exports.OrgType = OrgType;
@@ -483,6 +516,9 @@ exports.PlatformRole = PlatformRole;
 exports.PollStatus = PollStatus;
 exports.PollType = PollType;
 exports.Priority = Priority;
+exports.QUOTA_DEFAULT_DAILY_LIMITS = QUOTA_DEFAULT_DAILY_LIMITS;
+exports.QUOTA_RESOURCE_TYPES = QUOTA_RESOURCE_TYPES;
+exports.QuotaResourceType = QuotaResourceType;
 exports.SCOPED_DOMAINS = SCOPED_DOMAINS;
 exports.SCOPED_PERMISSIONS = SCOPED_PERMISSIONS;
 exports.TransactionCategory = TransactionCategory;
@@ -493,5 +529,5 @@ exports.canAssignOrgRole = canAssignOrgRole;
 exports.canAssignPlatformRole = canAssignPlatformRole;
 exports.canAssignRole = canAssignRole;
 exports.domainPermissions = domainPermissions;
-//# sourceMappingURL=chunk-VSQ5VGJP.cjs.map
-//# sourceMappingURL=chunk-VSQ5VGJP.cjs.map
+//# sourceMappingURL=chunk-G2R2QA2D.cjs.map
+//# sourceMappingURL=chunk-G2R2QA2D.cjs.map

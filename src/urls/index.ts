@@ -255,6 +255,7 @@ export const API_ROUTES = {
       `/organizations/${orgId}/members/${memberId}`,
     INVITE: (orgId: string) => `/organizations/${orgId}/invite`,
     INVITATIONS: (orgId: string) => `/organizations/${orgId}/invitations`,
+    QUOTAS: (orgId: string) => `/organizations/${orgId}/quotas`,
   },
 
   // ── Platform (admin) ─────────────────────────────────────────────────
