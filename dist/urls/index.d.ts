@@ -135,6 +135,8 @@ declare const API_ROUTES: {
         readonly EXPENSES: (buildingId: string) => string;
         readonly EXPENSE_DETAIL: (buildingId: string, expenseId: string) => string;
         readonly IMPORT_CAMT: (buildingId: string) => string;
+        readonly PRICUVA_LEDGER: (buildingId: string) => string;
+        readonly UPLATNICAS: (buildingId: string) => string;
         readonly RECURRING_TEMPLATES: (buildingId: string) => string;
         readonly RECURRING_TEMPLATE_DETAIL: (buildingId: string, templateId: string) => string;
         readonly RECURRING_TEMPLATE_RESTORE: (buildingId: string, templateId: string) => string;

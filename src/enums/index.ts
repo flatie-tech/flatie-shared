@@ -26,6 +26,7 @@ export {
 } from './permission.enum';
 export { PollStatus } from './poll-status.enum';
 export { PollType } from './poll-type.enum';
+export { PricuvaRefMode } from './pricuva-ref-mode.enum';
 export {
   BUILDING_ROLE_RANK,
   BuildingRole,

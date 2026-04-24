@@ -204,6 +204,8 @@ export const API_ROUTES = {
     EXPENSE_DETAIL: (buildingId: string, expenseId: string) =>
       `/buildings/${buildingId}/expenses/${expenseId}`,
     IMPORT_CAMT: (buildingId: string) => `/buildings/${buildingId}/funds/import/camt`,
+    PRICUVA_LEDGER: (buildingId: string) => `/buildings/${buildingId}/funds/pricuva-ledger`,
+    UPLATNICAS: (buildingId: string) => `/buildings/${buildingId}/funds/uplatnicas`,
     RECURRING_TEMPLATES: (buildingId: string) => `/buildings/${buildingId}/recurring-templates`,
     RECURRING_TEMPLATE_DETAIL: (buildingId: string, templateId: string) =>
       `/buildings/${buildingId}/recurring-templates/${templateId}`,

@@ -1,6 +1,6 @@
 'use strict';
 
-var chunkMTL7OQUB_cjs = require('./chunk-MTL7OQUB.cjs');
+var chunk3V4EFJQX_cjs = require('./chunk-3V4EFJQX.cjs');
 
 // src/constants/defaults.ts
 var DEFAULT_PAGINATION_LIMIT = 10;
@@ -254,38 +254,38 @@ var queryKeys = {
 // src/constants/role-permissions.ts
 var unique = (arr) => [...new Set(arr)];
 var ALL_READS = [
-  ...chunkMTL7OQUB_cjs.domainPermissions("building", "read"),
-  ...chunkMTL7OQUB_cjs.domainPermissions("user", "read"),
-  ...chunkMTL7OQUB_cjs.domainPermissions("notice", "read"),
-  ...chunkMTL7OQUB_cjs.domainPermissions("event", "read"),
-  ...chunkMTL7OQUB_cjs.domainPermissions("poll", "read"),
-  ...chunkMTL7OQUB_cjs.domainPermissions("failure_report", "read"),
-  ...chunkMTL7OQUB_cjs.domainPermissions("maintenance_log", "read"),
-  ...chunkMTL7OQUB_cjs.domainPermissions("financial", "read"),
-  ...chunkMTL7OQUB_cjs.domainPermissions("document", "read"),
-  ...chunkMTL7OQUB_cjs.domainPermissions("apartment", "read"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("building", "read"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("user", "read"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("notice", "read"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("event", "read"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("poll", "read"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("failure_report", "read"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("maintenance_log", "read"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("financial", "read"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("document", "read"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("apartment", "read"),
   "house_rules:read",
   "faq:read"
 ];
 var CO_OWNER_PERMISSIONS = [
   ...ALL_READS,
-  ...chunkMTL7OQUB_cjs.domainPermissions("notice", "own"),
-  ...chunkMTL7OQUB_cjs.domainPermissions("event", "own"),
-  ...chunkMTL7OQUB_cjs.domainPermissions("poll", "own"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("notice", "own"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("event", "own"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("poll", "own"),
   "poll:vote",
-  ...chunkMTL7OQUB_cjs.domainPermissions("failure_report", "own"),
-  ...chunkMTL7OQUB_cjs.domainPermissions("document", "own"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("failure_report", "own"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("document", "own"),
   "vote:cast",
   "vote:weight_based",
   "user:delete:own"
 ];
 var REPRESENTATIVE_PERMISSIONS = [
   ...CO_OWNER_PERMISSIONS,
-  ...chunkMTL7OQUB_cjs.domainPermissions("notice", "manage"),
-  ...chunkMTL7OQUB_cjs.domainPermissions("event", "manage"),
-  ...chunkMTL7OQUB_cjs.domainPermissions("poll", "manage"),
-  ...chunkMTL7OQUB_cjs.domainPermissions("failure_report", "manage"),
-  ...chunkMTL7OQUB_cjs.domainPermissions("document", "manage"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("notice", "manage"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("event", "manage"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("poll", "manage"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("failure_report", "manage"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("document", "manage"),
   "notice:approve",
   "notice:pin",
   "failure_report:approve",
@@ -308,7 +308,7 @@ var REPRESENTATIVE_PERMISSIONS = [
 ];
 var ORG_ADMIN_BUILDING_PERMISSIONS = [
   ...REPRESENTATIVE_PERMISSIONS,
-  ...chunkMTL7OQUB_cjs.domainPermissions("maintenance_log", "manage"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("maintenance_log", "manage"),
   "financial:create",
   "financial:update",
   "financial:delete",
@@ -327,10 +327,10 @@ var ORG_ADMIN_BUILDING_PERMISSIONS = [
 var SUPERVISOR_BUILDING_PERMISSIONS = [...ORG_ADMIN_BUILDING_PERMISSIONS];
 var REFERENT_BUILDING_PERMISSIONS = [
   ...ALL_READS,
-  ...chunkMTL7OQUB_cjs.domainPermissions("notice", "own"),
-  ...chunkMTL7OQUB_cjs.domainPermissions("event", "own"),
-  ...chunkMTL7OQUB_cjs.domainPermissions("failure_report", "own"),
-  ...chunkMTL7OQUB_cjs.domainPermissions("document", "own")
+  ...chunk3V4EFJQX_cjs.domainPermissions("notice", "own"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("event", "own"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("failure_report", "own"),
+  ...chunk3V4EFJQX_cjs.domainPermissions("document", "own")
 ];
 var OPERATIVE_BUILDING_PERMISSIONS = [
   ...ALL_READS,
@@ -355,18 +355,18 @@ var SUPERVISOR_ORG_PERMISSIONS = [
 var REFERENT_ORG_PERMISSIONS = ["org:view_buildings"];
 var OPERATIVE_ORG_PERMISSIONS = ["org:view_buildings"];
 var BUILDING_ROLE_PERMISSIONS = {
-  [chunkMTL7OQUB_cjs.BuildingRole.CO_OWNER]: unique(CO_OWNER_PERMISSIONS),
-  [chunkMTL7OQUB_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: unique(REPRESENTATIVE_PERMISSIONS),
-  [chunkMTL7OQUB_cjs.BuildingRole.OWNER_REPRESENTATIVE]: unique(REPRESENTATIVE_PERMISSIONS)
+  [chunk3V4EFJQX_cjs.BuildingRole.CO_OWNER]: unique(CO_OWNER_PERMISSIONS),
+  [chunk3V4EFJQX_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: unique(REPRESENTATIVE_PERMISSIONS),
+  [chunk3V4EFJQX_cjs.BuildingRole.OWNER_REPRESENTATIVE]: unique(REPRESENTATIVE_PERMISSIONS)
 };
 var ORG_ROLE_PERMISSIONS = {
-  [chunkMTL7OQUB_cjs.OrgRole.ORG_ADMIN]: unique([...ORG_ADMIN_BUILDING_PERMISSIONS, ...ORG_ADMIN_ORG_PERMISSIONS]),
-  [chunkMTL7OQUB_cjs.OrgRole.SUPERVISOR]: unique([...SUPERVISOR_BUILDING_PERMISSIONS, ...SUPERVISOR_ORG_PERMISSIONS]),
-  [chunkMTL7OQUB_cjs.OrgRole.REFERENT]: unique([...REFERENT_BUILDING_PERMISSIONS, ...REFERENT_ORG_PERMISSIONS]),
-  [chunkMTL7OQUB_cjs.OrgRole.OPERATIVE]: unique([...OPERATIVE_BUILDING_PERMISSIONS, ...OPERATIVE_ORG_PERMISSIONS])
+  [chunk3V4EFJQX_cjs.OrgRole.ORG_ADMIN]: unique([...ORG_ADMIN_BUILDING_PERMISSIONS, ...ORG_ADMIN_ORG_PERMISSIONS]),
+  [chunk3V4EFJQX_cjs.OrgRole.SUPERVISOR]: unique([...SUPERVISOR_BUILDING_PERMISSIONS, ...SUPERVISOR_ORG_PERMISSIONS]),
+  [chunk3V4EFJQX_cjs.OrgRole.REFERENT]: unique([...REFERENT_BUILDING_PERMISSIONS, ...REFERENT_ORG_PERMISSIONS]),
+  [chunk3V4EFJQX_cjs.OrgRole.OPERATIVE]: unique([...OPERATIVE_BUILDING_PERMISSIONS, ...OPERATIVE_ORG_PERMISSIONS])
 };
 var PLATFORM_ROLE_PERMISSIONS = {
-  [chunkMTL7OQUB_cjs.PlatformRole.PLATFORM_ADMIN]: [
+  [chunk3V4EFJQX_cjs.PlatformRole.PLATFORM_ADMIN]: [
     "platform:approve_buildings",
     "platform:manage_users",
     "platform:manage_orgs",
@@ -379,7 +379,7 @@ var PLATFORM_ROLE_PERMISSIONS = {
     "system:delete_user",
     "system:create_organization"
   ],
-  [chunkMTL7OQUB_cjs.PlatformRole.PLATFORM_MODERATOR]: [
+  [chunk3V4EFJQX_cjs.PlatformRole.PLATFORM_MODERATOR]: [
     "platform:approve_buildings",
     "platform:manage_users",
     "platform:manage_orgs",
@@ -387,17 +387,17 @@ var PLATFORM_ROLE_PERMISSIONS = {
     "platform:view_analytics",
     "platform:moderate_content"
   ],
-  [chunkMTL7OQUB_cjs.PlatformRole.PLATFORM_SUPPORT]: [
+  [chunk3V4EFJQX_cjs.PlatformRole.PLATFORM_SUPPORT]: [
     "platform:approve_buildings",
     "platform:view_orgs",
     "platform:view_analytics",
     "platform:moderate_content"
   ],
-  [chunkMTL7OQUB_cjs.PlatformRole.PLATFORM_OPERATIVE]: ["platform:view_analytics"]
+  [chunk3V4EFJQX_cjs.PlatformRole.PLATFORM_OPERATIVE]: ["platform:view_analytics"]
 };
-var ALL_PERMISSIONS = unique(Object.values(chunkMTL7OQUB_cjs.Permission));
-var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[chunkMTL7OQUB_cjs.OrgRole.ORG_ADMIN];
-var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[chunkMTL7OQUB_cjs.PlatformRole.PLATFORM_ADMIN];
+var ALL_PERMISSIONS = unique(Object.values(chunk3V4EFJQX_cjs.Permission));
+var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[chunk3V4EFJQX_cjs.OrgRole.ORG_ADMIN];
+var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[chunk3V4EFJQX_cjs.PlatformRole.PLATFORM_ADMIN];
 
 exports.ADMIN_ORG_PERMISSIONS = ADMIN_ORG_PERMISSIONS;
 exports.ADMIN_PLATFORM_PERMISSIONS = ADMIN_PLATFORM_PERMISSIONS;
@@ -436,5 +436,5 @@ exports.transactionCategoryKeys = transactionCategoryKeys;
 exports.unitSearchKeys = unitSearchKeys;
 exports.userKeys = userKeys;
 exports.widgetKeys = widgetKeys;
-//# sourceMappingURL=chunk-P3J3N3EK.cjs.map
-//# sourceMappingURL=chunk-P3J3N3EK.cjs.map
+//# sourceMappingURL=chunk-QVTM5B4N.cjs.map
+//# sourceMappingURL=chunk-QVTM5B4N.cjs.map

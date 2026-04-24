@@ -65,3 +65,8 @@ export {
   pollResultsSchema,
   pollVotersResponseSchema,
 } from './polls';
+export type { PricuvaLedgerResponse, PricuvaLedgerRow } from './pricuva-ledger';
+export {
+  pricuvaLedgerResponseSchema,
+  pricuvaLedgerRowSchema,
+} from './pricuva-ledger';

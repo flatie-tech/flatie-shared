@@ -102,6 +102,8 @@ export type {
   PollResponse,
   PollResults,
   PollVotersResponse,
+  PricuvaLedgerResponse,
+  PricuvaLedgerRow,
 } from './responses';
 export {
   ARCHIVE_TYPES,
@@ -130,6 +132,8 @@ export {
   pollResponseSchema,
   pollResultsSchema,
   pollVotersResponseSchema,
+  pricuvaLedgerResponseSchema,
+  pricuvaLedgerRowSchema,
 } from './responses';
 
 // Status schemas

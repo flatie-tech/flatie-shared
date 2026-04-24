@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { BuildingStatus } from '../../enums/building-status.enum';
 import { FundsSource } from '../../enums/funds-source.enum';
+import { PricuvaRefMode } from '../../enums/pricuva-ref-mode.enum';
 import { buildingTypeSchema } from '../entities/building.schema';
 import { paginatedResponseSchema } from '../pagination.schema';
 
@@ -167,11 +168,43 @@ export const buildingDetailResponseSchema = z.looseObject({
     .describe(
       'IBAN of the building fund bank account, or null when unset. Required on the building before a CAMT.053 import can match statements to this building.',
     ),
+  oib: z
+    .string()
+    .nullable()
+    .optional()
+    .describe(
+      'Croatian tax ID (OIB) of the building (Zajednica suvlasnika), or null when unset. Used as the payee OIB on generated uplatnicas.',
+    ),
+  houseNumber: z
+    .string()
+    .nullable()
+    .optional()
+    .describe(
+      'Street/house number as stored on the building row. Address data only — the HR01 reference uses `billingBuildingCode`.',
+    ),
   fundsSource: z
     .enum([FundsSource.MANUAL, FundsSource.CAMT])
     .optional()
     .describe(
       'Current funding-entry mode for this building. `manual` = representatives add income/expense through the UI; `camt` = platform admin ingests CAMT.053 XML statements and manual writes are blocked.',
+    ),
+  monthlyFeePerSqm: z
+    .number()
+    .nullable()
+    .optional()
+    .describe('Monthly pričuva rate in EUR per m² of owned area. Null when not yet configured.'),
+  billingBuildingCode: z
+    .string()
+    .nullable()
+    .optional()
+    .describe(
+      'Building identifier used as the first segment of HR01 poziv-na-broj references. Null until the managing org assigns one.',
+    ),
+  pricuvaRefMode: z
+    .enum([PricuvaRefMode.APARTMENT, PricuvaRefMode.OWNER])
+    .optional()
+    .describe(
+      'Which middle-segment identifier the HR01 poziv-na-broj uses: `apartment` (per-apartment code) or `owner` (per-co-owner code).',
     ),
   ownerRepresentatives: z
     .array(buildingRepresentativeSchema)
