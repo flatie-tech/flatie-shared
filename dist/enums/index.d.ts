@@ -138,4 +138,14 @@ declare const PollStatus: {
 };
 type PollStatus = (typeof PollStatus)[keyof typeof PollStatus];
 
-export { ApartmentRole, BuildingStatus, DevicePlatform, FailureLocationType, FailureUnitType, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, OrgStatus, OrgType, PollStatus, UNIMPLEMENTED_NOTIFICATION_TYPES, WASTE_SUBTYPE_NOTIFICATION_MAP };
+declare const QuotaResourceType: {
+    readonly COMMENT: "COMMENT";
+    readonly MAINTENANCE_REQUEST: "MAINTENANCE_REQUEST";
+    readonly INVITE: "INVITE";
+    readonly NOTIFICATION: "NOTIFICATION";
+};
+type QuotaResourceType = (typeof QuotaResourceType)[keyof typeof QuotaResourceType];
+declare const QUOTA_RESOURCE_TYPES: readonly QuotaResourceType[];
+declare const QUOTA_DEFAULT_DAILY_LIMITS: Record<QuotaResourceType, number | null>;
+
+export { ApartmentRole, BuildingStatus, DevicePlatform, FailureLocationType, FailureUnitType, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, OrgStatus, OrgType, PollStatus, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, UNIMPLEMENTED_NOTIFICATION_TYPES, WASTE_SUBTYPE_NOTIFICATION_MAP };

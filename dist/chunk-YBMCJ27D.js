@@ -43,7 +43,8 @@ var API_ROUTES = {
     JOIN_REQUEST_REJECT: (id, requestId) => `/buildings/${id}/join-requests/${requestId}/reject`,
     IMPORT_TEMPLATE: (id) => `/buildings/${id}/import/template`,
     IMPORT_PREVIEW: (id) => `/buildings/${id}/import/preview`,
-    IMPORT_COMMIT: (id) => `/buildings/${id}/import/commit`
+    IMPORT_COMMIT: (id) => `/buildings/${id}/import/commit`,
+    QUOTAS: (id) => `/buildings/${id}/quotas`
   },
   // ── Apartments ────────────────────────────────────────────────────────
   APARTMENTS: {
@@ -230,5 +231,5 @@ var API_ROUTES = {
 };
 
 export { API_ROUTES, API_VERSION };
-//# sourceMappingURL=chunk-MLS3VGSR.js.map
-//# sourceMappingURL=chunk-MLS3VGSR.js.map
+//# sourceMappingURL=chunk-YBMCJ27D.js.map
+//# sourceMappingURL=chunk-YBMCJ27D.js.map

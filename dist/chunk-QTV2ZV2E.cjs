@@ -339,6 +339,23 @@ var PollType = {
   COMMUNITY: "COMMUNITY"
 };
 
+// src/enums/quota.enum.ts
+var QuotaResourceType = {
+  COMMENT: "COMMENT",
+  MAINTENANCE_REQUEST: "MAINTENANCE_REQUEST",
+  INVITE: "INVITE",
+  NOTIFICATION: "NOTIFICATION"
+};
+var QUOTA_RESOURCE_TYPES = Object.values(
+  QuotaResourceType
+);
+var QUOTA_DEFAULT_DAILY_LIMITS = {
+  [QuotaResourceType.COMMENT]: 50,
+  [QuotaResourceType.MAINTENANCE_REQUEST]: 10,
+  [QuotaResourceType.INVITE]: 20,
+  [QuotaResourceType.NOTIFICATION]: null
+};
+
 // src/enums/role.enum.ts
 var BuildingRole = {
   OWNER_REPRESENTATIVE: "OWNER_REPRESENTATIVE",
@@ -483,6 +500,9 @@ exports.PlatformRole = PlatformRole;
 exports.PollStatus = PollStatus;
 exports.PollType = PollType;
 exports.Priority = Priority;
+exports.QUOTA_DEFAULT_DAILY_LIMITS = QUOTA_DEFAULT_DAILY_LIMITS;
+exports.QUOTA_RESOURCE_TYPES = QUOTA_RESOURCE_TYPES;
+exports.QuotaResourceType = QuotaResourceType;
 exports.SCOPED_DOMAINS = SCOPED_DOMAINS;
 exports.SCOPED_PERMISSIONS = SCOPED_PERMISSIONS;
 exports.TransactionCategory = TransactionCategory;
@@ -493,5 +513,5 @@ exports.canAssignOrgRole = canAssignOrgRole;
 exports.canAssignPlatformRole = canAssignPlatformRole;
 exports.canAssignRole = canAssignRole;
 exports.domainPermissions = domainPermissions;
-//# sourceMappingURL=chunk-VSQ5VGJP.cjs.map
-//# sourceMappingURL=chunk-VSQ5VGJP.cjs.map
+//# sourceMappingURL=chunk-QTV2ZV2E.cjs.map
+//# sourceMappingURL=chunk-QTV2ZV2E.cjs.map

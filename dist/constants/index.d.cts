@@ -52,6 +52,7 @@ declare const buildingKeys: {
         readonly [x: string]: unknown;
     }];
     settings: (id: string) => readonly ["building", "settings", string];
+    quotas: (id: string) => readonly ["building", "quotas", string];
     joinRequests: (id: string) => readonly ["building", "joinRequests", string];
     pending: () => readonly ["building", "pending"];
     chatVisibility: () => readonly ["building", "chatVisibility"];
@@ -302,6 +303,7 @@ declare const queryKeys: {
             readonly [x: string]: unknown;
         }];
         settings: (id: string) => readonly ["building", "settings", string];
+        quotas: (id: string) => readonly ["building", "quotas", string];
         joinRequests: (id: string) => readonly ["building", "joinRequests", string];
         pending: () => readonly ["building", "pending"];
         chatVisibility: () => readonly ["building", "chatVisibility"];

@@ -83,6 +83,18 @@ export {
   updateBuildingSchema,
   updateUserBuildingRoleSchema,
 } from './building.schema';
+
+// Building quota schemas
+export type {
+  BuildingQuotaConfig,
+  BuildingQuotaEntry,
+  BuildingQuotaList,
+} from './building-quota.schema';
+export {
+  buildingQuotaConfigSchema,
+  buildingQuotaEntrySchema,
+  buildingQuotaListSchema,
+} from './building-quota.schema';
 export type {
   CreateEventSchema,
   EventColorOption,
