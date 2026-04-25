@@ -301,6 +301,7 @@ export const widgetKeys = {
 export const queryKeys = {
   user: userKeys,
   building: buildingKeys,
+  buildingEmail: buildingEmailKeys,
   notice: noticeKeys,
   poll: pollKeys,
   event: eventKeys,

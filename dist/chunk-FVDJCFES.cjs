@@ -1,3 +1,5 @@
+'use strict';
+
 // src/enums/apartment-role.enum.ts
 var ApartmentRole = {
   OWNER: "OWNER",
@@ -271,6 +273,9 @@ var Permission = {
   FAQ_MANAGE_MANAGER: "faq:manage:manager",
   // Building Settings
   BUILDING_SETTINGS_MANAGE: "building_settings:manage",
+  // Building Email (per-building inbox, representative-managed)
+  BUILDING_EMAIL_VIEW: "building_email:view",
+  BUILDING_EMAIL_MANAGE: "building_email:manage",
   // Voting
   VOTE_CAST: "vote:cast",
   VOTE_WEIGHT_BASED: "vote:weight_based",
@@ -449,6 +454,49 @@ var FileCategory = {
   OTHER: "other"
 };
 
-export { APPROVE_PERMISSIONS, ApartmentRole, ApprovalStatus, BUILDING_ROLE_RANK, BuildingRole, BuildingStatus, BuildingType, CommonStatus, DevicePlatform, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_ROLE_RANK, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, Permission, PlatformRole, PollStatus, PollType, Priority, Role, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions };
-//# sourceMappingURL=chunk-P25WSM2I.js.map
-//# sourceMappingURL=chunk-P25WSM2I.js.map
+exports.APPROVE_PERMISSIONS = APPROVE_PERMISSIONS;
+exports.ApartmentRole = ApartmentRole;
+exports.ApprovalStatus = ApprovalStatus;
+exports.BUILDING_ROLE_RANK = BUILDING_ROLE_RANK;
+exports.BuildingRole = BuildingRole;
+exports.BuildingStatus = BuildingStatus;
+exports.BuildingType = BuildingType;
+exports.CommonStatus = CommonStatus;
+exports.DevicePlatform = DevicePlatform;
+exports.FailureLocationType = FailureLocationType;
+exports.FailureStatus = FailureStatus;
+exports.FailureType = FailureType;
+exports.FailureUnitType = FailureUnitType;
+exports.FileCategory = FileCategory;
+exports.Frequency = Frequency;
+exports.MaintenanceLogFinancedBy = MaintenanceLogFinancedBy;
+exports.MaintenanceStatus = MaintenanceStatus;
+exports.MaintenanceType = MaintenanceType;
+exports.NOTIFICATION_TYPE_CATEGORY = NOTIFICATION_TYPE_CATEGORY;
+exports.NotificationCategory = NotificationCategory;
+exports.NotificationChannel = NotificationChannel;
+exports.NotificationDeliveryStatus = NotificationDeliveryStatus;
+exports.NotificationType = NotificationType;
+exports.ORG_ROLE_RANK = ORG_ROLE_RANK;
+exports.OrgRole = OrgRole;
+exports.OrgStatus = OrgStatus;
+exports.OrgType = OrgType;
+exports.PLATFORM_ROLE_RANK = PLATFORM_ROLE_RANK;
+exports.Permission = Permission;
+exports.PlatformRole = PlatformRole;
+exports.PollStatus = PollStatus;
+exports.PollType = PollType;
+exports.Priority = Priority;
+exports.Role = Role;
+exports.SCOPED_DOMAINS = SCOPED_DOMAINS;
+exports.SCOPED_PERMISSIONS = SCOPED_PERMISSIONS;
+exports.TransactionCategory = TransactionCategory;
+exports.TransactionType = TransactionType;
+exports.UNIMPLEMENTED_NOTIFICATION_TYPES = UNIMPLEMENTED_NOTIFICATION_TYPES;
+exports.WASTE_SUBTYPE_NOTIFICATION_MAP = WASTE_SUBTYPE_NOTIFICATION_MAP;
+exports.canAssignOrgRole = canAssignOrgRole;
+exports.canAssignPlatformRole = canAssignPlatformRole;
+exports.canAssignRole = canAssignRole;
+exports.domainPermissions = domainPermissions;
+//# sourceMappingURL=chunk-FVDJCFES.cjs.map
+//# sourceMappingURL=chunk-FVDJCFES.cjs.map
