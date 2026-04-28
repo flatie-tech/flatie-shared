@@ -41,16 +41,9 @@ jobs:
       - name: Build
         run: pnpm build
 
-      # Consumers pin this repo via `github:flatie-tech/flatie-shared#<tag>`,
-      # which means they install whatever sits in `dist/` at the tagged SHA.
-      # If a PR changes src/ without regenerating dist/ (or vice versa), the
-      # published tag would be inconsistent. Fail the PR if so.
-      - name: Verify dist/ is in sync with src/
-        run: |
-          if ! git diff --exit-code dist/; then
-            echo "::error::dist/ is out of sync with src/. Run 'pnpm build' locally and commit the result."
-            exit 1
-          fi
+      # dist/ is gitignored — consumers regenerate it on `pnpm install`
+      # via the `prepare` script (`test -d dist || tsup`). The build step
+      # above just verifies the current src/ produces dist/ cleanly.
 
   docs-check:
     name: Doc hygiene
