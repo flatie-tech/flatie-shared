@@ -1,9 +1,8 @@
 import { z } from 'zod';
-import { BuildingRole, OrgRole, PlatformRole, Role } from '../enums';
+import { BuildingRole, OrgRole, PlatformRole } from '../enums';
 
 /** Zod schema for role types across all scopes. */
 export const roleTypeSchema = z.enum([
-  ...Object.values(Role),
   ...Object.values(BuildingRole),
   ...Object.values(OrgRole),
   ...Object.values(PlatformRole),

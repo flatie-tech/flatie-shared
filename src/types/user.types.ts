@@ -1,4 +1,3 @@
-import type { Role } from '../enums/role.enum';
 import type { BaseEntity } from './base-entity.types';
 
 /**
@@ -11,7 +10,6 @@ export interface User extends BaseEntity {
   image?: string | null;
   phone?: string | null;
   address?: string | null;
-  role: Role;
   agreedToTermsAndConditions?: boolean | null;
   termsAgreedAt?: Date | string | null;
 }

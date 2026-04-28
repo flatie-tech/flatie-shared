@@ -171,6 +171,7 @@ export const Permission = {
   PLATFORM_MODERATE_CONTENT: 'platform:moderate_content',
   PLATFORM_MANAGE_SETTINGS: 'platform:manage_settings',
   PLATFORM_MANAGE_OPERATIVES: 'platform:manage_operatives',
+  PLATFORM_MANAGE_SUBSCRIPTIONS: 'platform:manage_subscriptions',
   PLATFORM_PURGE: 'platform:purge',
 } as const;
 

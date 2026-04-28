@@ -1,26 +1,19 @@
-// ─── System Roles ───────────────────────────────────────────────────
-
-export const Role = {
-  USER: 'USER',
-  ADMIN: 'ADMIN',
-} as const;
-
-export type Role = (typeof Role)[keyof typeof Role];
-
 // ─── Building Roles ─────────────────────────────────────────────────
 
 export const BuildingRole = {
   OWNER_REPRESENTATIVE: 'OWNER_REPRESENTATIVE',
   DEPUTY_REPRESENTATIVE: 'DEPUTY_REPRESENTATIVE',
   CO_OWNER: 'CO_OWNER',
+  RESIDENT: 'RESIDENT',
 } as const;
 
 export type BuildingRole = (typeof BuildingRole)[keyof typeof BuildingRole];
 
 export const BUILDING_ROLE_RANK: Record<BuildingRole, number> = {
-  [BuildingRole.CO_OWNER]: 0,
-  [BuildingRole.DEPUTY_REPRESENTATIVE]: 1,
-  [BuildingRole.OWNER_REPRESENTATIVE]: 1,
+  [BuildingRole.RESIDENT]: 0,
+  [BuildingRole.CO_OWNER]: 1,
+  [BuildingRole.DEPUTY_REPRESENTATIVE]: 2,
+  [BuildingRole.OWNER_REPRESENTATIVE]: 2,
 };
 
 export function canAssignRole(assignerRole: BuildingRole, targetRole: BuildingRole): boolean {
