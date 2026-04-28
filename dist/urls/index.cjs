@@ -1,0 +1,16 @@
+'use strict';
+
+var chunkLW6KTAUO_cjs = require('../chunk-LW6KTAUO.cjs');
+
+
+
+Object.defineProperty(exports, "API_ROUTES", {
+  enumerable: true,
+  get: function () { return chunkLW6KTAUO_cjs.API_ROUTES; }
+});
+Object.defineProperty(exports, "API_VERSION", {
+  enumerable: true,
+  get: function () { return chunkLW6KTAUO_cjs.API_VERSION; }
+});
+//# sourceMappingURL=index.cjs.map
+//# sourceMappingURL=index.cjs.map
