@@ -34,6 +34,13 @@ export const apartmentSchema = z.looseObject({
   number: z
     .string()
     .describe('Apartment identifier as used by residents and mail (e.g. "12A", "3.5").'),
+  paymentRefCode: z
+    .string()
+    .nullable()
+    .optional()
+    .describe(
+      'Apartment code used as the middle segment of the HR01 poziv-na-broj in `apartment` ref mode. Auto-assigned on create (sequential per building, zero-padded e.g. `001`); editable. Null is allowed on legacy rows that pre-date the column.',
+    ),
   floor: z
     .string()
     .nullable()

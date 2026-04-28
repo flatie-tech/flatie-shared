@@ -107,6 +107,7 @@ export const fundsKeys = {
   summary: (buildingId: string) => [...fundsKeys.all, 'summary', buildingId] as const,
   graph: (buildingId: string) => [...fundsKeys.all, 'graph', buildingId] as const,
   income: (buildingId: string) => [...fundsKeys.all, 'income', buildingId] as const,
+  expenses: (buildingId: string) => [...fundsKeys.all, 'expenses', buildingId] as const,
   transactions: (buildingId: string, filters: Record<string, unknown> = {}) =>
     [...fundsKeys.all, 'transactions', buildingId, { ...filters }] as const,
 };
@@ -258,6 +259,39 @@ export const storageUnitKeys = {
   details: () => [...storageUnitKeys.all, 'detail'] as const,
   detail: (id: string) => [...storageUnitKeys.details(), id] as const,
   floors: (buildingId: string) => [...storageUnitKeys.all, 'floors', buildingId] as const,
+};
+
+export const ownerKeys = {
+  all: ['owner'] as const,
+  lists: () => [...ownerKeys.all, 'list'] as const,
+  list: (buildingId: string, search?: string) =>
+    [...ownerKeys.lists(), buildingId, search ?? null] as const,
+  details: () => [...ownerKeys.all, 'detail'] as const,
+  detail: (buildingId: string, ownerId: string) =>
+    [...ownerKeys.details(), buildingId, ownerId] as const,
+  assignments: (buildingId: string, unitKind: string, unitId: string) =>
+    [...ownerKeys.all, 'assignments', buildingId, unitKind, unitId] as const,
+};
+
+export const unitReminderKeys = {
+  all: ['unitReminder'] as const,
+  list: (buildingId: string, unitKind: string, unitId: string) =>
+    [...unitReminderKeys.all, 'list', buildingId, unitKind, unitId] as const,
+};
+
+export const businessPartnerKeys = {
+  all: ['businessPartner'] as const,
+  lists: () => [...businessPartnerKeys.all, 'list'] as const,
+  list: (orgId: string, params?: { search?: string; activeOnly?: boolean }) =>
+    [
+      ...businessPartnerKeys.lists(),
+      orgId,
+      params?.search ?? null,
+      params?.activeOnly ?? null,
+    ] as const,
+  details: () => [...businessPartnerKeys.all, 'detail'] as const,
+  detail: (orgId: string, partnerId: string) =>
+    [...businessPartnerKeys.details(), orgId, partnerId] as const,
 };
 
 export const transactionCategoryKeys = {

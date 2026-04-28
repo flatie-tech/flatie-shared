@@ -2,6 +2,7 @@ export { ApartmentRole } from './apartment-role.enum';
 export { BuildingStatus, OrgStatus } from './building-status.enum';
 export { BuildingType } from './building-type.enum';
 export { FailureLocationType, FailureUnitType } from './failure-location.enum';
+export { FundsSource, TransactionSource } from './funds-source.enum';
 export { MaintenanceLogFinancedBy } from './maintenance-log.enum';
 export {
   DevicePlatform,
@@ -25,6 +26,7 @@ export {
 } from './permission.enum';
 export { PollStatus } from './poll-status.enum';
 export { PollType } from './poll-type.enum';
+export { PricuvaRefMode } from './pricuva-ref-mode.enum';
 export {
   BUILDING_ROLE_RANK,
   BuildingRole,
@@ -50,3 +52,4 @@ export {
   TransactionCategory,
   TransactionType,
 } from './status.enum';
+export { UnitType } from './unit-type.enum';

@@ -99,6 +99,31 @@ export const API_ROUTES = {
     FLOORS: (buildingId: string) => `/buildings/${buildingId}/storage-units/floors`,
   },
 
+  // ── Unit Reminders (polymorphic — apartment/garage/storage) ─────────
+  UNIT_REMINDERS: {
+    LIST: (buildingId: string) => `/buildings/${buildingId}/unit-reminders`,
+    DETAIL: (buildingId: string, reminderId: string) =>
+      `/buildings/${buildingId}/unit-reminders/${reminderId}`,
+  },
+
+  // ── Owners (building-scoped, user-link optional) ────────────────────
+  OWNERS: {
+    LIST: (buildingId: string) => `/buildings/${buildingId}/owners`,
+    DETAIL: (buildingId: string, ownerId: string) => `/buildings/${buildingId}/owners/${ownerId}`,
+    APARTMENT_ASSIGNMENTS: (buildingId: string, apartmentId: string) =>
+      `/buildings/${buildingId}/apartments/${apartmentId}/owners`,
+    APARTMENT_ASSIGNMENT_DETAIL: (buildingId: string, apartmentId: string, ownerId: string) =>
+      `/buildings/${buildingId}/apartments/${apartmentId}/owners/${ownerId}`,
+    GARAGE_ASSIGNMENTS: (buildingId: string, garageId: string) =>
+      `/buildings/${buildingId}/garages/${garageId}/owners`,
+    GARAGE_ASSIGNMENT_DETAIL: (buildingId: string, garageId: string, ownerId: string) =>
+      `/buildings/${buildingId}/garages/${garageId}/owners/${ownerId}`,
+    STORAGE_ASSIGNMENTS: (buildingId: string, storageUnitId: string) =>
+      `/buildings/${buildingId}/storage-units/${storageUnitId}/owners`,
+    STORAGE_ASSIGNMENT_DETAIL: (buildingId: string, storageUnitId: string, ownerId: string) =>
+      `/buildings/${buildingId}/storage-units/${storageUnitId}/owners/${ownerId}`,
+  },
+
   // ── Units (generic) ──────────────────────────────────────────────────
   UNITS: {
     LIST: (buildingId: string) => `/buildings/${buildingId}/units`,
@@ -200,6 +225,13 @@ export const API_ROUTES = {
       `/buildings/${buildingId}/income/${incomeId}`,
     INCOME_RESTORE: (buildingId: string, incomeId: string) =>
       `/buildings/${buildingId}/income/${incomeId}/restore`,
+    EXPENSES: (buildingId: string) => `/buildings/${buildingId}/expenses`,
+    EXPENSE_DETAIL: (buildingId: string, expenseId: string) =>
+      `/buildings/${buildingId}/expenses/${expenseId}`,
+    IMPORT_CAMT: (buildingId: string) => `/buildings/${buildingId}/funds/import/camt`,
+    BUILDING_FUNDS_LEDGER: (buildingId: string) =>
+      `/buildings/${buildingId}/funds/building-funds-ledger`,
+    UPLATNICAS: (buildingId: string) => `/buildings/${buildingId}/funds/uplatnicas`,
     RECURRING_TEMPLATES: (buildingId: string) => `/buildings/${buildingId}/recurring-templates`,
     RECURRING_TEMPLATE_DETAIL: (buildingId: string, templateId: string) =>
       `/buildings/${buildingId}/recurring-templates/${templateId}`,
@@ -254,6 +286,9 @@ export const API_ROUTES = {
       `/organizations/${orgId}/members/${memberId}`,
     INVITE: (orgId: string) => `/organizations/${orgId}/invite`,
     INVITATIONS: (orgId: string) => `/organizations/${orgId}/invitations`,
+    BUSINESS_PARTNERS: (orgId: string) => `/organizations/${orgId}/business-partners`,
+    BUSINESS_PARTNER_DETAIL: (orgId: string, partnerId: string) =>
+      `/organizations/${orgId}/business-partners/${partnerId}`,
   },
 
   // ── Platform (admin) ─────────────────────────────────────────────────

@@ -1,5 +1,8 @@
 import { z } from 'zod';
+import { FundsSource } from '../../enums/funds-source.enum';
+import { PricuvaRefMode } from '../../enums/pricuva-ref-mode.enum';
 import { BuildingRole } from '../../enums/role.enum';
+import { optionalIbanSchema } from '../../validation/iban';
 import { uuidSchema } from '../base.schema';
 import { multipartBoolean } from '../multipart.schema';
 
@@ -88,6 +91,44 @@ export const createBuildingSchema = z.object({
     .describe(
       'Role the creating user should claim for themselves in the new building; omitted creates the building without assigning the caller a role.',
     ),
+  iban: optionalIbanSchema,
+  oib: z
+    .string()
+    .regex(/^\d{11}$/, 'OIB must be exactly 11 digits')
+    .optional()
+    .nullable()
+    .describe(
+      'Croatian tax ID (OIB) of the building (Zajednica suvlasnika). Used as the payee OIB on generated uplatnicas.',
+    ),
+  monthlyFeePerSqm: z.coerce
+    .number()
+    .nonnegative()
+    .optional()
+    .describe(
+      'Monthly fund contribution rate in EUR per m² for RESIDENTIAL units. Multiplied by each co-owner’s owned residential area (apartments/garages/storage of type `residential`) to derive their expected pričuva.',
+    ),
+  monthlyFeeCommercialPerSqm: z.coerce
+    .number()
+    .nonnegative()
+    .optional()
+    .describe(
+      'Monthly fund contribution rate in EUR per m² for COMMERCIAL units. Applied to owned area of any unit with `type = commercial`. Leave unset when the building has no commercial units.',
+    ),
+  apartmentResidentialCoef: z.coerce.number().nonnegative().optional(),
+  apartmentCommercialCoef: z.coerce.number().nonnegative().optional(),
+  garageResidentialCoef: z.coerce.number().nonnegative().optional(),
+  garageCommercialCoef: z.coerce.number().nonnegative().optional(),
+  storageResidentialCoef: z.coerce.number().nonnegative().optional(),
+  storageCommercialCoef: z.coerce.number().nonnegative().optional(),
+  billingBuildingCode: z
+    .string()
+    .trim()
+    .min(1)
+    .max(22)
+    .optional()
+    .describe(
+      'Short code identifying this building in HR01 poziv-na-broj references. Forms the first segment of `{billingBuildingCode}-{paymentRefCode}-{YYYYMM}`. Independent of the street house number.',
+    ),
 });
 
 /**
@@ -110,6 +151,12 @@ export const updateBuildingSchema = z.object({
     .optional()
     .describe('New full postal address.'),
   type: buildingTypeSchema.optional(),
+  houseNumber: z
+    .string()
+    .min(BUILDING_LIMITS.HOUSE_NUMBER_MIN)
+    .max(BUILDING_LIMITS.HOUSE_NUMBER_MAX)
+    .optional()
+    .describe('Street/house number (e.g. "12A"). Used as first HR01 reference segment.'),
   totalUnits: z.coerce
     .number()
     .int()
@@ -124,6 +171,56 @@ export const updateBuildingSchema = z.object({
     .optional()
     .describe(
       'When true, clears the existing house-rules attachment. Submit independently of `houseRulesFile` uploads.',
+    ),
+  iban: optionalIbanSchema,
+  oib: z
+    .string()
+    .regex(/^\d{11}$/, 'OIB must be exactly 11 digits')
+    .optional()
+    .nullable()
+    .describe('Croatian tax ID (OIB) of the building. Pass null to clear.'),
+  monthlyFeePerSqm: z.coerce
+    .number()
+    .nonnegative()
+    .optional()
+    .describe(
+      'New monthly residential fund contribution rate in EUR per m². Pass a value to update, omit to leave unchanged.',
+    ),
+  monthlyFeeCommercialPerSqm: z.coerce
+    .number()
+    .nonnegative()
+    .optional()
+    .nullable()
+    .describe(
+      'New monthly commercial fund contribution rate in EUR per m². Pass null to clear; omit to leave unchanged.',
+    ),
+  apartmentResidentialCoef: z.coerce.number().nonnegative().optional(),
+  apartmentCommercialCoef: z.coerce.number().nonnegative().optional(),
+  garageResidentialCoef: z.coerce.number().nonnegative().optional(),
+  garageCommercialCoef: z.coerce.number().nonnegative().optional(),
+  storageResidentialCoef: z.coerce.number().nonnegative().optional(),
+  storageCommercialCoef: z.coerce.number().nonnegative().optional(),
+  billingBuildingCode: z
+    .string()
+    .trim()
+    .min(1)
+    .max(22)
+    .optional()
+    .nullable()
+    .describe(
+      'New poziv-na-broj building identifier. Pass null to clear; omit to leave unchanged.',
+    ),
+  fundsSource: z
+    .enum([FundsSource.MANUAL, FundsSource.CAMT])
+    .optional()
+    .describe(
+      "Switches how the building's fund transactions are populated. `manual` (default) keeps the representative-facing add/edit flow; `camt` locks manual writes and only a platform admin can ingest CAMT.053 XML statements.",
+    ),
+  pricuvaRefMode: z
+    .enum([PricuvaRefMode.APARTMENT, PricuvaRefMode.OWNER])
+    .optional()
+    .describe(
+      'Selects whether the HR01 poziv-na-broj middle segment identifies the apartment (`apartment`, default) or the individual co-owner (`owner`). Changes how CAMT imports match payments to units/users.',
     ),
 });
 

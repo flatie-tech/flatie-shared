@@ -1,5 +1,38 @@
 # @flatie/shared
 
+## 0.25.0
+
+### Minor Changes
+
+- Add per-post `allowComments` flag to notices, events, and failure reports.
+
+  - `createNoticeSchema`, `updateNoticeSchema`, `noticeResponseSchema` carry `allowComments?: boolean`.
+  - Same field added to the event and failure-report request/response schemas.
+  - Consumers can gate the comments UI on a per-post basis; default remains open when the field is omitted.
+
+- d531a30: Add `monthlyFeePerSqm` to the building schema.
+
+  - `createBuildingSchema` and `updateBuildingSchema` accept optional `monthlyFeePerSqm` (non-negative number; EUR per m² of owned floor area, per month).
+  - `buildingDetailResponseSchema` returns it so clients can derive per-co-owner expected pričuva from apartment/garage/storage area.
+  - New `FUNDS.PRICUVA_LEDGER(buildingId)` URL + `pricuvaLedgerResponseSchema` response contract: per-co-owner expected-vs-paid rows for a given month.
+
+- Add organization-scoped business-partner contracts and `ORG_VIEW_PARTNERS` / `ORG_MANAGE_PARTNERS` permissions.
+
+  - New `businessPartnerResponseSchema`, `createBusinessPartnerSchema`, `updateBusinessPartnerSchema` in `@flatie/shared/schemas/entities` (all 15 fields incl. `oib`, `taxNumber`, `iban`, `bankAccount`, `code` / "oznaka", `isVatPayer`, `isActive`).
+  - Types: `BusinessPartnerResponse`, `CreateBusinessPartnerInput`, `UpdateBusinessPartnerInput`.
+  - New `API_ROUTES.ORGANIZATIONS.BUSINESS_PARTNERS` / `BUSINESS_PARTNER_DETAIL` URLs.
+  - Two new org-scoped permissions wired into `ORG_ROLE_PERMISSIONS` (all org roles see partners; `ORG_ADMIN` + `SUPERVISOR` manage them).
+  - New `businessPartnerKeys` query-key factory.
+
+- a3c99e5: Add building IBAN + funds-source mode and CAMT.053 import contract.
+
+  - New `FundsSource` / `TransactionSource` enums (`'manual' | 'camt'`) in `@flatie/shared/enums`.
+  - New `ibanSchema` + `optionalIbanSchema` in `@flatie/shared/validation` (format-only, no mod-97).
+  - `createBuildingSchema` accepts an optional `iban`; `updateBuildingSchema` accepts `iban` + `fundsSource` for switching between manual entry and CAMT ingestion.
+  - `buildingDetailResponseSchema` now carries `iban` + `fundsSource` so clients can gate the import UI.
+  - New `FUNDS.IMPORT_CAMT(buildingId)` URL plus `FUNDS.EXPENSES` / `FUNDS.EXPENSE_DETAIL` URLs for the new expense transactions surface.
+  - New `camtImportResponseSchema` for the `POST .../funds/import/camt` response: statement metadata, counts, and per-row imported/error details.
+
 ## 0.24.1
 
 ### Patch Changes
