@@ -1,5 +1,7 @@
 # Conventions
 
+> **🟢 Authoritative source for `@flatie/shared` package conventions** (naming, exports, error codes, response-schema pattern, `looseObject` vs `object`, what belongs in shared, API_ROUTES contract, versioning, tests). Backend / frontend / mobile docs link here for shared-package rules — don't duplicate.
+
 Rules for contributing to `@flatie/shared`. Read before adding new code.
 
 ## Naming

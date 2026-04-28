@@ -8,3 +8,15 @@ pre-commit:
       run: pnpm type-check
     test:
       run: pnpm test
+
+    # Doc-hygiene reminders — prints to stderr if a sensitive file is staged.
+    # Always exits 0 (non-blocking). Strict verifier lives in flatie-docs CI.
+    doc-hygiene:
+      run: bash scripts/check-doc-hygiene.sh
+
+    # CLAUDE.md template + link integrity lint. Blocks if CLAUDE.md is
+    # touched and any required section is missing, links don't resolve, or
+    # the file exceeds 200 lines.
+    claude-md-lint:
+      glob: "CLAUDE.md"
+      run: bash scripts/lint-claude-md.sh

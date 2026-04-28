@@ -51,3 +51,18 @@ jobs:
             echo "::error::dist/ is out of sync with src/. Run 'pnpm build' locally and commit the result."
             exit 1
           fi
+
+  docs-check:
+    name: Doc hygiene
+    runs-on: ubuntu-latest
+    # Reminders + CLAUDE.md lint. Lint failure blocks merge; doc-hygiene
+    # script only prints reminders. Strict cross-repo verifiers live in
+    # flatie-tech/flatie-docs CI (Phase E).
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run doc-hygiene reminders (non-blocking)
+        run: bash scripts/check-doc-hygiene.sh
+      - name: Lint CLAUDE.md (blocking)
+        run: bash scripts/lint-claude-md.sh
