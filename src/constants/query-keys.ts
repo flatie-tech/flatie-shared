@@ -28,6 +28,16 @@ export const userKeys = {
   info: () => userKeys.detail('info'),
 };
 
+export const organizationKeys = {
+  all: ['organization'] as const,
+  lists: () => [...organizationKeys.all, 'list'] as const,
+  list: (filters: Record<string, unknown> = {}) =>
+    [...organizationKeys.lists(), { ...filters }] as const,
+  details: () => [...organizationKeys.all, 'detail'] as const,
+  detail: (id: string) => [...organizationKeys.details(), id] as const,
+  quotas: (id: string) => [...organizationKeys.all, 'quotas', id] as const,
+};
+
 export const buildingKeys = {
   all: ['building'] as const,
   lists: () => [...buildingKeys.all, 'list'] as const,

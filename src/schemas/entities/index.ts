@@ -184,6 +184,14 @@ export {
   ownerResponseSchema,
   updateOwnerSchema,
 } from './owner.schema';
+
+// Organization quota schemas
+export type { OrgQuotaConfig, OrgQuotaEntry, OrgQuotaList } from './org-quota.schema';
+export {
+  orgQuotaConfigSchema,
+  orgQuotaEntrySchema,
+  orgQuotaListSchema,
+} from './org-quota.schema';
 export type {
   CreatePollSchema,
   FinalizePollSchema,

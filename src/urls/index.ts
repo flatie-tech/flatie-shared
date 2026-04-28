@@ -290,6 +290,7 @@ export const API_ROUTES = {
     BUSINESS_PARTNERS: (orgId: string) => `/organizations/${orgId}/business-partners`,
     BUSINESS_PARTNER_DETAIL: (orgId: string, partnerId: string) =>
       `/organizations/${orgId}/business-partners/${partnerId}`,
+    QUOTAS: (orgId: string) => `/organizations/${orgId}/quotas`,
   },
 
   // ── Platform (admin) ─────────────────────────────────────────────────
