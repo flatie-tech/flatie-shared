@@ -167,7 +167,7 @@ var API_ROUTES = {
     EXPENSE_DETAIL: (buildingId, expenseId) => `/buildings/${buildingId}/expenses/${expenseId}`,
     IMPORT_CAMT: (buildingId) => `/buildings/${buildingId}/funds/import/camt`,
     BUILDING_FUNDS_LEDGER: (buildingId) => `/buildings/${buildingId}/funds/building-funds-ledger`,
-    UPLATNICAS: (buildingId) => `/buildings/${buildingId}/funds/uplatnicas`,
+    INVOICES: (buildingId) => `/buildings/${buildingId}/funds/invoices`,
     RECURRING_TEMPLATES: (buildingId) => `/buildings/${buildingId}/recurring-templates`,
     RECURRING_TEMPLATE_DETAIL: (buildingId, templateId) => `/buildings/${buildingId}/recurring-templates/${templateId}`,
     RECURRING_TEMPLATE_RESTORE: (buildingId, templateId) => `/buildings/${buildingId}/recurring-templates/${templateId}/restore`
@@ -258,5 +258,5 @@ var API_ROUTES = {
 
 exports.API_ROUTES = API_ROUTES;
 exports.API_VERSION = API_VERSION;
-//# sourceMappingURL=chunk-LW6KTAUO.cjs.map
-//# sourceMappingURL=chunk-LW6KTAUO.cjs.map
+//# sourceMappingURL=chunk-QKC22KTY.cjs.map
+//# sourceMappingURL=chunk-QKC22KTY.cjs.map

@@ -232,7 +232,7 @@ export const API_ROUTES = {
     IMPORT_CAMT: (buildingId: string) => `/buildings/${buildingId}/funds/import/camt`,
     BUILDING_FUNDS_LEDGER: (buildingId: string) =>
       `/buildings/${buildingId}/funds/building-funds-ledger`,
-    UPLATNICAS: (buildingId: string) => `/buildings/${buildingId}/funds/uplatnicas`,
+    INVOICES: (buildingId: string) => `/buildings/${buildingId}/funds/invoices`,
     RECURRING_TEMPLATES: (buildingId: string) => `/buildings/${buildingId}/recurring-templates`,
     RECURRING_TEMPLATE_DETAIL: (buildingId: string, templateId: string) =>
       `/buildings/${buildingId}/recurring-templates/${templateId}`,

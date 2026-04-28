@@ -8,7 +8,7 @@ export { BACKEND_ERROR_CODES, isBackendErrorCode } from './chunk-E45VMJJC.js';
 export { colors, radii, themes } from './chunk-CVM7NQHG.js';
 import './chunk-4LSFAAZW.js';
 export { createPaginatedResponse } from './chunk-W3SU22LA.js';
-export { API_ROUTES, API_VERSION } from './chunk-TH3ZUS3M.js';
+export { API_ROUTES, API_VERSION } from './chunk-UJSBMO65.js';
 
 // src/test-ids/apartments.ts
 var ApartmentsTestIds = {

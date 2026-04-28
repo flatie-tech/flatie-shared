@@ -83,18 +83,6 @@ export {
   updateBuildingSchema,
   updateUserBuildingRoleSchema,
 } from './building.schema';
-// Business partner schemas
-export type {
-  BusinessPartnerResponse,
-  CreateBusinessPartnerInput,
-  UpdateBusinessPartnerInput,
-} from './business-partner.schema';
-export {
-  businessPartnerResponseSchema,
-  createBusinessPartnerSchema,
-  updateBusinessPartnerSchema,
-} from './business-partner.schema';
-
 // Building quota schemas
 export type {
   BuildingQuotaConfig,
@@ -106,6 +94,17 @@ export {
   buildingQuotaEntrySchema,
   buildingQuotaListSchema,
 } from './building-quota.schema';
+// Business partner schemas
+export type {
+  BusinessPartnerResponse,
+  CreateBusinessPartnerInput,
+  UpdateBusinessPartnerInput,
+} from './business-partner.schema';
+export {
+  businessPartnerResponseSchema,
+  createBusinessPartnerSchema,
+  updateBusinessPartnerSchema,
+} from './business-partner.schema';
 export type {
   CreateEventSchema,
   EventColorOption,
@@ -170,7 +169,13 @@ export {
   noticeEventSchema,
   updateNoticeSchema,
 } from './notice.schema';
-
+// Organization quota schemas
+export type { OrgQuotaConfig, OrgQuotaEntry, OrgQuotaList } from './org-quota.schema';
+export {
+  orgQuotaConfigSchema,
+  orgQuotaEntrySchema,
+  orgQuotaListSchema,
+} from './org-quota.schema';
 // Owner schemas
 export type {
   AssignOwnerInput,
@@ -184,14 +189,6 @@ export {
   ownerResponseSchema,
   updateOwnerSchema,
 } from './owner.schema';
-
-// Organization quota schemas
-export type { OrgQuotaConfig, OrgQuotaEntry, OrgQuotaList } from './org-quota.schema';
-export {
-  orgQuotaConfigSchema,
-  orgQuotaEntrySchema,
-  orgQuotaListSchema,
-} from './org-quota.schema';
 export type {
   CreatePollSchema,
   FinalizePollSchema,
