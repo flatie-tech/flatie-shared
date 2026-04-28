@@ -28,6 +28,11 @@ export { PollStatus } from './poll-status.enum';
 export { PollType } from './poll-type.enum';
 export { PricuvaRefMode } from './pricuva-ref-mode.enum';
 export {
+  QUOTA_DEFAULT_DAILY_LIMITS,
+  QUOTA_RESOURCE_TYPES,
+  QuotaResourceType,
+} from './quota.enum';
+export {
   BUILDING_ROLE_RANK,
   BuildingRole,
   canAssignOrgRole,

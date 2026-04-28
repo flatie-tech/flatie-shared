@@ -39,6 +39,7 @@ export const buildingKeys = {
   users: (id: string, filters: Record<string, unknown> = {}) =>
     [...buildingKeys.all, 'users', id, { ...filters }] as const,
   settings: (id: string) => [...buildingKeys.all, 'settings', id] as const,
+  quotas: (id: string) => [...buildingKeys.all, 'quotas', id] as const,
   joinRequests: (id: string) => [...buildingKeys.all, 'joinRequests', id] as const,
   pending: () => [...buildingKeys.all, 'pending'] as const,
   chatVisibility: () => [...buildingKeys.all, 'chatVisibility'] as const,
