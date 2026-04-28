@@ -52,6 +52,12 @@ fi
 # 3) Link integrity. Look at every markdown link [text](path) where path
 #    ends in .md or / (directory) and verify the target exists relative to
 #    the CLAUDE.md's parent directory.
+#
+# Cross-repo links (paths starting with ../) are SKIPPED — they reference
+# sibling repos that are present locally on a developer's machine but not
+# in CI (which checks out only the current repo). Local dev still gets
+# implicit validation when sibling repos are checked out side-by-side.
+
 DIR="$(cd "$(dirname "$CLAUDE_MD")" && pwd)"
 
 # .md links
@@ -62,6 +68,8 @@ while IFS= read -r raw; do
   # Skip absolute URLs (http(s):, mailto:, etc.)
   case "$path" in
     http://*|https://*|mailto:*) continue ;;
+    # Skip cross-repo refs (../<sibling>/...) — see header comment.
+    ../*) continue ;;
   esac
   if [ ! -e "$DIR/$path" ]; then
     echo "::error file=$CLAUDE_MD::Broken .md link: $path (resolves to $DIR/$path)"
@@ -75,6 +83,7 @@ while IFS= read -r raw; do
   [ -z "$path" ] && continue
   case "$path" in
     http://*|https://*) continue ;;
+    ../*) continue ;;  # cross-repo, see above
   esac
   if [ ! -d "$DIR/$path" ]; then
     echo "::error file=$CLAUDE_MD::Broken dir link: $path (resolves to $DIR/$path)"
