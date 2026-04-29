@@ -63,12 +63,16 @@ export { permissionsResponseSchema, roleTypeSchema } from './permissions.schema'
 
 // Request schemas (PATCH/PUT payloads: id + optional body fields)
 export type {
+  CreateEmailThreadRequestPayload,
+  ReplyEmailThreadRequestPayload,
   UpdateFailureReportRequestPayload,
   UpdateMaintenanceLogRequestPayload,
   UpdateNoticeRequestPayload,
   UpdatePollRequestPayload,
 } from './requests';
 export {
+  createEmailThreadRequestSchema,
+  replyEmailThreadRequestSchema,
   updateFailureReportRequestSchema,
   updateMaintenanceLogRequestSchema,
   updateNoticeRequestSchema,
@@ -85,6 +89,10 @@ export type {
   BuildingResponse,
   CamtImportResponse,
   CommentResponse,
+  EmailDirection,
+  EmailMessage,
+  EmailThread,
+  EmailThreadDetail,
   EventResponse,
   FailureReportResponse,
   FaqResponse,
@@ -96,6 +104,7 @@ export type {
   NotificationPreferenceItem,
   NotificationResponse,
   PaginatedBuildingsResponse,
+  PaginatedEmailThreadsResponse,
   PaginatedEventsResponse,
   PaginatedFailureReportsResponse,
   PaginatedMaintenanceLogsResponse,
@@ -115,6 +124,9 @@ export {
   buildingResponseSchema,
   camtImportResponseSchema,
   commentResponseSchema,
+  emailMessageSchema,
+  emailThreadDetailSchema,
+  emailThreadSchema,
   eventResponseSchema,
   failureReportResponseSchema,
   faqResponseSchema,
@@ -126,6 +138,7 @@ export {
   notificationPreferenceItemSchema,
   notificationResponseSchema,
   paginatedBuildingsResponseSchema,
+  paginatedEmailThreadsResponseSchema,
   paginatedEventsResponseSchema,
   paginatedFailureReportsResponseSchema,
   paginatedMaintenanceLogsResponseSchema,

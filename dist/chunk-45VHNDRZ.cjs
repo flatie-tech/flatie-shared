@@ -953,6 +953,19 @@ var permissionsResponseSchema = zod.z.object({
   orgId: zod.z.string().uuid().optional(),
   chatVisibleToCoOwners: zod.z.boolean().optional()
 });
+var createEmailThreadRequestSchema = zod.z.object({
+  recipientEmail: zod.z.string().email().describe("Primary To address of the first outbound message."),
+  recipientName: zod.z.string().optional().describe(
+    'Display name to include in the To header (renders as "Name <email>" on the manager side).'
+  ),
+  ccEmails: zod.z.array(zod.z.string().email()).optional().describe("Optional list of Cc addresses for the first message."),
+  subject: zod.z.string().min(1).max(200).describe("Subject line; used for both the first message and the thread summary."),
+  body: zod.z.string().min(1).describe("Plain-text body of the first outbound message.")
+}).strict();
+var replyEmailThreadRequestSchema = zod.z.object({
+  body: zod.z.string().min(1).describe("Plain-text body of the reply."),
+  ccEmails: zod.z.array(zod.z.string().email()).optional().describe("Optional Cc addresses for this reply; do not persist beyond this message.")
+}).strict();
 
 // src/schemas/requests/update-failure-report.ts
 var updateFailureReportRequestSchema = updateFailureReportSchema.extend({
@@ -1125,6 +1138,46 @@ var buildingDetailResponseSchema = zod.z.looseObject({
   deputyRepresentatives: zod.z.array(buildingRepresentativeSchema).default([]).describe("Users with the deputy-representative role, if any.")
 });
 var paginatedBuildingsResponseSchema = paginatedResponseSchema(buildingResponseSchema);
+var emailDirectionSchema = zod.z.enum(["outbound", "inbound"]).describe(
+  "`outbound` when a representative sent the message through the app; `inbound` when Flatie received the message from an external party via the inbound-mail webhook."
+);
+var emailMessageSchema = zod.z.looseObject({
+  id: zod.z.string().uuid().describe("UUID of the stored email message."),
+  threadId: zod.z.string().uuid().describe("UUID of the thread this message belongs to."),
+  direction: emailDirectionSchema,
+  fromAddress: zod.z.string().describe("Envelope/From address of this message."),
+  fromName: zod.z.string().nullable().optional().describe("Display name parsed from the From header, or null when missing."),
+  toAddresses: zod.z.array(zod.z.string()).default([]).describe("Primary recipients parsed from the To header."),
+  ccAddresses: zod.z.array(zod.z.string()).default([]).describe("Carbon-copy recipients parsed from the Cc header."),
+  subject: zod.z.string().describe("Subject line as stored (inherited from the thread for replies)."),
+  bodyText: zod.z.string().nullable().optional().describe("Plain-text body. Always populated for outbound; may be null for inbound."),
+  bodyHtml: zod.z.string().nullable().optional().describe("Rendered HTML body when the original message included one; null otherwise."),
+  messageId: zod.z.string().nullable().optional().describe(
+    "RFC 5322 Message-ID header value. Stable identifier used as a threading fallback when plus-addressing routing fails."
+  ),
+  sentByUserId: zod.z.string().uuid().nullable().optional().describe("UUID of the representative who triggered the outbound send; null for inbound."),
+  sentByUserName: zod.z.string().nullable().optional().describe("Display name of the sending representative; null for inbound."),
+  createdAt: zod.z.string().describe("ISO-8601 timestamp when the message was persisted server-side.")
+}).describe("A single email message within a building thread.");
+var emailThreadSchema = zod.z.looseObject({
+  id: zod.z.string().uuid().describe("UUID of the thread."),
+  buildingId: zod.z.string().uuid().describe("UUID of the building that owns the thread."),
+  subject: zod.z.string().describe("Subject line at thread creation; not rewritten on reply."),
+  externalParticipants: zod.z.array(zod.z.string()).default([]).describe(
+    "Unique external email addresses seen on this thread (recipients of outbound + senders of inbound)."
+  ),
+  inboxAddress: zod.z.string().describe("The building\u2019s inbox address at the time the thread was routed."),
+  lastMessageAt: zod.z.string().describe("ISO-8601 timestamp of the most recent message."),
+  lastMessagePreview: zod.z.string().nullable().optional().describe("First ~140 characters of the most recent message body, for list previews."),
+  lastMessageDirection: emailDirectionSchema.nullable().optional().describe("Direction of the most recent message; null when the thread has no messages yet."),
+  messageCount: zod.z.coerce.number().default(0).describe("Total messages currently in the thread."),
+  unreadCount: zod.z.coerce.number().default(0).describe("Count of inbound messages not yet marked as read."),
+  archived: zod.z.boolean().default(false).describe("True when the thread has been archived.")
+}).describe("Summary row for the thread list view.");
+var emailThreadDetailSchema = emailThreadSchema.extend({
+  messages: zod.z.array(emailMessageSchema).default([]).describe("All messages in the thread, oldest first.")
+}).describe("Full thread detail including every message.");
+var paginatedEmailThreadsResponseSchema = paginatedResponseSchema(emailThreadSchema);
 var buildingFundsLedgerRowSchema = zod.z.object({
   ownerId: zod.z.string().uuid().describe("ID of the owner record this row attributes to."),
   ownerName: zod.z.string().describe("Full name of the owner this row attributes to."),
@@ -1837,6 +1890,7 @@ exports.copyTransactionCategoriesSchema = copyTransactionCategoriesSchema;
 exports.createBuildingSchema = createBuildingSchema;
 exports.createBusinessPartnerSchema = createBusinessPartnerSchema;
 exports.createConversationSchema = createConversationSchema;
+exports.createEmailThreadRequestSchema = createEmailThreadRequestSchema;
 exports.createEventSchema = createEventSchema;
 exports.createFailureReportSchema = createFailureReportSchema;
 exports.createFaqSchema = createFaqSchema;
@@ -1850,7 +1904,10 @@ exports.cursorQuerySchema = cursorQuerySchema;
 exports.dateRangeParamsSchema = dateRangeParamsSchema;
 exports.dateRangeWithValidationSchema = dateRangeWithValidationSchema;
 exports.dateTimeSchema = dateTimeSchema;
+exports.emailMessageSchema = emailMessageSchema;
 exports.emailSchema = emailSchema;
+exports.emailThreadDetailSchema = emailThreadDetailSchema;
+exports.emailThreadSchema = emailThreadSchema;
 exports.eventColorSchema = eventColorSchema;
 exports.eventResponseSchema = eventResponseSchema;
 exports.eventTypeSchema = eventTypeSchema;
@@ -1889,6 +1946,7 @@ exports.orgQuotaListSchema = orgQuotaListSchema;
 exports.ownerResponseSchema = ownerResponseSchema;
 exports.paginatedApartmentsResponseSchema = paginatedApartmentsResponseSchema;
 exports.paginatedBuildingsResponseSchema = paginatedBuildingsResponseSchema;
+exports.paginatedEmailThreadsResponseSchema = paginatedEmailThreadsResponseSchema;
 exports.paginatedEventsResponseSchema = paginatedEventsResponseSchema;
 exports.paginatedFailureReportsResponseSchema = paginatedFailureReportsResponseSchema;
 exports.paginatedMaintenanceLogsResponseSchema = paginatedMaintenanceLogsResponseSchema;
@@ -1906,6 +1964,7 @@ exports.pollVotersResponseSchema = pollVotersResponseSchema;
 exports.priorityOptions = priorityOptions;
 exports.registerSchema = registerSchema;
 exports.reorderFaqsSchema = reorderFaqsSchema;
+exports.replyEmailThreadRequestSchema = replyEmailThreadRequestSchema;
 exports.resetPasswordSchema = resetPasswordSchema;
 exports.roleTypeSchema = roleTypeSchema;
 exports.searchUsersQuerySchema = searchUsersQuerySchema;
@@ -1938,5 +1997,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-BH6J5424.cjs.map
-//# sourceMappingURL=chunk-BH6J5424.cjs.map
+//# sourceMappingURL=chunk-45VHNDRZ.cjs.map
+//# sourceMappingURL=chunk-45VHNDRZ.cjs.map

@@ -18,6 +18,19 @@ export {
   paginatedBuildingsResponseSchema,
 } from './building';
 export type {
+  EmailDirection,
+  EmailMessage,
+  EmailThread,
+  EmailThreadDetail,
+  PaginatedEmailThreadsResponse,
+} from './building-email';
+export {
+  emailMessageSchema,
+  emailThreadDetailSchema,
+  emailThreadSchema,
+  paginatedEmailThreadsResponseSchema,
+} from './building-email';
+export type {
   BuildingFundsLedgerResponse,
   BuildingFundsLedgerRow,
 } from './building-funds-ledger';
