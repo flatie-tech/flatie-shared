@@ -1,173 +1,177 @@
 'use strict';
 
-var chunkSSS333RD_cjs = require('../chunk-SSS333RD.cjs');
+var chunk6V4DI23Y_cjs = require('../chunk-6V4DI23Y.cjs');
 require('../chunk-YNPRAZ3P.cjs');
 
 
 
 Object.defineProperty(exports, "ADMIN_ORG_PERMISSIONS", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.ADMIN_ORG_PERMISSIONS; }
+  get: function () { return chunk6V4DI23Y_cjs.ADMIN_ORG_PERMISSIONS; }
 });
 Object.defineProperty(exports, "ADMIN_PLATFORM_PERMISSIONS", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.ADMIN_PLATFORM_PERMISSIONS; }
+  get: function () { return chunk6V4DI23Y_cjs.ADMIN_PLATFORM_PERMISSIONS; }
 });
 Object.defineProperty(exports, "ALL_PERMISSIONS", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.ALL_PERMISSIONS; }
+  get: function () { return chunk6V4DI23Y_cjs.ALL_PERMISSIONS; }
 });
 Object.defineProperty(exports, "BUILDING_ROLE_PERMISSIONS", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.BUILDING_ROLE_PERMISSIONS; }
+  get: function () { return chunk6V4DI23Y_cjs.BUILDING_ROLE_PERMISSIONS; }
 });
 Object.defineProperty(exports, "DEFAULT_PAGINATION_LIMIT", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.DEFAULT_PAGINATION_LIMIT; }
+  get: function () { return chunk6V4DI23Y_cjs.DEFAULT_PAGINATION_LIMIT; }
 });
 Object.defineProperty(exports, "MAX_PAGINATION_LIMIT", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.MAX_PAGINATION_LIMIT; }
+  get: function () { return chunk6V4DI23Y_cjs.MAX_PAGINATION_LIMIT; }
 });
 Object.defineProperty(exports, "ORG_ROLE_PERMISSIONS", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.ORG_ROLE_PERMISSIONS; }
+  get: function () { return chunk6V4DI23Y_cjs.ORG_ROLE_PERMISSIONS; }
 });
 Object.defineProperty(exports, "PLATFORM_ROLE_PERMISSIONS", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.PLATFORM_ROLE_PERMISSIONS; }
+  get: function () { return chunk6V4DI23Y_cjs.PLATFORM_ROLE_PERMISSIONS; }
 });
 Object.defineProperty(exports, "adminBuildingKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.adminBuildingKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.adminBuildingKeys; }
 });
 Object.defineProperty(exports, "adminKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.adminKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.adminKeys; }
 });
 Object.defineProperty(exports, "apartmentKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.apartmentKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.apartmentKeys; }
 });
 Object.defineProperty(exports, "blogKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.blogKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.blogKeys; }
+});
+Object.defineProperty(exports, "buildingEmailKeys", {
+  enumerable: true,
+  get: function () { return chunk6V4DI23Y_cjs.buildingEmailKeys; }
 });
 Object.defineProperty(exports, "buildingKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.buildingKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.buildingKeys; }
 });
 Object.defineProperty(exports, "businessPartnerKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.businessPartnerKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.businessPartnerKeys; }
 });
 Object.defineProperty(exports, "chatKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.chatKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.chatKeys; }
 });
 Object.defineProperty(exports, "dashboardSummaryKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.dashboardSummaryKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.dashboardSummaryKeys; }
 });
 Object.defineProperty(exports, "documentKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.documentKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.documentKeys; }
 });
 Object.defineProperty(exports, "eventKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.eventKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.eventKeys; }
 });
 Object.defineProperty(exports, "failureReportKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.failureReportKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.failureReportKeys; }
 });
 Object.defineProperty(exports, "faqKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.faqKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.faqKeys; }
 });
 Object.defineProperty(exports, "fundsKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.fundsKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.fundsKeys; }
 });
 Object.defineProperty(exports, "garageKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.garageKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.garageKeys; }
 });
 Object.defineProperty(exports, "layoutKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.layoutKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.layoutKeys; }
 });
 Object.defineProperty(exports, "maintenanceLogKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.maintenanceLogKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.maintenanceLogKeys; }
 });
 Object.defineProperty(exports, "noticeKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.noticeKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.noticeKeys; }
 });
 Object.defineProperty(exports, "notificationKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.notificationKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.notificationKeys; }
 });
 Object.defineProperty(exports, "organizationKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.organizationKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.organizationKeys; }
 });
 Object.defineProperty(exports, "ownerKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.ownerKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.ownerKeys; }
 });
 Object.defineProperty(exports, "permissionKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.permissionKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.permissionKeys; }
 });
 Object.defineProperty(exports, "platformBuildingKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.platformBuildingKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.platformBuildingKeys; }
 });
 Object.defineProperty(exports, "pollKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.pollKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.pollKeys; }
 });
 Object.defineProperty(exports, "queryKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.queryKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.queryKeys; }
 });
 Object.defineProperty(exports, "recentKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.recentKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.recentKeys; }
 });
 Object.defineProperty(exports, "recurringTemplateKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.recurringTemplateKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.recurringTemplateKeys; }
 });
 Object.defineProperty(exports, "spotlightKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.spotlightKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.spotlightKeys; }
 });
 Object.defineProperty(exports, "storageUnitKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.storageUnitKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.storageUnitKeys; }
 });
 Object.defineProperty(exports, "transactionCategoryKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.transactionCategoryKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.transactionCategoryKeys; }
 });
 Object.defineProperty(exports, "unitReminderKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.unitReminderKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.unitReminderKeys; }
 });
 Object.defineProperty(exports, "unitSearchKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.unitSearchKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.unitSearchKeys; }
 });
 Object.defineProperty(exports, "userKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.userKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.userKeys; }
 });
 Object.defineProperty(exports, "widgetKeys", {
   enumerable: true,
-  get: function () { return chunkSSS333RD_cjs.widgetKeys; }
+  get: function () { return chunk6V4DI23Y_cjs.widgetKeys; }
 });
 //# sourceMappingURL=index.cjs.map
 //# sourceMappingURL=index.cjs.map
