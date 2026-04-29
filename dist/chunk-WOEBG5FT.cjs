@@ -1,6 +1,6 @@
 'use strict';
 
-var chunkQIDNFYBV_cjs = require('./chunk-QIDNFYBV.cjs');
+var chunkYNPRAZ3P_cjs = require('./chunk-YNPRAZ3P.cjs');
 var chunkIGBERUWL_cjs = require('./chunk-IGBERUWL.cjs');
 
 // src/utils/pagination.ts
@@ -74,13 +74,13 @@ function canDo(ctx, permission) {
 }
 function canDoOnResource(ctx, domain, action, resourceOwnerId) {
   if (ctx.kind === "admin") return true;
-  const scopedPerms = chunkQIDNFYBV_cjs.SCOPED_PERMISSIONS[domain]?.[action];
+  const scopedPerms = chunkYNPRAZ3P_cjs.SCOPED_PERMISSIONS[domain]?.[action];
   if (!scopedPerms) return false;
   if (ctx.permissions.includes(scopedPerms.any)) return true;
   return ctx.permissions.includes(scopedPerms.own) && resourceOwnerId === ctx.userId;
 }
 function computeActionFlags(ctx, domain, resourceOwnerId) {
-  const approvePermission = chunkQIDNFYBV_cjs.APPROVE_PERMISSIONS[domain];
+  const approvePermission = chunkYNPRAZ3P_cjs.APPROVE_PERMISSIONS[domain];
   return {
     canEdit: canDoOnResource(ctx, domain, "update", resourceOwnerId),
     canDelete: canDoOnResource(ctx, domain, "delete", resourceOwnerId),
@@ -108,52 +108,52 @@ function hasAllPermissions(userPermissions, permissions) {
 
 // src/utils/role-helpers.ts
 var MANAGERIAL_BUILDING_ROLES = [
-  chunkQIDNFYBV_cjs.BuildingRole.OWNER_REPRESENTATIVE,
-  chunkQIDNFYBV_cjs.BuildingRole.DEPUTY_REPRESENTATIVE
+  chunkYNPRAZ3P_cjs.BuildingRole.OWNER_REPRESENTATIVE,
+  chunkYNPRAZ3P_cjs.BuildingRole.DEPUTY_REPRESENTATIVE
 ];
 function isManagerialRole(role) {
   return MANAGERIAL_BUILDING_ROLES.includes(role);
 }
 var ROLE_TRANSLATION_KEYS = {
   // Building roles
-  [chunkQIDNFYBV_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
-  [chunkQIDNFYBV_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
-  [chunkQIDNFYBV_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER",
-  [chunkQIDNFYBV_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT",
+  [chunkYNPRAZ3P_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
+  [chunkYNPRAZ3P_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
+  [chunkYNPRAZ3P_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER",
+  [chunkYNPRAZ3P_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT",
   // Org roles
-  [chunkQIDNFYBV_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
-  [chunkQIDNFYBV_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
-  [chunkQIDNFYBV_cjs.OrgRole.REFERENT]: "roles.REFERENT",
-  [chunkQIDNFYBV_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE",
+  [chunkYNPRAZ3P_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
+  [chunkYNPRAZ3P_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
+  [chunkYNPRAZ3P_cjs.OrgRole.REFERENT]: "roles.REFERENT",
+  [chunkYNPRAZ3P_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE",
   // Platform roles
-  [chunkQIDNFYBV_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
-  [chunkQIDNFYBV_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
-  [chunkQIDNFYBV_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
-  [chunkQIDNFYBV_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
+  [chunkYNPRAZ3P_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
+  [chunkYNPRAZ3P_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
+  [chunkYNPRAZ3P_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
+  [chunkYNPRAZ3P_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
 };
 var ROLE_DESCRIPTION_KEYS = {
-  [chunkQIDNFYBV_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
-  [chunkQIDNFYBV_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
-  [chunkQIDNFYBV_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
-  [chunkQIDNFYBV_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
-  [chunkQIDNFYBV_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
-  [chunkQIDNFYBV_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
-  [chunkQIDNFYBV_cjs.OrgRole.REFERENT]: "roles.REFERENT_DESC",
-  [chunkQIDNFYBV_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
-  [chunkQIDNFYBV_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
-  [chunkQIDNFYBV_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
-  [chunkQIDNFYBV_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
-  [chunkQIDNFYBV_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
+  [chunkYNPRAZ3P_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
+  [chunkYNPRAZ3P_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
+  [chunkYNPRAZ3P_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
+  [chunkYNPRAZ3P_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
+  [chunkYNPRAZ3P_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
+  [chunkYNPRAZ3P_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
+  [chunkYNPRAZ3P_cjs.OrgRole.REFERENT]: "roles.REFERENT_DESC",
+  [chunkYNPRAZ3P_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
+  [chunkYNPRAZ3P_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
+  [chunkYNPRAZ3P_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
+  [chunkYNPRAZ3P_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
+  [chunkYNPRAZ3P_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
 };
 
 // src/utils/status-variants.ts
 function failureStatusVariant(status) {
   switch (status) {
-    case chunkQIDNFYBV_cjs.FailureStatus.PENDING:
+    case chunkYNPRAZ3P_cjs.FailureStatus.PENDING:
       return "info";
-    case chunkQIDNFYBV_cjs.FailureStatus.IN_PROGRESS:
+    case chunkYNPRAZ3P_cjs.FailureStatus.IN_PROGRESS:
       return "warning";
-    case chunkQIDNFYBV_cjs.FailureStatus.RESOLVED:
+    case chunkYNPRAZ3P_cjs.FailureStatus.RESOLVED:
       return "success";
     default:
       return "neutral";
@@ -161,9 +161,9 @@ function failureStatusVariant(status) {
 }
 function priorityVariant(priority) {
   switch (priority) {
-    case chunkQIDNFYBV_cjs.Priority.URGENT:
+    case chunkYNPRAZ3P_cjs.Priority.URGENT:
       return "danger";
-    case chunkQIDNFYBV_cjs.Priority.NORMAL:
+    case chunkYNPRAZ3P_cjs.Priority.NORMAL:
       return "neutral";
     default:
       return "neutral";
@@ -248,5 +248,5 @@ exports.isManagerialRole = isManagerialRole;
 exports.normalizePaginatedResponse = normalizePaginatedResponse;
 exports.parseData = parseData;
 exports.priorityVariant = priorityVariant;
-//# sourceMappingURL=chunk-PI5QTPA6.cjs.map
-//# sourceMappingURL=chunk-PI5QTPA6.cjs.map
+//# sourceMappingURL=chunk-WOEBG5FT.cjs.map
+//# sourceMappingURL=chunk-WOEBG5FT.cjs.map

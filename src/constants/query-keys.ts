@@ -66,6 +66,15 @@ export const noticeKeys = {
   detail: (id: string) => [...noticeKeys.details(), id] as const,
 };
 
+export const buildingEmailKeys = {
+  all: ['buildingEmail'] as const,
+  threads: (buildingId: string) => [...buildingEmailKeys.all, 'threads', buildingId] as const,
+  threadList: (buildingId: string, filters: Record<string, unknown> = {}) =>
+    [...buildingEmailKeys.threads(buildingId), { ...filters }] as const,
+  thread: (buildingId: string, threadId: string) =>
+    [...buildingEmailKeys.threads(buildingId), threadId] as const,
+};
+
 export const pollKeys = {
   all: ['poll'] as const,
   lists: () => [...pollKeys.all, 'list'] as const,
@@ -337,6 +346,7 @@ export const widgetKeys = {
 export const queryKeys = {
   user: userKeys,
   building: buildingKeys,
+  buildingEmail: buildingEmailKeys,
   notice: noticeKeys,
   poll: pollKeys,
   event: eventKeys,

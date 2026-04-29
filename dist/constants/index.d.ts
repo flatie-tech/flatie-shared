@@ -1,4 +1,4 @@
-import { P as Permission, B as BuildingRole, O as OrgRole, a as PlatformRole } from '../role.enum-C3r7jyty.js';
+import { P as Permission, B as BuildingRole, O as OrgRole, a as PlatformRole } from '../role.enum-B_7lBNq-.js';
 
 /**
  * Default pagination page size used across the stack.
@@ -342,6 +342,14 @@ declare const queryKeys: {
         chatVisibility: () => readonly ["building", "chatVisibility"];
         chatPermissions: (ids?: string[]) => readonly ["building", "chatPermissions", ...string[][]];
         search: (query: string) => readonly ["building", "search", string];
+    };
+    readonly buildingEmail: {
+        all: readonly ["buildingEmail"];
+        threads: (buildingId: string) => readonly ["buildingEmail", "threads", string];
+        threadList: (buildingId: string, filters?: Record<string, unknown>) => readonly ["buildingEmail", "threads", string, {
+            readonly [x: string]: unknown;
+        }];
+        thread: (buildingId: string, threadId: string) => readonly ["buildingEmail", "threads", string, string];
     };
     readonly notice: {
         all: readonly ["notice"];

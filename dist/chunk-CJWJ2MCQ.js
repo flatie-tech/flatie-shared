@@ -1,5 +1,5 @@
 import { optionalIbanSchema } from './chunk-WK7VOCOE.js';
-import { ApartmentRole, OrgRole, OrgType, BuildingRole, PricuvaRefMode, FundsSource, QUOTA_RESOURCE_TYPES, FailureUnitType, FailureLocationType, Priority, ORG_QUOTA_RESOURCE_TYPES, TransactionType, PlatformRole, BuildingStatus, NotificationType } from './chunk-FHM5T7KD.js';
+import { ApartmentRole, OrgRole, OrgType, BuildingRole, PricuvaRefMode, FundsSource, QUOTA_RESOURCE_TYPES, FailureUnitType, FailureLocationType, Priority, ORG_QUOTA_RESOURCE_TYPES, TransactionType, PlatformRole, BuildingStatus, NotificationType } from './chunk-KT36KDYK.js';
 import { BACKEND_ERROR_CODES } from './chunk-E45VMJJC.js';
 import { z } from 'zod';
 
@@ -405,6 +405,19 @@ var updateUserBuildingRoleSchema = z.object({
   ),
   chatVisibleToCoOwners: z.boolean().optional().describe("Controls whether this user appears in chat directories visible to co-owners.")
 });
+var buildingQuotaEntrySchema = z.object({
+  resourceType: z.enum(
+    QUOTA_RESOURCE_TYPES
+  ),
+  dailyLimit: z.number().int().min(0).max(1e4).nullable()
+});
+var buildingQuotaConfigSchema = z.object({
+  quotas: z.array(buildingQuotaEntrySchema).max(QUOTA_RESOURCE_TYPES.length)
+});
+var buildingQuotaListSchema = z.object({
+  buildingId: z.string().uuid(),
+  quotas: z.array(buildingQuotaEntrySchema)
+});
 var businessPartnerResponseSchema = z.object({
   id: z.string().uuid(),
   organizationId: z.string().uuid(),
@@ -444,19 +457,6 @@ var createBusinessPartnerSchema = z.object({
   isActive: z.boolean().optional()
 }).meta({ id: "CreateBusinessPartner" });
 var updateBusinessPartnerSchema = createBusinessPartnerSchema.partial().meta({ id: "UpdateBusinessPartner" });
-var buildingQuotaEntrySchema = z.object({
-  resourceType: z.enum(
-    QUOTA_RESOURCE_TYPES
-  ),
-  dailyLimit: z.number().int().min(0).max(1e4).nullable()
-});
-var buildingQuotaConfigSchema = z.object({
-  quotas: z.array(buildingQuotaEntrySchema).max(QUOTA_RESOURCE_TYPES.length)
-});
-var buildingQuotaListSchema = z.object({
-  buildingId: z.string().uuid(),
-  quotas: z.array(buildingQuotaEntrySchema)
-});
 var EVENT_TYPES = [
   "service",
   "inspection",
@@ -743,6 +743,19 @@ var updateNoticeSchema = z.object({
 var approveNoticeSchema = z.object({
   approved: z.boolean().describe("True to approve the notice for public visibility, false to reject.")
 });
+var orgQuotaEntrySchema = z.object({
+  resourceType: z.enum(
+    ORG_QUOTA_RESOURCE_TYPES
+  ),
+  dailyLimit: z.number().int().min(0).max(1e4).nullable()
+});
+var orgQuotaConfigSchema = z.object({
+  quotas: z.array(orgQuotaEntrySchema).max(ORG_QUOTA_RESOURCE_TYPES.length)
+});
+var orgQuotaListSchema = z.object({
+  orgId: z.string().uuid(),
+  quotas: z.array(orgQuotaEntrySchema)
+});
 var ownerResponseSchema = z.object({
   id: z.string().uuid(),
   buildingId: z.string().uuid(),
@@ -770,19 +783,6 @@ var assignOwnerSchema = z.object({
   ownerId: z.string().uuid(),
   ownershipPercentage: z.number().min(0).max(100).nullable().optional()
 }).meta({ id: "AssignOwner" });
-var orgQuotaEntrySchema = z.object({
-  resourceType: z.enum(
-    ORG_QUOTA_RESOURCE_TYPES
-  ),
-  dailyLimit: z.number().int().min(0).max(1e4).nullable()
-});
-var orgQuotaConfigSchema = z.object({
-  quotas: z.array(orgQuotaEntrySchema).max(ORG_QUOTA_RESOURCE_TYPES.length)
-});
-var orgQuotaListSchema = z.object({
-  orgId: z.string().uuid(),
-  quotas: z.array(orgQuotaEntrySchema)
-});
 var POLL_TYPES = ["CONSENSUS", "COMMUNITY"];
 var pollTypeSchema = z.enum(POLL_TYPES).describe(
   "`COMMUNITY` polls pass by simple majority of votes cast; `CONSENSUS` polls require an ownership-weighted approval threshold."
@@ -1781,5 +1781,5 @@ var pollVotersResponseSchema = z.looseObject({
 var paginatedPollsResponseSchema = paginatedResponseSchema(pollResponseSchema);
 
 export { ARCHIVE_TYPES, ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, baseEntitySchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, commentResponseSchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createOwnerSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgQuotaConfigSchema, orgQuotaEntrySchema, orgQuotaListSchema, ownerResponseSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, registerSchema, reorderFaqsSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateBusinessPartnerSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-2WBDQ3RG.js.map
-//# sourceMappingURL=chunk-2WBDQ3RG.js.map
+//# sourceMappingURL=chunk-CJWJ2MCQ.js.map
+//# sourceMappingURL=chunk-CJWJ2MCQ.js.map

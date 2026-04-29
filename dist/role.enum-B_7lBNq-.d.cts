@@ -83,6 +83,8 @@ declare const Permission: {
     readonly FAQ_MANAGE_REPRESENTATIVE: "faq:manage:representative";
     readonly FAQ_MANAGE_MANAGER: "faq:manage:manager";
     readonly BUILDING_SETTINGS_MANAGE: "building_settings:manage";
+    readonly BUILDING_EMAIL_VIEW: "building_email:view";
+    readonly BUILDING_EMAIL_MANAGE: "building_email:manage";
     readonly VOTE_CAST: "vote:cast";
     readonly VOTE_WEIGHT_BASED: "vote:weight_based";
     readonly SYSTEM_ADMIN: "system:admin";

@@ -57,6 +57,7 @@ const CO_OWNER_PERMISSIONS = [
   'poll:vote',
   ...domainPermissions('failure_report', 'own'),
   ...domainPermissions('document', 'own'),
+  'building_email:view',
   'vote:cast',
   'vote:weight_based',
   'user:delete:own',
@@ -93,6 +94,7 @@ const REPRESENTATIVE_PERMISSIONS = [
   'building_role:remove',
   'house_rules:manage',
   'building_settings:manage',
+  'building_email:manage',
   'faq:manage:representative',
   'apartment:update',
 ];

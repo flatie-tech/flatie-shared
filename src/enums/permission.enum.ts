@@ -140,6 +140,10 @@ export const Permission = {
   // Building Settings
   BUILDING_SETTINGS_MANAGE: 'building_settings:manage',
 
+  // Building Email (per-building inbox, representative-managed)
+  BUILDING_EMAIL_VIEW: 'building_email:view',
+  BUILDING_EMAIL_MANAGE: 'building_email:manage',
+
   // Voting
   VOTE_CAST: 'vote:cast',
   VOTE_WEIGHT_BASED: 'vote:weight_based',

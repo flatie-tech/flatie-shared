@@ -619,6 +619,55 @@ type JoinBuildingWithOtpSchema = z.infer<typeof joinBuildingWithOtpSchema>;
 type UpdateUserBuildingRoleSchema = z.infer<typeof updateUserBuildingRoleSchema>;
 
 /**
+ * One row of per-building daily quota configuration. `dailyLimit` is an integer
+ * number of actions allowed per day per user in that building; `null` means
+ * "unlimited" (quota is disabled for this resource in this building).
+ */
+declare const buildingQuotaEntrySchema: z.ZodObject<{
+    resourceType: z.ZodEnum<{
+        COMMENT: "COMMENT";
+        MAINTENANCE_REQUEST: "MAINTENANCE_REQUEST";
+        INVITE: "INVITE";
+        NOTIFICATION: "NOTIFICATION";
+    }>;
+    dailyLimit: z.ZodNullable<z.ZodNumber>;
+}, z.core.$strip>;
+/**
+ * PUT /buildings/:id/quotas payload — full list of quota rows the representative
+ * is configuring for the building. Missing resource types fall back to the
+ * platform defaults from `QUOTA_DEFAULT_DAILY_LIMITS`.
+ */
+declare const buildingQuotaConfigSchema: z.ZodObject<{
+    quotas: z.ZodArray<z.ZodObject<{
+        resourceType: z.ZodEnum<{
+            COMMENT: "COMMENT";
+            MAINTENANCE_REQUEST: "MAINTENANCE_REQUEST";
+            INVITE: "INVITE";
+            NOTIFICATION: "NOTIFICATION";
+        }>;
+        dailyLimit: z.ZodNullable<z.ZodNumber>;
+    }, z.core.$strip>>;
+}, z.core.$strip>;
+/**
+ * GET /buildings/:id/quotas response shape.
+ */
+declare const buildingQuotaListSchema: z.ZodObject<{
+    buildingId: z.ZodString;
+    quotas: z.ZodArray<z.ZodObject<{
+        resourceType: z.ZodEnum<{
+            COMMENT: "COMMENT";
+            MAINTENANCE_REQUEST: "MAINTENANCE_REQUEST";
+            INVITE: "INVITE";
+            NOTIFICATION: "NOTIFICATION";
+        }>;
+        dailyLimit: z.ZodNullable<z.ZodNumber>;
+    }, z.core.$strip>>;
+}, z.core.$strip>;
+type BuildingQuotaEntry = z.infer<typeof buildingQuotaEntrySchema>;
+type BuildingQuotaConfig = z.infer<typeof buildingQuotaConfigSchema>;
+type BuildingQuotaList = z.infer<typeof buildingQuotaListSchema>;
+
+/**
  * Business partner (Croatian "poslovni partner") scoped to an
  * organization. Address-book with bookkeeping fields — later linkable
  * to expense transactions via `expense_transactions.partner_id`.
@@ -685,55 +734,6 @@ declare const updateBusinessPartnerSchema: z.ZodObject<{
     isActive: z.ZodOptional<z.ZodOptional<z.ZodBoolean>>;
 }, z.core.$strip>;
 type UpdateBusinessPartnerInput = z.infer<typeof updateBusinessPartnerSchema>;
-
-/**
- * One row of per-building daily quota configuration. `dailyLimit` is an integer
- * number of actions allowed per day per user in that building; `null` means
- * "unlimited" (quota is disabled for this resource in this building).
- */
-declare const buildingQuotaEntrySchema: z.ZodObject<{
-    resourceType: z.ZodEnum<{
-        COMMENT: "COMMENT";
-        MAINTENANCE_REQUEST: "MAINTENANCE_REQUEST";
-        INVITE: "INVITE";
-        NOTIFICATION: "NOTIFICATION";
-    }>;
-    dailyLimit: z.ZodNullable<z.ZodNumber>;
-}, z.core.$strip>;
-/**
- * PUT /buildings/:id/quotas payload — full list of quota rows the representative
- * is configuring for the building. Missing resource types fall back to the
- * platform defaults from `QUOTA_DEFAULT_DAILY_LIMITS`.
- */
-declare const buildingQuotaConfigSchema: z.ZodObject<{
-    quotas: z.ZodArray<z.ZodObject<{
-        resourceType: z.ZodEnum<{
-            COMMENT: "COMMENT";
-            MAINTENANCE_REQUEST: "MAINTENANCE_REQUEST";
-            INVITE: "INVITE";
-            NOTIFICATION: "NOTIFICATION";
-        }>;
-        dailyLimit: z.ZodNullable<z.ZodNumber>;
-    }, z.core.$strip>>;
-}, z.core.$strip>;
-/**
- * GET /buildings/:id/quotas response shape.
- */
-declare const buildingQuotaListSchema: z.ZodObject<{
-    buildingId: z.ZodString;
-    quotas: z.ZodArray<z.ZodObject<{
-        resourceType: z.ZodEnum<{
-            COMMENT: "COMMENT";
-            MAINTENANCE_REQUEST: "MAINTENANCE_REQUEST";
-            INVITE: "INVITE";
-            NOTIFICATION: "NOTIFICATION";
-        }>;
-        dailyLimit: z.ZodNullable<z.ZodNumber>;
-    }, z.core.$strip>>;
-}, z.core.$strip>;
-type BuildingQuotaEntry = z.infer<typeof buildingQuotaEntrySchema>;
-type BuildingQuotaConfig = z.infer<typeof buildingQuotaConfigSchema>;
-type BuildingQuotaList = z.infer<typeof buildingQuotaListSchema>;
 
 /**
  * Event type options
@@ -1154,6 +1154,51 @@ type UpdateNoticeSchema = z.infer<typeof updateNoticeSchema>;
 type ApproveNoticeSchema = z.infer<typeof approveNoticeSchema>;
 
 /**
+ * One row of per-organization daily quota configuration. Mirrors the
+ * per-building schema but keyed on orgId + OrgQuotaResourceType. Null
+ * `dailyLimit` means "unlimited" for this resource in this org.
+ */
+declare const orgQuotaEntrySchema: z.ZodObject<{
+    resourceType: z.ZodEnum<{
+        BUILDING_CREATE: "BUILDING_CREATE";
+        NOTIFICATION: "NOTIFICATION";
+        MEMBER_INVITE: "MEMBER_INVITE";
+    }>;
+    dailyLimit: z.ZodNullable<z.ZodNumber>;
+}, z.core.$strip>;
+/**
+ * PUT /organizations/:orgId/quotas payload. Missing resource types fall
+ * back to the platform defaults in `ORG_QUOTA_DEFAULT_DAILY_LIMITS`.
+ */
+declare const orgQuotaConfigSchema: z.ZodObject<{
+    quotas: z.ZodArray<z.ZodObject<{
+        resourceType: z.ZodEnum<{
+            BUILDING_CREATE: "BUILDING_CREATE";
+            NOTIFICATION: "NOTIFICATION";
+            MEMBER_INVITE: "MEMBER_INVITE";
+        }>;
+        dailyLimit: z.ZodNullable<z.ZodNumber>;
+    }, z.core.$strip>>;
+}, z.core.$strip>;
+/**
+ * GET /organizations/:orgId/quotas response shape.
+ */
+declare const orgQuotaListSchema: z.ZodObject<{
+    orgId: z.ZodString;
+    quotas: z.ZodArray<z.ZodObject<{
+        resourceType: z.ZodEnum<{
+            BUILDING_CREATE: "BUILDING_CREATE";
+            NOTIFICATION: "NOTIFICATION";
+            MEMBER_INVITE: "MEMBER_INVITE";
+        }>;
+        dailyLimit: z.ZodNullable<z.ZodNumber>;
+    }, z.core.$strip>>;
+}, z.core.$strip>;
+type OrgQuotaEntry = z.infer<typeof orgQuotaEntrySchema>;
+type OrgQuotaConfig = z.infer<typeof orgQuotaConfigSchema>;
+type OrgQuotaList = z.infer<typeof orgQuotaListSchema>;
+
+/**
  * Owner entity. Decoupled from `user` — `userId` is nullable and set
  * only when the physical person has registered on Flatie (auto-linked
  * by email match across buildings, or manually via the admin UI).
@@ -1208,51 +1253,6 @@ declare const assignOwnerSchema: z.ZodObject<{
     ownershipPercentage: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
 }, z.core.$strip>;
 type AssignOwnerInput = z.infer<typeof assignOwnerSchema>;
-
-/**
- * One row of per-organization daily quota configuration. Mirrors the
- * per-building schema but keyed on orgId + OrgQuotaResourceType. Null
- * `dailyLimit` means "unlimited" for this resource in this org.
- */
-declare const orgQuotaEntrySchema: z.ZodObject<{
-    resourceType: z.ZodEnum<{
-        BUILDING_CREATE: "BUILDING_CREATE";
-        NOTIFICATION: "NOTIFICATION";
-        MEMBER_INVITE: "MEMBER_INVITE";
-    }>;
-    dailyLimit: z.ZodNullable<z.ZodNumber>;
-}, z.core.$strip>;
-/**
- * PUT /organizations/:orgId/quotas payload. Missing resource types fall
- * back to the platform defaults in `ORG_QUOTA_DEFAULT_DAILY_LIMITS`.
- */
-declare const orgQuotaConfigSchema: z.ZodObject<{
-    quotas: z.ZodArray<z.ZodObject<{
-        resourceType: z.ZodEnum<{
-            BUILDING_CREATE: "BUILDING_CREATE";
-            NOTIFICATION: "NOTIFICATION";
-            MEMBER_INVITE: "MEMBER_INVITE";
-        }>;
-        dailyLimit: z.ZodNullable<z.ZodNumber>;
-    }, z.core.$strip>>;
-}, z.core.$strip>;
-/**
- * GET /organizations/:orgId/quotas response shape.
- */
-declare const orgQuotaListSchema: z.ZodObject<{
-    orgId: z.ZodString;
-    quotas: z.ZodArray<z.ZodObject<{
-        resourceType: z.ZodEnum<{
-            BUILDING_CREATE: "BUILDING_CREATE";
-            NOTIFICATION: "NOTIFICATION";
-            MEMBER_INVITE: "MEMBER_INVITE";
-        }>;
-        dailyLimit: z.ZodNullable<z.ZodNumber>;
-    }, z.core.$strip>>;
-}, z.core.$strip>;
-type OrgQuotaEntry = z.infer<typeof orgQuotaEntrySchema>;
-type OrgQuotaConfig = z.infer<typeof orgQuotaConfigSchema>;
-type OrgQuotaList = z.infer<typeof orgQuotaListSchema>;
 
 /**
  * Poll type options
