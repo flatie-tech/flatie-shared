@@ -1,5 +1,42 @@
 # @flatie/shared
 
+## 0.32.0
+
+### Minor Changes
+
+- 3deac44: feat(building-email): add `BUILDING_EMAIL_VIEW` and `BUILDING_EMAIL_MANAGE`
+  permissions for the per-building inbox feature, wire `view` to co-owners and
+  `manage` to representatives/deputies, and expose `buildingEmailKeys` through
+  the master `queryKeys` aggregator.
+- ff01387: feat(building-email): add Zod request + response schemas for the per-building
+  inbox feature: `createEmailThreadRequestSchema`, `replyEmailThreadRequestSchema`,
+  `emailMessageSchema`, `emailThreadSchema`, `emailThreadDetailSchema`, and
+  `paginatedEmailThreadsResponseSchema`. Companion to the v0.30.0 permissions
+  release; together they form the complete contract for the building-email
+  feature consumed by `flatie-backend` + `flatie-frontend`.
+- 622ca7c: feat(utils): add `LOCALE_MAP`, `getDateLocale`, `formatDateByLocale`,
+  `formatDateTime`, `formatCurrencyByLocale` for cross-consumer locale-aware
+  date / currency formatting; add `parseApiError` (pure, no axios coupling) and
+  `ParsedApiError` for extracting domain error codes + messages from caught HTTP
+  errors. Lifts identical local copies that previously lived in
+  `flatie-frontend/src/lib/api/errors.ts`,
+  `flatie-frontend/src/hooks/use-locale-date-format.ts`,
+  `flatie-mobile/src/api/common/errors.ts`, and the inline helpers in
+  `flatie-backend/src/modules/notification/notification-email-templates.ts`.
+- 622ca7c: feat(query-keys): add `userKeys.me()` and `userKeys.profile()`; broaden
+  `chatKeys.messages` to `(buildingId, conversationId)`.
+
+  - `userKeys.me()` returns `['user', 'me']` and `userKeys.profile()` returns
+    `[...me, 'profile']`. These match the convention mobile already uses
+    (`/users/me` REST shape) and let mobile delete its local `userKeys`
+    block. Existing `userKeys.info()` is unchanged for current frontend
+    callers.
+  - `chatKeys.messages` now requires both `buildingId` and `conversationId`.
+    Flatie's chat is scoped per-building, so single-arg keys could collide
+    across buildings. **Breaking** for any caller passing a single argument
+    — frontend's chat code needs to add the buildingId at every call site.
+    Treated as minor because there are no production users to migrate.
+
 ## 0.25.0
 
 ### Minor Changes
