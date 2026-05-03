@@ -38,6 +38,10 @@ declare const userKeys: {
     details: () => readonly ["user", "detail"];
     detail: (id: string) => readonly ["user", "detail", string];
     info: () => readonly ["user", "detail", string];
+    /** Current authenticated user. Convention matches `/users/me` REST shape. */
+    me: () => readonly ["user", "me"];
+    /** Current user's profile-screen data. */
+    profile: () => readonly ["user", "me", "profile"];
 };
 declare const organizationKeys: {
     all: readonly ["organization"];
@@ -203,7 +207,13 @@ declare const chatKeys: {
     all: readonly ["chat"];
     conversations: (buildingId: string) => readonly ["chat", "conversations", string];
     conversation: (buildingId: string, conversationId: string) => readonly ["chat", "conversation", string, string];
-    messages: (conversationId: string) => readonly ["chat", "messages", string];
+    /**
+     * Building-scoped message list. The buildingId is part of the cache key
+     * because Flatie's chat lives inside a building — the same conversationId
+     * resolved against a different building would return different data, so
+     * one-arg keys would collide.
+     */
+    messages: (buildingId: string, conversationId: string) => readonly ["chat", "messages", string, string];
     unreadCount: (buildingId: string) => readonly ["chat", "unreadCount", string];
     buildingUsers: (buildingId: string, search?: string) => readonly ["chat", "buildingUsers", string, string | undefined];
     selfUser: (buildingId: string) => readonly ["chat", "selfUser", string];
@@ -330,6 +340,10 @@ declare const queryKeys: {
         details: () => readonly ["user", "detail"];
         detail: (id: string) => readonly ["user", "detail", string];
         info: () => readonly ["user", "detail", string];
+        /** Current authenticated user. Convention matches `/users/me` REST shape. */
+        me: () => readonly ["user", "me"];
+        /** Current user's profile-screen data. */
+        profile: () => readonly ["user", "me", "profile"];
     };
     readonly building: {
         all: readonly ["building"];
@@ -485,7 +499,13 @@ declare const queryKeys: {
         all: readonly ["chat"];
         conversations: (buildingId: string) => readonly ["chat", "conversations", string];
         conversation: (buildingId: string, conversationId: string) => readonly ["chat", "conversation", string, string];
-        messages: (conversationId: string) => readonly ["chat", "messages", string];
+        /**
+         * Building-scoped message list. The buildingId is part of the cache key
+         * because Flatie's chat lives inside a building — the same conversationId
+         * resolved against a different building would return different data, so
+         * one-arg keys would collide.
+         */
+        messages: (buildingId: string, conversationId: string) => readonly ["chat", "messages", string, string];
         unreadCount: (buildingId: string) => readonly ["chat", "unreadCount", string];
         buildingUsers: (buildingId: string, search?: string) => readonly ["chat", "buildingUsers", string, string | undefined];
         selfUser: (buildingId: string) => readonly ["chat", "selfUser", string];

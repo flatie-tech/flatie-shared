@@ -13,7 +13,11 @@ var userKeys = {
   list: (name, filters = {}) => [...userKeys.lists(), name, { ...filters }],
   details: () => [...userKeys.all, "detail"],
   detail: (id) => [...userKeys.details(), id],
-  info: () => userKeys.detail("info")
+  info: () => userKeys.detail("info"),
+  /** Current authenticated user. Convention matches `/users/me` REST shape. */
+  me: () => [...userKeys.all, "me"],
+  /** Current user's profile-screen data. */
+  profile: () => [...userKeys.me(), "profile"]
 };
 var organizationKeys = {
   all: ["organization"],
@@ -143,7 +147,13 @@ var chatKeys = {
   all: ["chat"],
   conversations: (buildingId) => [...chatKeys.all, "conversations", buildingId],
   conversation: (buildingId, conversationId) => [...chatKeys.all, "conversation", buildingId, conversationId],
-  messages: (conversationId) => [...chatKeys.all, "messages", conversationId],
+  /**
+   * Building-scoped message list. The buildingId is part of the cache key
+   * because Flatie's chat lives inside a building — the same conversationId
+   * resolved against a different building would return different data, so
+   * one-arg keys would collide.
+   */
+  messages: (buildingId, conversationId) => [...chatKeys.all, "messages", buildingId, conversationId],
   unreadCount: (buildingId) => [...chatKeys.all, "unreadCount", buildingId],
   buildingUsers: (buildingId, search) => [...chatKeys.all, "buildingUsers", buildingId, search],
   selfUser: (buildingId) => [...chatKeys.all, "selfUser", buildingId]
@@ -498,5 +508,5 @@ exports.unitReminderKeys = unitReminderKeys;
 exports.unitSearchKeys = unitSearchKeys;
 exports.userKeys = userKeys;
 exports.widgetKeys = widgetKeys;
-//# sourceMappingURL=chunk-6V4DI23Y.cjs.map
-//# sourceMappingURL=chunk-6V4DI23Y.cjs.map
+//# sourceMappingURL=chunk-5SRINYV7.cjs.map
+//# sourceMappingURL=chunk-5SRINYV7.cjs.map

@@ -11,7 +11,11 @@ var userKeys = {
   list: (name, filters = {}) => [...userKeys.lists(), name, { ...filters }],
   details: () => [...userKeys.all, "detail"],
   detail: (id) => [...userKeys.details(), id],
-  info: () => userKeys.detail("info")
+  info: () => userKeys.detail("info"),
+  /** Current authenticated user. Convention matches `/users/me` REST shape. */
+  me: () => [...userKeys.all, "me"],
+  /** Current user's profile-screen data. */
+  profile: () => [...userKeys.me(), "profile"]
 };
 var organizationKeys = {
   all: ["organization"],
@@ -141,7 +145,13 @@ var chatKeys = {
   all: ["chat"],
   conversations: (buildingId) => [...chatKeys.all, "conversations", buildingId],
   conversation: (buildingId, conversationId) => [...chatKeys.all, "conversation", buildingId, conversationId],
-  messages: (conversationId) => [...chatKeys.all, "messages", conversationId],
+  /**
+   * Building-scoped message list. The buildingId is part of the cache key
+   * because Flatie's chat lives inside a building — the same conversationId
+   * resolved against a different building would return different data, so
+   * one-arg keys would collide.
+   */
+  messages: (buildingId, conversationId) => [...chatKeys.all, "messages", buildingId, conversationId],
   unreadCount: (buildingId) => [...chatKeys.all, "unreadCount", buildingId],
   buildingUsers: (buildingId, search) => [...chatKeys.all, "buildingUsers", buildingId, search],
   selfUser: (buildingId) => [...chatKeys.all, "selfUser", buildingId]
@@ -455,5 +465,5 @@ var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[OrgRole.ORG_ADMIN];
 var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_ADMIN];
 
 export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminBuildingKeys, adminKeys, apartmentKeys, blogKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };
-//# sourceMappingURL=chunk-CO5BRG2K.js.map
-//# sourceMappingURL=chunk-CO5BRG2K.js.map
+//# sourceMappingURL=chunk-H6ZS3E4V.js.map
+//# sourceMappingURL=chunk-H6ZS3E4V.js.map
