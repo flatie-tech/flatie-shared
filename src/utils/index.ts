@@ -4,6 +4,14 @@
  * Common utilities for use across frontend, mobile, and backend.
  */
 
+// Locale-aware date / currency formatting
+export {
+  formatCurrencyByLocale,
+  formatDate as formatDateByLocale,
+  formatDateTime,
+  getDateLocale,
+  LOCALE_MAP,
+} from './locale';
 // Pagination utilities
 export {
   calculatePaginationMeta,
@@ -12,6 +20,8 @@ export {
 } from './pagination';
 // Client-side schema validation for API responses
 export { ParseError, parseData } from './parse';
+// Error-shape parser — extract domain code + message from caught HTTP errors
+export { type ParsedApiError, parseApiError } from './parse-error';
 // Permission evaluator (pure, cross-package)
 export type { ActionFlags } from './permission-evaluator';
 export {

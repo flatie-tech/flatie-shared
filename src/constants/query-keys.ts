@@ -26,6 +26,10 @@ export const userKeys = {
   details: () => [...userKeys.all, 'detail'] as const,
   detail: (id: string) => [...userKeys.details(), id] as const,
   info: () => userKeys.detail('info'),
+  /** Current authenticated user. Convention matches `/users/me` REST shape. */
+  me: () => [...userKeys.all, 'me'] as const,
+  /** Current user's profile-screen data. */
+  profile: () => [...userKeys.me(), 'profile'] as const,
 };
 
 export const organizationKeys = {
@@ -192,7 +196,14 @@ export const chatKeys = {
   conversations: (buildingId: string) => [...chatKeys.all, 'conversations', buildingId] as const,
   conversation: (buildingId: string, conversationId: string) =>
     [...chatKeys.all, 'conversation', buildingId, conversationId] as const,
-  messages: (conversationId: string) => [...chatKeys.all, 'messages', conversationId] as const,
+  /**
+   * Building-scoped message list. The buildingId is part of the cache key
+   * because Flatie's chat lives inside a building — the same conversationId
+   * resolved against a different building would return different data, so
+   * one-arg keys would collide.
+   */
+  messages: (buildingId: string, conversationId: string) =>
+    [...chatKeys.all, 'messages', buildingId, conversationId] as const,
   unreadCount: (buildingId: string) => [...chatKeys.all, 'unreadCount', buildingId] as const,
   buildingUsers: (buildingId: string, search?: string) =>
     [...chatKeys.all, 'buildingUsers', buildingId, search] as const,

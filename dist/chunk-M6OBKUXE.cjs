@@ -1,7 +1,47 @@
 'use strict';
 
 var chunkYNPRAZ3P_cjs = require('./chunk-YNPRAZ3P.cjs');
+var chunkIW2SD4F6_cjs = require('./chunk-IW2SD4F6.cjs');
 var chunkIGBERUWL_cjs = require('./chunk-IGBERUWL.cjs');
+
+// src/utils/locale.ts
+var LOCALE_MAP = {
+  hr: "hr-HR",
+  de: "de-DE",
+  en: "en-US"
+};
+var DEFAULT_LOCALE = "en-US";
+function getDateLocale(appLocale) {
+  if (!appLocale) return DEFAULT_LOCALE;
+  return LOCALE_MAP[appLocale] ?? DEFAULT_LOCALE;
+}
+var DEFAULT_DATE_OPTIONS = {
+  year: "numeric",
+  month: "short",
+  day: "numeric"
+};
+var DEFAULT_DATETIME_OPTIONS = {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+  hour: "2-digit",
+  minute: "2-digit"
+};
+function formatDate(date, locale, options = DEFAULT_DATE_OPTIONS) {
+  const dateObj = date instanceof Date ? date : new Date(date);
+  return new Intl.DateTimeFormat(getDateLocale(locale), options).format(dateObj);
+}
+function formatDateTime(date, locale, options = DEFAULT_DATETIME_OPTIONS) {
+  return formatDate(date, locale, options);
+}
+function formatCurrencyByLocale(amount, locale, currency = "EUR") {
+  return new Intl.NumberFormat(getDateLocale(locale), {
+    style: "currency",
+    currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(amount);
+}
 
 // src/utils/pagination.ts
 function normalizePaginatedResponse(input, fallbackLimit = 10) {
@@ -65,6 +105,26 @@ var parseData = (schema, data, errorMessage = "Response failed schema validation
     throw new ParseError(errorMessage, result.error);
   }
   return result.data;
+};
+
+// src/utils/parse-error.ts
+var readProp = (value, key) => {
+  if (value !== null && typeof value === "object" && key in value) {
+    return value[key];
+  }
+  return void 0;
+};
+var parseApiError = (error) => {
+  const response = readProp(error, "response");
+  const data = readProp(response, "data");
+  const rawCode = readProp(data, "code");
+  const code = chunkIW2SD4F6_cjs.isBackendErrorCode(rawCode) ? rawCode : null;
+  const dataMessage = readProp(data, "message");
+  const errorMessage = readProp(error, "message");
+  const message = typeof dataMessage === "string" && dataMessage.length > 0 && dataMessage || typeof errorMessage === "string" && errorMessage.length > 0 && errorMessage || "Unknown error";
+  const rawStatus = readProp(response, "status");
+  const status = typeof rawStatus === "number" ? rawStatus : null;
+  return { code, message, status };
 };
 
 // src/utils/permission-evaluator.ts
@@ -184,35 +244,35 @@ function formatCurrency(amount, locale = "en-EU", currency = "EUR") {
 }
 function getDateRange(filter) {
   const today = /* @__PURE__ */ new Date();
-  const formatDate = (date) => date.toISOString().slice(0, 10);
+  const formatDate2 = (date) => date.toISOString().slice(0, 10);
   switch (filter) {
     case "today":
       return {
-        fromDate: formatDate(today),
-        toDate: formatDate(today)
+        fromDate: formatDate2(today),
+        toDate: formatDate2(today)
       };
     case "yesterday": {
       const yesterday = new Date(today);
       yesterday.setDate(yesterday.getDate() - 1);
       return {
-        fromDate: formatDate(yesterday),
-        toDate: formatDate(yesterday)
+        fromDate: formatDate2(yesterday),
+        toDate: formatDate2(yesterday)
       };
     }
     case "week": {
       const weekAgo = new Date(today);
       weekAgo.setDate(weekAgo.getDate() - 7);
       return {
-        fromDate: formatDate(weekAgo),
-        toDate: formatDate(today)
+        fromDate: formatDate2(weekAgo),
+        toDate: formatDate2(today)
       };
     }
     case "month": {
       const monthAgo = new Date(today);
       monthAgo.setMonth(monthAgo.getMonth() - 1);
       return {
-        fromDate: formatDate(monthAgo),
-        toDate: formatDate(today)
+        fromDate: formatDate2(monthAgo),
+        toDate: formatDate2(today)
       };
     }
   }
@@ -225,6 +285,7 @@ function debounce(func, delay) {
   };
 }
 
+exports.LOCALE_MAP = LOCALE_MAP;
 exports.MANAGERIAL_BUILDING_ROLES = MANAGERIAL_BUILDING_ROLES;
 exports.ParseError = ParseError;
 exports.ROLE_DESCRIPTION_KEYS = ROLE_DESCRIPTION_KEYS;
@@ -237,8 +298,12 @@ exports.debounce = debounce;
 exports.extractPaginatedItems = extractPaginatedItems;
 exports.failureStatusVariant = failureStatusVariant;
 exports.formatCurrency = formatCurrency;
+exports.formatCurrencyByLocale = formatCurrencyByLocale;
+exports.formatDate = formatDate;
+exports.formatDateTime = formatDateTime;
 exports.formatText = formatText;
 exports.getContextUserId = getContextUserId;
+exports.getDateLocale = getDateLocale;
 exports.getDateRange = getDateRange;
 exports.hasAllPermissions = hasAllPermissions;
 exports.hasAnyPermission = hasAnyPermission;
@@ -246,7 +311,8 @@ exports.hasPermission = hasPermission;
 exports.isAdminContext = isAdminContext;
 exports.isManagerialRole = isManagerialRole;
 exports.normalizePaginatedResponse = normalizePaginatedResponse;
+exports.parseApiError = parseApiError;
 exports.parseData = parseData;
 exports.priorityVariant = priorityVariant;
-//# sourceMappingURL=chunk-WOEBG5FT.cjs.map
-//# sourceMappingURL=chunk-WOEBG5FT.cjs.map
+//# sourceMappingURL=chunk-M6OBKUXE.cjs.map
+//# sourceMappingURL=chunk-M6OBKUXE.cjs.map
