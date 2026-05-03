@@ -1,7 +1,47 @@
 import { P as PaginatedResponse, a as PermissionContext } from '../permission-context-Bp7AfXDD.js';
 import { z } from 'zod';
+import { BackendErrorCode } from '../errors/index.js';
 import { P as Permission, S as ScopedDomain, b as ScopedAction, B as BuildingRole, O as OrgRole, a as PlatformRole } from '../role.enum-B_7lBNq-.js';
 import { F as FailureStatus, P as Priority } from '../status.enum-D4pAcU1b.js';
+
+/**
+ * Locale utilities — shared across web, mobile, and backend so app-locale
+ * codes (e.g. `'hr'`, `'en'`, `'de'` from i18n libraries) consistently map
+ * to BCP-47 strings consumed by `Intl.*`.
+ *
+ * Pure functions only — no React, no next-intl, no platform globals. Web
+ * wraps these in a hook (see flatie-frontend `useLocaleDateFormat`); mobile
+ * and backend call them directly.
+ */
+/**
+ * Maps short application-locale codes to the BCP-47 strings expected by
+ * `Intl.DateTimeFormat` / `Intl.NumberFormat`. Add a key here when adding
+ * a new app language.
+ */
+declare const LOCALE_MAP: Record<string, string>;
+/**
+ * Resolve a short app-locale code to a BCP-47 locale, falling back to
+ * `en-US` when the code is unknown. Accepts `undefined` so callers can
+ * pass an optional locale through without a separate guard.
+ */
+declare function getDateLocale(appLocale: string | undefined | null): string;
+/**
+ * Format a date using `Intl.DateTimeFormat`. `locale` accepts either a
+ * short app code (`'hr'`) or an explicit BCP-47 string (`'hr-HR'`); the
+ * function normalises via `getDateLocale`.
+ */
+declare function formatDate(date: Date | string | number, locale: string, options?: Intl.DateTimeFormatOptions): string;
+/**
+ * Format a date with date + time fields. Convenience wrapper used by
+ * notification templates and chat timestamps.
+ */
+declare function formatDateTime(date: Date | string | number, locale: string, options?: Intl.DateTimeFormatOptions): string;
+/**
+ * Format a number as currency. `locale` accepts either a short app code
+ * or an explicit BCP-47 string. Currency defaults to EUR — Flatie's
+ * primary market is Croatia (€).
+ */
+declare function formatCurrencyByLocale(amount: number, locale: string, currency?: string): string;
 
 /**
  * Normalize various paginated response formats to a consistent structure
@@ -70,6 +110,49 @@ declare class ParseError extends Error {
  * should use schema `.parse()` directly.
  */
 declare const parseData: <T extends z.ZodType>(schema: T, data: unknown, errorMessage?: string) => z.infer<T>;
+
+/**
+ * Parsed shape of an API error.
+ *
+ * - `code`:   A validated {@link BackendErrorCode} when the backend returned
+ *             a `code` field on the error response and it matches a known
+ *             domain code. `null` otherwise (legacy endpoint, network error,
+ *             unknown code string, etc.).
+ * - `message`: A human-readable fallback message. Prefers the backend's
+ *             `response.data.message`, then the JS `Error.message`, and
+ *             finally a generic `'Unknown error'` string.
+ * - `status`:  The HTTP status code if the error originated from an Axios
+ *             response; `null` otherwise.
+ */
+interface ParsedApiError {
+    code: BackendErrorCode | null;
+    message: string;
+    status: number | null;
+}
+/**
+ * Extract a domain error code and message from an arbitrary caught error.
+ *
+ * Designed for use in `catch` blocks around API calls. Never throws — on
+ * completely unrecognizable input it returns
+ * `{ code: null, message: 'Unknown error', status: null }`.
+ *
+ * Pure function; no axios coupling. Walks `error.response.data.{code,message}`
+ * which matches the shape every Flatie HTTP client (axios on web/mobile,
+ * fetch wrappers on the server) produces.
+ *
+ * @example
+ * try {
+ *   await apiClient.post('/buildings/123/join-requests', payload);
+ * } catch (err) {
+ *   const { code, message } = parseApiError(err);
+ *   if (code === BACKEND_ERROR_CODES.USER_ALREADY_MEMBER) {
+ *     setStatus('already_member');
+ *   } else {
+ *     toast.error(message);
+ *   }
+ * }
+ */
+declare const parseApiError: (error: unknown) => ParsedApiError;
 
 interface ActionFlags {
     canEdit: boolean;
@@ -201,4 +284,4 @@ declare function getDateRange(filter: 'today' | 'yesterday' | 'week' | 'month'):
  */
 declare function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(func: T, delay: number): (...args: Parameters<T>) => void;
 
-export { type ActionFlags, MANAGERIAL_BUILDING_ROLES, ParseError, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type StatusVariant, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatText, getContextUserId, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isAdminContext, isManagerialRole, normalizePaginatedResponse, parseData, priorityVariant };
+export { type ActionFlags, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, type ParsedApiError, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type StatusVariant, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatCurrencyByLocale, formatDate as formatDateByLocale, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isAdminContext, isManagerialRole, normalizePaginatedResponse, parseApiError, parseData, priorityVariant };
