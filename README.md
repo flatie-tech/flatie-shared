@@ -9,13 +9,19 @@ Used by:
 
 ## Installation
 
-This package is distributed as a GitHub dependency (not published to npm):
+This package is distributed as a GitHub-tagged dependency (not published
+to npm). Each consumer pins independently — see each repo's
+`package.json` for its current pin.
 
 ```bash
-# Production / CI
-pnpm add github:flatie-tech/flatie-shared#v0.2.0
+# Production / CI — replace <tag> with the latest release
+# (see GitHub Releases, e.g. v0.31.2 at the time of writing)
+pnpm add github:flatie-tech/flatie-shared#<tag>
 
-# Local development (recommended)
+# Local development against an in-progress branch
+pnpm add github:flatie-tech/flatie-shared#<branch-name>
+
+# Local development against a sibling checkout
 pnpm add file:../flatie-shared
 ```
 
