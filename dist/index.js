@@ -16,6 +16,14 @@ var ApartmentsTestIds = {
   searchInput: "apartments-search-input"
 };
 
+// src/test-ids/app-shell.ts
+var AppShellTestIds = {
+  // Account dropdown trigger in the dashboard header (avatar button)
+  accountDropdown: "account-dropdown",
+  // Sign-out menu item inside the account dropdown
+  signOutButton: "sign-out-button"
+};
+
 // src/test-ids/auth.ts
 var LoginTestIds = {
   emailInput: "login-email-input",
@@ -85,6 +93,14 @@ var NoticeBoardTestIds = {
   addButton: "notices-add-button"
 };
 
+// src/test-ids/onboarding.ts
+var OnboardingTestIds = {
+  // The three top-level tabs on /onboarding for users without buildings
+  tabFind: "onboarding-tab-find",
+  tabJoin: "onboarding-tab-join",
+  tabCreate: "onboarding-tab-create"
+};
+
 // src/test-ids/polls.ts
 var PollsTestIds = {
   screen: "polls-screen",
@@ -100,6 +116,6 @@ var SettingsTestIds = {
   logoutButton: "settings-logout-button"
 };
 
-export { ApartmentsTestIds, BuildingInfoTestIds, BuildingOverviewTestIds, CalendarTestIds, DocumentsTestIds, FailureReportsTestIds, FundsTestIds, LoginTestIds, MaintenanceLogsTestIds, NoticeBoardTestIds, PollsTestIds, SettingsTestIds };
+export { ApartmentsTestIds, AppShellTestIds, BuildingInfoTestIds, BuildingOverviewTestIds, CalendarTestIds, DocumentsTestIds, FailureReportsTestIds, FundsTestIds, LoginTestIds, MaintenanceLogsTestIds, NoticeBoardTestIds, OnboardingTestIds, PollsTestIds, SettingsTestIds };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

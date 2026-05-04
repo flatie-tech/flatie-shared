@@ -18,6 +18,11 @@ declare const ApartmentsTestIds: {
     readonly searchInput: "apartments-search-input";
 };
 
+declare const AppShellTestIds: {
+    readonly accountDropdown: "account-dropdown";
+    readonly signOutButton: "sign-out-button";
+};
+
 declare const LoginTestIds: {
     readonly emailInput: "login-email-input";
     readonly passwordInput: "login-password-input";
@@ -78,6 +83,12 @@ declare const NoticeBoardTestIds: {
     readonly addButton: "notices-add-button";
 };
 
+declare const OnboardingTestIds: {
+    readonly tabFind: "onboarding-tab-find";
+    readonly tabJoin: "onboarding-tab-join";
+    readonly tabCreate: "onboarding-tab-create";
+};
+
 declare const PollsTestIds: {
     readonly screen: "polls-screen";
     readonly searchInput: "polls-search-input";
@@ -90,4 +101,4 @@ declare const SettingsTestIds: {
     readonly logoutButton: "settings-logout-button";
 };
 
-export { ApartmentsTestIds, BuildingInfoTestIds, BuildingOverviewTestIds, CalendarTestIds, DocumentsTestIds, FailureReportsTestIds, FundsTestIds, LoginTestIds, MaintenanceLogsTestIds, NoticeBoardTestIds, PollsTestIds, SettingsTestIds };
+export { ApartmentsTestIds, AppShellTestIds, BuildingInfoTestIds, BuildingOverviewTestIds, CalendarTestIds, DocumentsTestIds, FailureReportsTestIds, FundsTestIds, LoginTestIds, MaintenanceLogsTestIds, NoticeBoardTestIds, OnboardingTestIds, PollsTestIds, SettingsTestIds };
