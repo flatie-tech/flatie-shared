@@ -23,7 +23,6 @@ declare const LoginTestIds: {
     readonly passwordInput: "login-password-input";
     readonly passwordToggle: "login-password-toggle";
     readonly googleButton: "login-google-button";
-    readonly certiliaButton: "login-certilia-button";
     readonly submitButton: "login-submit-button";
     readonly forgotPasswordLink: "login-forgot-password-link";
     readonly rememberMe: "login-remember-me-checkbox";

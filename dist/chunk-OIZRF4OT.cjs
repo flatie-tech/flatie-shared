@@ -2,7 +2,7 @@
 
 var chunkXXNOAOHF_cjs = require('./chunk-XXNOAOHF.cjs');
 var chunkYNPRAZ3P_cjs = require('./chunk-YNPRAZ3P.cjs');
-var chunkDKW2V3AY_cjs = require('./chunk-DKW2V3AY.cjs');
+var chunkRRQB6VP5_cjs = require('./chunk-RRQB6VP5.cjs');
 var zod = require('zod');
 
 var apiErrorSchema = zod.z.object({
@@ -12,7 +12,7 @@ var apiErrorSchema = zod.z.object({
   path: zod.z.string()
 });
 var apiErrorResponseSchema = apiErrorSchema.extend({
-  code: zod.z.enum(Object.values(chunkDKW2V3AY_cjs.BACKEND_ERROR_CODES)).optional().describe(
+  code: zod.z.enum(Object.values(chunkRRQB6VP5_cjs.BACKEND_ERROR_CODES)).optional().describe(
     "Canonical error code from `@flatie/shared/errors` (`BACKEND_ERROR_CODES`). Present when the backend raised a `DomainException`; absent for generic HTTP errors (network failures, unhandled exceptions, validation-pipe rejections)."
   )
 }).describe("Standard error envelope returned by the Flatie backend on 4xx and 5xx responses.");
@@ -60,6 +60,28 @@ var updatePasswordSchema = zod.z.object({
   message: "Passwords do not match",
   path: ["confirmPassword"]
 });
+var uuidSchema = zod.z.string().uuid();
+var dateTimeSchema = zod.z.string().datetime();
+var optionalDateTimeSchema = zod.z.string().datetime().nullable().optional();
+var baseEntitySchema = zod.z.object({
+  id: uuidSchema,
+  createdAt: dateTimeSchema,
+  updatedAt: optionalDateTimeSchema
+});
+var buildingEntitySchema = baseEntitySchema.extend({
+  buildingId: uuidSchema
+});
+var userEntitySchema = baseEntitySchema.extend({
+  createdBy: uuidSchema
+});
+var buildingUserEntitySchema = baseEntitySchema.extend({
+  buildingId: uuidSchema,
+  createdBy: uuidSchema
+});
+var permissionFieldsSchema = zod.z.object({
+  canEdit: zod.z.boolean(),
+  canDelete: zod.z.boolean()
+});
 var oibValueSchema = zod.z.string().trim().regex(/^\d{11}$/, "OIB must be 11 digits").optional();
 var certiliaUserinfoSchema = zod.z.object({
   sub: zod.z.string().min(1),
@@ -89,28 +111,6 @@ var certiliaUserinfoSchema = zod.z.object({
     oib,
     raw: profile
   };
-});
-var uuidSchema = zod.z.string().uuid();
-var dateTimeSchema = zod.z.string().datetime();
-var optionalDateTimeSchema = zod.z.string().datetime().nullable().optional();
-var baseEntitySchema = zod.z.object({
-  id: uuidSchema,
-  createdAt: dateTimeSchema,
-  updatedAt: optionalDateTimeSchema
-});
-var buildingEntitySchema = baseEntitySchema.extend({
-  buildingId: uuidSchema
-});
-var userEntitySchema = baseEntitySchema.extend({
-  createdBy: uuidSchema
-});
-var buildingUserEntitySchema = baseEntitySchema.extend({
-  buildingId: uuidSchema,
-  createdBy: uuidSchema
-});
-var permissionFieldsSchema = zod.z.object({
-  canEdit: zod.z.boolean(),
-  canDelete: zod.z.boolean()
 });
 var dateRangeParamsSchema = zod.z.object({
   fromDate: zod.z.string().optional(),
@@ -2028,5 +2028,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-HEW3UAUG.cjs.map
-//# sourceMappingURL=chunk-HEW3UAUG.cjs.map
+//# sourceMappingURL=chunk-OIZRF4OT.cjs.map
+//# sourceMappingURL=chunk-OIZRF4OT.cjs.map

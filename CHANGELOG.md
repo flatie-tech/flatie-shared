@@ -1,5 +1,36 @@
 # @flatie/shared
 
+## 0.34.0
+
+### Minor Changes
+
+- Re-scope Certilia contracts from OIDC login to consensus-vote identity
+  verification. The 0.33.0 changelog described this scope but the
+  shipped exports were still the earlier login-flow shape; 0.34.0
+  brings the actual exports in line with how `flatie-backend` and
+  `flatie-frontend` consume them.
+
+  **Removed (login-flow, never used by any consumer):**
+
+  - `BACKEND_ERROR_CODES.CERTILIA_NO_MATCH`
+  - `BACKEND_ERROR_CODES.CERTILIA_OIB_CONFLICT`
+  - `LoginTestIds.certiliaButton`
+
+  **Added (vote-flow, consumed by the identity-challenge endpoint):**
+
+  - `BACKEND_ERROR_CODES.CONSENSUS_REQUIRES_IDENTITY_VERIFICATION` —
+    plain vote rejected on a CONSENSUS poll.
+  - `BACKEND_ERROR_CODES.OIB_REQUIRED_BEFORE_VOTE` — user has no OIB on
+    file; frontend prompts the OIB-required dialog.
+  - `BACKEND_ERROR_CODES.CERTILIA_OIB_MISMATCH` — Certilia returned an
+    OIB different from the user's stored OIB.
+  - `BACKEND_ERROR_CODES.CERTILIA_EMAIL_MISMATCH` — Certilia returned
+    an email different from the user's stored email.
+
+  **Unchanged from 0.33.0:** `certiliaUserinfoSchema`,
+  `BACKEND_ERROR_CODES.CERTILIA_INSUFFICIENT_CLAIMS`,
+  `PollsTestIds.identityVerifiedVoteButton`.
+
 ## 0.33.0
 
 ### Minor Changes

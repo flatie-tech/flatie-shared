@@ -103,49 +103,6 @@ type ResetPasswordSchema = z.infer<typeof resetPasswordSchema>;
 type VerifyOtpSchema = z.infer<typeof verifyOtpSchema>;
 type UpdatePasswordSchema = z.infer<typeof updatePasswordSchema>;
 
-declare const certiliaUserinfoSchema: z.ZodPipe<z.ZodObject<{
-    sub: z.ZodString;
-    email: z.ZodOptional<z.ZodString>;
-    email_verified: z.ZodOptional<z.ZodBoolean>;
-    name: z.ZodOptional<z.ZodString>;
-    given_name: z.ZodOptional<z.ZodString>;
-    family_name: z.ZodOptional<z.ZodString>;
-    phone_number: z.ZodOptional<z.ZodString>;
-    address: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodObject<{
-        formatted: z.ZodOptional<z.ZodString>;
-    }, z.core.$loose>]>>;
-    oib: z.ZodOptional<z.ZodString>;
-    pin: z.ZodOptional<z.ZodString>;
-    oib_pin: z.ZodOptional<z.ZodString>;
-}, z.core.$loose>, z.ZodTransform<{
-    sub: string;
-    email: string | undefined;
-    emailVerified: boolean;
-    name: string | undefined;
-    givenName: string | undefined;
-    familyName: string | undefined;
-    phoneNumber: string | undefined;
-    oib: string | undefined;
-    raw: Record<string, unknown>;
-}, {
-    [x: string]: unknown;
-    sub: string;
-    email?: string | undefined;
-    email_verified?: boolean | undefined;
-    name?: string | undefined;
-    given_name?: string | undefined;
-    family_name?: string | undefined;
-    phone_number?: string | undefined;
-    address?: string | {
-        [x: string]: unknown;
-        formatted?: string | undefined;
-    } | undefined;
-    oib?: string | undefined;
-    pin?: string | undefined;
-    oib_pin?: string | undefined;
-}>>;
-type CertiliaUserinfo = z.infer<typeof certiliaUserinfoSchema>;
-
 /**
  * UUID validation schema
  */
@@ -208,6 +165,49 @@ type BuildingEntitySchema = z.infer<typeof buildingEntitySchema>;
 type UserEntitySchema = z.infer<typeof userEntitySchema>;
 type BuildingUserEntitySchema = z.infer<typeof buildingUserEntitySchema>;
 type PermissionFieldsSchema = z.infer<typeof permissionFieldsSchema>;
+
+declare const certiliaUserinfoSchema: z.ZodPipe<z.ZodObject<{
+    sub: z.ZodString;
+    email: z.ZodOptional<z.ZodString>;
+    email_verified: z.ZodOptional<z.ZodBoolean>;
+    name: z.ZodOptional<z.ZodString>;
+    given_name: z.ZodOptional<z.ZodString>;
+    family_name: z.ZodOptional<z.ZodString>;
+    phone_number: z.ZodOptional<z.ZodString>;
+    address: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodObject<{
+        formatted: z.ZodOptional<z.ZodString>;
+    }, z.core.$loose>]>>;
+    oib: z.ZodOptional<z.ZodString>;
+    pin: z.ZodOptional<z.ZodString>;
+    oib_pin: z.ZodOptional<z.ZodString>;
+}, z.core.$loose>, z.ZodTransform<{
+    sub: string;
+    email: string | undefined;
+    emailVerified: boolean;
+    name: string | undefined;
+    givenName: string | undefined;
+    familyName: string | undefined;
+    phoneNumber: string | undefined;
+    oib: string | undefined;
+    raw: Record<string, unknown>;
+}, {
+    [x: string]: unknown;
+    sub: string;
+    email?: string | undefined;
+    email_verified?: boolean | undefined;
+    name?: string | undefined;
+    given_name?: string | undefined;
+    family_name?: string | undefined;
+    phone_number?: string | undefined;
+    address?: string | {
+        [x: string]: unknown;
+        formatted?: string | undefined;
+    } | undefined;
+    oib?: string | undefined;
+    pin?: string | undefined;
+    oib_pin?: string | undefined;
+}>>;
+type CertiliaUserinfo = z.infer<typeof certiliaUserinfoSchema>;
 
 /**
  * Date range filter parameters schema
@@ -497,8 +497,8 @@ declare const getOrgBuildingsQuerySchema: z.ZodObject<{
     search: z.ZodOptional<z.ZodString>;
     sortBy: z.ZodOptional<z.ZodEnum<{
         name: "name";
-        address: "address";
         createdAt: "createdAt";
+        address: "address";
     }>>;
     sortOrder: z.ZodOptional<z.ZodEnum<{
         asc: "asc";

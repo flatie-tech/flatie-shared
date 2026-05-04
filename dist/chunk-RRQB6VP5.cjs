@@ -1,3 +1,5 @@
+'use strict';
+
 // src/errors/index.ts
 var BACKEND_ERROR_CODES = {
   // Auth
@@ -70,21 +72,29 @@ var BACKEND_ERROR_CODES = {
   // Platform-specific
   BUILDING_NOT_PENDING_APPROVAL: "BUILDING_NOT_PENDING_APPROVAL",
   USER_ALREADY_PLATFORM_MEMBER: "USER_ALREADY_PLATFORM_MEMBER",
-  // Certilia OIDC login — Croatian eID flow rejects sign-in unless the
-  // remote identity matches an existing Flatie user. We never auto-create
-  // users from Certilia; the inviter (building rep) is the only path in.
-  CERTILIA_NO_MATCH: "CERTILIA_NO_MATCH",
-  // Certilia returned an OIB and email belonging to two different Flatie
-  // users — refuse rather than guess which account to sign in.
-  CERTILIA_OIB_CONFLICT: "CERTILIA_OIB_CONFLICT",
-  // Certilia did not return an OIB or email claim. Means the client's
-  // scope/claim allowlist is misconfigured at Certilia.
-  CERTILIA_INSUFFICIENT_CLAIMS: "CERTILIA_INSUFFICIENT_CLAIMS"
+  // ── Consensus poll identity verification (Certilia OIDC) ────────────
+  // Plain vote attempted on a CONSENSUS poll — frontend must route the
+  // user through the identity-challenge flow instead.
+  CONSENSUS_REQUIRES_IDENTITY_VERIFICATION: "CONSENSUS_REQUIRES_IDENTITY_VERIFICATION",
+  // User has no OIB stored on their Flatie account. Required before they
+  // can identity-verify with Certilia, since the Certilia OIB has to
+  // match an OIB we already hold on file.
+  OIB_REQUIRED_BEFORE_VOTE: "OIB_REQUIRED_BEFORE_VOTE",
+  // Certilia OIDC client did not return an OIB or email claim — the
+  // portal-side scope/attribute allowlist is misconfigured.
+  CERTILIA_INSUFFICIENT_CLAIMS: "CERTILIA_INSUFFICIENT_CLAIMS",
+  // Certilia returned an OIB that doesn't match the OIB on the logged-in
+  // user's Flatie account. Wrong identity — refuse to cast the vote.
+  CERTILIA_OIB_MISMATCH: "CERTILIA_OIB_MISMATCH",
+  // Certilia returned an email that doesn't match the email on the
+  // logged-in user's Flatie account.
+  CERTILIA_EMAIL_MISMATCH: "CERTILIA_EMAIL_MISMATCH"
 };
 function isBackendErrorCode(code) {
   return typeof code === "string" && Object.values(BACKEND_ERROR_CODES).includes(code);
 }
 
-export { BACKEND_ERROR_CODES, isBackendErrorCode };
-//# sourceMappingURL=chunk-OBGE3PUH.js.map
-//# sourceMappingURL=chunk-OBGE3PUH.js.map
+exports.BACKEND_ERROR_CODES = BACKEND_ERROR_CODES;
+exports.isBackendErrorCode = isBackendErrorCode;
+//# sourceMappingURL=chunk-RRQB6VP5.cjs.map
+//# sourceMappingURL=chunk-RRQB6VP5.cjs.map

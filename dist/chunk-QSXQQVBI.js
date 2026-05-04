@@ -1,6 +1,6 @@
 import { optionalIbanSchema } from './chunk-WK7VOCOE.js';
 import { ApartmentRole, OrgRole, OrgType, BuildingRole, PricuvaRefMode, FundsSource, QUOTA_RESOURCE_TYPES, FailureUnitType, FailureLocationType, Priority, ORG_QUOTA_RESOURCE_TYPES, TransactionType, PlatformRole, BuildingStatus, NotificationType } from './chunk-KT36KDYK.js';
-import { BACKEND_ERROR_CODES } from './chunk-OBGE3PUH.js';
+import { BACKEND_ERROR_CODES } from './chunk-OTQ3IRH2.js';
 import { z } from 'zod';
 
 var apiErrorSchema = z.object({
@@ -58,6 +58,28 @@ var updatePasswordSchema = z.object({
   message: "Passwords do not match",
   path: ["confirmPassword"]
 });
+var uuidSchema = z.string().uuid();
+var dateTimeSchema = z.string().datetime();
+var optionalDateTimeSchema = z.string().datetime().nullable().optional();
+var baseEntitySchema = z.object({
+  id: uuidSchema,
+  createdAt: dateTimeSchema,
+  updatedAt: optionalDateTimeSchema
+});
+var buildingEntitySchema = baseEntitySchema.extend({
+  buildingId: uuidSchema
+});
+var userEntitySchema = baseEntitySchema.extend({
+  createdBy: uuidSchema
+});
+var buildingUserEntitySchema = baseEntitySchema.extend({
+  buildingId: uuidSchema,
+  createdBy: uuidSchema
+});
+var permissionFieldsSchema = z.object({
+  canEdit: z.boolean(),
+  canDelete: z.boolean()
+});
 var oibValueSchema = z.string().trim().regex(/^\d{11}$/, "OIB must be 11 digits").optional();
 var certiliaUserinfoSchema = z.object({
   sub: z.string().min(1),
@@ -87,28 +109,6 @@ var certiliaUserinfoSchema = z.object({
     oib,
     raw: profile
   };
-});
-var uuidSchema = z.string().uuid();
-var dateTimeSchema = z.string().datetime();
-var optionalDateTimeSchema = z.string().datetime().nullable().optional();
-var baseEntitySchema = z.object({
-  id: uuidSchema,
-  createdAt: dateTimeSchema,
-  updatedAt: optionalDateTimeSchema
-});
-var buildingEntitySchema = baseEntitySchema.extend({
-  buildingId: uuidSchema
-});
-var userEntitySchema = baseEntitySchema.extend({
-  createdBy: uuidSchema
-});
-var buildingUserEntitySchema = baseEntitySchema.extend({
-  buildingId: uuidSchema,
-  createdBy: uuidSchema
-});
-var permissionFieldsSchema = z.object({
-  canEdit: z.boolean(),
-  canDelete: z.boolean()
 });
 var dateRangeParamsSchema = z.object({
   fromDate: z.string().optional(),
@@ -1864,5 +1864,5 @@ var pollVotersResponseSchema = z.looseObject({
 var paginatedPollsResponseSchema = paginatedResponseSchema(pollResponseSchema);
 
 export { ARCHIVE_TYPES, ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, baseEntitySchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, commentResponseSchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createEmailThreadRequestSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createOwnerSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgQuotaConfigSchema, orgQuotaEntrySchema, orgQuotaListSchema, ownerResponseSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, registerSchema, reorderFaqsSchema, replyEmailThreadRequestSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateBusinessPartnerSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-LPVWQL2G.js.map
-//# sourceMappingURL=chunk-LPVWQL2G.js.map
+//# sourceMappingURL=chunk-QSXQQVBI.js.map
+//# sourceMappingURL=chunk-QSXQQVBI.js.map
