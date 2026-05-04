@@ -46,6 +46,9 @@ export {
   userEntitySchema,
   uuidSchema,
 } from './base.schema';
+// Certilia OIDC userinfo
+export type { CertiliaUserinfo } from './certilia.schema';
+export { certiliaUserinfoSchema } from './certilia.schema';
 // Date range schemas
 export type { DateRangeParamsSchema, DateRangeWithValidationSchema } from './date-range.schema';
 export { dateRangeParamsSchema, dateRangeWithValidationSchema } from './date-range.schema';

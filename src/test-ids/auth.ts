@@ -3,6 +3,7 @@ export const LoginTestIds = {
   passwordInput: 'login-password-input',
   passwordToggle: 'login-password-toggle',
   googleButton: 'login-google-button',
+  certiliaButton: 'login-certilia-button',
   submitButton: 'login-submit-button',
   forgotPasswordLink: 'login-forgot-password-link',
   rememberMe: 'login-remember-me-checkbox',

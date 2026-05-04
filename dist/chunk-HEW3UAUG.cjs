@@ -2,7 +2,7 @@
 
 var chunkXXNOAOHF_cjs = require('./chunk-XXNOAOHF.cjs');
 var chunkYNPRAZ3P_cjs = require('./chunk-YNPRAZ3P.cjs');
-var chunkIW2SD4F6_cjs = require('./chunk-IW2SD4F6.cjs');
+var chunkDKW2V3AY_cjs = require('./chunk-DKW2V3AY.cjs');
 var zod = require('zod');
 
 var apiErrorSchema = zod.z.object({
@@ -12,7 +12,7 @@ var apiErrorSchema = zod.z.object({
   path: zod.z.string()
 });
 var apiErrorResponseSchema = apiErrorSchema.extend({
-  code: zod.z.enum(Object.values(chunkIW2SD4F6_cjs.BACKEND_ERROR_CODES)).optional().describe(
+  code: zod.z.enum(Object.values(chunkDKW2V3AY_cjs.BACKEND_ERROR_CODES)).optional().describe(
     "Canonical error code from `@flatie/shared/errors` (`BACKEND_ERROR_CODES`). Present when the backend raised a `DomainException`; absent for generic HTTP errors (network failures, unhandled exceptions, validation-pipe rejections)."
   )
 }).describe("Standard error envelope returned by the Flatie backend on 4xx and 5xx responses.");
@@ -59,6 +59,36 @@ var updatePasswordSchema = zod.z.object({
 }).refine((data) => data.newPassword === data.confirmPassword, {
   message: "Passwords do not match",
   path: ["confirmPassword"]
+});
+var oibValueSchema = zod.z.string().trim().regex(/^\d{11}$/, "OIB must be 11 digits").optional();
+var certiliaUserinfoSchema = zod.z.object({
+  sub: zod.z.string().min(1),
+  email: zod.z.string().email().optional(),
+  email_verified: zod.z.boolean().optional(),
+  name: zod.z.string().optional(),
+  given_name: zod.z.string().optional(),
+  family_name: zod.z.string().optional(),
+  phone_number: zod.z.string().optional(),
+  address: zod.z.union([zod.z.string(), zod.z.object({ formatted: zod.z.string().optional() }).passthrough()]).optional(),
+  // Custom Croatian eID claims — Certilia exposes OIB under a couple of
+  // different names depending on tenant configuration. Accept any.
+  oib: oibValueSchema,
+  pin: oibValueSchema,
+  oib_pin: oibValueSchema
+}).passthrough().transform((profile) => {
+  const oib = profile.oib ?? profile.pin ?? profile.oib_pin ?? void 0;
+  const fullName = profile.name ?? [profile.given_name, profile.family_name].filter(Boolean).join(" ").trim() ?? void 0;
+  return {
+    sub: profile.sub,
+    email: profile.email?.toLowerCase().trim(),
+    emailVerified: profile.email_verified ?? false,
+    name: fullName || void 0,
+    givenName: profile.given_name,
+    familyName: profile.family_name,
+    phoneNumber: profile.phone_number,
+    oib,
+    raw: profile
+  };
 });
 var uuidSchema = zod.z.string().uuid();
 var dateTimeSchema = zod.z.string().datetime();
@@ -1883,6 +1913,7 @@ exports.buildingTypeSchema = buildingTypeSchema;
 exports.buildingUserEntitySchema = buildingUserEntitySchema;
 exports.businessPartnerResponseSchema = businessPartnerResponseSchema;
 exports.camtImportResponseSchema = camtImportResponseSchema;
+exports.certiliaUserinfoSchema = certiliaUserinfoSchema;
 exports.commentResponseSchema = commentResponseSchema;
 exports.commonStatusOptions = commonStatusOptions;
 exports.copyFaqsSchema = copyFaqsSchema;
@@ -1997,5 +2028,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-45VHNDRZ.cjs.map
-//# sourceMappingURL=chunk-45VHNDRZ.cjs.map
+//# sourceMappingURL=chunk-HEW3UAUG.cjs.map
+//# sourceMappingURL=chunk-HEW3UAUG.cjs.map

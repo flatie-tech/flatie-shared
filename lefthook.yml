@@ -1,13 +1,17 @@
 pre-commit:
   parallel: true
   commands:
+    # All node-based commands are wrapped in `bash -lc` so the user's
+    # shell profile (homebrew, nvm, mise) is sourced. Git's hook
+    # environment is otherwise stripped to POSIX `sh` and `node` /
+    # `pnpm` resolve to "command not found".
     lint:
       glob: "*.{ts,tsx,js,jsx,json}"
-      run: pnpm lint
+      run: bash -lc 'pnpm lint'
     type-check:
-      run: pnpm type-check
+      run: bash -lc 'pnpm type-check'
     test:
-      run: pnpm test
+      run: bash -lc 'pnpm test'
 
     # Doc-hygiene reminders — prints to stderr if a sensitive file is staged.
     # Always exits 0 (non-blocking). Strict verifier lives in flatie-docs CI.

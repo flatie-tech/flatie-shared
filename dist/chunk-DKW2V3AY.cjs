@@ -1,3 +1,5 @@
+'use strict';
+
 // src/errors/index.ts
 var BACKEND_ERROR_CODES = {
   // Auth
@@ -69,12 +71,23 @@ var BACKEND_ERROR_CODES = {
   INVOICE_ALREADY_PAID: "INVOICE_ALREADY_PAID",
   // Platform-specific
   BUILDING_NOT_PENDING_APPROVAL: "BUILDING_NOT_PENDING_APPROVAL",
-  USER_ALREADY_PLATFORM_MEMBER: "USER_ALREADY_PLATFORM_MEMBER"
+  USER_ALREADY_PLATFORM_MEMBER: "USER_ALREADY_PLATFORM_MEMBER",
+  // Certilia OIDC login — Croatian eID flow rejects sign-in unless the
+  // remote identity matches an existing Flatie user. We never auto-create
+  // users from Certilia; the inviter (building rep) is the only path in.
+  CERTILIA_NO_MATCH: "CERTILIA_NO_MATCH",
+  // Certilia returned an OIB and email belonging to two different Flatie
+  // users — refuse rather than guess which account to sign in.
+  CERTILIA_OIB_CONFLICT: "CERTILIA_OIB_CONFLICT",
+  // Certilia did not return an OIB or email claim. Means the client's
+  // scope/claim allowlist is misconfigured at Certilia.
+  CERTILIA_INSUFFICIENT_CLAIMS: "CERTILIA_INSUFFICIENT_CLAIMS"
 };
 function isBackendErrorCode(code) {
   return typeof code === "string" && Object.values(BACKEND_ERROR_CODES).includes(code);
 }
 
-export { BACKEND_ERROR_CODES, isBackendErrorCode };
-//# sourceMappingURL=chunk-E45VMJJC.js.map
-//# sourceMappingURL=chunk-E45VMJJC.js.map
+exports.BACKEND_ERROR_CODES = BACKEND_ERROR_CODES;
+exports.isBackendErrorCode = isBackendErrorCode;
+//# sourceMappingURL=chunk-DKW2V3AY.cjs.map
+//# sourceMappingURL=chunk-DKW2V3AY.cjs.map

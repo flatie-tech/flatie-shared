@@ -80,6 +80,17 @@ export const BACKEND_ERROR_CODES = {
   // Platform-specific
   BUILDING_NOT_PENDING_APPROVAL: 'BUILDING_NOT_PENDING_APPROVAL',
   USER_ALREADY_PLATFORM_MEMBER: 'USER_ALREADY_PLATFORM_MEMBER',
+
+  // Certilia OIDC login — Croatian eID flow rejects sign-in unless the
+  // remote identity matches an existing Flatie user. We never auto-create
+  // users from Certilia; the inviter (building rep) is the only path in.
+  CERTILIA_NO_MATCH: 'CERTILIA_NO_MATCH',
+  // Certilia returned an OIB and email belonging to two different Flatie
+  // users — refuse rather than guess which account to sign in.
+  CERTILIA_OIB_CONFLICT: 'CERTILIA_OIB_CONFLICT',
+  // Certilia did not return an OIB or email claim. Means the client's
+  // scope/claim allowlist is misconfigured at Certilia.
+  CERTILIA_INSUFFICIENT_CLAIMS: 'CERTILIA_INSUFFICIENT_CLAIMS',
 } as const;
 
 export type BackendErrorCode = (typeof BACKEND_ERROR_CODES)[keyof typeof BACKEND_ERROR_CODES];

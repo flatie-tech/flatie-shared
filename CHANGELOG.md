@@ -1,5 +1,20 @@
 # @flatie/shared
 
+## 0.33.0
+
+### Minor Changes
+
+- Add Certilia OIDC userinfo schema + login error codes for the Croatian eID
+  login flow.
+
+  - `certiliaUserinfoSchema` parses Certilia's `/userinfo` response and
+    normalises the OIB claim across the variants Certilia uses (`oib`,
+    `pin`, `oib_pin`).
+  - `BACKEND_ERROR_CODES.CERTILIA_NO_MATCH`, `CERTILIA_OIB_CONFLICT`, and
+    `CERTILIA_INSUFFICIENT_CLAIMS` for the three rejection paths in the
+    backend's `genericOAuth` Certilia provider.
+  - `LoginTestIds.certiliaButton` for the new login-page button.
+
 ## 0.32.0
 
 ### Minor Changes
