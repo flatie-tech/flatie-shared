@@ -1,4 +1,5 @@
 export * from './apartments';
+export * from './app-shell';
 export * from './auth';
 export * from './building-info';
 export * from './building-overview';
@@ -8,5 +9,6 @@ export * from './failure-reports';
 export * from './funds';
 export * from './maintenance-logs';
 export * from './notice-board';
+export * from './onboarding';
 export * from './polls';
 export * from './settings';

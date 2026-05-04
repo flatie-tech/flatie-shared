@@ -18,6 +18,14 @@ var ApartmentsTestIds = {
   searchInput: "apartments-search-input"
 };
 
+// src/test-ids/app-shell.ts
+var AppShellTestIds = {
+  // Account dropdown trigger in the dashboard header (avatar button)
+  accountDropdown: "account-dropdown",
+  // Sign-out menu item inside the account dropdown
+  signOutButton: "sign-out-button"
+};
+
 // src/test-ids/auth.ts
 var LoginTestIds = {
   emailInput: "login-email-input",
@@ -85,6 +93,14 @@ var NoticeBoardTestIds = {
   screen: "notices-screen",
   searchInput: "notices-search-input",
   addButton: "notices-add-button"
+};
+
+// src/test-ids/onboarding.ts
+var OnboardingTestIds = {
+  // The three top-level tabs on /onboarding for users without buildings
+  tabFind: "onboarding-tab-find",
+  tabJoin: "onboarding-tab-join",
+  tabCreate: "onboarding-tab-create"
 };
 
 // src/test-ids/polls.ts
@@ -1323,6 +1339,7 @@ Object.defineProperty(exports, "API_VERSION", {
   get: function () { return chunkQKC22KTY_cjs.API_VERSION; }
 });
 exports.ApartmentsTestIds = ApartmentsTestIds;
+exports.AppShellTestIds = AppShellTestIds;
 exports.BuildingInfoTestIds = BuildingInfoTestIds;
 exports.BuildingOverviewTestIds = BuildingOverviewTestIds;
 exports.CalendarTestIds = CalendarTestIds;
@@ -1332,6 +1349,7 @@ exports.FundsTestIds = FundsTestIds;
 exports.LoginTestIds = LoginTestIds;
 exports.MaintenanceLogsTestIds = MaintenanceLogsTestIds;
 exports.NoticeBoardTestIds = NoticeBoardTestIds;
+exports.OnboardingTestIds = OnboardingTestIds;
 exports.PollsTestIds = PollsTestIds;
 exports.SettingsTestIds = SettingsTestIds;
 //# sourceMappingURL=index.cjs.map
