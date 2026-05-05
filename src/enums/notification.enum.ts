@@ -7,6 +7,9 @@ export const NotificationType = {
   POLL_DEADLINE_24H: 'poll_deadline_24h',
   POLL_DEADLINE_1H: 'poll_deadline_1h',
   POLL_FINALIZED: 'poll_finalized',
+  POLL_VOTE_SIGNATURE_PENDING: 'poll_vote_signature_pending',
+  POLL_VOTE_SIGNATURE_APPROVED: 'poll_vote_signature_approved',
+  POLL_VOTE_SIGNATURE_REJECTED: 'poll_vote_signature_rejected',
 
   EVENT_CREATED: 'event_created',
   EVENT_REMINDER_24H: 'event_reminder_24h',
@@ -98,6 +101,9 @@ export const NOTIFICATION_TYPE_CATEGORY: Record<NotificationType, NotificationCa
   [NotificationType.POLL_DEADLINE_24H]: NotificationCategory.POLLS,
   [NotificationType.POLL_DEADLINE_1H]: NotificationCategory.POLLS,
   [NotificationType.POLL_FINALIZED]: NotificationCategory.POLLS,
+  [NotificationType.POLL_VOTE_SIGNATURE_PENDING]: NotificationCategory.POLLS,
+  [NotificationType.POLL_VOTE_SIGNATURE_APPROVED]: NotificationCategory.POLLS,
+  [NotificationType.POLL_VOTE_SIGNATURE_REJECTED]: NotificationCategory.POLLS,
 
   [NotificationType.EVENT_CREATED]: NotificationCategory.EVENTS,
   [NotificationType.EVENT_REMINDER_24H]: NotificationCategory.EVENTS,

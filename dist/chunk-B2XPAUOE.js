@@ -1,4 +1,4 @@
-import { domainPermissions, BuildingRole, OrgRole, PlatformRole, Permission } from './chunk-KT36KDYK.js';
+import { domainPermissions, BuildingRole, OrgRole, PlatformRole, Permission } from './chunk-33K3EQLQ.js';
 
 // src/constants/defaults.ts
 var DEFAULT_PAGINATION_LIMIT = 10;
@@ -465,5 +465,5 @@ var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[OrgRole.ORG_ADMIN];
 var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_ADMIN];
 
 export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminBuildingKeys, adminKeys, apartmentKeys, blogKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };
-//# sourceMappingURL=chunk-H6ZS3E4V.js.map
-//# sourceMappingURL=chunk-H6ZS3E4V.js.map
+//# sourceMappingURL=chunk-B2XPAUOE.js.map
+//# sourceMappingURL=chunk-B2XPAUOE.js.map

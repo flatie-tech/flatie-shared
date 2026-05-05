@@ -88,7 +88,17 @@ var BACKEND_ERROR_CODES = {
   CERTILIA_OIB_MISMATCH: "CERTILIA_OIB_MISMATCH",
   // Certilia returned an email that doesn't match the email on the
   // logged-in user's Flatie account.
-  CERTILIA_EMAIL_MISMATCH: "CERTILIA_EMAIL_MISMATCH"
+  CERTILIA_EMAIL_MISMATCH: "CERTILIA_EMAIL_MISMATCH",
+  // Signature-vote upload missing — the multipart request didn't carry
+  // a signed-PDF / image file under the expected field name.
+  SIGNATURE_FILE_REQUIRED: "SIGNATURE_FILE_REQUIRED",
+  // Uploaded signature file failed validation (wrong mime, too large,
+  // empty, or generally unparseable).
+  INVALID_SIGNATURE_FILE: "INVALID_SIGNATURE_FILE",
+  // A signature-vote review action was attempted on a vote whose
+  // status is not `pending_signature_review` (already accepted /
+  // already rejected). Prevents double-application of the totals.
+  SIGNATURE_VOTE_NOT_PENDING: "SIGNATURE_VOTE_NOT_PENDING"
 };
 function isBackendErrorCode(code) {
   return typeof code === "string" && Object.values(BACKEND_ERROR_CODES).includes(code);
@@ -96,5 +106,5 @@ function isBackendErrorCode(code) {
 
 exports.BACKEND_ERROR_CODES = BACKEND_ERROR_CODES;
 exports.isBackendErrorCode = isBackendErrorCode;
-//# sourceMappingURL=chunk-RRQB6VP5.cjs.map
-//# sourceMappingURL=chunk-RRQB6VP5.cjs.map
+//# sourceMappingURL=chunk-HA63T76G.cjs.map
+//# sourceMappingURL=chunk-HA63T76G.cjs.map

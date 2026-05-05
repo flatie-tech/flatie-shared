@@ -2616,6 +2616,9 @@ declare const notificationResponseSchema: z.ZodObject<{
         poll_deadline_24h: "poll_deadline_24h";
         poll_deadline_1h: "poll_deadline_1h";
         poll_finalized: "poll_finalized";
+        poll_vote_signature_pending: "poll_vote_signature_pending";
+        poll_vote_signature_approved: "poll_vote_signature_approved";
+        poll_vote_signature_rejected: "poll_vote_signature_rejected";
         event_created: "event_created";
         event_reminder_24h: "event_reminder_24h";
         event_reminder_1h: "event_reminder_1h";
@@ -3063,8 +3066,8 @@ declare const CommonStatusSchema: z.ZodEnum<{
 }>;
 declare const ApprovalStatusSchema: z.ZodEnum<{
     pending: "pending";
-    approved: "approved";
     rejected: "rejected";
+    approved: "approved";
 }>;
 declare const MaintenanceStatusSchema: z.ZodEnum<{
     pending: "pending";

@@ -60,6 +60,24 @@ declare const TransactionSource: {
 };
 type TransactionSource = (typeof TransactionSource)[keyof typeof TransactionSource];
 
+/**
+ * How a CONSENSUS poll vote's identity was established. Stored on
+ * `poll_votes.identity_verification_method` so the artefact behind the
+ * row is reproducible after the fact.
+ *
+ * - `CERTILIA_OIDC`: voter completed the Certilia eID OAuth flow and
+ *   the qualifying claims (OIB, signed JWT, full userinfo payload) are
+ *   persisted on the row.
+ * - `PRINTED_SIGNATURE`: voter downloaded a pre-filled ballot PDF,
+ *   signed it on paper, and re-uploaded the scan. A representative
+ *   approved the upload before the vote was counted.
+ */
+declare const IdentityVerificationMethod: {
+    readonly CERTILIA_OIDC: "certilia_oidc";
+    readonly PRINTED_SIGNATURE: "printed_signature";
+};
+type IdentityVerificationMethod = (typeof IdentityVerificationMethod)[keyof typeof IdentityVerificationMethod];
+
 declare const MaintenanceLogFinancedBy: {
     readonly BUILDING_FUNDS: "building_funds";
     readonly INSURANCE: "insurance";
@@ -75,6 +93,9 @@ declare const NotificationType: {
     readonly POLL_DEADLINE_24H: "poll_deadline_24h";
     readonly POLL_DEADLINE_1H: "poll_deadline_1h";
     readonly POLL_FINALIZED: "poll_finalized";
+    readonly POLL_VOTE_SIGNATURE_PENDING: "poll_vote_signature_pending";
+    readonly POLL_VOTE_SIGNATURE_APPROVED: "poll_vote_signature_approved";
+    readonly POLL_VOTE_SIGNATURE_REJECTED: "poll_vote_signature_rejected";
     readonly EVENT_CREATED: "event_created";
     readonly EVENT_REMINDER_24H: "event_reminder_24h";
     readonly EVENT_REMINDER_1H: "event_reminder_1h";
@@ -166,6 +187,25 @@ declare const PollStatus: {
 type PollStatus = (typeof PollStatus)[keyof typeof PollStatus];
 
 /**
+ * Lifecycle of a single poll vote row.
+ *
+ * Most votes (Certilia online + rep-recorded offline) are inserted as
+ * `ACCEPTED` straight away and immediately fold into the poll totals.
+ *
+ * Printed-signature votes go through a review queue: the co-owner
+ * uploads a signed PDF, the row lands as `PENDING_SIGNATURE_REVIEW`,
+ * and a building representative either approves it (status flips to
+ * `ACCEPTED` and the totals are updated then) or rejects it (status
+ * `REJECTED`, voter notified with the reason, may re-upload).
+ */
+declare const PollVoteStatus: {
+    readonly ACCEPTED: "accepted";
+    readonly PENDING_SIGNATURE_REVIEW: "pending_signature_review";
+    readonly REJECTED: "rejected";
+};
+type PollVoteStatus = (typeof PollVoteStatus)[keyof typeof PollVoteStatus];
+
+/**
  * How the building expects co-owners to address their pričuva payments
  * in the HR01 poziv-na-broj reference.
  *
@@ -217,4 +257,4 @@ declare const UnitType: {
 };
 type UnitType = (typeof UnitType)[keyof typeof UnitType];
 
-export { ApartmentRole, BuildingStatus, DevicePlatform, FailureLocationType, FailureUnitType, FundsSource, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, OrgQuotaResourceType, OrgStatus, OrgType, PollStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, TransactionSource, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, WASTE_SUBTYPE_NOTIFICATION_MAP };
+export { ApartmentRole, BuildingStatus, DevicePlatform, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, OrgQuotaResourceType, OrgStatus, OrgType, PollStatus, PollVoteStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, TransactionSource, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, WASTE_SUBTYPE_NOTIFICATION_MAP };

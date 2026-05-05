@@ -3,6 +3,7 @@ export { BuildingStatus, OrgStatus } from './building-status.enum';
 export { BuildingType } from './building-type.enum';
 export { FailureLocationType, FailureUnitType } from './failure-location.enum';
 export { FundsSource, TransactionSource } from './funds-source.enum';
+export { IdentityVerificationMethod } from './identity-verification-method.enum';
 export { MaintenanceLogFinancedBy } from './maintenance-log.enum';
 export {
   DevicePlatform,
@@ -26,6 +27,7 @@ export {
 } from './permission.enum';
 export { PollStatus } from './poll-status.enum';
 export { PollType } from './poll-type.enum';
+export { PollVoteStatus } from './poll-vote-status.enum';
 export { PricuvaRefMode } from './pricuva-ref-mode.enum';
 export {
   ORG_QUOTA_DEFAULT_DAILY_LIMITS,

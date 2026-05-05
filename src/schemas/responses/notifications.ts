@@ -154,6 +154,9 @@ const notificationDataSchemaByType = {
   [NotificationType.POLL_DEADLINE_24H]: unimplementedDataSchema,
   [NotificationType.POLL_DEADLINE_1H]: unimplementedDataSchema,
   [NotificationType.POLL_FINALIZED]: pollFinalizedDataSchema,
+  [NotificationType.POLL_VOTE_SIGNATURE_PENDING]: unimplementedDataSchema,
+  [NotificationType.POLL_VOTE_SIGNATURE_APPROVED]: unimplementedDataSchema,
+  [NotificationType.POLL_VOTE_SIGNATURE_REJECTED]: unimplementedDataSchema,
 
   [NotificationType.EVENT_CREATED]: eventCreatedOrUpdatedDataSchema,
   [NotificationType.EVENT_UPDATED]: eventCreatedOrUpdatedDataSchema,
