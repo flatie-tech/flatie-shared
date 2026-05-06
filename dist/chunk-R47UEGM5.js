@@ -355,6 +355,7 @@ var REPRESENTATIVE_PERMISSIONS = [
   "building:update",
   "building:delete",
   "user:create",
+  "user:update",
   "user:kick",
   "building_role:assign",
   "building_role:update",
@@ -377,7 +378,6 @@ var ORG_ADMIN_BUILDING_PERMISSIONS = [
   "apartment:manage_users",
   "building:manage",
   "building:generate_otp",
-  "user:update",
   "user:delete:any",
   "system:admin",
   "system:manage",
@@ -465,5 +465,5 @@ var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[OrgRole.ORG_ADMIN];
 var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_ADMIN];
 
 export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminBuildingKeys, adminKeys, apartmentKeys, blogKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };
-//# sourceMappingURL=chunk-H6ZS3E4V.js.map
-//# sourceMappingURL=chunk-H6ZS3E4V.js.map
+//# sourceMappingURL=chunk-R47UEGM5.js.map
+//# sourceMappingURL=chunk-R47UEGM5.js.map

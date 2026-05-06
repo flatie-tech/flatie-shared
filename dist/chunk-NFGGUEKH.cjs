@@ -357,6 +357,7 @@ var REPRESENTATIVE_PERMISSIONS = [
   "building:update",
   "building:delete",
   "user:create",
+  "user:update",
   "user:kick",
   "building_role:assign",
   "building_role:update",
@@ -379,7 +380,6 @@ var ORG_ADMIN_BUILDING_PERMISSIONS = [
   "apartment:manage_users",
   "building:manage",
   "building:generate_otp",
-  "user:update",
   "user:delete:any",
   "system:admin",
   "system:manage",
@@ -508,5 +508,5 @@ exports.unitReminderKeys = unitReminderKeys;
 exports.unitSearchKeys = unitSearchKeys;
 exports.userKeys = userKeys;
 exports.widgetKeys = widgetKeys;
-//# sourceMappingURL=chunk-5SRINYV7.cjs.map
-//# sourceMappingURL=chunk-5SRINYV7.cjs.map
+//# sourceMappingURL=chunk-NFGGUEKH.cjs.map
+//# sourceMappingURL=chunk-NFGGUEKH.cjs.map
