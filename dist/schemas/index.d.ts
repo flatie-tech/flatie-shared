@@ -2640,6 +2640,9 @@ declare const notificationResponseSchema: z.ZodObject<{
         building_approved: "building_approved";
         building_rejected: "building_rejected";
         chat_message: "chat_message";
+        poll_vote_signature_pending: "poll_vote_signature_pending";
+        poll_vote_signature_approved: "poll_vote_signature_approved";
+        poll_vote_signature_rejected: "poll_vote_signature_rejected";
         system_announcement: "system_announcement";
     }>;
     buildingId: z.ZodOptional<z.ZodNullable<z.ZodString>>;

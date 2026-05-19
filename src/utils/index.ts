@@ -29,7 +29,6 @@ export {
   canDoOnResource,
   computeActionFlags,
   getContextUserId,
-  isAdminContext,
 } from './permission-evaluator';
 // Permission utilities
 export { hasAllPermissions, hasAnyPermission, hasPermission } from './permissions';

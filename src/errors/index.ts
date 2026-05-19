@@ -98,6 +98,11 @@ export const BACKEND_ERROR_CODES = {
   // Certilia returned an email that doesn't match the email on the
   // logged-in user's Flatie account.
   CERTILIA_EMAIL_MISMATCH: 'CERTILIA_EMAIL_MISMATCH',
+
+  // ── Signature-based voting ────────────────────────────────────────
+  SIGNATURE_VOTE_NOT_PENDING: 'SIGNATURE_VOTE_NOT_PENDING',
+  SIGNATURE_FILE_REQUIRED: 'SIGNATURE_FILE_REQUIRED',
+  INVALID_SIGNATURE_FILE: 'INVALID_SIGNATURE_FILE',
 } as const;
 
 export type BackendErrorCode = (typeof BACKEND_ERROR_CODES)[keyof typeof BACKEND_ERROR_CODES];

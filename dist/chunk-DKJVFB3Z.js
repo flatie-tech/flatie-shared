@@ -86,12 +86,16 @@ var BACKEND_ERROR_CODES = {
   CERTILIA_OIB_MISMATCH: "CERTILIA_OIB_MISMATCH",
   // Certilia returned an email that doesn't match the email on the
   // logged-in user's Flatie account.
-  CERTILIA_EMAIL_MISMATCH: "CERTILIA_EMAIL_MISMATCH"
+  CERTILIA_EMAIL_MISMATCH: "CERTILIA_EMAIL_MISMATCH",
+  // ── Signature-based voting ────────────────────────────────────────
+  SIGNATURE_VOTE_NOT_PENDING: "SIGNATURE_VOTE_NOT_PENDING",
+  SIGNATURE_FILE_REQUIRED: "SIGNATURE_FILE_REQUIRED",
+  INVALID_SIGNATURE_FILE: "INVALID_SIGNATURE_FILE"
 };
 function isBackendErrorCode(code) {
   return typeof code === "string" && Object.values(BACKEND_ERROR_CODES).includes(code);
 }
 
 export { BACKEND_ERROR_CODES, isBackendErrorCode };
-//# sourceMappingURL=chunk-OTQ3IRH2.js.map
-//# sourceMappingURL=chunk-OTQ3IRH2.js.map
+//# sourceMappingURL=chunk-DKJVFB3Z.js.map
+//# sourceMappingURL=chunk-DKJVFB3Z.js.map

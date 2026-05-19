@@ -13,31 +13,16 @@ export interface ActionFlags {
   canApprove: boolean;
 }
 
-/**
- * Check if a context has a specific permission. Admins always return true.
- *
- * Pure function — no logging, no side effects. Backend wraps this with a
- * NestJS-injectable that adds scope-mismatch warnings in dev.
- */
 export function canDo(ctx: PermissionContext, permission: Permission): boolean {
-  if (ctx.kind === 'admin') return true;
   return ctx.permissions.includes(permission);
 }
 
-/**
- * Check if a context can perform an action on a specific resource,
- * resolving `:own` vs `:any` using the type-safe permission lookup.
- *
- * Checks `:any` first, then falls back to `:own` if the caller owns the resource.
- */
 export function canDoOnResource(
   ctx: PermissionContext,
   domain: ScopedDomain,
   action: ScopedAction,
   resourceOwnerId: string,
 ): boolean {
-  if (ctx.kind === 'admin') return true;
-
   const scopedPerms = SCOPED_PERMISSIONS[domain]?.[action];
   if (!scopedPerms) return false;
 
@@ -65,11 +50,6 @@ export function computeActionFlags(
   };
 }
 
-export function isAdminContext(ctx: PermissionContext): boolean {
-  return ctx.kind === 'admin';
-}
-
-export function getContextUserId(ctx: PermissionContext): string | null {
-  if (ctx.kind === 'admin') return null;
+export function getContextUserId(ctx: PermissionContext): string {
   return ctx.userId;
 }

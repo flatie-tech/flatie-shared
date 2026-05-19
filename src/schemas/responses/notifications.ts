@@ -185,6 +185,10 @@ const notificationDataSchemaByType = {
 
   [NotificationType.CHAT_MESSAGE]: chatMessageDataSchema,
 
+  [NotificationType.POLL_VOTE_SIGNATURE_PENDING]: unimplementedDataSchema,
+  [NotificationType.POLL_VOTE_SIGNATURE_APPROVED]: unimplementedDataSchema,
+  [NotificationType.POLL_VOTE_SIGNATURE_REJECTED]: unimplementedDataSchema,
+
   [NotificationType.SYSTEM_ANNOUNCEMENT]: unimplementedDataSchema,
 } as const satisfies Record<NotificationType, z.ZodType>;
 

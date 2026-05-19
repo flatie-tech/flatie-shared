@@ -1,4 +1,4 @@
-import { P as PaginatedResponse, a as PermissionContext } from '../permission-context-DiFftP1O.cjs';
+import { P as PaginatedResponse, a as PermissionContext } from '../permission-context-THJvTsgj.cjs';
 import { z } from 'zod';
 import { BackendErrorCode } from '../errors/index.cjs';
 import { P as Permission, S as ScopedDomain, b as ScopedAction, B as BuildingRole, O as OrgRole, a as PlatformRole } from '../role.enum-B_7lBNq-.cjs';
@@ -159,19 +159,7 @@ interface ActionFlags {
     canDelete: boolean;
     canApprove: boolean;
 }
-/**
- * Check if a context has a specific permission. Admins always return true.
- *
- * Pure function — no logging, no side effects. Backend wraps this with a
- * NestJS-injectable that adds scope-mismatch warnings in dev.
- */
 declare function canDo(ctx: PermissionContext, permission: Permission): boolean;
-/**
- * Check if a context can perform an action on a specific resource,
- * resolving `:own` vs `:any` using the type-safe permission lookup.
- *
- * Checks `:any` first, then falls back to `:own` if the caller owns the resource.
- */
 declare function canDoOnResource(ctx: PermissionContext, domain: ScopedDomain, action: ScopedAction, resourceOwnerId: string): boolean;
 /**
  * Compute standard action flags for an entity.
@@ -181,8 +169,7 @@ declare function canDoOnResource(ctx: PermissionContext, domain: ScopedDomain, a
  * without a round-trip to `/users/me/permissions`.
  */
 declare function computeActionFlags(ctx: PermissionContext, domain: ScopedDomain, resourceOwnerId: string): ActionFlags;
-declare function isAdminContext(ctx: PermissionContext): boolean;
-declare function getContextUserId(ctx: PermissionContext): string | null;
+declare function getContextUserId(ctx: PermissionContext): string;
 
 /**
  * Check if a user has a specific permission.
@@ -284,4 +271,4 @@ declare function getDateRange(filter: 'today' | 'yesterday' | 'week' | 'month'):
  */
 declare function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(func: T, delay: number): (...args: Parameters<T>) => void;
 
-export { type ActionFlags, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, type ParsedApiError, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type StatusVariant, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatCurrencyByLocale, formatDate as formatDateByLocale, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isAdminContext, isManagerialRole, normalizePaginatedResponse, parseApiError, parseData, priorityVariant };
+export { type ActionFlags, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, type ParsedApiError, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type StatusVariant, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatCurrencyByLocale, formatDate as formatDateByLocale, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isManagerialRole, normalizePaginatedResponse, parseApiError, parseData, priorityVariant };

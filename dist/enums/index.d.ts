@@ -60,6 +60,12 @@ declare const TransactionSource: {
 };
 type TransactionSource = (typeof TransactionSource)[keyof typeof TransactionSource];
 
+declare const IdentityVerificationMethod: {
+    readonly PRINTED_SIGNATURE: "PRINTED_SIGNATURE";
+    readonly CERTILIA: "CERTILIA";
+};
+type IdentityVerificationMethod = (typeof IdentityVerificationMethod)[keyof typeof IdentityVerificationMethod];
+
 declare const MaintenanceLogFinancedBy: {
     readonly BUILDING_FUNDS: "building_funds";
     readonly INSURANCE: "insurance";
@@ -99,6 +105,9 @@ declare const NotificationType: {
     readonly BUILDING_APPROVED: "building_approved";
     readonly BUILDING_REJECTED: "building_rejected";
     readonly CHAT_MESSAGE: "chat_message";
+    readonly POLL_VOTE_SIGNATURE_PENDING: "poll_vote_signature_pending";
+    readonly POLL_VOTE_SIGNATURE_APPROVED: "poll_vote_signature_approved";
+    readonly POLL_VOTE_SIGNATURE_REJECTED: "poll_vote_signature_rejected";
     readonly SYSTEM_ANNOUNCEMENT: "system_announcement";
 };
 type NotificationType = (typeof NotificationType)[keyof typeof NotificationType];
@@ -165,6 +174,13 @@ declare const PollStatus: {
 };
 type PollStatus = (typeof PollStatus)[keyof typeof PollStatus];
 
+declare const PollVoteStatus: {
+    readonly ACCEPTED: "ACCEPTED";
+    readonly PENDING_SIGNATURE_REVIEW: "PENDING_SIGNATURE_REVIEW";
+    readonly REJECTED: "REJECTED";
+};
+type PollVoteStatus = (typeof PollVoteStatus)[keyof typeof PollVoteStatus];
+
 /**
  * How the building expects co-owners to address their pričuva payments
  * in the HR01 poziv-na-broj reference.
@@ -217,4 +233,4 @@ declare const UnitType: {
 };
 type UnitType = (typeof UnitType)[keyof typeof UnitType];
 
-export { ApartmentRole, BuildingStatus, DevicePlatform, FailureLocationType, FailureUnitType, FundsSource, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, OrgQuotaResourceType, OrgStatus, OrgType, PollStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, TransactionSource, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, WASTE_SUBTYPE_NOTIFICATION_MAP };
+export { ApartmentRole, BuildingStatus, DevicePlatform, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, OrgQuotaResourceType, OrgStatus, OrgType, PollStatus, PollVoteStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, TransactionSource, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, WASTE_SUBTYPE_NOTIFICATION_MAP };

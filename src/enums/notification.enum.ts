@@ -38,6 +38,10 @@ export const NotificationType = {
 
   CHAT_MESSAGE: 'chat_message',
 
+  POLL_VOTE_SIGNATURE_PENDING: 'poll_vote_signature_pending',
+  POLL_VOTE_SIGNATURE_APPROVED: 'poll_vote_signature_approved',
+  POLL_VOTE_SIGNATURE_REJECTED: 'poll_vote_signature_rejected',
+
   SYSTEM_ANNOUNCEMENT: 'system_announcement',
 } as const;
 
@@ -128,6 +132,11 @@ export const NOTIFICATION_TYPE_CATEGORY: Record<NotificationType, NotificationCa
   [NotificationType.BUILDING_PENDING_APPROVAL]: NotificationCategory.SYSTEM,
   [NotificationType.BUILDING_APPROVED]: NotificationCategory.SYSTEM,
   [NotificationType.BUILDING_REJECTED]: NotificationCategory.SYSTEM,
+
+  [NotificationType.POLL_VOTE_SIGNATURE_PENDING]: NotificationCategory.POLLS,
+  [NotificationType.POLL_VOTE_SIGNATURE_APPROVED]: NotificationCategory.POLLS,
+  [NotificationType.POLL_VOTE_SIGNATURE_REJECTED]: NotificationCategory.POLLS,
+
   [NotificationType.SYSTEM_ANNOUNCEMENT]: NotificationCategory.SYSTEM,
 };
 

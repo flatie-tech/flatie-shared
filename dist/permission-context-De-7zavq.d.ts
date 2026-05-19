@@ -59,14 +59,11 @@ type BuildingPermissionContext = BuildingContextFromOrg | BuildingContextFromRol
 /**
  * Discriminated union representing the caller's permission context.
  *
- * - `admin` — system admin, bypasses all checks
  * - `platform` — platform-scoped role (e.g. PLATFORM_ADMIN)
  * - `organization` — org-scoped role
  * - `building` — building-scoped, either via org membership or direct role
  */
 type PermissionContext = {
-    kind: 'admin';
-} | {
     kind: 'platform';
     userId: string;
     platformRole: PlatformRole;
