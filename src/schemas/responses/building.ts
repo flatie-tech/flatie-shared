@@ -95,6 +95,26 @@ export const buildingResponseSchema = z.looseObject({
     .nullable()
     .optional()
     .describe('Croatian tax ID (OIB) of the building, or null when unset.'),
+  houseNumber: z
+    .string()
+    .nullable()
+    .optional()
+    .describe('Street/house number, or null when not set.'),
+  billingBuildingCode: z
+    .string()
+    .nullable()
+    .optional()
+    .describe('Building identifier used in HR01 poziv-na-broj references, or null until assigned.'),
+  monthlyFeePerSqm: z
+    .number()
+    .nullable()
+    .optional()
+    .describe('Monthly residential pričuva rate in EUR per m², or null when not configured.'),
+  monthlyFeeCommercialPerSqm: z
+    .number()
+    .nullable()
+    .optional()
+    .describe('Monthly commercial pričuva rate in EUR per m², or null when not configured.'),
   createdAt: z.string().describe('ISO-8601 timestamp when the building record was created.'),
   updatedAt: z
     .string()
