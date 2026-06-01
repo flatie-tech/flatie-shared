@@ -1838,6 +1838,10 @@ declare const buildingResponseSchema: z.ZodObject<{
     createdBy: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     iban: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     oib: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    houseNumber: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    billingBuildingCode: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    monthlyFeePerSqm: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
+    monthlyFeeCommercialPerSqm: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
     createdAt: z.ZodString;
     updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
 }, z.core.$loose>;
@@ -1928,6 +1932,10 @@ declare const paginatedBuildingsResponseSchema: z.ZodObject<{
         createdBy: z.ZodNullable<z.ZodOptional<z.ZodString>>;
         iban: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         oib: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        houseNumber: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        billingBuildingCode: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        monthlyFeePerSqm: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
+        monthlyFeeCommercialPerSqm: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
         createdAt: z.ZodString;
         updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     }, z.core.$loose>>;

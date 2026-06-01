@@ -1103,6 +1103,10 @@ var buildingResponseSchema = zod.z.looseObject({
   createdBy: zod.z.string().uuid().optional().nullable().describe("UUID of the user who registered the building on the platform."),
   iban: zod.z.string().nullable().optional().describe("IBAN of the building fund bank account, or null when unset."),
   oib: zod.z.string().nullable().optional().describe("Croatian tax ID (OIB) of the building, or null when unset."),
+  houseNumber: zod.z.string().nullable().optional().describe("Street/house number, or null when not set."),
+  billingBuildingCode: zod.z.string().nullable().optional().describe("Building identifier used in HR01 poziv-na-broj references, or null until assigned."),
+  monthlyFeePerSqm: zod.z.number().nullable().optional().describe("Monthly residential pri\u010Duva rate in EUR per m\xB2, or null when not configured."),
+  monthlyFeeCommercialPerSqm: zod.z.number().nullable().optional().describe("Monthly commercial pri\u010Duva rate in EUR per m\xB2, or null when not configured."),
   createdAt: zod.z.string().describe("ISO-8601 timestamp when the building record was created."),
   updatedAt: zod.z.string().nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited.")
 });
@@ -2052,5 +2056,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-DWJDRA5Q.cjs.map
-//# sourceMappingURL=chunk-DWJDRA5Q.cjs.map
+//# sourceMappingURL=chunk-JJ7WGTEQ.cjs.map
+//# sourceMappingURL=chunk-JJ7WGTEQ.cjs.map
