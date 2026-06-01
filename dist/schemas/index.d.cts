@@ -1836,6 +1836,8 @@ declare const buildingResponseSchema: z.ZodObject<{
     isStratified: z.ZodBoolean;
     houseRulesFileUrl: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     createdBy: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    iban: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    oib: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     createdAt: z.ZodString;
     updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
 }, z.core.$loose>;
@@ -1924,6 +1926,8 @@ declare const paginatedBuildingsResponseSchema: z.ZodObject<{
         isStratified: z.ZodBoolean;
         houseRulesFileUrl: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         createdBy: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+        iban: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        oib: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         createdAt: z.ZodString;
         updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     }, z.core.$loose>>;
@@ -2148,6 +2152,7 @@ declare const eventResponseSchema: z.ZodObject<{
     }, z.core.$loose>>;
     isAnonymous: z.ZodBoolean;
     approved: z.ZodBoolean;
+    allowComments: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
     canEdit: z.ZodBoolean;
     canDelete: z.ZodBoolean;
     canApprove: z.ZodBoolean;
@@ -2181,6 +2186,7 @@ declare const paginatedEventsResponseSchema: z.ZodObject<{
         }, z.core.$loose>>;
         isAnonymous: z.ZodBoolean;
         approved: z.ZodBoolean;
+        allowComments: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
         canEdit: z.ZodBoolean;
         canDelete: z.ZodBoolean;
         canApprove: z.ZodBoolean;
@@ -2228,6 +2234,7 @@ declare const failureReportResponseSchema: z.ZodObject<{
     }>>>;
     createdAt: z.ZodString;
     updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    allowComments: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
     canEdit: z.ZodBoolean;
     canDelete: z.ZodBoolean;
     canApprove: z.ZodBoolean;
@@ -2295,6 +2302,7 @@ declare const paginatedFailureReportsResponseSchema: z.ZodObject<{
         }>>>;
         createdAt: z.ZodString;
         updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        allowComments: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
         canEdit: z.ZodBoolean;
         canDelete: z.ZodBoolean;
         canApprove: z.ZodBoolean;
@@ -2540,6 +2548,7 @@ declare const noticeResponseSchema: z.ZodObject<{
     createdAt: z.ZodString;
     updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     createdByName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    allowComments: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
     canApprove: z.ZodBoolean;
     canEdit: z.ZodBoolean;
     canDelete: z.ZodBoolean;
@@ -2575,6 +2584,7 @@ declare const paginatedNoticesResponseSchema: z.ZodObject<{
         createdAt: z.ZodString;
         updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         createdByName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        allowComments: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
         canApprove: z.ZodBoolean;
         canEdit: z.ZodBoolean;
         canDelete: z.ZodBoolean;

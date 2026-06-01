@@ -1101,6 +1101,8 @@ var buildingResponseSchema = zod.z.looseObject({
   ),
   houseRulesFileUrl: zod.z.string().nullable().optional().describe("Absolute URL to the uploaded house-rules PDF, or null if none has been uploaded."),
   createdBy: zod.z.string().uuid().optional().nullable().describe("UUID of the user who registered the building on the platform."),
+  iban: zod.z.string().nullable().optional().describe("IBAN of the building fund bank account, or null when unset."),
+  oib: zod.z.string().nullable().optional().describe("Croatian tax ID (OIB) of the building, or null when unset."),
   createdAt: zod.z.string().describe("ISO-8601 timestamp when the building record was created."),
   updatedAt: zod.z.string().nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited.")
 });
@@ -1298,6 +1300,7 @@ var eventResponseSchema = zod.z.looseObject({
   user: eventUserSchema.optional().describe("Creator of the event; omitted when the event is anonymous or seeded by the system."),
   isAnonymous: zod.z.boolean().describe("True when the creator chose to hide their identity from other residents."),
   approved: zod.z.boolean().describe("True when the event has been approved by a representative and is publicly visible."),
+  allowComments: zod.z.boolean().optional().default(true).describe("True when comments are enabled on this event."),
   canEdit: zod.z.boolean().describe("True when the calling user is allowed to edit this event."),
   canDelete: zod.z.boolean().describe("True when the calling user is allowed to delete this event."),
   canApprove: zod.z.boolean().describe("True when the calling user is allowed to approve or reject this event."),
@@ -1412,6 +1415,7 @@ var failureReportResponseSchema = zod.z.looseObject({
   ),
   createdAt: zod.z.string().describe("ISO-8601 timestamp when the report was filed."),
   updatedAt: zod.z.string().nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited."),
+  allowComments: zod.z.boolean().optional().default(true).describe("True when comments are enabled on this failure report."),
   canEdit: zod.z.boolean().describe("True when the calling user is allowed to edit this report."),
   canDelete: zod.z.boolean().describe("True when the calling user is allowed to delete this report."),
   canApprove: zod.z.boolean().describe("True when the calling user may approve or reject the report."),
@@ -1550,6 +1554,7 @@ var noticeResponseSchema = zod.z.looseObject({
   createdByName: zod.z.string().nullable().optional().describe(
     "Author display name. Null when `isAnonymous` is true or the author has been deleted."
   ),
+  allowComments: zod.z.boolean().optional().default(true).describe("True when comments are enabled on this notice."),
   canApprove: zod.z.boolean().describe("True when the calling user may approve or reject the notice."),
   canEdit: zod.z.boolean().describe("True when the calling user may edit the notice."),
   canDelete: zod.z.boolean().describe("True when the calling user may delete the notice."),
@@ -2047,5 +2052,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-6AQI2Y5F.cjs.map
-//# sourceMappingURL=chunk-6AQI2Y5F.cjs.map
+//# sourceMappingURL=chunk-DWJDRA5Q.cjs.map
+//# sourceMappingURL=chunk-DWJDRA5Q.cjs.map

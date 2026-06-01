@@ -42,6 +42,11 @@ export const noticeResponseSchema = z.looseObject({
     .describe(
       'Author display name. Null when `isAnonymous` is true or the author has been deleted.',
     ),
+  allowComments: z
+    .boolean()
+    .optional()
+    .default(true)
+    .describe('True when comments are enabled on this notice.'),
   canApprove: z.boolean().describe('True when the calling user may approve or reject the notice.'),
   canEdit: z.boolean().describe('True when the calling user may edit the notice.'),
   canDelete: z.boolean().describe('True when the calling user may delete the notice.'),

@@ -86,6 +86,11 @@ export const eventResponseSchema = z.looseObject({
   approved: z
     .boolean()
     .describe('True when the event has been approved by a representative and is publicly visible.'),
+  allowComments: z
+    .boolean()
+    .optional()
+    .default(true)
+    .describe('True when comments are enabled on this event.'),
   canEdit: z.boolean().describe('True when the calling user is allowed to edit this event.'),
   canDelete: z.boolean().describe('True when the calling user is allowed to delete this event.'),
   canApprove: z

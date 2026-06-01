@@ -85,6 +85,16 @@ export const buildingResponseSchema = z.looseObject({
     .optional()
     .nullable()
     .describe('UUID of the user who registered the building on the platform.'),
+  iban: z
+    .string()
+    .nullable()
+    .optional()
+    .describe('IBAN of the building fund bank account, or null when unset.'),
+  oib: z
+    .string()
+    .nullable()
+    .optional()
+    .describe('Croatian tax ID (OIB) of the building, or null when unset.'),
   createdAt: z.string().describe('ISO-8601 timestamp when the building record was created.'),
   updatedAt: z
     .string()
