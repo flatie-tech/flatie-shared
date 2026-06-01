@@ -1,26 +1,36 @@
+'use strict';
+
 // src/enums/apartment-role.enum.ts
 var ApartmentRole = {
-  OWNER: "OWNER",
-  TENANT: "TENANT"
+  OWNER: "owner",
+  TENANT: "tenant"
+};
+
+// src/enums/building-otp-expiry.enum.ts
+var BuildingOtpExpiry = {
+  ONE_HOUR: "1_hour",
+  ONE_DAY: "1_day",
+  SEVEN_DAYS: "7_days",
+  NEVER: "never"
 };
 
 // src/enums/building-status.enum.ts
 var BuildingStatus = {
-  PENDING_APPROVAL: "PENDING_APPROVAL",
-  ACTIVE: "ACTIVE",
-  REJECTED: "REJECTED"
+  PENDING_APPROVAL: "pending_approval",
+  ACTIVE: "active",
+  REJECTED: "rejected"
 };
 var OrgStatus = {
-  PENDING_APPROVAL: "PENDING_APPROVAL",
-  ACTIVE: "ACTIVE",
-  REJECTED: "REJECTED"
+  PENDING_APPROVAL: "pending_approval",
+  ACTIVE: "active",
+  REJECTED: "rejected"
 };
 
 // src/enums/building-type.enum.ts
 var BuildingType = {
-  RESIDENTIAL: "RESIDENTIAL",
-  COMMERCIAL: "COMMERCIAL",
-  RESIDENTIAL_COMMERCIAL: "RESIDENTIAL_COMMERCIAL"
+  RESIDENTIAL: "residential",
+  COMMERCIAL: "commercial",
+  RESIDENTIAL_COMMERCIAL: "residential_commercial"
 };
 
 // src/enums/failure-location.enum.ts
@@ -46,8 +56,15 @@ var TransactionSource = {
 
 // src/enums/identity-verification.enum.ts
 var IdentityVerificationMethod = {
-  PRINTED_SIGNATURE: "PRINTED_SIGNATURE",
-  CERTILIA: "CERTILIA"
+  PRINTED_SIGNATURE: "printed_signature",
+  CERTILIA: "certilia"
+};
+
+// src/enums/join-request-status.enum.ts
+var JoinRequestStatus = {
+  PENDING: "pending",
+  APPROVED: "approved",
+  REJECTED: "rejected"
 };
 
 // src/enums/maintenance-log.enum.ts
@@ -177,8 +194,8 @@ var WASTE_SUBTYPE_NOTIFICATION_MAP = {
 
 // src/enums/org-type.enum.ts
 var OrgType = {
-  MANAGEMENT_FIRM: "MANAGEMENT_FIRM",
-  PLATFORM: "PLATFORM"
+  MANAGEMENT_FIRM: "management_firm",
+  PLATFORM: "platform"
 };
 
 // src/enums/permission.enum.ts
@@ -360,15 +377,15 @@ var PollStatus = {
 
 // src/enums/poll-type.enum.ts
 var PollType = {
-  CONSENSUS: "CONSENSUS",
-  COMMUNITY: "COMMUNITY"
+  CONSENSUS: "consensus",
+  COMMUNITY: "community"
 };
 
 // src/enums/poll-vote-status.enum.ts
 var PollVoteStatus = {
-  ACCEPTED: "ACCEPTED",
-  PENDING_SIGNATURE_REVIEW: "PENDING_SIGNATURE_REVIEW",
-  REJECTED: "REJECTED"
+  ACCEPTED: "accepted",
+  PENDING_SIGNATURE_REVIEW: "pending_signature_review",
+  REJECTED: "rejected"
 };
 
 // src/enums/pricuva-ref-mode.enum.ts
@@ -379,10 +396,10 @@ var PricuvaRefMode = {
 
 // src/enums/quota.enum.ts
 var QuotaResourceType = {
-  COMMENT: "COMMENT",
-  MAINTENANCE_REQUEST: "MAINTENANCE_REQUEST",
-  INVITE: "INVITE",
-  NOTIFICATION: "NOTIFICATION"
+  COMMENT: "comment",
+  MAINTENANCE_REQUEST: "maintenance_request",
+  INVITE: "invite",
+  NOTIFICATION: "notification"
 };
 var QUOTA_RESOURCE_TYPES = Object.values(
   QuotaResourceType
@@ -394,9 +411,9 @@ var QUOTA_DEFAULT_DAILY_LIMITS = {
   [QuotaResourceType.NOTIFICATION]: null
 };
 var OrgQuotaResourceType = {
-  MEMBER_INVITE: "MEMBER_INVITE",
-  BUILDING_CREATE: "BUILDING_CREATE",
-  NOTIFICATION: "NOTIFICATION"
+  MEMBER_INVITE: "member_invite",
+  BUILDING_CREATE: "building_create",
+  NOTIFICATION: "notification"
 };
 var ORG_QUOTA_RESOURCE_TYPES = Object.values(
   OrgQuotaResourceType
@@ -409,10 +426,10 @@ var ORG_QUOTA_DEFAULT_DAILY_LIMITS = {
 
 // src/enums/role.enum.ts
 var BuildingRole = {
-  OWNER_REPRESENTATIVE: "OWNER_REPRESENTATIVE",
-  DEPUTY_REPRESENTATIVE: "DEPUTY_REPRESENTATIVE",
-  CO_OWNER: "CO_OWNER",
-  RESIDENT: "RESIDENT"
+  OWNER_REPRESENTATIVE: "owner_representative",
+  DEPUTY_REPRESENTATIVE: "deputy_representative",
+  CO_OWNER: "co_owner",
+  RESIDENT: "resident"
 };
 var BUILDING_ROLE_RANK = {
   [BuildingRole.RESIDENT]: 0,
@@ -424,10 +441,10 @@ function canAssignRole(assignerRole, targetRole) {
   return BUILDING_ROLE_RANK[assignerRole] > BUILDING_ROLE_RANK[targetRole];
 }
 var OrgRole = {
-  ORG_ADMIN: "ORG_ADMIN",
-  SUPERVISOR: "SUPERVISOR",
-  REFERENT: "REFERENT",
-  OPERATIVE: "OPERATIVE"
+  ORG_ADMIN: "org_admin",
+  SUPERVISOR: "supervisor",
+  REFERENT: "referent",
+  OPERATIVE: "operative"
 };
 var ORG_ROLE_RANK = {
   [OrgRole.OPERATIVE]: 0,
@@ -439,10 +456,10 @@ function canAssignOrgRole(assignerRole, targetRole) {
   return ORG_ROLE_RANK[assignerRole] > ORG_ROLE_RANK[targetRole];
 }
 var PlatformRole = {
-  PLATFORM_ADMIN: "PLATFORM_ADMIN",
-  PLATFORM_MODERATOR: "PLATFORM_MODERATOR",
-  PLATFORM_SUPPORT: "PLATFORM_SUPPORT",
-  PLATFORM_OPERATIVE: "PLATFORM_OPERATIVE"
+  PLATFORM_ADMIN: "platform_admin",
+  PLATFORM_MODERATOR: "platform_moderator",
+  PLATFORM_SUPPORT: "platform_support",
+  PLATFORM_OPERATIVE: "platform_operative"
 };
 var PLATFORM_ROLE_RANK = {
   [PlatformRole.PLATFORM_OPERATIVE]: 0,
@@ -473,7 +490,7 @@ var MaintenanceStatus = {
 };
 var FailureStatus = {
   PENDING: "pending",
-  IN_PROGRESS: "inProgress",
+  IN_PROGRESS: "in_progress",
   RESOLVED: "resolved"
 };
 var MaintenanceType = {
@@ -524,6 +541,62 @@ var UnitType = {
   COMMERCIAL: "commercial"
 };
 
-export { APPROVE_PERMISSIONS, ApartmentRole, ApprovalStatus, BUILDING_ROLE_RANK, BuildingRole, BuildingStatus, BuildingType, CommonStatus, DevicePlatform, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, IdentityVerificationMethod, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, ORG_ROLE_RANK, OrgQuotaResourceType, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, Permission, PlatformRole, PollStatus, PollType, PollVoteStatus, PricuvaRefMode, Priority, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions };
-//# sourceMappingURL=chunk-5SW3ASZL.js.map
-//# sourceMappingURL=chunk-5SW3ASZL.js.map
+exports.APPROVE_PERMISSIONS = APPROVE_PERMISSIONS;
+exports.ApartmentRole = ApartmentRole;
+exports.ApprovalStatus = ApprovalStatus;
+exports.BUILDING_ROLE_RANK = BUILDING_ROLE_RANK;
+exports.BuildingOtpExpiry = BuildingOtpExpiry;
+exports.BuildingRole = BuildingRole;
+exports.BuildingStatus = BuildingStatus;
+exports.BuildingType = BuildingType;
+exports.CommonStatus = CommonStatus;
+exports.DevicePlatform = DevicePlatform;
+exports.FailureLocationType = FailureLocationType;
+exports.FailureStatus = FailureStatus;
+exports.FailureType = FailureType;
+exports.FailureUnitType = FailureUnitType;
+exports.FileCategory = FileCategory;
+exports.Frequency = Frequency;
+exports.FundsSource = FundsSource;
+exports.IdentityVerificationMethod = IdentityVerificationMethod;
+exports.JoinRequestStatus = JoinRequestStatus;
+exports.MaintenanceLogFinancedBy = MaintenanceLogFinancedBy;
+exports.MaintenanceStatus = MaintenanceStatus;
+exports.MaintenanceType = MaintenanceType;
+exports.NOTIFICATION_TYPE_CATEGORY = NOTIFICATION_TYPE_CATEGORY;
+exports.NotificationCategory = NotificationCategory;
+exports.NotificationChannel = NotificationChannel;
+exports.NotificationDeliveryStatus = NotificationDeliveryStatus;
+exports.NotificationType = NotificationType;
+exports.ORG_QUOTA_DEFAULT_DAILY_LIMITS = ORG_QUOTA_DEFAULT_DAILY_LIMITS;
+exports.ORG_QUOTA_RESOURCE_TYPES = ORG_QUOTA_RESOURCE_TYPES;
+exports.ORG_ROLE_RANK = ORG_ROLE_RANK;
+exports.OrgQuotaResourceType = OrgQuotaResourceType;
+exports.OrgRole = OrgRole;
+exports.OrgStatus = OrgStatus;
+exports.OrgType = OrgType;
+exports.PLATFORM_ROLE_RANK = PLATFORM_ROLE_RANK;
+exports.Permission = Permission;
+exports.PlatformRole = PlatformRole;
+exports.PollStatus = PollStatus;
+exports.PollType = PollType;
+exports.PollVoteStatus = PollVoteStatus;
+exports.PricuvaRefMode = PricuvaRefMode;
+exports.Priority = Priority;
+exports.QUOTA_DEFAULT_DAILY_LIMITS = QUOTA_DEFAULT_DAILY_LIMITS;
+exports.QUOTA_RESOURCE_TYPES = QUOTA_RESOURCE_TYPES;
+exports.QuotaResourceType = QuotaResourceType;
+exports.SCOPED_DOMAINS = SCOPED_DOMAINS;
+exports.SCOPED_PERMISSIONS = SCOPED_PERMISSIONS;
+exports.TransactionCategory = TransactionCategory;
+exports.TransactionSource = TransactionSource;
+exports.TransactionType = TransactionType;
+exports.UNIMPLEMENTED_NOTIFICATION_TYPES = UNIMPLEMENTED_NOTIFICATION_TYPES;
+exports.UnitType = UnitType;
+exports.WASTE_SUBTYPE_NOTIFICATION_MAP = WASTE_SUBTYPE_NOTIFICATION_MAP;
+exports.canAssignOrgRole = canAssignOrgRole;
+exports.canAssignPlatformRole = canAssignPlatformRole;
+exports.canAssignRole = canAssignRole;
+exports.domainPermissions = domainPermissions;
+//# sourceMappingURL=chunk-N4VU2M34.cjs.map
+//# sourceMappingURL=chunk-N4VU2M34.cjs.map

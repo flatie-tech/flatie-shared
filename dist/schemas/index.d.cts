@@ -227,8 +227,8 @@ type DateRangeParamsSchema = z.infer<typeof dateRangeParamsSchema>;
 type DateRangeWithValidationSchema = z.infer<typeof dateRangeWithValidationSchema>;
 
 declare const apartmentRoleSchema: z.ZodEnum<{
-    OWNER: "OWNER";
-    TENANT: "TENANT";
+    owner: "owner";
+    tenant: "tenant";
 }>;
 declare const apartmentUserSchema: z.ZodObject<{
     id: z.ZodString;
@@ -236,8 +236,8 @@ declare const apartmentUserSchema: z.ZodObject<{
     email: z.ZodString;
     image: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     roleType: z.ZodEnum<{
-        OWNER: "OWNER";
-        TENANT: "TENANT";
+        owner: "owner";
+        tenant: "tenant";
     }>;
     joinedAt: z.ZodString;
     ownershipPercentage: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
@@ -260,8 +260,8 @@ declare const apartmentSchema: z.ZodObject<{
         email: z.ZodString;
         image: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         roleType: z.ZodEnum<{
-            OWNER: "OWNER";
-            TENANT: "TENANT";
+            owner: "owner";
+            tenant: "tenant";
         }>;
         joinedAt: z.ZodString;
         ownershipPercentage: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
@@ -289,8 +289,8 @@ declare const paginatedApartmentsResponseSchema: z.ZodObject<{
             email: z.ZodString;
             image: z.ZodOptional<z.ZodNullable<z.ZodString>>;
             roleType: z.ZodEnum<{
-                OWNER: "OWNER";
-                TENANT: "TENANT";
+                owner: "owner";
+                tenant: "tenant";
             }>;
             joinedAt: z.ZodString;
             ownershipPercentage: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
@@ -416,8 +416,8 @@ declare const ORGANIZATION_LIMITS: {
 declare const createOrganizationSchema: z.ZodObject<{
     name: z.ZodString;
     type: z.ZodEnum<{
-        MANAGEMENT_FIRM: "MANAGEMENT_FIRM";
-        PLATFORM: "PLATFORM";
+        platform: "platform";
+        management_firm: "management_firm";
     }>;
     oib: z.ZodOptional<z.ZodString>;
     contactEmail: z.ZodOptional<z.ZodString>;
@@ -438,10 +438,10 @@ declare const updateOrganizationSchema: z.ZodObject<{
 declare const addOrgMemberSchema: z.ZodObject<{
     userId: z.ZodString;
     orgRole: z.ZodEnum<{
-        ORG_ADMIN: "ORG_ADMIN";
-        SUPERVISOR: "SUPERVISOR";
-        REFERENT: "REFERENT";
-        OPERATIVE: "OPERATIVE";
+        org_admin: "org_admin";
+        supervisor: "supervisor";
+        referent: "referent";
+        operative: "operative";
     }>;
 }, z.core.$strip>;
 /**
@@ -449,10 +449,10 @@ declare const addOrgMemberSchema: z.ZodObject<{
  */
 declare const updateOrgMemberRoleSchema: z.ZodObject<{
     orgRole: z.ZodEnum<{
-        ORG_ADMIN: "ORG_ADMIN";
-        SUPERVISOR: "SUPERVISOR";
-        REFERENT: "REFERENT";
-        OPERATIVE: "OPERATIVE";
+        org_admin: "org_admin";
+        supervisor: "supervisor";
+        referent: "referent";
+        operative: "operative";
     }>;
 }, z.core.$strip>;
 /**
@@ -461,10 +461,10 @@ declare const updateOrgMemberRoleSchema: z.ZodObject<{
 declare const inviteOrgMemberSchema: z.ZodObject<{
     email: z.ZodString;
     orgRole: z.ZodEnum<{
-        ORG_ADMIN: "ORG_ADMIN";
-        SUPERVISOR: "SUPERVISOR";
-        REFERENT: "REFERENT";
-        OPERATIVE: "OPERATIVE";
+        org_admin: "org_admin";
+        supervisor: "supervisor";
+        referent: "referent";
+        operative: "operative";
     }>;
     message: z.ZodOptional<z.ZodString>;
 }, z.core.$strip>;
@@ -534,19 +534,17 @@ type GetOrgBuildingsQuerySchema = z.infer<typeof getOrgBuildingsQuerySchema>;
 type GetOrgMembersQuerySchema = z.infer<typeof getOrgMembersQuerySchema>;
 
 /**
- * Building type options — uppercase to match the backend pgEnum.
- * Frontend callers that use lowercase internally (form state)
- * must `toUpperCase()` before submitting.
+ * Building type options — lowercase_snake_case to match the backend pgEnum.
  */
-declare const BUILDING_TYPES: readonly ["RESIDENTIAL", "COMMERCIAL", "RESIDENTIAL_COMMERCIAL"];
+declare const BUILDING_TYPES: readonly ["residential", "commercial", "residential_commercial"];
 type BuildingTypeOption = (typeof BUILDING_TYPES)[number];
 /**
  * Building type schema
  */
 declare const buildingTypeSchema: z.ZodEnum<{
-    RESIDENTIAL: "RESIDENTIAL";
-    COMMERCIAL: "COMMERCIAL";
-    RESIDENTIAL_COMMERCIAL: "RESIDENTIAL_COMMERCIAL";
+    residential: "residential";
+    commercial: "commercial";
+    residential_commercial: "residential_commercial";
 }>;
 /**
  * Validation constants for buildings
@@ -574,16 +572,16 @@ declare const createBuildingSchema: z.ZodObject<{
     streetId: z.ZodString;
     houseNumber: z.ZodString;
     type: z.ZodEnum<{
-        RESIDENTIAL: "RESIDENTIAL";
-        COMMERCIAL: "COMMERCIAL";
-        RESIDENTIAL_COMMERCIAL: "RESIDENTIAL_COMMERCIAL";
+        residential: "residential";
+        commercial: "commercial";
+        residential_commercial: "residential_commercial";
     }>;
     totalUnits: z.ZodCoercedNumber<unknown>;
     isStratified: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
     role: z.ZodOptional<z.ZodEnum<{
-        CO_OWNER: "CO_OWNER";
-        OWNER_REPRESENTATIVE: "OWNER_REPRESENTATIVE";
-        DEPUTY_REPRESENTATIVE: "DEPUTY_REPRESENTATIVE";
+        co_owner: "co_owner";
+        owner_representative: "owner_representative";
+        deputy_representative: "deputy_representative";
     }>>;
     iban: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     oib: z.ZodNullable<z.ZodOptional<z.ZodString>>;
@@ -607,9 +605,9 @@ declare const updateBuildingSchema: z.ZodObject<{
     name: z.ZodOptional<z.ZodString>;
     address: z.ZodOptional<z.ZodString>;
     type: z.ZodOptional<z.ZodEnum<{
-        RESIDENTIAL: "RESIDENTIAL";
-        COMMERCIAL: "COMMERCIAL";
-        RESIDENTIAL_COMMERCIAL: "RESIDENTIAL_COMMERCIAL";
+        residential: "residential";
+        commercial: "commercial";
+        residential_commercial: "residential_commercial";
     }>>;
     houseNumber: z.ZodOptional<z.ZodString>;
     totalUnits: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
@@ -649,9 +647,9 @@ declare const joinBuildingWithOtpSchema: z.ZodObject<{
 declare const updateUserBuildingRoleSchema: z.ZodObject<{
     userId: z.ZodString;
     roleType: z.ZodOptional<z.ZodEnum<{
-        CO_OWNER: "CO_OWNER";
-        OWNER_REPRESENTATIVE: "OWNER_REPRESENTATIVE";
-        DEPUTY_REPRESENTATIVE: "DEPUTY_REPRESENTATIVE";
+        co_owner: "co_owner";
+        owner_representative: "owner_representative";
+        deputy_representative: "deputy_representative";
     }>>;
     buildingSurfacePercentage: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
     chatVisibleToCoOwners: z.ZodOptional<z.ZodBoolean>;
@@ -668,10 +666,10 @@ type UpdateUserBuildingRoleSchema = z.infer<typeof updateUserBuildingRoleSchema>
  */
 declare const buildingQuotaEntrySchema: z.ZodObject<{
     resourceType: z.ZodEnum<{
-        COMMENT: "COMMENT";
-        MAINTENANCE_REQUEST: "MAINTENANCE_REQUEST";
-        INVITE: "INVITE";
-        NOTIFICATION: "NOTIFICATION";
+        notification: "notification";
+        comment: "comment";
+        maintenance_request: "maintenance_request";
+        invite: "invite";
     }>;
     dailyLimit: z.ZodNullable<z.ZodNumber>;
 }, z.core.$strip>;
@@ -683,10 +681,10 @@ declare const buildingQuotaEntrySchema: z.ZodObject<{
 declare const buildingQuotaConfigSchema: z.ZodObject<{
     quotas: z.ZodArray<z.ZodObject<{
         resourceType: z.ZodEnum<{
-            COMMENT: "COMMENT";
-            MAINTENANCE_REQUEST: "MAINTENANCE_REQUEST";
-            INVITE: "INVITE";
-            NOTIFICATION: "NOTIFICATION";
+            notification: "notification";
+            comment: "comment";
+            maintenance_request: "maintenance_request";
+            invite: "invite";
         }>;
         dailyLimit: z.ZodNullable<z.ZodNumber>;
     }, z.core.$strip>>;
@@ -698,10 +696,10 @@ declare const buildingQuotaListSchema: z.ZodObject<{
     buildingId: z.ZodString;
     quotas: z.ZodArray<z.ZodObject<{
         resourceType: z.ZodEnum<{
-            COMMENT: "COMMENT";
-            MAINTENANCE_REQUEST: "MAINTENANCE_REQUEST";
-            INVITE: "INVITE";
-            NOTIFICATION: "NOTIFICATION";
+            notification: "notification";
+            comment: "comment";
+            maintenance_request: "maintenance_request";
+            invite: "invite";
         }>;
         dailyLimit: z.ZodNullable<z.ZodNumber>;
     }, z.core.$strip>>;
@@ -944,7 +942,7 @@ declare const updateFailureReportSchema: z.ZodObject<{
     description: z.ZodOptional<z.ZodString>;
     status: z.ZodOptional<z.ZodEnum<{
         pending: "pending";
-        inProgress: "inProgress";
+        in_progress: "in_progress";
         resolved: "resolved";
     }>>;
     priority: z.ZodOptional<z.ZodEnum<{
@@ -984,8 +982,8 @@ type UpdateFailureReportSchema = z.infer<typeof updateFailureReportSchema>;
 type ApproveFailureReportSchema = z.infer<typeof approveFailureReportSchema>;
 
 declare const garageRoleSchema: z.ZodEnum<{
-    OWNER: "OWNER";
-    TENANT: "TENANT";
+    owner: "owner";
+    tenant: "tenant";
 }>;
 type GarageRole = z.infer<typeof garageRoleSchema>;
 declare const garageUserSchema: z.ZodObject<{
@@ -994,8 +992,8 @@ declare const garageUserSchema: z.ZodObject<{
     email: z.ZodString;
     image: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     roleType: z.ZodEnum<{
-        OWNER: "OWNER";
-        TENANT: "TENANT";
+        owner: "owner";
+        tenant: "tenant";
     }>;
     joinedAt: z.ZodString;
     ownershipPercentage: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
@@ -1015,8 +1013,8 @@ declare const garageSchema: z.ZodObject<{
         email: z.ZodString;
         image: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         roleType: z.ZodEnum<{
-            OWNER: "OWNER";
-            TENANT: "TENANT";
+            owner: "owner";
+            tenant: "tenant";
         }>;
         joinedAt: z.ZodString;
         ownershipPercentage: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
@@ -1203,9 +1201,9 @@ type ApproveNoticeSchema = z.infer<typeof approveNoticeSchema>;
  */
 declare const orgQuotaEntrySchema: z.ZodObject<{
     resourceType: z.ZodEnum<{
-        BUILDING_CREATE: "BUILDING_CREATE";
-        NOTIFICATION: "NOTIFICATION";
-        MEMBER_INVITE: "MEMBER_INVITE";
+        notification: "notification";
+        member_invite: "member_invite";
+        building_create: "building_create";
     }>;
     dailyLimit: z.ZodNullable<z.ZodNumber>;
 }, z.core.$strip>;
@@ -1216,9 +1214,9 @@ declare const orgQuotaEntrySchema: z.ZodObject<{
 declare const orgQuotaConfigSchema: z.ZodObject<{
     quotas: z.ZodArray<z.ZodObject<{
         resourceType: z.ZodEnum<{
-            BUILDING_CREATE: "BUILDING_CREATE";
-            NOTIFICATION: "NOTIFICATION";
-            MEMBER_INVITE: "MEMBER_INVITE";
+            notification: "notification";
+            member_invite: "member_invite";
+            building_create: "building_create";
         }>;
         dailyLimit: z.ZodNullable<z.ZodNumber>;
     }, z.core.$strip>>;
@@ -1230,9 +1228,9 @@ declare const orgQuotaListSchema: z.ZodObject<{
     orgId: z.ZodString;
     quotas: z.ZodArray<z.ZodObject<{
         resourceType: z.ZodEnum<{
-            BUILDING_CREATE: "BUILDING_CREATE";
-            NOTIFICATION: "NOTIFICATION";
-            MEMBER_INVITE: "MEMBER_INVITE";
+            notification: "notification";
+            member_invite: "member_invite";
+            building_create: "building_create";
         }>;
         dailyLimit: z.ZodNullable<z.ZodNumber>;
     }, z.core.$strip>>;
@@ -1300,14 +1298,14 @@ type AssignOwnerInput = z.infer<typeof assignOwnerSchema>;
 /**
  * Poll type options
  */
-declare const POLL_TYPES: readonly ["CONSENSUS", "COMMUNITY"];
+declare const POLL_TYPES: readonly ["consensus", "community"];
 type PollTypeOption = (typeof POLL_TYPES)[number];
 /**
  * Poll type enum schema
  */
 declare const pollTypeSchema: z.ZodEnum<{
-    CONSENSUS: "CONSENSUS";
-    COMMUNITY: "COMMUNITY";
+    consensus: "consensus";
+    community: "community";
 }>;
 /**
  * Validation constants for polls
@@ -1331,8 +1329,8 @@ declare const createPollSchema: z.ZodObject<{
     question: z.ZodString;
     options: z.ZodPipe<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>, z.ZodArray<z.ZodString>>;
     pollType: z.ZodEnum<{
-        CONSENSUS: "CONSENSUS";
-        COMMUNITY: "COMMUNITY";
+        consensus: "consensus";
+        community: "community";
     }>;
     deadline: z.ZodOptional<z.ZodCoercedDate<unknown>>;
     requiredConsensusPercentage: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
@@ -1351,8 +1349,8 @@ declare const updatePollSchema: z.ZodObject<{
     question: z.ZodOptional<z.ZodString>;
     options: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
     pollType: z.ZodOptional<z.ZodEnum<{
-        CONSENSUS: "CONSENSUS";
-        COMMUNITY: "COMMUNITY";
+        consensus: "consensus";
+        community: "community";
     }>>;
     deadline: z.ZodOptional<z.ZodCoercedDate<unknown>>;
     requiredConsensusPercentage: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
@@ -1391,8 +1389,8 @@ type VotePollSchema = z.infer<typeof votePollSchema>;
 type FinalizePollSchema = z.infer<typeof finalizePollSchema>;
 
 declare const storageUnitRoleSchema: z.ZodEnum<{
-    OWNER: "OWNER";
-    TENANT: "TENANT";
+    owner: "owner";
+    tenant: "tenant";
 }>;
 type StorageUnitRole = z.infer<typeof storageUnitRoleSchema>;
 declare const storageUnitUserSchema: z.ZodObject<{
@@ -1401,8 +1399,8 @@ declare const storageUnitUserSchema: z.ZodObject<{
     email: z.ZodString;
     image: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     roleType: z.ZodEnum<{
-        OWNER: "OWNER";
-        TENANT: "TENANT";
+        owner: "owner";
+        tenant: "tenant";
     }>;
     joinedAt: z.ZodString;
     ownershipPercentage: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
@@ -1422,8 +1420,8 @@ declare const storageUnitSchema: z.ZodObject<{
         email: z.ZodString;
         image: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         roleType: z.ZodEnum<{
-            OWNER: "OWNER";
-            TENANT: "TENANT";
+            owner: "owner";
+            tenant: "tenant";
         }>;
         joinedAt: z.ZodString;
         ownershipPercentage: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
@@ -1598,7 +1596,7 @@ declare const updateFailureReportRequestSchema: z.ZodObject<{
     description: z.ZodOptional<z.ZodString>;
     status: z.ZodOptional<z.ZodEnum<{
         pending: "pending";
-        inProgress: "inProgress";
+        in_progress: "in_progress";
         resolved: "resolved";
     }>>;
     priority: z.ZodOptional<z.ZodEnum<{
@@ -1699,8 +1697,8 @@ declare const updatePollRequestSchema: z.ZodObject<{
     question: z.ZodOptional<z.ZodString>;
     options: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
     pollType: z.ZodOptional<z.ZodEnum<{
-        CONSENSUS: "CONSENSUS";
-        COMMUNITY: "COMMUNITY";
+        consensus: "consensus";
+        community: "community";
     }>>;
     deadline: z.ZodOptional<z.ZodCoercedDate<unknown>>;
     requiredConsensusPercentage: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
@@ -1827,9 +1825,9 @@ declare const buildingResponseSchema: z.ZodObject<{
     address: z.ZodString;
     coverImage: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     type: z.ZodEnum<{
-        RESIDENTIAL: "RESIDENTIAL";
-        COMMERCIAL: "COMMERCIAL";
-        RESIDENTIAL_COMMERCIAL: "RESIDENTIAL_COMMERCIAL";
+        residential: "residential";
+        commercial: "commercial";
+        residential_commercial: "residential_commercial";
     }>;
     status: z.ZodOptional<z.ZodEnum<{
         [x: string]: string;
@@ -1851,9 +1849,9 @@ declare const buildingDetailResponseSchema: z.ZodObject<{
     address: z.ZodString;
     coverImage: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     type: z.ZodEnum<{
-        RESIDENTIAL: "RESIDENTIAL";
-        COMMERCIAL: "COMMERCIAL";
-        RESIDENTIAL_COMMERCIAL: "RESIDENTIAL_COMMERCIAL";
+        residential: "residential";
+        commercial: "commercial";
+        residential_commercial: "residential_commercial";
     }>;
     totalUnits: z.ZodNumber;
     isStratified: z.ZodBoolean;
@@ -1915,9 +1913,9 @@ declare const paginatedBuildingsResponseSchema: z.ZodObject<{
         address: z.ZodString;
         coverImage: z.ZodNullable<z.ZodOptional<z.ZodString>>;
         type: z.ZodEnum<{
-            RESIDENTIAL: "RESIDENTIAL";
-            COMMERCIAL: "COMMERCIAL";
-            RESIDENTIAL_COMMERCIAL: "RESIDENTIAL_COMMERCIAL";
+            residential: "residential";
+            commercial: "commercial";
+            residential_commercial: "residential_commercial";
         }>;
         status: z.ZodOptional<z.ZodEnum<{
             [x: string]: string;
@@ -2219,7 +2217,7 @@ declare const failureReportResponseSchema: z.ZodObject<{
     submittedByName: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     status: z.ZodEnum<{
         pending: "pending";
-        inProgress: "inProgress";
+        in_progress: "in_progress";
         resolved: "resolved";
     }>;
     approved: z.ZodBoolean;
@@ -2286,7 +2284,7 @@ declare const paginatedFailureReportsResponseSchema: z.ZodObject<{
         submittedByName: z.ZodNullable<z.ZodOptional<z.ZodString>>;
         status: z.ZodEnum<{
             pending: "pending";
-            inProgress: "inProgress";
+            in_progress: "in_progress";
             resolved: "resolved";
         }>;
         approved: z.ZodBoolean;
@@ -2858,8 +2856,8 @@ declare const pollResponseSchema: z.ZodObject<{
     updatedAt: z.ZodString;
     deadline: z.ZodOptional<z.ZodString>;
     pollType: z.ZodEnum<{
-        CONSENSUS: "CONSENSUS";
-        COMMUNITY: "COMMUNITY";
+        consensus: "consensus";
+        community: "community";
     }>;
     status: z.ZodEnum<{
         active: "active";
@@ -2902,8 +2900,8 @@ declare const pollResultsSchema: z.ZodObject<{
     createdAt: z.ZodString;
     deadline: z.ZodOptional<z.ZodString>;
     pollType: z.ZodEnum<{
-        CONSENSUS: "CONSENSUS";
-        COMMUNITY: "COMMUNITY";
+        consensus: "consensus";
+        community: "community";
     }>;
     status: z.ZodEnum<{
         active: "active";
@@ -2996,8 +2994,8 @@ declare const paginatedPollsResponseSchema: z.ZodObject<{
         updatedAt: z.ZodString;
         deadline: z.ZodOptional<z.ZodString>;
         pollType: z.ZodEnum<{
-            CONSENSUS: "CONSENSUS";
-            COMMUNITY: "COMMUNITY";
+            consensus: "consensus";
+            community: "community";
         }>;
         status: z.ZodEnum<{
             active: "active";
@@ -3039,22 +3037,10 @@ type PollResults = z.infer<typeof pollResultsSchema>;
 type PollVotersResponse = z.infer<typeof pollVotersResponseSchema>;
 type PaginatedPollsResponse = z.infer<typeof paginatedPollsResponseSchema>;
 
-/**
- * Common status options
- */
 declare const commonStatusOptions: readonly ["active", "completed", "cancelled"];
-/**
- * Approval status options
- */
 declare const approvalStatusOptions: readonly ["pending", "approved", "rejected"];
-/**
- * Maintenance status options
- */
 declare const maintenanceStatusOptions: readonly ["pending", "in_progress", "completed", "cancelled"];
-/**
- * Failure status options
- */
-declare const failureStatusOptions: readonly ["pending", "inProgress", "resolved"];
+declare const failureStatusOptions: readonly ["pending", "in_progress", "resolved"];
 /**
  * Priority options
  */
@@ -3066,8 +3052,8 @@ declare const CommonStatusSchema: z.ZodEnum<{
 }>;
 declare const ApprovalStatusSchema: z.ZodEnum<{
     pending: "pending";
-    approved: "approved";
     rejected: "rejected";
+    approved: "approved";
 }>;
 declare const MaintenanceStatusSchema: z.ZodEnum<{
     pending: "pending";
@@ -3077,7 +3063,7 @@ declare const MaintenanceStatusSchema: z.ZodEnum<{
 }>;
 declare const FailureStatusSchema: z.ZodEnum<{
     pending: "pending";
-    inProgress: "inProgress";
+    in_progress: "in_progress";
     resolved: "resolved";
 }>;
 declare const PrioritySchema: z.ZodEnum<{

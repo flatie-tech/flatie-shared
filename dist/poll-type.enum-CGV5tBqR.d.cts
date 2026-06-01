@@ -1,13 +1,13 @@
 declare const BuildingType: {
-    readonly RESIDENTIAL: "RESIDENTIAL";
-    readonly COMMERCIAL: "COMMERCIAL";
-    readonly RESIDENTIAL_COMMERCIAL: "RESIDENTIAL_COMMERCIAL";
+    readonly RESIDENTIAL: "residential";
+    readonly COMMERCIAL: "commercial";
+    readonly RESIDENTIAL_COMMERCIAL: "residential_commercial";
 };
 type BuildingType = (typeof BuildingType)[keyof typeof BuildingType];
 
 declare const PollType: {
-    readonly CONSENSUS: "CONSENSUS";
-    readonly COMMUNITY: "COMMUNITY";
+    readonly CONSENSUS: "consensus";
+    readonly COMMUNITY: "community";
 };
 type PollType = (typeof PollType)[keyof typeof PollType];
 

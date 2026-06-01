@@ -19,7 +19,7 @@ declare const MaintenanceStatus: {
 type MaintenanceStatus = (typeof MaintenanceStatus)[keyof typeof MaintenanceStatus];
 declare const FailureStatus: {
     readonly PENDING: "pending";
-    readonly IN_PROGRESS: "inProgress";
+    readonly IN_PROGRESS: "in_progress";
     readonly RESOLVED: "resolved";
 };
 type FailureStatus = (typeof FailureStatus)[keyof typeof FailureStatus];

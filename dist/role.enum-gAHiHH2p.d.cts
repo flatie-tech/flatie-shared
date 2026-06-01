@@ -121,28 +121,28 @@ declare const SCOPED_PERMISSIONS: Record<"notice" | "poll" | "event" | "document
 declare const APPROVE_PERMISSIONS: Partial<Record<ScopedDomain, Permission>>;
 
 declare const BuildingRole: {
-    readonly OWNER_REPRESENTATIVE: "OWNER_REPRESENTATIVE";
-    readonly DEPUTY_REPRESENTATIVE: "DEPUTY_REPRESENTATIVE";
-    readonly CO_OWNER: "CO_OWNER";
-    readonly RESIDENT: "RESIDENT";
+    readonly OWNER_REPRESENTATIVE: "owner_representative";
+    readonly DEPUTY_REPRESENTATIVE: "deputy_representative";
+    readonly CO_OWNER: "co_owner";
+    readonly RESIDENT: "resident";
 };
 type BuildingRole = (typeof BuildingRole)[keyof typeof BuildingRole];
 declare const BUILDING_ROLE_RANK: Record<BuildingRole, number>;
 declare function canAssignRole(assignerRole: BuildingRole, targetRole: BuildingRole): boolean;
 declare const OrgRole: {
-    readonly ORG_ADMIN: "ORG_ADMIN";
-    readonly SUPERVISOR: "SUPERVISOR";
-    readonly REFERENT: "REFERENT";
-    readonly OPERATIVE: "OPERATIVE";
+    readonly ORG_ADMIN: "org_admin";
+    readonly SUPERVISOR: "supervisor";
+    readonly REFERENT: "referent";
+    readonly OPERATIVE: "operative";
 };
 type OrgRole = (typeof OrgRole)[keyof typeof OrgRole];
 declare const ORG_ROLE_RANK: Record<OrgRole, number>;
 declare function canAssignOrgRole(assignerRole: OrgRole, targetRole: OrgRole): boolean;
 declare const PlatformRole: {
-    readonly PLATFORM_ADMIN: "PLATFORM_ADMIN";
-    readonly PLATFORM_MODERATOR: "PLATFORM_MODERATOR";
-    readonly PLATFORM_SUPPORT: "PLATFORM_SUPPORT";
-    readonly PLATFORM_OPERATIVE: "PLATFORM_OPERATIVE";
+    readonly PLATFORM_ADMIN: "platform_admin";
+    readonly PLATFORM_MODERATOR: "platform_moderator";
+    readonly PLATFORM_SUPPORT: "platform_support";
+    readonly PLATFORM_OPERATIVE: "platform_operative";
 };
 type PlatformRole = (typeof PlatformRole)[keyof typeof PlatformRole];
 declare const PLATFORM_ROLE_RANK: Record<PlatformRole, number>;

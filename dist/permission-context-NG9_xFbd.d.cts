@@ -1,4 +1,4 @@
-import { P as Permission, O as OrgRole, B as BuildingRole, a as PlatformRole } from './role.enum-B_7lBNq-.js';
+import { P as Permission, O as OrgRole, B as BuildingRole, a as PlatformRole } from './role.enum-gAHiHH2p.cjs';
 
 /**
  * Pagination query parameters

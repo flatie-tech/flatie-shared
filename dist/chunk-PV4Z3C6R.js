@@ -1,5 +1,5 @@
 import { optionalIbanSchema } from './chunk-WK7VOCOE.js';
-import { ApartmentRole, OrgRole, OrgType, BuildingRole, PricuvaRefMode, FundsSource, QUOTA_RESOURCE_TYPES, FailureUnitType, FailureLocationType, Priority, ORG_QUOTA_RESOURCE_TYPES, TransactionType, PlatformRole, BuildingStatus, NotificationType } from './chunk-5SW3ASZL.js';
+import { ApartmentRole, OrgRole, OrgType, BuildingType, BuildingRole, PricuvaRefMode, FundsSource, QUOTA_RESOURCE_TYPES, FailureUnitType, FailureLocationType, Priority, FailureStatus, ORG_QUOTA_RESOURCE_TYPES, PollType, TransactionType, PlatformRole, BuildingStatus, CommonStatus, ApprovalStatus, MaintenanceStatus, NotificationType } from './chunk-V243BJQL.js';
 import { BACKEND_ERROR_CODES } from './chunk-DKJVFB3Z.js';
 import { z } from 'zod';
 
@@ -321,9 +321,13 @@ function multipartBoolean() {
 }
 
 // src/schemas/entities/building.schema.ts
-var BUILDING_TYPES = ["RESIDENTIAL", "COMMERCIAL", "RESIDENTIAL_COMMERCIAL"];
+var BUILDING_TYPES = [
+  BuildingType.RESIDENTIAL,
+  BuildingType.COMMERCIAL,
+  BuildingType.RESIDENTIAL_COMMERCIAL
+];
 var buildingTypeSchema = z.enum(BUILDING_TYPES).describe(
-  "Usage of the building: `RESIDENTIAL` (homes only), `COMMERCIAL` (business only), or `RESIDENTIAL_COMMERCIAL` (mixed use)."
+  "Usage of the building: `residential` (homes only), `commercial` (business only), or `residential_commercial` (mixed use)."
 );
 var BUILDING_LIMITS = {
   NAME_MIN: 1,
@@ -603,8 +607,8 @@ var updateFailureReportSchema = refineLocation(
   z.object({
     title: z.string().min(FAILURE_REPORT_LIMITS.TITLE_MIN).max(FAILURE_REPORT_LIMITS.TITLE_MAX).optional().describe("Revised report title, 1\u2013100 chars."),
     description: z.string().min(1).max(FAILURE_REPORT_LIMITS.DESCRIPTION_MAX).optional().describe("Revised description, up to 2000 chars."),
-    status: z.enum(["pending", "inProgress", "resolved"]).optional().describe(
-      "Lifecycle status: `pending` (newly filed), `inProgress` (assigned work), `resolved` (closed out)."
+    status: z.enum([FailureStatus.PENDING, FailureStatus.IN_PROGRESS, FailureStatus.RESOLVED]).optional().describe(
+      "Lifecycle status: `pending` (newly filed), `in_progress` (assigned work), `resolved` (closed out)."
     ),
     priority: z.enum([Priority.NORMAL, Priority.URGENT]).optional().describe("Revised priority: `normal` or `urgent`."),
     locationType: z.enum([FailureLocationType.COMMON_AREA, FailureLocationType.OWN_UNIT]).optional().describe("Revised location classification: `common_area` or `own_unit`."),
@@ -622,14 +626,14 @@ var updateFailureReportSchema = refineLocation(
 var approveFailureReportSchema = z.object({
   approved: z.boolean().describe("True to approve the report for public visibility, false to reject.")
 });
-var garageRoleSchema = z.enum(["OWNER", "TENANT"]).describe("`OWNER` for the title-deed holder, `TENANT` for a resident renting from the owner.");
+var garageRoleSchema = z.enum([ApartmentRole.OWNER, ApartmentRole.TENANT]).describe("`owner` for the title-deed holder, `tenant` for a resident renting from the owner.");
 var garageUserSchema = z.looseObject({
   id: z.string(),
   name: z.string().describe("Display name of the garage member."),
   email: z.string().describe("Contact email of the garage member."),
   image: z.string().nullable().optional().describe("Absolute URL to the member\u2019s profile image; null when none is set."),
   roleType: garageRoleSchema.describe(
-    "Relationship of this user to the garage (`OWNER` or `TENANT`)."
+    "Relationship of this user to the garage (`owner` or `tenant`)."
   ),
   joinedAt: z.string().describe("ISO-8601 timestamp when the user was attached to the garage."),
   ownershipPercentage: z.number().nullable().optional().describe(
@@ -813,9 +817,9 @@ var assignOwnerSchema = z.object({
   ownerId: z.string().uuid(),
   ownershipPercentage: z.number().min(0).max(100).nullable().optional()
 }).meta({ id: "AssignOwner" });
-var POLL_TYPES = ["CONSENSUS", "COMMUNITY"];
+var POLL_TYPES = [PollType.CONSENSUS, PollType.COMMUNITY];
 var pollTypeSchema = z.enum(POLL_TYPES).describe(
-  "`COMMUNITY` polls pass by simple majority of votes cast; `CONSENSUS` polls require an ownership-weighted approval threshold."
+  "`community` polls pass by simple majority of votes cast; `consensus` polls require an ownership-weighted approval threshold."
 );
 var POLL_LIMITS = {
   QUESTION_MIN: 5,
@@ -855,10 +859,10 @@ var createPollSchema = z.object({
   fileIds: multipartArray(uuidSchema).optional().default([]).describe("UUIDs of previously-uploaded supporting documents (proposals, receipts, specs).")
 }).refine(
   (data) => {
-    if (data.pollType === "COMMUNITY") {
+    if (data.pollType === PollType.COMMUNITY) {
       return data.options.length >= POLL_LIMITS.COMMUNITY_OPTIONS_MIN && data.options.length <= POLL_LIMITS.COMMUNITY_OPTIONS_MAX;
     }
-    if (data.pollType === "CONSENSUS") {
+    if (data.pollType === PollType.CONSENSUS) {
       return data.options.length === POLL_LIMITS.CONSENSUS_OPTIONS;
     }
     return true;
@@ -869,7 +873,7 @@ var createPollSchema = z.object({
   }
 ).refine(
   (data) => {
-    if (data.pollType === "CONSENSUS") {
+    if (data.pollType === PollType.CONSENSUS) {
       return data.requiredConsensusPercentage !== void 0 && data.requiredConsensusPercentage >= POLL_LIMITS.CONSENSUS_PERCENTAGE_MIN && data.requiredConsensusPercentage <= POLL_LIMITS.CONSENSUS_PERCENTAGE_MAX;
     }
     return true;
@@ -901,14 +905,14 @@ var finalizePollSchema = z.object({
     "True to seal the poll and freeze its results; false is accepted as a no-op for legacy compatibility."
   )
 });
-var storageUnitRoleSchema = z.enum(["OWNER", "TENANT"]).describe("`OWNER` for the title-deed holder, `TENANT` for a resident renting from the owner.");
+var storageUnitRoleSchema = z.enum([ApartmentRole.OWNER, ApartmentRole.TENANT]).describe("`owner` for the title-deed holder, `tenant` for a resident renting from the owner.");
 var storageUnitUserSchema = z.looseObject({
   id: z.string(),
   name: z.string().describe("Display name of the storage-unit member."),
   email: z.string().describe("Contact email of the storage-unit member."),
   image: z.string().nullable().optional().describe("Absolute URL to the member\u2019s profile image; null when none is set."),
   roleType: storageUnitRoleSchema.describe(
-    "Relationship of this user to the storage unit (`OWNER` or `TENANT`)."
+    "Relationship of this user to the storage unit (`owner` or `tenant`)."
   ),
   joinedAt: z.string().describe("ISO-8601 timestamp when the user was attached to the storage unit."),
   ownershipPercentage: z.number().nullable().optional().describe(
@@ -1307,15 +1311,27 @@ var eventResponseSchema = z.looseObject({
   )
 });
 var paginatedEventsResponseSchema = paginatedResponseSchema(eventResponseSchema);
-var commonStatusOptions = ["active", "completed", "cancelled"];
-var approvalStatusOptions = ["pending", "approved", "rejected"];
-var maintenanceStatusOptions = [
-  "pending",
-  "in_progress",
-  "completed",
-  "cancelled"
+var commonStatusOptions = [
+  CommonStatus.ACTIVE,
+  CommonStatus.COMPLETED,
+  CommonStatus.CANCELLED
 ];
-var failureStatusOptions = ["pending", "inProgress", "resolved"];
+var approvalStatusOptions = [
+  ApprovalStatus.PENDING,
+  ApprovalStatus.APPROVED,
+  ApprovalStatus.REJECTED
+];
+var maintenanceStatusOptions = [
+  MaintenanceStatus.PENDING,
+  MaintenanceStatus.IN_PROGRESS,
+  MaintenanceStatus.COMPLETED,
+  MaintenanceStatus.CANCELLED
+];
+var failureStatusOptions = [
+  FailureStatus.PENDING,
+  FailureStatus.IN_PROGRESS,
+  FailureStatus.RESOLVED
+];
 var priorityOptions = ["normal", "urgent"];
 var CommonStatusSchema = z.enum(commonStatusOptions);
 var ApprovalStatusSchema = z.enum(approvalStatusOptions);
@@ -1385,7 +1401,7 @@ var failureReportResponseSchema = z.looseObject({
     "Reporter display name. Null when `isAnonymous` is true or the user has been deleted."
   ),
   status: FailureStatusSchema.describe(
-    "Lifecycle status: `pending` (newly filed), `inProgress` (assigned work), `resolved` (closed out)."
+    "Lifecycle status: `pending` (newly filed), `in_progress` (assigned work), `resolved` (closed out)."
   ),
   approved: z.boolean().describe("True when a representative has approved the report for public visibility."),
   isAnonymous: z.boolean().optional().default(false).describe("True when the reporter opted to hide their identity from other residents."),
@@ -1471,7 +1487,7 @@ var camtImportResponseSchema = z.looseObject({
 var failureReportReferenceSchema = z.looseObject({
   id: z.string().uuid(),
   title: z.string().describe("Failure report title for quick UI display."),
-  status: z.string().describe("Report lifecycle status (`pending`, `inProgress`, `resolved`)."),
+  status: z.string().describe("Report lifecycle status (`pending`, `in_progress`, `resolved`)."),
   createdAt: z.string().describe("ISO-8601 timestamp when the failure report was filed.")
 }).describe(
   "Lightweight failure-report reference embedded in maintenance-log responses (the report this work resolved)."
@@ -1867,5 +1883,5 @@ var pollVotersResponseSchema = z.looseObject({
 var paginatedPollsResponseSchema = paginatedResponseSchema(pollResponseSchema);
 
 export { ARCHIVE_TYPES, ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, baseEntitySchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, commentResponseSchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createEmailThreadRequestSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createOwnerSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgQuotaConfigSchema, orgQuotaEntrySchema, orgQuotaListSchema, ownerResponseSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, registerSchema, reorderFaqsSchema, replyEmailThreadRequestSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateBusinessPartnerSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-KIX7BRZF.js.map
-//# sourceMappingURL=chunk-KIX7BRZF.js.map
+//# sourceMappingURL=chunk-PV4Z3C6R.js.map
+//# sourceMappingURL=chunk-PV4Z3C6R.js.map

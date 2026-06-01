@@ -1,23 +1,31 @@
-export { B as BuildingType, P as PollType } from '../poll-type.enum-Cz_42Pj9.js';
-export { A as APPROVE_PERMISSIONS, f as BUILDING_ROLE_RANK, B as BuildingRole, j as ORG_ROLE_RANK, O as OrgRole, k as PLATFORM_ROLE_RANK, P as Permission, a as PlatformRole, c as SCOPED_DOMAINS, e as SCOPED_PERMISSIONS, b as ScopedAction, S as ScopedDomain, g as canAssignOrgRole, h as canAssignPlatformRole, i as canAssignRole, d as domainPermissions } from '../role.enum-B_7lBNq-.js';
-export { A as ApprovalStatus, C as CommonStatus, F as FailureStatus, a as FailureType, b as FileCategory, c as Frequency, M as MaintenanceStatus, d as MaintenanceType, P as Priority, T as TransactionCategory, e as TransactionType } from '../status.enum-D4pAcU1b.js';
+export { B as BuildingType, P as PollType } from '../poll-type.enum-CGV5tBqR.js';
+export { A as APPROVE_PERMISSIONS, f as BUILDING_ROLE_RANK, B as BuildingRole, j as ORG_ROLE_RANK, O as OrgRole, k as PLATFORM_ROLE_RANK, P as Permission, a as PlatformRole, c as SCOPED_DOMAINS, e as SCOPED_PERMISSIONS, b as ScopedAction, S as ScopedDomain, g as canAssignOrgRole, h as canAssignPlatformRole, i as canAssignRole, d as domainPermissions } from '../role.enum-gAHiHH2p.js';
+export { A as ApprovalStatus, C as CommonStatus, F as FailureStatus, a as FailureType, b as FileCategory, c as Frequency, M as MaintenanceStatus, d as MaintenanceType, P as Priority, T as TransactionCategory, e as TransactionType } from '../status.enum-BYlt7_Fs.js';
 
 declare const ApartmentRole: {
-    readonly OWNER: "OWNER";
-    readonly TENANT: "TENANT";
+    readonly OWNER: "owner";
+    readonly TENANT: "tenant";
 };
 type ApartmentRole = (typeof ApartmentRole)[keyof typeof ApartmentRole];
 
+declare const BuildingOtpExpiry: {
+    readonly ONE_HOUR: "1_hour";
+    readonly ONE_DAY: "1_day";
+    readonly SEVEN_DAYS: "7_days";
+    readonly NEVER: "never";
+};
+type BuildingOtpExpiry = (typeof BuildingOtpExpiry)[keyof typeof BuildingOtpExpiry];
+
 declare const BuildingStatus: {
-    readonly PENDING_APPROVAL: "PENDING_APPROVAL";
-    readonly ACTIVE: "ACTIVE";
-    readonly REJECTED: "REJECTED";
+    readonly PENDING_APPROVAL: "pending_approval";
+    readonly ACTIVE: "active";
+    readonly REJECTED: "rejected";
 };
 type BuildingStatus = (typeof BuildingStatus)[keyof typeof BuildingStatus];
 declare const OrgStatus: {
-    readonly PENDING_APPROVAL: "PENDING_APPROVAL";
-    readonly ACTIVE: "ACTIVE";
-    readonly REJECTED: "REJECTED";
+    readonly PENDING_APPROVAL: "pending_approval";
+    readonly ACTIVE: "active";
+    readonly REJECTED: "rejected";
 };
 type OrgStatus = (typeof OrgStatus)[keyof typeof OrgStatus];
 
@@ -61,10 +69,17 @@ declare const TransactionSource: {
 type TransactionSource = (typeof TransactionSource)[keyof typeof TransactionSource];
 
 declare const IdentityVerificationMethod: {
-    readonly PRINTED_SIGNATURE: "PRINTED_SIGNATURE";
-    readonly CERTILIA: "CERTILIA";
+    readonly PRINTED_SIGNATURE: "printed_signature";
+    readonly CERTILIA: "certilia";
 };
 type IdentityVerificationMethod = (typeof IdentityVerificationMethod)[keyof typeof IdentityVerificationMethod];
+
+declare const JoinRequestStatus: {
+    readonly PENDING: "pending";
+    readonly APPROVED: "approved";
+    readonly REJECTED: "rejected";
+};
+type JoinRequestStatus = (typeof JoinRequestStatus)[keyof typeof JoinRequestStatus];
 
 declare const MaintenanceLogFinancedBy: {
     readonly BUILDING_FUNDS: "building_funds";
@@ -162,8 +177,8 @@ declare const UNIMPLEMENTED_NOTIFICATION_TYPES: ReadonlySet<NotificationType>;
 declare const WASTE_SUBTYPE_NOTIFICATION_MAP: Record<string, NotificationType>;
 
 declare const OrgType: {
-    readonly MANAGEMENT_FIRM: "MANAGEMENT_FIRM";
-    readonly PLATFORM: "PLATFORM";
+    readonly MANAGEMENT_FIRM: "management_firm";
+    readonly PLATFORM: "platform";
 };
 type OrgType = (typeof OrgType)[keyof typeof OrgType];
 
@@ -175,9 +190,9 @@ declare const PollStatus: {
 type PollStatus = (typeof PollStatus)[keyof typeof PollStatus];
 
 declare const PollVoteStatus: {
-    readonly ACCEPTED: "ACCEPTED";
-    readonly PENDING_SIGNATURE_REVIEW: "PENDING_SIGNATURE_REVIEW";
-    readonly REJECTED: "REJECTED";
+    readonly ACCEPTED: "accepted";
+    readonly PENDING_SIGNATURE_REVIEW: "pending_signature_review";
+    readonly REJECTED: "rejected";
 };
 type PollVoteStatus = (typeof PollVoteStatus)[keyof typeof PollVoteStatus];
 
@@ -202,18 +217,18 @@ declare const PricuvaRefMode: {
 type PricuvaRefMode = (typeof PricuvaRefMode)[keyof typeof PricuvaRefMode];
 
 declare const QuotaResourceType: {
-    readonly COMMENT: "COMMENT";
-    readonly MAINTENANCE_REQUEST: "MAINTENANCE_REQUEST";
-    readonly INVITE: "INVITE";
-    readonly NOTIFICATION: "NOTIFICATION";
+    readonly COMMENT: "comment";
+    readonly MAINTENANCE_REQUEST: "maintenance_request";
+    readonly INVITE: "invite";
+    readonly NOTIFICATION: "notification";
 };
 type QuotaResourceType = (typeof QuotaResourceType)[keyof typeof QuotaResourceType];
 declare const QUOTA_RESOURCE_TYPES: readonly QuotaResourceType[];
 declare const QUOTA_DEFAULT_DAILY_LIMITS: Record<QuotaResourceType, number | null>;
 declare const OrgQuotaResourceType: {
-    readonly MEMBER_INVITE: "MEMBER_INVITE";
-    readonly BUILDING_CREATE: "BUILDING_CREATE";
-    readonly NOTIFICATION: "NOTIFICATION";
+    readonly MEMBER_INVITE: "member_invite";
+    readonly BUILDING_CREATE: "building_create";
+    readonly NOTIFICATION: "notification";
 };
 type OrgQuotaResourceType = (typeof OrgQuotaResourceType)[keyof typeof OrgQuotaResourceType];
 declare const ORG_QUOTA_RESOURCE_TYPES: readonly OrgQuotaResourceType[];
@@ -233,4 +248,4 @@ declare const UnitType: {
 };
 type UnitType = (typeof UnitType)[keyof typeof UnitType];
 
-export { ApartmentRole, BuildingStatus, DevicePlatform, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, OrgQuotaResourceType, OrgStatus, OrgType, PollStatus, PollVoteStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, TransactionSource, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, WASTE_SUBTYPE_NOTIFICATION_MAP };
+export { ApartmentRole, BuildingOtpExpiry, BuildingStatus, DevicePlatform, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, JoinRequestStatus, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, OrgQuotaResourceType, OrgStatus, OrgType, PollStatus, PollVoteStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, TransactionSource, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, WASTE_SUBTYPE_NOTIFICATION_MAP };
