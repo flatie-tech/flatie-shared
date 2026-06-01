@@ -1,10 +1,10 @@
 // ─── Building Roles ─────────────────────────────────────────────────
 
 export const BuildingRole = {
-  OWNER_REPRESENTATIVE: 'OWNER_REPRESENTATIVE',
-  DEPUTY_REPRESENTATIVE: 'DEPUTY_REPRESENTATIVE',
-  CO_OWNER: 'CO_OWNER',
-  RESIDENT: 'RESIDENT',
+  OWNER_REPRESENTATIVE: 'owner_representative',
+  DEPUTY_REPRESENTATIVE: 'deputy_representative',
+  CO_OWNER: 'co_owner',
+  RESIDENT: 'resident',
 } as const;
 
 export type BuildingRole = (typeof BuildingRole)[keyof typeof BuildingRole];
@@ -23,10 +23,10 @@ export function canAssignRole(assignerRole: BuildingRole, targetRole: BuildingRo
 // ─── Organization Roles ─────────────────────────────────────────────
 
 export const OrgRole = {
-  ORG_ADMIN: 'ORG_ADMIN',
-  SUPERVISOR: 'SUPERVISOR',
-  REFERENT: 'REFERENT',
-  OPERATIVE: 'OPERATIVE',
+  ORG_ADMIN: 'org_admin',
+  SUPERVISOR: 'supervisor',
+  REFERENT: 'referent',
+  OPERATIVE: 'operative',
 } as const;
 
 export type OrgRole = (typeof OrgRole)[keyof typeof OrgRole];
@@ -45,10 +45,10 @@ export function canAssignOrgRole(assignerRole: OrgRole, targetRole: OrgRole): bo
 // ─── Platform Roles ─────────────────────────────────────────────────
 
 export const PlatformRole = {
-  PLATFORM_ADMIN: 'PLATFORM_ADMIN',
-  PLATFORM_MODERATOR: 'PLATFORM_MODERATOR',
-  PLATFORM_SUPPORT: 'PLATFORM_SUPPORT',
-  PLATFORM_OPERATIVE: 'PLATFORM_OPERATIVE',
+  PLATFORM_ADMIN: 'platform_admin',
+  PLATFORM_MODERATOR: 'platform_moderator',
+  PLATFORM_SUPPORT: 'platform_support',
+  PLATFORM_OPERATIVE: 'platform_operative',
 } as const;
 
 export type PlatformRole = (typeof PlatformRole)[keyof typeof PlatformRole];

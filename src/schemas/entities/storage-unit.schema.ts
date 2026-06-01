@@ -1,8 +1,9 @@
 import { z } from 'zod';
+import { ApartmentRole } from '../../enums/apartment-role.enum';
 
 export const storageUnitRoleSchema = z
-  .enum(['OWNER', 'TENANT'])
-  .describe('`OWNER` for the title-deed holder, `TENANT` for a resident renting from the owner.');
+  .enum([ApartmentRole.OWNER, ApartmentRole.TENANT])
+  .describe('`owner` for the title-deed holder, `tenant` for a resident renting from the owner.');
 export type StorageUnitRole = z.infer<typeof storageUnitRoleSchema>;
 
 export const storageUnitUserSchema = z.looseObject({
@@ -15,7 +16,7 @@ export const storageUnitUserSchema = z.looseObject({
     .optional()
     .describe('Absolute URL to the member’s profile image; null when none is set.'),
   roleType: storageUnitRoleSchema.describe(
-    'Relationship of this user to the storage unit (`OWNER` or `TENANT`).',
+    'Relationship of this user to the storage unit (`owner` or `tenant`).',
   ),
   joinedAt: z
     .string()

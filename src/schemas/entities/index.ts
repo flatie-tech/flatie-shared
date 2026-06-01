@@ -206,7 +206,6 @@ export {
   updatePollSchema,
   votePollSchema,
 } from './poll.schema';
-
 // Storage unit schemas
 export type { StorageUnit, StorageUnitRole, StorageUnitUser } from './storage-unit.schema';
 export {

@@ -1,6 +1,6 @@
 export const PollType = {
-  CONSENSUS: 'CONSENSUS',
-  COMMUNITY: 'COMMUNITY',
+  CONSENSUS: 'consensus',
+  COMMUNITY: 'community',
 } as const;
 
 export type PollType = (typeof PollType)[keyof typeof PollType];

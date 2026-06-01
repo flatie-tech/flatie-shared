@@ -1,6 +1,6 @@
 export const IdentityVerificationMethod = {
-  PRINTED_SIGNATURE: 'PRINTED_SIGNATURE',
-  CERTILIA: 'CERTILIA',
+  PRINTED_SIGNATURE: 'printed_signature',
+  CERTILIA: 'certilia',
 } as const;
 
 export type IdentityVerificationMethod =

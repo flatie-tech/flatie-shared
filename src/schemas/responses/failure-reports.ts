@@ -60,7 +60,7 @@ export const failureReportResponseSchema = z.looseObject({
       'Reporter display name. Null when `isAnonymous` is true or the user has been deleted.',
     ),
   status: FailureStatusSchema.describe(
-    'Lifecycle status: `pending` (newly filed), `inProgress` (assigned work), `resolved` (closed out).',
+    'Lifecycle status: `pending` (newly filed), `in_progress` (assigned work), `resolved` (closed out).',
   ),
   approved: z
     .boolean()

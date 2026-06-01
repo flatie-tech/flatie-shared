@@ -1,11 +1,12 @@
 import { z } from 'zod';
+import { PollType } from '../../enums/poll-type.enum';
 import { uuidSchema } from '../base.schema';
 import { multipartArray } from '../multipart.schema';
 
 /**
  * Poll type options
  */
-export const POLL_TYPES = ['CONSENSUS', 'COMMUNITY'] as const;
+export const POLL_TYPES = [PollType.CONSENSUS, PollType.COMMUNITY] as const;
 export type PollTypeOption = (typeof POLL_TYPES)[number];
 
 /**
@@ -14,7 +15,7 @@ export type PollTypeOption = (typeof POLL_TYPES)[number];
 export const pollTypeSchema = z
   .enum(POLL_TYPES)
   .describe(
-    '`COMMUNITY` polls pass by simple majority of votes cast; `CONSENSUS` polls require an ownership-weighted approval threshold.',
+    '`community` polls pass by simple majority of votes cast; `consensus` polls require an ownership-weighted approval threshold.',
   );
 
 /**
@@ -95,13 +96,13 @@ export const createPollSchema = z
   })
   .refine(
     (data) => {
-      if (data.pollType === 'COMMUNITY') {
+      if (data.pollType === PollType.COMMUNITY) {
         return (
           data.options.length >= POLL_LIMITS.COMMUNITY_OPTIONS_MIN &&
           data.options.length <= POLL_LIMITS.COMMUNITY_OPTIONS_MAX
         );
       }
-      if (data.pollType === 'CONSENSUS') {
+      if (data.pollType === PollType.CONSENSUS) {
         return data.options.length === POLL_LIMITS.CONSENSUS_OPTIONS;
       }
       return true;
@@ -113,7 +114,7 @@ export const createPollSchema = z
   )
   .refine(
     (data) => {
-      if (data.pollType === 'CONSENSUS') {
+      if (data.pollType === PollType.CONSENSUS) {
         return (
           data.requiredConsensusPercentage !== undefined &&
           data.requiredConsensusPercentage >= POLL_LIMITS.CONSENSUS_PERCENTAGE_MIN &&

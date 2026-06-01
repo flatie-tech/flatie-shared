@@ -7,7 +7,7 @@ const failureReportReferenceSchema = z
   .looseObject({
     id: z.string().uuid(),
     title: z.string().describe('Failure report title for quick UI display.'),
-    status: z.string().describe('Report lifecycle status (`pending`, `inProgress`, `resolved`).'),
+    status: z.string().describe('Report lifecycle status (`pending`, `in_progress`, `resolved`).'),
     createdAt: z.string().describe('ISO-8601 timestamp when the failure report was filed.'),
   })
   .describe(

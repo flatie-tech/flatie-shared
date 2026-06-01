@@ -1,29 +1,35 @@
 import { z } from 'zod';
+import {
+  ApprovalStatus,
+  CommonStatus,
+  FailureStatus,
+  MaintenanceStatus,
+} from '../enums/status.enum';
 
-/**
- * Common status options
- */
-export const commonStatusOptions = ['active', 'completed', 'cancelled'] as const;
-
-/**
- * Approval status options
- */
-export const approvalStatusOptions = ['pending', 'approved', 'rejected'] as const;
-
-/**
- * Maintenance status options
- */
-export const maintenanceStatusOptions = [
-  'pending',
-  'in_progress',
-  'completed',
-  'cancelled',
+export const commonStatusOptions = [
+  CommonStatus.ACTIVE,
+  CommonStatus.COMPLETED,
+  CommonStatus.CANCELLED,
 ] as const;
 
-/**
- * Failure status options
- */
-export const failureStatusOptions = ['pending', 'inProgress', 'resolved'] as const;
+export const approvalStatusOptions = [
+  ApprovalStatus.PENDING,
+  ApprovalStatus.APPROVED,
+  ApprovalStatus.REJECTED,
+] as const;
+
+export const maintenanceStatusOptions = [
+  MaintenanceStatus.PENDING,
+  MaintenanceStatus.IN_PROGRESS,
+  MaintenanceStatus.COMPLETED,
+  MaintenanceStatus.CANCELLED,
+] as const;
+
+export const failureStatusOptions = [
+  FailureStatus.PENDING,
+  FailureStatus.IN_PROGRESS,
+  FailureStatus.RESOLVED,
+] as const;
 
 /**
  * Priority options

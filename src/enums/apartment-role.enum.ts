@@ -1,6 +1,6 @@
 export const ApartmentRole = {
-  OWNER: 'OWNER',
-  TENANT: 'TENANT',
+  OWNER: 'owner',
+  TENANT: 'tenant',
 } as const;
 
 export type ApartmentRole = (typeof ApartmentRole)[keyof typeof ApartmentRole];

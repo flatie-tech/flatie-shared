@@ -25,7 +25,7 @@ export type MaintenanceStatus = (typeof MaintenanceStatus)[keyof typeof Maintena
 
 export const FailureStatus = {
   PENDING: 'pending',
-  IN_PROGRESS: 'inProgress',
+  IN_PROGRESS: 'in_progress',
   RESOLVED: 'resolved',
 } as const;
 

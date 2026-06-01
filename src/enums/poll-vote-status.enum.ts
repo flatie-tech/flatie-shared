@@ -1,7 +1,7 @@
 export const PollVoteStatus = {
-  ACCEPTED: 'ACCEPTED',
-  PENDING_SIGNATURE_REVIEW: 'PENDING_SIGNATURE_REVIEW',
-  REJECTED: 'REJECTED',
+  ACCEPTED: 'accepted',
+  PENDING_SIGNATURE_REVIEW: 'pending_signature_review',
+  REJECTED: 'rejected',
 } as const;
 
 export type PollVoteStatus = (typeof PollVoteStatus)[keyof typeof PollVoteStatus];

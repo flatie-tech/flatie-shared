@@ -1,10 +1,10 @@
 // ─── Building-scoped quota resources ───────────────────────────────
 
 export const QuotaResourceType = {
-  COMMENT: 'COMMENT',
-  MAINTENANCE_REQUEST: 'MAINTENANCE_REQUEST',
-  INVITE: 'INVITE',
-  NOTIFICATION: 'NOTIFICATION',
+  COMMENT: 'comment',
+  MAINTENANCE_REQUEST: 'maintenance_request',
+  INVITE: 'invite',
+  NOTIFICATION: 'notification',
 } as const;
 
 export type QuotaResourceType = (typeof QuotaResourceType)[keyof typeof QuotaResourceType];
@@ -27,9 +27,9 @@ export const QUOTA_DEFAULT_DAILY_LIMITS: Record<QuotaResourceType, number | null
 // guards members/buildings bulk-actions and platform-ish blast radius.
 
 export const OrgQuotaResourceType = {
-  MEMBER_INVITE: 'MEMBER_INVITE',
-  BUILDING_CREATE: 'BUILDING_CREATE',
-  NOTIFICATION: 'NOTIFICATION',
+  MEMBER_INVITE: 'member_invite',
+  BUILDING_CREATE: 'building_create',
+  NOTIFICATION: 'notification',
 } as const;
 
 export type OrgQuotaResourceType = (typeof OrgQuotaResourceType)[keyof typeof OrgQuotaResourceType];

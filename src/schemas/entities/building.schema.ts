@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { BuildingType } from '../../enums/building-type.enum';
 import { FundsSource } from '../../enums/funds-source.enum';
 import { PricuvaRefMode } from '../../enums/pricuva-ref-mode.enum';
 import { BuildingRole } from '../../enums/role.enum';
@@ -7,11 +8,13 @@ import { uuidSchema } from '../base.schema';
 import { multipartBoolean } from '../multipart.schema';
 
 /**
- * Building type options — uppercase to match the backend pgEnum.
- * Frontend callers that use lowercase internally (form state)
- * must `toUpperCase()` before submitting.
+ * Building type options — lowercase_snake_case to match the backend pgEnum.
  */
-export const BUILDING_TYPES = ['RESIDENTIAL', 'COMMERCIAL', 'RESIDENTIAL_COMMERCIAL'] as const;
+export const BUILDING_TYPES = [
+  BuildingType.RESIDENTIAL,
+  BuildingType.COMMERCIAL,
+  BuildingType.RESIDENTIAL_COMMERCIAL,
+] as const;
 export type BuildingTypeOption = (typeof BUILDING_TYPES)[number];
 
 /**
@@ -20,7 +23,7 @@ export type BuildingTypeOption = (typeof BUILDING_TYPES)[number];
 export const buildingTypeSchema = z
   .enum(BUILDING_TYPES)
   .describe(
-    'Usage of the building: `RESIDENTIAL` (homes only), `COMMERCIAL` (business only), or `RESIDENTIAL_COMMERCIAL` (mixed use).',
+    'Usage of the building: `residential` (homes only), `commercial` (business only), or `residential_commercial` (mixed use).',
   );
 
 /**

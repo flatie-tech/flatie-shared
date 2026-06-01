@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { FailureLocationType, FailureUnitType } from '../../enums/failure-location.enum';
-import { Priority } from '../../enums/status.enum';
+import { FailureStatus, Priority } from '../../enums/status.enum';
 import { uuidSchema } from '../base.schema';
 import { multipartArray, multipartBoolean } from '../multipart.schema';
 
@@ -152,10 +152,10 @@ export const updateFailureReportSchema = refineLocation(
       .optional()
       .describe('Revised description, up to 2000 chars.'),
     status: z
-      .enum(['pending', 'inProgress', 'resolved'])
+      .enum([FailureStatus.PENDING, FailureStatus.IN_PROGRESS, FailureStatus.RESOLVED])
       .optional()
       .describe(
-        'Lifecycle status: `pending` (newly filed), `inProgress` (assigned work), `resolved` (closed out).',
+        'Lifecycle status: `pending` (newly filed), `in_progress` (assigned work), `resolved` (closed out).',
       ),
     priority: z
       .enum([Priority.NORMAL, Priority.URGENT])
