@@ -1,6 +1,6 @@
 'use strict';
 
-var chunkN4VU2M34_cjs = require('./chunk-N4VU2M34.cjs');
+var chunkOY3KKXHH_cjs = require('./chunk-OY3KKXHH.cjs');
 var chunkAU46DIAR_cjs = require('./chunk-AU46DIAR.cjs');
 var chunkIGBERUWL_cjs = require('./chunk-IGBERUWL.cjs');
 
@@ -128,25 +128,42 @@ var parseApiError = (error) => {
 };
 
 // src/utils/permission-evaluator.ts
-function canDo(ctx, permission) {
-  return ctx.permissions.includes(permission);
+function canDo(subject, permission) {
+  return subject.permissions.includes(permission);
 }
-function canDoOnResource(ctx, domain, action, resourceOwnerId) {
-  const scopedPerms = chunkN4VU2M34_cjs.SCOPED_PERMISSIONS[domain]?.[action];
+function canDoOnResource(subject, domain, action, resourceOwnerId) {
+  const scopedPerms = chunkOY3KKXHH_cjs.SCOPED_PERMISSIONS[domain]?.[action];
   if (!scopedPerms) return false;
-  if (ctx.permissions.includes(scopedPerms.any)) return true;
-  return ctx.permissions.includes(scopedPerms.own) && resourceOwnerId === ctx.userId;
+  if (subject.permissions.includes(scopedPerms.any)) return true;
+  return subject.permissions.includes(scopedPerms.own) && resourceOwnerId === subject.userId;
 }
-function computeActionFlags(ctx, domain, resourceOwnerId) {
-  const approvePermission = chunkN4VU2M34_cjs.APPROVE_PERMISSIONS[domain];
+function computeActionFlags(subject, domain, resourceOwnerId) {
+  const approvePermission = chunkOY3KKXHH_cjs.APPROVE_PERMISSIONS[domain];
   return {
-    canEdit: canDoOnResource(ctx, domain, "update", resourceOwnerId),
-    canDelete: canDoOnResource(ctx, domain, "delete", resourceOwnerId),
-    canApprove: approvePermission ? canDo(ctx, approvePermission) : false
+    canEdit: canDoOnResource(subject, domain, "update", resourceOwnerId),
+    canDelete: canDoOnResource(subject, domain, "delete", resourceOwnerId),
+    canApprove: approvePermission ? canDo(subject, approvePermission) : false
   };
 }
-function getContextUserId(ctx) {
-  return ctx.userId;
+function getContextUserId(subject) {
+  return subject.userId;
+}
+
+// src/utils/permission-checker.ts
+var EMPTY_ACTION_FLAGS = {
+  canEdit: false,
+  canDelete: false,
+  canApprove: false
+};
+function createPermissionChecker(subject) {
+  const perms = subject?.permissions ?? [];
+  return {
+    can: (permission) => perms.includes(permission),
+    canAny: (permissions) => permissions.some((p) => perms.includes(p)),
+    canAll: (permissions) => permissions.every((p) => perms.includes(p)),
+    canOnResource: (domain, action, resourceOwnerId) => subject ? canDoOnResource(subject, domain, action, resourceOwnerId ?? "") : false,
+    actionFlags: (domain, resourceOwnerId) => subject ? computeActionFlags(subject, domain, resourceOwnerId ?? "") : EMPTY_ACTION_FLAGS
+  };
 }
 
 // src/utils/permissions.ts
@@ -162,52 +179,52 @@ function hasAllPermissions(userPermissions, permissions) {
 
 // src/utils/role-helpers.ts
 var MANAGERIAL_BUILDING_ROLES = [
-  chunkN4VU2M34_cjs.BuildingRole.OWNER_REPRESENTATIVE,
-  chunkN4VU2M34_cjs.BuildingRole.DEPUTY_REPRESENTATIVE
+  chunkOY3KKXHH_cjs.BuildingRole.OWNER_REPRESENTATIVE,
+  chunkOY3KKXHH_cjs.BuildingRole.DEPUTY_REPRESENTATIVE
 ];
 function isManagerialRole(role) {
   return MANAGERIAL_BUILDING_ROLES.includes(role);
 }
 var ROLE_TRANSLATION_KEYS = {
   // Building roles
-  [chunkN4VU2M34_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
-  [chunkN4VU2M34_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
-  [chunkN4VU2M34_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER",
-  [chunkN4VU2M34_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT",
+  [chunkOY3KKXHH_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
+  [chunkOY3KKXHH_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
+  [chunkOY3KKXHH_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER",
+  [chunkOY3KKXHH_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT",
   // Org roles
-  [chunkN4VU2M34_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
-  [chunkN4VU2M34_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
-  [chunkN4VU2M34_cjs.OrgRole.REFERENT]: "roles.REFERENT",
-  [chunkN4VU2M34_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE",
+  [chunkOY3KKXHH_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
+  [chunkOY3KKXHH_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
+  [chunkOY3KKXHH_cjs.OrgRole.REFERENT]: "roles.REFERENT",
+  [chunkOY3KKXHH_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE",
   // Platform roles
-  [chunkN4VU2M34_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
-  [chunkN4VU2M34_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
-  [chunkN4VU2M34_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
-  [chunkN4VU2M34_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
+  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
+  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
+  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
+  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
 };
 var ROLE_DESCRIPTION_KEYS = {
-  [chunkN4VU2M34_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
-  [chunkN4VU2M34_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
-  [chunkN4VU2M34_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
-  [chunkN4VU2M34_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
-  [chunkN4VU2M34_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
-  [chunkN4VU2M34_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
-  [chunkN4VU2M34_cjs.OrgRole.REFERENT]: "roles.REFERENT_DESC",
-  [chunkN4VU2M34_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
-  [chunkN4VU2M34_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
-  [chunkN4VU2M34_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
-  [chunkN4VU2M34_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
-  [chunkN4VU2M34_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
+  [chunkOY3KKXHH_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
+  [chunkOY3KKXHH_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
+  [chunkOY3KKXHH_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
+  [chunkOY3KKXHH_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
+  [chunkOY3KKXHH_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
+  [chunkOY3KKXHH_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
+  [chunkOY3KKXHH_cjs.OrgRole.REFERENT]: "roles.REFERENT_DESC",
+  [chunkOY3KKXHH_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
+  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
+  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
+  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
+  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
 };
 
 // src/utils/status-variants.ts
 function failureStatusVariant(status) {
   switch (status) {
-    case chunkN4VU2M34_cjs.FailureStatus.PENDING:
+    case chunkOY3KKXHH_cjs.FailureStatus.PENDING:
       return "info";
-    case chunkN4VU2M34_cjs.FailureStatus.IN_PROGRESS:
+    case chunkOY3KKXHH_cjs.FailureStatus.IN_PROGRESS:
       return "warning";
-    case chunkN4VU2M34_cjs.FailureStatus.RESOLVED:
+    case chunkOY3KKXHH_cjs.FailureStatus.RESOLVED:
       return "success";
     default:
       return "neutral";
@@ -215,9 +232,9 @@ function failureStatusVariant(status) {
 }
 function priorityVariant(priority) {
   switch (priority) {
-    case chunkN4VU2M34_cjs.Priority.URGENT:
+    case chunkOY3KKXHH_cjs.Priority.URGENT:
       return "danger";
-    case chunkN4VU2M34_cjs.Priority.NORMAL:
+    case chunkOY3KKXHH_cjs.Priority.NORMAL:
       return "neutral";
     default:
       return "neutral";
@@ -288,6 +305,7 @@ exports.calculatePaginationMeta = calculatePaginationMeta;
 exports.canDo = canDo;
 exports.canDoOnResource = canDoOnResource;
 exports.computeActionFlags = computeActionFlags;
+exports.createPermissionChecker = createPermissionChecker;
 exports.debounce = debounce;
 exports.extractPaginatedItems = extractPaginatedItems;
 exports.failureStatusVariant = failureStatusVariant;
@@ -307,5 +325,5 @@ exports.normalizePaginatedResponse = normalizePaginatedResponse;
 exports.parseApiError = parseApiError;
 exports.parseData = parseData;
 exports.priorityVariant = priorityVariant;
-//# sourceMappingURL=chunk-NHIEME33.cjs.map
-//# sourceMappingURL=chunk-NHIEME33.cjs.map
+//# sourceMappingURL=chunk-GWWGZ7XK.cjs.map
+//# sourceMappingURL=chunk-GWWGZ7XK.cjs.map

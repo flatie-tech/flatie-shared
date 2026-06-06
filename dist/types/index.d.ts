@@ -1,7 +1,7 @@
 import { B as BuildingType, P as PollType } from '../poll-type.enum-CGV5tBqR.js';
-import { B as BuildingRole, P as Permission } from '../role.enum-gAHiHH2p.js';
+import { B as BuildingRole, P as Permission, O as OrgRole, b as PlatformRole } from '../role.enum-BTOXn9M9.js';
 import { F as FailureStatus, e as TransactionType, T as TransactionCategory, C as CommonStatus } from '../status.enum-BYlt7_Fs.js';
-export { B as BuildingContextFromOrg, d as BuildingContextFromRole, e as BuildingPermissionContext, D as DateRangeParams, P as PaginatedResponse, b as PaginationParams, a as PermissionContext, c as createPaginatedResponse } from '../permission-context-_atDMtsq.js';
+export { D as DateRangeParams, P as PaginatedResponse, a as PaginationParams, c as createPaginatedResponse } from '../pagination.types-CKR9lS7u.js';
 
 /**
  * Base entity with common fields for all database entities
@@ -309,6 +309,51 @@ interface CreateNoticeRequest {
     content: string;
 }
 
+/** Building access granted via organization membership. */
+interface BuildingContextFromOrg {
+    kind: 'building';
+    userId: string;
+    buildingId: string;
+    permissions: Permission[];
+    source: 'organization';
+    orgId: string;
+    orgRole: OrgRole;
+    buildingRole?: undefined;
+    buildingSurfacePercentage?: undefined;
+}
+/** Building access granted via direct building role assignment. */
+interface BuildingContextFromRole {
+    kind: 'building';
+    userId: string;
+    buildingId: string;
+    permissions: Permission[];
+    source: 'building_role';
+    buildingRole: BuildingRole;
+    buildingSurfacePercentage?: string;
+    orgId?: undefined;
+    orgRole?: undefined;
+}
+type BuildingPermissionContext = BuildingContextFromOrg | BuildingContextFromRole;
+/**
+ * Discriminated union representing the caller's permission context.
+ *
+ * - `platform` — platform-scoped role (e.g. PLATFORM_ADMIN)
+ * - `organization` — org-scoped role
+ * - `building` — building-scoped, either via org membership or direct role
+ */
+type PermissionContext = {
+    kind: 'platform';
+    userId: string;
+    platformRole: PlatformRole;
+    permissions: Permission[];
+} | {
+    kind: 'organization';
+    userId: string;
+    orgId: string;
+    orgRole: OrgRole;
+    permissions: Permission[];
+} | BuildingPermissionContext;
+
 /** Scope for permission resolution. */
 type PermissionScope = 'building' | 'organization' | 'platform';
 /** Unified response from GET /users/me/permissions. */
@@ -426,4 +471,4 @@ interface UserBuildingRole {
     permissions: string[];
 }
 
-export type { BaseEntity, Building, BuildingEntity, BuildingFund, BuildingMember, BuildingOTPResponse, BuildingUser, BuildingUserEntity, BuildingWithRole, CreateEventRequest, CreateFailureReportRequest, CreateMaintenanceLogRequest, CreateNoticeRequest, CreatePollRequest, CreateRecurringTemplateRequest, CreateTransactionRequest, Event, EventColor, EventType, EventWithCreator, FailureReport, FailureReportWithCreator, FinancialGraphData, FinancialSummary, MaintenanceFinancedBy, MaintenanceLog, MaintenanceLogWithCreator, Notice, NoticeWithCreator, PermissionFields, PermissionScope, PermissionsResponse, Poll, PollOptionResult, PollVote, PollWithResults, RecurringTemplate, Session, Transaction, User, UserBuildingRole, UserCreatedEntity, UserWithBuildings, VoteRequest };
+export type { BaseEntity, Building, BuildingContextFromOrg, BuildingContextFromRole, BuildingEntity, BuildingFund, BuildingMember, BuildingOTPResponse, BuildingPermissionContext, BuildingUser, BuildingUserEntity, BuildingWithRole, CreateEventRequest, CreateFailureReportRequest, CreateMaintenanceLogRequest, CreateNoticeRequest, CreatePollRequest, CreateRecurringTemplateRequest, CreateTransactionRequest, Event, EventColor, EventType, EventWithCreator, FailureReport, FailureReportWithCreator, FinancialGraphData, FinancialSummary, MaintenanceFinancedBy, MaintenanceLog, MaintenanceLogWithCreator, Notice, NoticeWithCreator, PermissionContext, PermissionFields, PermissionScope, PermissionsResponse, Poll, PollOptionResult, PollVote, PollWithResults, RecurringTemplate, Session, Transaction, User, UserBuildingRole, UserCreatedEntity, UserWithBuildings, VoteRequest };

@@ -22,15 +22,18 @@ export {
 export { ParseError, parseData } from './parse';
 // Error-shape parser — extract domain code + message from caught HTTP errors
 export { type ParsedApiError, parseApiError } from './parse-error';
+// Unified permission checker (isomorphic can() surface)
+export type { PermissionChecker } from './permission-checker';
+export { createPermissionChecker } from './permission-checker';
 // Permission evaluator (pure, cross-package)
-export type { ActionFlags } from './permission-evaluator';
+export type { ActionFlags, PermissionSubject } from './permission-evaluator';
 export {
   canDo,
   canDoOnResource,
   computeActionFlags,
   getContextUserId,
 } from './permission-evaluator';
-// Permission utilities
+// Permission utilities (deprecated — prefer createPermissionChecker)
 export { hasAllPermissions, hasAnyPermission, hasPermission } from './permissions';
 // Role helpers
 export {

@@ -1,21 +1,26 @@
 import type { Permission } from '../enums/permission.enum';
 
 /**
- * Check if a user has a specific permission.
+ * @deprecated Use `createPermissionChecker(subject).can(permission)` from
+ * `./permission-checker`. These raw `string[]` helpers predate the unified
+ * `PermissionChecker` and are kept only so existing call-sites keep compiling
+ * during migration; they will be removed in a future minor.
  */
 export function hasPermission(userPermissions: string[], permission: Permission): boolean {
   return userPermissions.includes(permission);
 }
 
 /**
- * Check if a user has any of the specified permissions.
+ * @deprecated Use `createPermissionChecker(subject).canAny(permissions)` from
+ * `./permission-checker`.
  */
 export function hasAnyPermission(userPermissions: string[], permissions: Permission[]): boolean {
   return permissions.some((p) => userPermissions.includes(p));
 }
 
 /**
- * Check if a user has all of the specified permissions.
+ * @deprecated Use `createPermissionChecker(subject).canAll(permissions)` from
+ * `./permission-checker`.
  */
 export function hasAllPermissions(userPermissions: string[], permissions: Permission[]): boolean {
   return permissions.every((p) => userPermissions.includes(p));

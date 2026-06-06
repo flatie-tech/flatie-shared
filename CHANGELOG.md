@@ -1,5 +1,25 @@
 # @flatie/shared
 
+## 0.40.0
+
+### Minor Changes
+
+- Add the unified `createPermissionChecker(subject)` primitive — an isomorphic
+  `can / canAny / canAll / canOnResource / actionFlags` surface (Clerk-`has()`
+  analogue) that backs the backend guards and both client hooks over a minimal
+  `PermissionSubject` (`{ userId, permissions }`). The evaluator functions
+  (`canDo`, `canDoOnResource`, `computeActionFlags`) now accept `PermissionSubject`
+  instead of the full `PermissionContext`; `PermissionContext` still satisfies it,
+  so existing backend call-sites are unaffected (parameter widening, non-breaking).
+
+  The raw `string[]` helpers in `utils/permissions.ts`
+  (`hasPermission`/`hasAnyPermission`/`hasAllPermissions`) are now `@deprecated` in
+  favour of the checker — kept in place for one minor cycle.
+
+  New permission strings (additive): `document:set_private`, `chat:create_group`,
+  `poll:export_signers` (granted to representatives, inherited by ORG_ADMIN /
+  SUPERVISOR) and `platform:view_archive` (PLATFORM_ADMIN only).
+
 ## 0.35.0
 
 ### Minor Changes

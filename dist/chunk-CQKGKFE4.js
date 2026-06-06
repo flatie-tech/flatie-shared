@@ -1,4 +1,4 @@
-import { domainPermissions, BuildingRole, OrgRole, PlatformRole, Permission } from './chunk-V243BJQL.js';
+import { domainPermissions, BuildingRole, OrgRole, PlatformRole, Permission } from './chunk-ANLWV62L.js';
 
 // src/constants/defaults.ts
 var DEFAULT_PAGINATION_LIMIT = 10;
@@ -351,6 +351,9 @@ var REPRESENTATIVE_PERMISSIONS = [
   "poll:approve",
   "poll:finalize",
   "poll:delete_after_vote",
+  "poll:export_signers",
+  "document:set_private",
+  "chat:create_group",
   "building:create",
   "building:update",
   "building:delete",
@@ -441,6 +444,7 @@ var PLATFORM_ROLE_PERMISSIONS = {
     "platform:manage_operatives",
     "platform:manage_subscriptions",
     "platform:purge",
+    "platform:view_archive",
     "system:delete_user",
     "system:create_organization"
   ],
@@ -465,5 +469,5 @@ var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[OrgRole.ORG_ADMIN];
 var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_ADMIN];
 
 export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminBuildingKeys, adminKeys, apartmentKeys, blogKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };
-//# sourceMappingURL=chunk-R3Q3JRXJ.js.map
-//# sourceMappingURL=chunk-R3Q3JRXJ.js.map
+//# sourceMappingURL=chunk-CQKGKFE4.js.map
+//# sourceMappingURL=chunk-CQKGKFE4.js.map
