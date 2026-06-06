@@ -49,6 +49,7 @@ declare const Permission: {
     readonly POLL_VOTE: "poll:vote";
     readonly POLL_FINALIZE: "poll:finalize";
     readonly POLL_DELETE_AFTER_VOTE: "poll:delete_after_vote";
+    readonly POLL_EXPORT_SIGNERS: "poll:export_signers";
     readonly FAILURE_REPORT_CREATE: "failure_report:create";
     readonly FAILURE_REPORT_READ: "failure_report:read";
     readonly FAILURE_REPORT_UPDATE_OWN: "failure_report:update:own";
@@ -72,6 +73,8 @@ declare const Permission: {
     readonly DOCUMENT_UPDATE_ANY: "document:update:any";
     readonly DOCUMENT_DELETE_OWN: "document:delete:own";
     readonly DOCUMENT_DELETE_ANY: "document:delete:any";
+    readonly DOCUMENT_SET_PRIVATE: "document:set_private";
+    readonly CHAT_CREATE_GROUP: "chat:create_group";
     readonly APARTMENT_CREATE: "apartment:create";
     readonly APARTMENT_READ: "apartment:read";
     readonly APARTMENT_UPDATE: "apartment:update";
@@ -111,6 +114,7 @@ declare const Permission: {
     readonly PLATFORM_MANAGE_OPERATIVES: "platform:manage_operatives";
     readonly PLATFORM_MANAGE_SUBSCRIPTIONS: "platform:manage_subscriptions";
     readonly PLATFORM_PURGE: "platform:purge";
+    readonly PLATFORM_VIEW_ARCHIVE: "platform:view_archive";
 };
 type Permission = (typeof Permission)[keyof typeof Permission];
 declare const SCOPED_PERMISSIONS: Record<"notice" | "poll" | "event" | "document" | "failure_report" | "maintenance_log", Record<ScopedAction, {
@@ -148,4 +152,4 @@ type PlatformRole = (typeof PlatformRole)[keyof typeof PlatformRole];
 declare const PLATFORM_ROLE_RANK: Record<PlatformRole, number>;
 declare function canAssignPlatformRole(assignerRole: PlatformRole, targetRole: PlatformRole): boolean;
 
-export { APPROVE_PERMISSIONS as A, BuildingRole as B, OrgRole as O, Permission as P, type ScopedDomain as S, PlatformRole as a, type ScopedAction as b, SCOPED_DOMAINS as c, domainPermissions as d, SCOPED_PERMISSIONS as e, BUILDING_ROLE_RANK as f, canAssignOrgRole as g, canAssignPlatformRole as h, canAssignRole as i, ORG_ROLE_RANK as j, PLATFORM_ROLE_RANK as k };
+export { APPROVE_PERMISSIONS as A, BuildingRole as B, OrgRole as O, Permission as P, type ScopedDomain as S, type ScopedAction as a, PlatformRole as b, SCOPED_DOMAINS as c, domainPermissions as d, SCOPED_PERMISSIONS as e, BUILDING_ROLE_RANK as f, canAssignOrgRole as g, canAssignPlatformRole as h, canAssignRole as i, ORG_ROLE_RANK as j, PLATFORM_ROLE_RANK as k };

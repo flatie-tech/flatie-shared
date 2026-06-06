@@ -1,7 +1,7 @@
-import { P as PaginatedResponse, a as PermissionContext } from '../permission-context-_atDMtsq.js';
+import { P as PaginatedResponse } from '../pagination.types-CKR9lS7u.js';
 import { z } from 'zod';
 import { BackendErrorCode } from '../errors/index.js';
-import { P as Permission, S as ScopedDomain, b as ScopedAction, B as BuildingRole, O as OrgRole, a as PlatformRole } from '../role.enum-gAHiHH2p.js';
+import { P as Permission, S as ScopedDomain, a as ScopedAction, B as BuildingRole, O as OrgRole, b as PlatformRole } from '../role.enum-BTOXn9M9.js';
 import { F as FailureStatus, P as Priority } from '../status.enum-BYlt7_Fs.js';
 
 /**
@@ -154,13 +154,25 @@ interface ParsedApiError {
  */
 declare const parseApiError: (error: unknown) => ParsedApiError;
 
+/**
+ * Minimal shape needed to evaluate permissions: the caller's id plus their
+ * resolved permission list. The full {@link PermissionContext} discriminated
+ * union (backend) satisfies this, but clients can also pass a plain
+ * `{ userId, permissions }` built from the `/users/me/permissions` response
+ * without fabricating the rest of the union. This is what lets a single
+ * evaluator back both the server guards and the client `can()` checker.
+ */
+interface PermissionSubject {
+    userId: string;
+    permissions: Permission[];
+}
 interface ActionFlags {
     canEdit: boolean;
     canDelete: boolean;
     canApprove: boolean;
 }
-declare function canDo(ctx: PermissionContext, permission: Permission): boolean;
-declare function canDoOnResource(ctx: PermissionContext, domain: ScopedDomain, action: ScopedAction, resourceOwnerId: string): boolean;
+declare function canDo(subject: PermissionSubject, permission: Permission): boolean;
+declare function canDoOnResource(subject: PermissionSubject, domain: ScopedDomain, action: ScopedAction, resourceOwnerId: string): boolean;
 /**
  * Compute standard action flags for an entity.
  *
@@ -168,19 +180,56 @@ declare function canDoOnResource(ctx: PermissionContext, domain: ScopedDomain, a
  * Clients can use this for optimistic UI gating (show/hide edit/delete buttons)
  * without a round-trip to `/users/me/permissions`.
  */
-declare function computeActionFlags(ctx: PermissionContext, domain: ScopedDomain, resourceOwnerId: string): ActionFlags;
-declare function getContextUserId(ctx: PermissionContext): string;
+declare function computeActionFlags(subject: PermissionSubject, domain: ScopedDomain, resourceOwnerId: string): ActionFlags;
+declare function getContextUserId(subject: PermissionSubject): string;
 
 /**
- * Check if a user has a specific permission.
+ * The unified, isomorphic permission check surface — Flatie's analogue of
+ * Clerk's `has()`. Built once over {@link PermissionSubject} so the same five
+ * methods work identically on the backend (pass a `PermissionContext`) and on
+ * the clients (pass a `{ userId, permissions }` derived from the session or the
+ * `/users/me/permissions` response).
+ *
+ * Pass `null` when the subject is unknown/unresolved (loading, error, preview
+ * mode) — every check then returns the safe `false`.
+ *
+ * @example
+ *   const checker = createPermissionChecker({ userId, permissions });
+ *   checker.can(Permission.NOTICE_CREATE);
+ *   checker.canOnResource('notice', 'update', notice.authorId);
+ */
+interface PermissionChecker {
+    /** True if the subject holds `permission`. */
+    can: (permission: Permission) => boolean;
+    /** True if the subject holds at least one of `permissions`. */
+    canAny: (permissions: Permission[]) => boolean;
+    /** True if the subject holds every one of `permissions`. */
+    canAll: (permissions: Permission[]) => boolean;
+    /**
+     * `:own`/`:any` resolution for a scoped domain. Grants when the subject has
+     * the `:any` permission, or the `:own` permission and owns the resource.
+     */
+    canOnResource: (domain: ScopedDomain, action: ScopedAction, resourceOwnerId?: string) => boolean;
+    /** Standard edit/delete/approve flags for a scoped-domain entity. */
+    actionFlags: (domain: ScopedDomain, resourceOwnerId?: string) => ActionFlags;
+}
+declare function createPermissionChecker(subject: PermissionSubject | null): PermissionChecker;
+
+/**
+ * @deprecated Use `createPermissionChecker(subject).can(permission)` from
+ * `./permission-checker`. These raw `string[]` helpers predate the unified
+ * `PermissionChecker` and are kept only so existing call-sites keep compiling
+ * during migration; they will be removed in a future minor.
  */
 declare function hasPermission(userPermissions: string[], permission: Permission): boolean;
 /**
- * Check if a user has any of the specified permissions.
+ * @deprecated Use `createPermissionChecker(subject).canAny(permissions)` from
+ * `./permission-checker`.
  */
 declare function hasAnyPermission(userPermissions: string[], permissions: Permission[]): boolean;
 /**
- * Check if a user has all of the specified permissions.
+ * @deprecated Use `createPermissionChecker(subject).canAll(permissions)` from
+ * `./permission-checker`.
  */
 declare function hasAllPermissions(userPermissions: string[], permissions: Permission[]): boolean;
 
@@ -271,4 +320,4 @@ declare function getDateRange(filter: 'today' | 'yesterday' | 'week' | 'month'):
  */
 declare function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(func: T, delay: number): (...args: Parameters<T>) => void;
 
-export { type ActionFlags, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, type ParsedApiError, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type StatusVariant, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatCurrencyByLocale, formatDate as formatDateByLocale, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isManagerialRole, normalizePaginatedResponse, parseApiError, parseData, priorityVariant };
+export { type ActionFlags, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, type ParsedApiError, type PermissionChecker, type PermissionSubject, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type StatusVariant, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatCurrencyByLocale, formatDate as formatDateByLocale, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isManagerialRole, normalizePaginatedResponse, parseApiError, parseData, priorityVariant };

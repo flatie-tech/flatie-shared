@@ -89,6 +89,7 @@ export const Permission = {
   POLL_VOTE: 'poll:vote',
   POLL_FINALIZE: 'poll:finalize',
   POLL_DELETE_AFTER_VOTE: 'poll:delete_after_vote',
+  POLL_EXPORT_SIGNERS: 'poll:export_signers',
 
   // Failure Report
   FAILURE_REPORT_CREATE: 'failure_report:create',
@@ -120,6 +121,10 @@ export const Permission = {
   DOCUMENT_UPDATE_ANY: 'document:update:any',
   DOCUMENT_DELETE_OWN: 'document:delete:own',
   DOCUMENT_DELETE_ANY: 'document:delete:any',
+  DOCUMENT_SET_PRIVATE: 'document:set_private',
+
+  // Chat
+  CHAT_CREATE_GROUP: 'chat:create_group',
 
   // Apartment (flat, no :own/:any)
   APARTMENT_CREATE: 'apartment:create',
@@ -177,6 +182,7 @@ export const Permission = {
   PLATFORM_MANAGE_OPERATIVES: 'platform:manage_operatives',
   PLATFORM_MANAGE_SUBSCRIPTIONS: 'platform:manage_subscriptions',
   PLATFORM_PURGE: 'platform:purge',
+  PLATFORM_VIEW_ARCHIVE: 'platform:view_archive',
 } as const;
 
 export type Permission = (typeof Permission)[keyof typeof Permission];

@@ -5,7 +5,19 @@ import {
   type ScopedAction,
   type ScopedDomain,
 } from '../enums';
-import type { PermissionContext } from '../types/permission-context';
+
+/**
+ * Minimal shape needed to evaluate permissions: the caller's id plus their
+ * resolved permission list. The full {@link PermissionContext} discriminated
+ * union (backend) satisfies this, but clients can also pass a plain
+ * `{ userId, permissions }` built from the `/users/me/permissions` response
+ * without fabricating the rest of the union. This is what lets a single
+ * evaluator back both the server guards and the client `can()` checker.
+ */
+export interface PermissionSubject {
+  userId: string;
+  permissions: Permission[];
+}
 
 export interface ActionFlags {
   canEdit: boolean;
@@ -13,12 +25,12 @@ export interface ActionFlags {
   canApprove: boolean;
 }
 
-export function canDo(ctx: PermissionContext, permission: Permission): boolean {
-  return ctx.permissions.includes(permission);
+export function canDo(subject: PermissionSubject, permission: Permission): boolean {
+  return subject.permissions.includes(permission);
 }
 
 export function canDoOnResource(
-  ctx: PermissionContext,
+  subject: PermissionSubject,
   domain: ScopedDomain,
   action: ScopedAction,
   resourceOwnerId: string,
@@ -26,8 +38,8 @@ export function canDoOnResource(
   const scopedPerms = SCOPED_PERMISSIONS[domain]?.[action];
   if (!scopedPerms) return false;
 
-  if (ctx.permissions.includes(scopedPerms.any)) return true;
-  return ctx.permissions.includes(scopedPerms.own) && resourceOwnerId === ctx.userId;
+  if (subject.permissions.includes(scopedPerms.any)) return true;
+  return subject.permissions.includes(scopedPerms.own) && resourceOwnerId === subject.userId;
 }
 
 /**
@@ -38,18 +50,18 @@ export function canDoOnResource(
  * without a round-trip to `/users/me/permissions`.
  */
 export function computeActionFlags(
-  ctx: PermissionContext,
+  subject: PermissionSubject,
   domain: ScopedDomain,
   resourceOwnerId: string,
 ): ActionFlags {
   const approvePermission = APPROVE_PERMISSIONS[domain];
   return {
-    canEdit: canDoOnResource(ctx, domain, 'update', resourceOwnerId),
-    canDelete: canDoOnResource(ctx, domain, 'delete', resourceOwnerId),
-    canApprove: approvePermission ? canDo(ctx, approvePermission) : false,
+    canEdit: canDoOnResource(subject, domain, 'update', resourceOwnerId),
+    canDelete: canDoOnResource(subject, domain, 'delete', resourceOwnerId),
+    canApprove: approvePermission ? canDo(subject, approvePermission) : false,
   };
 }
 
-export function getContextUserId(ctx: PermissionContext): string {
-  return ctx.userId;
+export function getContextUserId(subject: PermissionSubject): string {
+  return subject.userId;
 }

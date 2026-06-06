@@ -1,4 +1,4 @@
-import { BuildingRole, PlatformRole, OrgRole, SCOPED_PERMISSIONS, APPROVE_PERMISSIONS, FailureStatus, Priority } from './chunk-V243BJQL.js';
+import { BuildingRole, PlatformRole, OrgRole, SCOPED_PERMISSIONS, APPROVE_PERMISSIONS, FailureStatus, Priority } from './chunk-ANLWV62L.js';
 import { isBackendErrorCode } from './chunk-DKJVFB3Z.js';
 import { createPaginatedResponse } from './chunk-W3SU22LA.js';
 
@@ -126,25 +126,42 @@ var parseApiError = (error) => {
 };
 
 // src/utils/permission-evaluator.ts
-function canDo(ctx, permission) {
-  return ctx.permissions.includes(permission);
+function canDo(subject, permission) {
+  return subject.permissions.includes(permission);
 }
-function canDoOnResource(ctx, domain, action, resourceOwnerId) {
+function canDoOnResource(subject, domain, action, resourceOwnerId) {
   const scopedPerms = SCOPED_PERMISSIONS[domain]?.[action];
   if (!scopedPerms) return false;
-  if (ctx.permissions.includes(scopedPerms.any)) return true;
-  return ctx.permissions.includes(scopedPerms.own) && resourceOwnerId === ctx.userId;
+  if (subject.permissions.includes(scopedPerms.any)) return true;
+  return subject.permissions.includes(scopedPerms.own) && resourceOwnerId === subject.userId;
 }
-function computeActionFlags(ctx, domain, resourceOwnerId) {
+function computeActionFlags(subject, domain, resourceOwnerId) {
   const approvePermission = APPROVE_PERMISSIONS[domain];
   return {
-    canEdit: canDoOnResource(ctx, domain, "update", resourceOwnerId),
-    canDelete: canDoOnResource(ctx, domain, "delete", resourceOwnerId),
-    canApprove: approvePermission ? canDo(ctx, approvePermission) : false
+    canEdit: canDoOnResource(subject, domain, "update", resourceOwnerId),
+    canDelete: canDoOnResource(subject, domain, "delete", resourceOwnerId),
+    canApprove: approvePermission ? canDo(subject, approvePermission) : false
   };
 }
-function getContextUserId(ctx) {
-  return ctx.userId;
+function getContextUserId(subject) {
+  return subject.userId;
+}
+
+// src/utils/permission-checker.ts
+var EMPTY_ACTION_FLAGS = {
+  canEdit: false,
+  canDelete: false,
+  canApprove: false
+};
+function createPermissionChecker(subject) {
+  const perms = subject?.permissions ?? [];
+  return {
+    can: (permission) => perms.includes(permission),
+    canAny: (permissions) => permissions.some((p) => perms.includes(p)),
+    canAll: (permissions) => permissions.every((p) => perms.includes(p)),
+    canOnResource: (domain, action, resourceOwnerId) => subject ? canDoOnResource(subject, domain, action, resourceOwnerId ?? "") : false,
+    actionFlags: (domain, resourceOwnerId) => subject ? computeActionFlags(subject, domain, resourceOwnerId ?? "") : EMPTY_ACTION_FLAGS
+  };
 }
 
 // src/utils/permissions.ts
@@ -277,6 +294,6 @@ function debounce(func, delay) {
   };
 }
 
-export { LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatCurrencyByLocale, formatDate, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isManagerialRole, normalizePaginatedResponse, parseApiError, parseData, priorityVariant };
-//# sourceMappingURL=chunk-EKPVBP6D.js.map
-//# sourceMappingURL=chunk-EKPVBP6D.js.map
+export { LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatCurrencyByLocale, formatDate, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isManagerialRole, normalizePaginatedResponse, parseApiError, parseData, priorityVariant };
+//# sourceMappingURL=chunk-G373XU47.js.map
+//# sourceMappingURL=chunk-G373XU47.js.map
