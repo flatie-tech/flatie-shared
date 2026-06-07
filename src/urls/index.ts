@@ -156,6 +156,16 @@ export const API_ROUTES = {
     RESULTS: (buildingId: string) => `/buildings/${buildingId}/polls/results`,
     OFFLINE_VOTES: (buildingId: string, pollId: string) =>
       `/buildings/${buildingId}/polls/${pollId}/offline-votes`,
+    SIGNATURE_BALLOT_PDF: (buildingId: string, pollId: string) =>
+      `/buildings/${buildingId}/polls/${pollId}/signature-ballot.pdf`,
+    SIGNATURE_VOTE: (buildingId: string, pollId: string) =>
+      `/buildings/${buildingId}/polls/${pollId}/signature-vote`,
+    PENDING_SIGNATURES: (buildingId: string) =>
+      `/buildings/${buildingId}/poll-votes/pending-signatures`,
+    APPROVE_SIGNATURE: (buildingId: string, voteId: string) =>
+      `/buildings/${buildingId}/poll-votes/${voteId}/approve-signature`,
+    REJECT_SIGNATURE: (buildingId: string, voteId: string) =>
+      `/buildings/${buildingId}/poll-votes/${voteId}/reject-signature`,
   },
 
   // ── Events ────────────────────────────────────────────────────────────

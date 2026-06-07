@@ -1,6 +1,8 @@
-import { BuildingRole, PlatformRole, OrgRole, SCOPED_PERMISSIONS, APPROVE_PERMISSIONS, FailureStatus, Priority } from './chunk-ANLWV62L.js';
-import { isBackendErrorCode } from './chunk-2AGAVFFE.js';
-import { createPaginatedResponse } from './chunk-W3SU22LA.js';
+'use strict';
+
+var chunkOY3KKXHH_cjs = require('./chunk-OY3KKXHH.cjs');
+var chunkDE3QTAUQ_cjs = require('./chunk-DE3QTAUQ.cjs');
+var chunkIGBERUWL_cjs = require('./chunk-IGBERUWL.cjs');
 
 // src/utils/locale.ts
 var LOCALE_MAP = {
@@ -29,17 +31,39 @@ var DATE_FORMATS = {
   SHORT: { day: "2-digit", month: "2-digit", year: "numeric" },
   MEDIUM: { day: "numeric", month: "short", year: "numeric" },
   LONG: { month: "long", day: "numeric", year: "numeric" },
-  FULL: { weekday: "long", month: "long", day: "numeric", year: "numeric" },
+  FULL: {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+  },
   MONTH_YEAR: { month: "long", year: "numeric" },
   MONTH_SHORT: { month: "short" },
-  WEEKDAY_DAY_MONTH: { weekday: "long", day: "2-digit", month: "2-digit" }
+  WEEKDAY_DAY_MONTH: {
+    weekday: "long",
+    day: "2-digit",
+    month: "2-digit"
+  }
 };
 var TIME_FORMATS = {
   SHORT: { hour: "numeric", minute: "2-digit" }
 };
 var DATETIME_FORMATS = {
-  SHORT: { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" },
-  FULL: { weekday: "long", month: "long", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }
+  SHORT: {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  },
+  FULL: {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit"
+  }
 };
 function formatDate(date, locale, options = DEFAULT_DATE_OPTIONS) {
   const dateObj = date instanceof Date ? date : new Date(date);
@@ -60,7 +84,7 @@ function formatCurrencyByLocale(amount, locale, currency = "EUR") {
 // src/utils/pagination.ts
 function normalizePaginatedResponse(input, fallbackLimit = 10) {
   if (Array.isArray(input)) {
-    return createPaginatedResponse(input, input.length, 0, input.length);
+    return chunkIGBERUWL_cjs.createPaginatedResponse(input, input.length, 0, input.length);
   }
   if (input && typeof input === "object") {
     const response = input;
@@ -69,9 +93,9 @@ function normalizePaginatedResponse(input, fallbackLimit = 10) {
     const count = response.count ?? response.total ?? response.totalCount ?? (Array.isArray(data) ? data.length : 0);
     const page = response.page ?? response.currentPage ?? (response.offset !== void 0 && limit ? Math.floor(response.offset / limit) + 1 : 1);
     const offset = response.offset !== void 0 ? response.offset : limit && page ? (page - 1) * limit : 0;
-    return createPaginatedResponse(Array.isArray(data) ? data : [], count, offset, limit);
+    return chunkIGBERUWL_cjs.createPaginatedResponse(Array.isArray(data) ? data : [], count, offset, limit);
   }
-  return createPaginatedResponse([], 0, 0, fallbackLimit);
+  return chunkIGBERUWL_cjs.createPaginatedResponse([], 0, 0, fallbackLimit);
 }
 function extractPaginatedItems(response, itemsKey) {
   if (Array.isArray(response)) {
@@ -132,7 +156,7 @@ var parseApiError = (error) => {
   const response = readProp(error, "response");
   const data = readProp(response, "data");
   const rawCode = readProp(data, "code");
-  const code = isBackendErrorCode(rawCode) ? rawCode : null;
+  const code = chunkDE3QTAUQ_cjs.isBackendErrorCode(rawCode) ? rawCode : null;
   const dataMessage = readProp(data, "message");
   const errorMessage = readProp(error, "message");
   const message = typeof dataMessage === "string" && dataMessage.length > 0 && dataMessage || typeof errorMessage === "string" && errorMessage.length > 0 && errorMessage || "Unknown error";
@@ -146,13 +170,13 @@ function canDo(subject, permission) {
   return subject.permissions.includes(permission);
 }
 function canDoOnResource(subject, domain, action, resourceOwnerId) {
-  const scopedPerms = SCOPED_PERMISSIONS[domain]?.[action];
+  const scopedPerms = chunkOY3KKXHH_cjs.SCOPED_PERMISSIONS[domain]?.[action];
   if (!scopedPerms) return false;
   if (subject.permissions.includes(scopedPerms.any)) return true;
   return subject.permissions.includes(scopedPerms.own) && resourceOwnerId === subject.userId;
 }
 function computeActionFlags(subject, domain, resourceOwnerId) {
-  const approvePermission = APPROVE_PERMISSIONS[domain];
+  const approvePermission = chunkOY3KKXHH_cjs.APPROVE_PERMISSIONS[domain];
   return {
     canEdit: canDoOnResource(subject, domain, "update", resourceOwnerId),
     canDelete: canDoOnResource(subject, domain, "delete", resourceOwnerId),
@@ -193,52 +217,52 @@ function hasAllPermissions(userPermissions, permissions) {
 
 // src/utils/role-helpers.ts
 var MANAGERIAL_BUILDING_ROLES = [
-  BuildingRole.OWNER_REPRESENTATIVE,
-  BuildingRole.DEPUTY_REPRESENTATIVE
+  chunkOY3KKXHH_cjs.BuildingRole.OWNER_REPRESENTATIVE,
+  chunkOY3KKXHH_cjs.BuildingRole.DEPUTY_REPRESENTATIVE
 ];
 function isManagerialRole(role) {
   return MANAGERIAL_BUILDING_ROLES.includes(role);
 }
 var ROLE_TRANSLATION_KEYS = {
   // Building roles
-  [BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
-  [BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
-  [BuildingRole.CO_OWNER]: "roles.CO_OWNER",
-  [BuildingRole.RESIDENT]: "roles.RESIDENT",
+  [chunkOY3KKXHH_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
+  [chunkOY3KKXHH_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
+  [chunkOY3KKXHH_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER",
+  [chunkOY3KKXHH_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT",
   // Org roles
-  [OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
-  [OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
-  [OrgRole.REFERENT]: "roles.REFERENT",
-  [OrgRole.OPERATIVE]: "roles.OPERATIVE",
+  [chunkOY3KKXHH_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
+  [chunkOY3KKXHH_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
+  [chunkOY3KKXHH_cjs.OrgRole.REFERENT]: "roles.REFERENT",
+  [chunkOY3KKXHH_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE",
   // Platform roles
-  [PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
-  [PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
-  [PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
-  [PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
+  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
+  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
+  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
+  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
 };
 var ROLE_DESCRIPTION_KEYS = {
-  [BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
-  [BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
-  [BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
-  [BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
-  [OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
-  [OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
-  [OrgRole.REFERENT]: "roles.REFERENT_DESC",
-  [OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
-  [PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
-  [PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
-  [PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
-  [PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
+  [chunkOY3KKXHH_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
+  [chunkOY3KKXHH_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
+  [chunkOY3KKXHH_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
+  [chunkOY3KKXHH_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
+  [chunkOY3KKXHH_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
+  [chunkOY3KKXHH_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
+  [chunkOY3KKXHH_cjs.OrgRole.REFERENT]: "roles.REFERENT_DESC",
+  [chunkOY3KKXHH_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
+  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
+  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
+  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
+  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
 };
 
 // src/utils/status-variants.ts
 function failureStatusVariant(status) {
   switch (status) {
-    case FailureStatus.PENDING:
+    case chunkOY3KKXHH_cjs.FailureStatus.PENDING:
       return "info";
-    case FailureStatus.IN_PROGRESS:
+    case chunkOY3KKXHH_cjs.FailureStatus.IN_PROGRESS:
       return "warning";
-    case FailureStatus.RESOLVED:
+    case chunkOY3KKXHH_cjs.FailureStatus.RESOLVED:
       return "success";
     default:
       return "neutral";
@@ -246,9 +270,9 @@ function failureStatusVariant(status) {
 }
 function priorityVariant(priority) {
   switch (priority) {
-    case Priority.URGENT:
+    case chunkOY3KKXHH_cjs.Priority.URGENT:
       return "danger";
-    case Priority.NORMAL:
+    case chunkOY3KKXHH_cjs.Priority.NORMAL:
       return "neutral";
     default:
       return "neutral";
@@ -310,6 +334,37 @@ function debounce(func, delay) {
   };
 }
 
-export { DATETIME_FORMATS, DATE_FORMATS, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, TIME_FORMATS, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatCurrencyByLocale, formatDate, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isManagerialRole, normalizePaginatedResponse, parseApiError, parseData, priorityVariant };
-//# sourceMappingURL=chunk-VQYZGKAM.js.map
-//# sourceMappingURL=chunk-VQYZGKAM.js.map
+exports.DATETIME_FORMATS = DATETIME_FORMATS;
+exports.DATE_FORMATS = DATE_FORMATS;
+exports.LOCALE_MAP = LOCALE_MAP;
+exports.MANAGERIAL_BUILDING_ROLES = MANAGERIAL_BUILDING_ROLES;
+exports.ParseError = ParseError;
+exports.ROLE_DESCRIPTION_KEYS = ROLE_DESCRIPTION_KEYS;
+exports.ROLE_TRANSLATION_KEYS = ROLE_TRANSLATION_KEYS;
+exports.TIME_FORMATS = TIME_FORMATS;
+exports.calculatePaginationMeta = calculatePaginationMeta;
+exports.canDo = canDo;
+exports.canDoOnResource = canDoOnResource;
+exports.computeActionFlags = computeActionFlags;
+exports.createPermissionChecker = createPermissionChecker;
+exports.debounce = debounce;
+exports.extractPaginatedItems = extractPaginatedItems;
+exports.failureStatusVariant = failureStatusVariant;
+exports.formatCurrency = formatCurrency;
+exports.formatCurrencyByLocale = formatCurrencyByLocale;
+exports.formatDate = formatDate;
+exports.formatDateTime = formatDateTime;
+exports.formatText = formatText;
+exports.getContextUserId = getContextUserId;
+exports.getDateLocale = getDateLocale;
+exports.getDateRange = getDateRange;
+exports.hasAllPermissions = hasAllPermissions;
+exports.hasAnyPermission = hasAnyPermission;
+exports.hasPermission = hasPermission;
+exports.isManagerialRole = isManagerialRole;
+exports.normalizePaginatedResponse = normalizePaginatedResponse;
+exports.parseApiError = parseApiError;
+exports.parseData = parseData;
+exports.priorityVariant = priorityVariant;
+//# sourceMappingURL=chunk-5567UHOO.cjs.map
+//# sourceMappingURL=chunk-5567UHOO.cjs.map

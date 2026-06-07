@@ -1,6 +1,6 @@
 'use strict';
 
-var chunk5BCCMVET_cjs = require('./chunk-5BCCMVET.cjs');
+var chunk5567UHOO_cjs = require('./chunk-5567UHOO.cjs');
 var chunkSLKO3TRC_cjs = require('./chunk-SLKO3TRC.cjs');
 var chunkUXE7KRAX_cjs = require('./chunk-UXE7KRAX.cjs');
 var chunkACDY7K6W_cjs = require('./chunk-ACDY7K6W.cjs');
@@ -10,7 +10,7 @@ var chunkDE3QTAUQ_cjs = require('./chunk-DE3QTAUQ.cjs');
 var chunkMTOJIOIR_cjs = require('./chunk-MTOJIOIR.cjs');
 require('./chunk-TCHOIK53.cjs');
 var chunkIGBERUWL_cjs = require('./chunk-IGBERUWL.cjs');
-var chunkQKC22KTY_cjs = require('./chunk-QKC22KTY.cjs');
+var chunkERXSYVYK_cjs = require('./chunk-ERXSYVYK.cjs');
 
 // src/test-ids/apartments.ts
 var ApartmentsTestIds = {
@@ -120,131 +120,131 @@ var SettingsTestIds = {
 
 Object.defineProperty(exports, "DATETIME_FORMATS", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.DATETIME_FORMATS; }
+  get: function () { return chunk5567UHOO_cjs.DATETIME_FORMATS; }
 });
 Object.defineProperty(exports, "DATE_FORMATS", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.DATE_FORMATS; }
+  get: function () { return chunk5567UHOO_cjs.DATE_FORMATS; }
 });
 Object.defineProperty(exports, "LOCALE_MAP", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.LOCALE_MAP; }
+  get: function () { return chunk5567UHOO_cjs.LOCALE_MAP; }
 });
 Object.defineProperty(exports, "MANAGERIAL_BUILDING_ROLES", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.MANAGERIAL_BUILDING_ROLES; }
+  get: function () { return chunk5567UHOO_cjs.MANAGERIAL_BUILDING_ROLES; }
 });
 Object.defineProperty(exports, "ParseError", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.ParseError; }
+  get: function () { return chunk5567UHOO_cjs.ParseError; }
 });
 Object.defineProperty(exports, "ROLE_DESCRIPTION_KEYS", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.ROLE_DESCRIPTION_KEYS; }
+  get: function () { return chunk5567UHOO_cjs.ROLE_DESCRIPTION_KEYS; }
 });
 Object.defineProperty(exports, "ROLE_TRANSLATION_KEYS", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.ROLE_TRANSLATION_KEYS; }
+  get: function () { return chunk5567UHOO_cjs.ROLE_TRANSLATION_KEYS; }
 });
 Object.defineProperty(exports, "TIME_FORMATS", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.TIME_FORMATS; }
+  get: function () { return chunk5567UHOO_cjs.TIME_FORMATS; }
 });
 Object.defineProperty(exports, "calculatePaginationMeta", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.calculatePaginationMeta; }
+  get: function () { return chunk5567UHOO_cjs.calculatePaginationMeta; }
 });
 Object.defineProperty(exports, "canDo", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.canDo; }
+  get: function () { return chunk5567UHOO_cjs.canDo; }
 });
 Object.defineProperty(exports, "canDoOnResource", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.canDoOnResource; }
+  get: function () { return chunk5567UHOO_cjs.canDoOnResource; }
 });
 Object.defineProperty(exports, "computeActionFlags", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.computeActionFlags; }
+  get: function () { return chunk5567UHOO_cjs.computeActionFlags; }
 });
 Object.defineProperty(exports, "createPermissionChecker", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.createPermissionChecker; }
+  get: function () { return chunk5567UHOO_cjs.createPermissionChecker; }
 });
 Object.defineProperty(exports, "debounce", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.debounce; }
+  get: function () { return chunk5567UHOO_cjs.debounce; }
 });
 Object.defineProperty(exports, "extractPaginatedItems", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.extractPaginatedItems; }
+  get: function () { return chunk5567UHOO_cjs.extractPaginatedItems; }
 });
 Object.defineProperty(exports, "failureStatusVariant", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.failureStatusVariant; }
+  get: function () { return chunk5567UHOO_cjs.failureStatusVariant; }
 });
 Object.defineProperty(exports, "formatCurrency", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.formatCurrency; }
+  get: function () { return chunk5567UHOO_cjs.formatCurrency; }
 });
 Object.defineProperty(exports, "formatCurrencyByLocale", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.formatCurrencyByLocale; }
+  get: function () { return chunk5567UHOO_cjs.formatCurrencyByLocale; }
 });
 Object.defineProperty(exports, "formatDateByLocale", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.formatDate; }
+  get: function () { return chunk5567UHOO_cjs.formatDate; }
 });
 Object.defineProperty(exports, "formatDateTime", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.formatDateTime; }
+  get: function () { return chunk5567UHOO_cjs.formatDateTime; }
 });
 Object.defineProperty(exports, "formatText", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.formatText; }
+  get: function () { return chunk5567UHOO_cjs.formatText; }
 });
 Object.defineProperty(exports, "getContextUserId", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.getContextUserId; }
+  get: function () { return chunk5567UHOO_cjs.getContextUserId; }
 });
 Object.defineProperty(exports, "getDateLocale", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.getDateLocale; }
+  get: function () { return chunk5567UHOO_cjs.getDateLocale; }
 });
 Object.defineProperty(exports, "getDateRange", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.getDateRange; }
+  get: function () { return chunk5567UHOO_cjs.getDateRange; }
 });
 Object.defineProperty(exports, "hasAllPermissions", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.hasAllPermissions; }
+  get: function () { return chunk5567UHOO_cjs.hasAllPermissions; }
 });
 Object.defineProperty(exports, "hasAnyPermission", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.hasAnyPermission; }
+  get: function () { return chunk5567UHOO_cjs.hasAnyPermission; }
 });
 Object.defineProperty(exports, "hasPermission", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.hasPermission; }
+  get: function () { return chunk5567UHOO_cjs.hasPermission; }
 });
 Object.defineProperty(exports, "isManagerialRole", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.isManagerialRole; }
+  get: function () { return chunk5567UHOO_cjs.isManagerialRole; }
 });
 Object.defineProperty(exports, "normalizePaginatedResponse", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.normalizePaginatedResponse; }
+  get: function () { return chunk5567UHOO_cjs.normalizePaginatedResponse; }
 });
 Object.defineProperty(exports, "parseApiError", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.parseApiError; }
+  get: function () { return chunk5567UHOO_cjs.parseApiError; }
 });
 Object.defineProperty(exports, "parseData", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.parseData; }
+  get: function () { return chunk5567UHOO_cjs.parseData; }
 });
 Object.defineProperty(exports, "priorityVariant", {
   enumerable: true,
-  get: function () { return chunk5BCCMVET_cjs.priorityVariant; }
+  get: function () { return chunk5567UHOO_cjs.priorityVariant; }
 });
 Object.defineProperty(exports, "addressSchema", {
   enumerable: true,
@@ -1360,11 +1360,11 @@ Object.defineProperty(exports, "createPaginatedResponse", {
 });
 Object.defineProperty(exports, "API_ROUTES", {
   enumerable: true,
-  get: function () { return chunkQKC22KTY_cjs.API_ROUTES; }
+  get: function () { return chunkERXSYVYK_cjs.API_ROUTES; }
 });
 Object.defineProperty(exports, "API_VERSION", {
   enumerable: true,
-  get: function () { return chunkQKC22KTY_cjs.API_VERSION; }
+  get: function () { return chunkERXSYVYK_cjs.API_VERSION; }
 });
 exports.ApartmentsTestIds = ApartmentsTestIds;
 exports.AppShellTestIds = AppShellTestIds;

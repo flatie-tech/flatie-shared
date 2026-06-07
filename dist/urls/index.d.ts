@@ -104,6 +104,11 @@ declare const API_ROUTES: {
         readonly VOTERS: (buildingId: string, pollId: string) => string;
         readonly RESULTS: (buildingId: string) => string;
         readonly OFFLINE_VOTES: (buildingId: string, pollId: string) => string;
+        readonly SIGNATURE_BALLOT_PDF: (buildingId: string, pollId: string) => string;
+        readonly SIGNATURE_VOTE: (buildingId: string, pollId: string) => string;
+        readonly PENDING_SIGNATURES: (buildingId: string) => string;
+        readonly APPROVE_SIGNATURE: (buildingId: string, voteId: string) => string;
+        readonly REJECT_SIGNATURE: (buildingId: string, voteId: string) => string;
     };
     readonly EVENTS: {
         readonly LIST: (buildingId: string) => string;

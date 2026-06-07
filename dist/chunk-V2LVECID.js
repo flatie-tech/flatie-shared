@@ -110,7 +110,12 @@ var API_ROUTES = {
     VOTE: (buildingId, pollId) => `/buildings/${buildingId}/polls/${pollId}/vote`,
     VOTERS: (buildingId, pollId) => `/buildings/${buildingId}/polls/${pollId}/voters`,
     RESULTS: (buildingId) => `/buildings/${buildingId}/polls/results`,
-    OFFLINE_VOTES: (buildingId, pollId) => `/buildings/${buildingId}/polls/${pollId}/offline-votes`
+    OFFLINE_VOTES: (buildingId, pollId) => `/buildings/${buildingId}/polls/${pollId}/offline-votes`,
+    SIGNATURE_BALLOT_PDF: (buildingId, pollId) => `/buildings/${buildingId}/polls/${pollId}/signature-ballot.pdf`,
+    SIGNATURE_VOTE: (buildingId, pollId) => `/buildings/${buildingId}/polls/${pollId}/signature-vote`,
+    PENDING_SIGNATURES: (buildingId) => `/buildings/${buildingId}/poll-votes/pending-signatures`,
+    APPROVE_SIGNATURE: (buildingId, voteId) => `/buildings/${buildingId}/poll-votes/${voteId}/approve-signature`,
+    REJECT_SIGNATURE: (buildingId, voteId) => `/buildings/${buildingId}/poll-votes/${voteId}/reject-signature`
   },
   // ── Events ────────────────────────────────────────────────────────────
   EVENTS: {
@@ -255,5 +260,5 @@ var API_ROUTES = {
 };
 
 export { API_ROUTES, API_VERSION };
-//# sourceMappingURL=chunk-UJSBMO65.js.map
-//# sourceMappingURL=chunk-UJSBMO65.js.map
+//# sourceMappingURL=chunk-V2LVECID.js.map
+//# sourceMappingURL=chunk-V2LVECID.js.map
