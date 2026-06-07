@@ -45,6 +45,47 @@ const DEFAULT_DATETIME_OPTIONS: Intl.DateTimeFormatOptions = {
   minute: '2-digit',
 };
 
+export const DATE_FORMATS = {
+  SHORT: { day: '2-digit', month: '2-digit', year: 'numeric' } as Intl.DateTimeFormatOptions,
+  MEDIUM: { day: 'numeric', month: 'short', year: 'numeric' } as Intl.DateTimeFormatOptions,
+  LONG: { month: 'long', day: 'numeric', year: 'numeric' } as Intl.DateTimeFormatOptions,
+  FULL: {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  } as Intl.DateTimeFormatOptions,
+  MONTH_YEAR: { month: 'long', year: 'numeric' } as Intl.DateTimeFormatOptions,
+  MONTH_SHORT: { month: 'short' } as Intl.DateTimeFormatOptions,
+  WEEKDAY_DAY_MONTH: {
+    weekday: 'long',
+    day: '2-digit',
+    month: '2-digit',
+  } as Intl.DateTimeFormatOptions,
+} as const;
+
+export const TIME_FORMATS = {
+  SHORT: { hour: 'numeric', minute: '2-digit' } as Intl.DateTimeFormatOptions,
+} as const;
+
+export const DATETIME_FORMATS = {
+  SHORT: {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  } as Intl.DateTimeFormatOptions,
+  FULL: {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  } as Intl.DateTimeFormatOptions,
+} as const;
+
 /**
  * Format a date using `Intl.DateTimeFormat`. `locale` accepts either a
  * short app code (`'hr'`) or an explicit BCP-47 string (`'hr-HR'`); the

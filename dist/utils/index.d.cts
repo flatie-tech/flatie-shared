@@ -25,6 +25,22 @@ declare const LOCALE_MAP: Record<string, string>;
  * pass an optional locale through without a separate guard.
  */
 declare function getDateLocale(appLocale: string | undefined | null): string;
+declare const DATE_FORMATS: {
+    readonly SHORT: Intl.DateTimeFormatOptions;
+    readonly MEDIUM: Intl.DateTimeFormatOptions;
+    readonly LONG: Intl.DateTimeFormatOptions;
+    readonly FULL: Intl.DateTimeFormatOptions;
+    readonly MONTH_YEAR: Intl.DateTimeFormatOptions;
+    readonly MONTH_SHORT: Intl.DateTimeFormatOptions;
+    readonly WEEKDAY_DAY_MONTH: Intl.DateTimeFormatOptions;
+};
+declare const TIME_FORMATS: {
+    readonly SHORT: Intl.DateTimeFormatOptions;
+};
+declare const DATETIME_FORMATS: {
+    readonly SHORT: Intl.DateTimeFormatOptions;
+    readonly FULL: Intl.DateTimeFormatOptions;
+};
 /**
  * Format a date using `Intl.DateTimeFormat`. `locale` accepts either a
  * short app code (`'hr'`) or an explicit BCP-47 string (`'hr-HR'`); the
@@ -320,4 +336,4 @@ declare function getDateRange(filter: 'today' | 'yesterday' | 'week' | 'month'):
  */
 declare function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(func: T, delay: number): (...args: Parameters<T>) => void;
 
-export { type ActionFlags, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, type ParsedApiError, type PermissionChecker, type PermissionSubject, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type StatusVariant, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatCurrencyByLocale, formatDate as formatDateByLocale, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isManagerialRole, normalizePaginatedResponse, parseApiError, parseData, priorityVariant };
+export { type ActionFlags, DATETIME_FORMATS, DATE_FORMATS, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, type ParsedApiError, type PermissionChecker, type PermissionSubject, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type StatusVariant, TIME_FORMATS, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatCurrencyByLocale, formatDate as formatDateByLocale, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isManagerialRole, normalizePaginatedResponse, parseApiError, parseData, priorityVariant };

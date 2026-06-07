@@ -2,7 +2,7 @@
 
 var chunkXXNOAOHF_cjs = require('./chunk-XXNOAOHF.cjs');
 var chunkOY3KKXHH_cjs = require('./chunk-OY3KKXHH.cjs');
-var chunkAU46DIAR_cjs = require('./chunk-AU46DIAR.cjs');
+var chunkDE3QTAUQ_cjs = require('./chunk-DE3QTAUQ.cjs');
 var zod = require('zod');
 
 var apiErrorSchema = zod.z.object({
@@ -12,7 +12,7 @@ var apiErrorSchema = zod.z.object({
   path: zod.z.string()
 });
 var apiErrorResponseSchema = apiErrorSchema.extend({
-  code: zod.z.enum(Object.values(chunkAU46DIAR_cjs.BACKEND_ERROR_CODES)).optional().describe(
+  code: zod.z.enum(Object.values(chunkDE3QTAUQ_cjs.BACKEND_ERROR_CODES)).optional().describe(
     "Canonical error code from `@flatie/shared/errors` (`BACKEND_ERROR_CODES`). Present when the backend raised a `DomainException`; absent for generic HTTP errors (network failures, unhandled exceptions, validation-pipe rejections)."
   )
 }).describe("Standard error envelope returned by the Flatie backend on 4xx and 5xx responses.");
@@ -1559,6 +1559,7 @@ var noticeResponseSchema = zod.z.looseObject({
     "Author display name. Null when `isAnonymous` is true or the author has been deleted."
   ),
   allowComments: zod.z.boolean().optional().default(true).describe("True when comments are enabled on this notice."),
+  commentsCount: zod.z.number().int().default(0).describe("Number of non-archived comments on this notice."),
   canApprove: zod.z.boolean().describe("True when the calling user may approve or reject the notice."),
   canEdit: zod.z.boolean().describe("True when the calling user may edit the notice."),
   canDelete: zod.z.boolean().describe("True when the calling user may delete the notice."),
@@ -2056,5 +2057,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-ANUXR5HP.cjs.map
-//# sourceMappingURL=chunk-ANUXR5HP.cjs.map
+//# sourceMappingURL=chunk-ACDY7K6W.cjs.map
+//# sourceMappingURL=chunk-ACDY7K6W.cjs.map

@@ -6,11 +6,14 @@
 
 // Locale-aware date / currency formatting
 export {
+  DATE_FORMATS,
+  DATETIME_FORMATS,
   formatCurrencyByLocale,
   formatDate as formatDateByLocale,
   formatDateTime,
   getDateLocale,
   LOCALE_MAP,
+  TIME_FORMATS,
 } from './locale';
 // Pagination utilities
 export {

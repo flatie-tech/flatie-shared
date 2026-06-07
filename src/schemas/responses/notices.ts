@@ -47,6 +47,11 @@ export const noticeResponseSchema = z.looseObject({
     .optional()
     .default(true)
     .describe('True when comments are enabled on this notice.'),
+  commentsCount: z
+    .number()
+    .int()
+    .default(0)
+    .describe('Number of non-archived comments on this notice.'),
   canApprove: z.boolean().describe('True when the calling user may approve or reject the notice.'),
   canEdit: z.boolean().describe('True when the calling user may edit the notice.'),
   canDelete: z.boolean().describe('True when the calling user may delete the notice.'),

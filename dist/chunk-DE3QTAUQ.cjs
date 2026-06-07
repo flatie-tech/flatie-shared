@@ -1,3 +1,5 @@
+'use strict';
+
 // src/errors/index.ts
 var BACKEND_ERROR_CODES = {
   // Auth
@@ -67,6 +69,8 @@ var BACKEND_ERROR_CODES = {
   BLOG_POST_NOT_FOUND: "BLOG_POST_NOT_FOUND",
   // Subscription / billing
   INVOICE_ALREADY_PAID: "INVOICE_ALREADY_PAID",
+  SUBSCRIPTION_NOT_FOUND: "SUBSCRIPTION_NOT_FOUND",
+  SUBSCRIPTION_ALREADY_CANCELLED: "SUBSCRIPTION_ALREADY_CANCELLED",
   // Platform-specific
   BUILDING_NOT_PENDING_APPROVAL: "BUILDING_NOT_PENDING_APPROVAL",
   USER_ALREADY_PLATFORM_MEMBER: "USER_ALREADY_PLATFORM_MEMBER",
@@ -96,6 +100,7 @@ function isBackendErrorCode(code) {
   return typeof code === "string" && Object.values(BACKEND_ERROR_CODES).includes(code);
 }
 
-export { BACKEND_ERROR_CODES, isBackendErrorCode };
-//# sourceMappingURL=chunk-DKJVFB3Z.js.map
-//# sourceMappingURL=chunk-DKJVFB3Z.js.map
+exports.BACKEND_ERROR_CODES = BACKEND_ERROR_CODES;
+exports.isBackendErrorCode = isBackendErrorCode;
+//# sourceMappingURL=chunk-DE3QTAUQ.cjs.map
+//# sourceMappingURL=chunk-DE3QTAUQ.cjs.map

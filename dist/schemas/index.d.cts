@@ -2557,6 +2557,7 @@ declare const noticeResponseSchema: z.ZodObject<{
     updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     createdByName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     allowComments: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
+    commentsCount: z.ZodDefault<z.ZodNumber>;
     canApprove: z.ZodBoolean;
     canEdit: z.ZodBoolean;
     canDelete: z.ZodBoolean;
@@ -2593,6 +2594,7 @@ declare const paginatedNoticesResponseSchema: z.ZodObject<{
         updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         createdByName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         allowComments: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
+        commentsCount: z.ZodDefault<z.ZodNumber>;
         canApprove: z.ZodBoolean;
         canEdit: z.ZodBoolean;
         canDelete: z.ZodBoolean;
