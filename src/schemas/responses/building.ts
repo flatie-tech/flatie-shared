@@ -4,6 +4,7 @@ import { FundsSource } from '../../enums/funds-source.enum';
 import { PricuvaRefMode } from '../../enums/pricuva-ref-mode.enum';
 import { buildingTypeSchema } from '../entities/building.schema';
 import { paginatedResponseSchema } from '../pagination.schema';
+import type { Strict } from './_strict';
 
 const buildingStatusSchema = z
   .enum(Object.values(BuildingStatus) as [string, ...string[]])
@@ -293,6 +294,6 @@ export const buildingDetailResponseSchema = z.looseObject({
 
 export const paginatedBuildingsResponseSchema = paginatedResponseSchema(buildingResponseSchema);
 
-export type BuildingResponse = z.infer<typeof buildingResponseSchema>;
-export type BuildingDetailResponse = z.infer<typeof buildingDetailResponseSchema>;
-export type PaginatedBuildingsResponse = z.infer<typeof paginatedBuildingsResponseSchema>;
+export type BuildingResponse = Strict<z.infer<typeof buildingResponseSchema>>;
+export type BuildingDetailResponse = Strict<z.infer<typeof buildingDetailResponseSchema>>;
+export type PaginatedBuildingsResponse = Strict<z.infer<typeof paginatedBuildingsResponseSchema>>;

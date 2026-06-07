@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { NotificationType } from '../../enums/notification.enum';
+import type { Strict } from './_strict';
 
 /**
  * Fields merged into `data` by NotificationService#emit for every notification.
@@ -300,7 +301,9 @@ export const getNotificationDataSchema = <T extends NotificationType>(
   type: T,
 ): (typeof notificationDataSchemaByType)[T] => notificationDataSchemaByType[type];
 
-export type NotificationData = z.infer<typeof notificationDataSchema>;
-export type NotificationResponse = z.infer<typeof notificationResponseSchema>;
-export type NotificationPreferenceItem = z.infer<typeof notificationPreferenceItemSchema>;
-export type NotificationPreferenceCategory = z.infer<typeof notificationPreferenceCategorySchema>;
+export type NotificationData = Strict<z.infer<typeof notificationDataSchema>>;
+export type NotificationResponse = Strict<z.infer<typeof notificationResponseSchema>>;
+export type NotificationPreferenceItem = Strict<z.infer<typeof notificationPreferenceItemSchema>>;
+export type NotificationPreferenceCategory = Strict<
+  z.infer<typeof notificationPreferenceCategorySchema>
+>;

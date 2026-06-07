@@ -1,8 +1,33 @@
 'use strict';
 
 var chunkOY3KKXHH_cjs = require('./chunk-OY3KKXHH.cjs');
-var chunkDE3QTAUQ_cjs = require('./chunk-DE3QTAUQ.cjs');
-var chunkIGBERUWL_cjs = require('./chunk-IGBERUWL.cjs');
+var chunkJEVLYWVQ_cjs = require('./chunk-JEVLYWVQ.cjs');
+var chunkOOJKTZT4_cjs = require('./chunk-OOJKTZT4.cjs');
+
+// src/utils/house-number.ts
+var HOUSE_NUMBER_PATTERN = /^\d{1,4}[A-Z]?(?:\/\d{1,3})?$|^BB$/;
+function normalizeHouseNumber(raw) {
+  if (!raw || !raw.trim()) return null;
+  const normalized = raw.trim().toUpperCase().replace(/\s+/g, "").replace(/\s*\/\s*/g, "/");
+  if (!HOUSE_NUMBER_PATTERN.test(normalized)) return null;
+  return normalized;
+}
+function isValidHouseNumber(raw) {
+  return normalizeHouseNumber(raw) !== null;
+}
+function parseHouseNumber(normalized) {
+  if (normalized === "BB") return null;
+  const match = normalized.match(/^(\d{1,4})([A-Z])?(?:\/(\d{1,3}))?$/);
+  if (!match) return null;
+  const result = { number: Number.parseInt(match[1], 10) };
+  if (match[2]) result.letter = match[2];
+  if (match[3]) result.subNumber = Number.parseInt(match[3], 10);
+  return result;
+}
+function formatAddress(parts) {
+  const streetPart = [parts.street, parts.houseNumber].filter(Boolean).join(" ");
+  return `${streetPart}, ${parts.postalCode} ${parts.city}`;
+}
 
 // src/utils/locale.ts
 var LOCALE_MAP = {
@@ -84,7 +109,7 @@ function formatCurrencyByLocale(amount, locale, currency = "EUR") {
 // src/utils/pagination.ts
 function normalizePaginatedResponse(input, fallbackLimit = 10) {
   if (Array.isArray(input)) {
-    return chunkIGBERUWL_cjs.createPaginatedResponse(input, input.length, 0, input.length);
+    return chunkOOJKTZT4_cjs.createPaginatedResponse(input, input.length, 0, input.length);
   }
   if (input && typeof input === "object") {
     const response = input;
@@ -93,9 +118,9 @@ function normalizePaginatedResponse(input, fallbackLimit = 10) {
     const count = response.count ?? response.total ?? response.totalCount ?? (Array.isArray(data) ? data.length : 0);
     const page = response.page ?? response.currentPage ?? (response.offset !== void 0 && limit ? Math.floor(response.offset / limit) + 1 : 1);
     const offset = response.offset !== void 0 ? response.offset : limit && page ? (page - 1) * limit : 0;
-    return chunkIGBERUWL_cjs.createPaginatedResponse(Array.isArray(data) ? data : [], count, offset, limit);
+    return chunkOOJKTZT4_cjs.createPaginatedResponse(Array.isArray(data) ? data : [], count, offset, limit);
   }
-  return chunkIGBERUWL_cjs.createPaginatedResponse([], 0, 0, fallbackLimit);
+  return chunkOOJKTZT4_cjs.createPaginatedResponse([], 0, 0, fallbackLimit);
 }
 function extractPaginatedItems(response, itemsKey) {
   if (Array.isArray(response)) {
@@ -156,7 +181,7 @@ var parseApiError = (error) => {
   const response = readProp(error, "response");
   const data = readProp(response, "data");
   const rawCode = readProp(data, "code");
-  const code = chunkDE3QTAUQ_cjs.isBackendErrorCode(rawCode) ? rawCode : null;
+  const code = chunkJEVLYWVQ_cjs.isBackendErrorCode(rawCode) ? rawCode : null;
   const dataMessage = readProp(data, "message");
   const errorMessage = readProp(error, "message");
   const message = typeof dataMessage === "string" && dataMessage.length > 0 && dataMessage || typeof errorMessage === "string" && errorMessage.length > 0 && errorMessage || "Unknown error";
@@ -350,6 +375,7 @@ exports.createPermissionChecker = createPermissionChecker;
 exports.debounce = debounce;
 exports.extractPaginatedItems = extractPaginatedItems;
 exports.failureStatusVariant = failureStatusVariant;
+exports.formatAddress = formatAddress;
 exports.formatCurrency = formatCurrency;
 exports.formatCurrencyByLocale = formatCurrencyByLocale;
 exports.formatDate = formatDate;
@@ -362,9 +388,12 @@ exports.hasAllPermissions = hasAllPermissions;
 exports.hasAnyPermission = hasAnyPermission;
 exports.hasPermission = hasPermission;
 exports.isManagerialRole = isManagerialRole;
+exports.isValidHouseNumber = isValidHouseNumber;
+exports.normalizeHouseNumber = normalizeHouseNumber;
 exports.normalizePaginatedResponse = normalizePaginatedResponse;
 exports.parseApiError = parseApiError;
 exports.parseData = parseData;
+exports.parseHouseNumber = parseHouseNumber;
 exports.priorityVariant = priorityVariant;
-//# sourceMappingURL=chunk-5567UHOO.cjs.map
-//# sourceMappingURL=chunk-5567UHOO.cjs.map
+//# sourceMappingURL=chunk-QGMGIEIS.cjs.map
+//# sourceMappingURL=chunk-QGMGIEIS.cjs.map

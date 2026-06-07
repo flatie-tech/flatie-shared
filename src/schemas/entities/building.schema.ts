@@ -53,22 +53,22 @@ export const createBuildingSchema = z.object({
     .min(BUILDING_LIMITS.NAME_MIN, 'Name is required')
     .max(BUILDING_LIMITS.NAME_MAX, `Name must be at most ${BUILDING_LIMITS.NAME_MAX} characters`)
     .describe('Display name of the building shown throughout the UI.'),
-  address: z
-    .string()
-    .min(BUILDING_LIMITS.ADDRESS_MIN, 'Address is required')
-    .max(
-      BUILDING_LIMITS.ADDRESS_MAX,
-      `Address must be at most ${BUILDING_LIMITS.ADDRESS_MAX} characters`,
-    )
-    .describe('Full postal address including street and city.'),
-  streetId: uuidSchema.describe(
-    'UUID of the street record the building belongs to; used to normalise address data.',
-  ),
+  addressId: uuidSchema
+    .optional()
+    .describe(
+      'UUID of an existing address record. When provided, streetId/houseNumber are ignored.',
+    ),
+  streetId: uuidSchema
+    .optional()
+    .describe(
+      'UUID of the street record. Required when addressId is not provided (address will be resolved or created).',
+    ),
   houseNumber: z
     .string()
     .min(BUILDING_LIMITS.HOUSE_NUMBER_MIN, 'House number is required')
     .max(BUILDING_LIMITS.HOUSE_NUMBER_MAX)
-    .describe('Street/house number including any suffix (e.g. "12A", "5B").'),
+    .optional()
+    .describe('Street/house number (e.g. "12A", "16/1"). Required when addressId is not provided.'),
   type: buildingTypeSchema,
   totalUnits: z.coerce
     .number()
@@ -147,19 +147,21 @@ export const updateBuildingSchema = z.object({
     .max(BUILDING_LIMITS.NAME_MAX)
     .optional()
     .describe('New display name of the building.'),
-  address: z
-    .string()
-    .min(BUILDING_LIMITS.ADDRESS_MIN)
-    .max(BUILDING_LIMITS.ADDRESS_MAX)
+  addressId: uuidSchema
     .optional()
-    .describe('New full postal address.'),
-  type: buildingTypeSchema.optional(),
+    .describe('UUID of the new address record to assign to this building.'),
+  streetId: uuidSchema
+    .optional()
+    .describe('UUID of the street record. Used with houseNumber to resolve or create an address.'),
   houseNumber: z
     .string()
     .min(BUILDING_LIMITS.HOUSE_NUMBER_MIN)
     .max(BUILDING_LIMITS.HOUSE_NUMBER_MAX)
     .optional()
-    .describe('Street/house number (e.g. "12A"). Used as first HR01 reference segment.'),
+    .describe(
+      'Street/house number (e.g. "12A", "16/1"). Used with streetId to resolve an address.',
+    ),
+  type: buildingTypeSchema.optional(),
   totalUnits: z.coerce
     .number()
     .int()

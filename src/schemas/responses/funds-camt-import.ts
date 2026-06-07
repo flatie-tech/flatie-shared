@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { TransactionType } from '../../enums/status.enum';
+import type { Strict } from './_strict';
 
 /**
  * Row-level result for a single CAMT `<Ntry>` that was persisted as an
@@ -112,4 +113,4 @@ export const camtImportResponseSchema = z
   })
   .describe('Outcome summary for a CAMT.053 statement import.');
 
-export type CamtImportResponse = z.infer<typeof camtImportResponseSchema>;
+export type CamtImportResponse = Strict<z.infer<typeof camtImportResponseSchema>>;

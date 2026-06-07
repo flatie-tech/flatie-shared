@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { Strict } from './_strict';
 
 export const faqResponseSchema = z.looseObject({
   id: z.string().uuid(),
@@ -26,4 +27,4 @@ export const faqResponseSchema = z.looseObject({
     .describe('ISO-8601 timestamp of the last edit; null when never edited.'),
 });
 
-export type FaqResponse = z.infer<typeof faqResponseSchema>;
+export type FaqResponse = Strict<z.infer<typeof faqResponseSchema>>;

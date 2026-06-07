@@ -2,7 +2,7 @@
 
 var chunkXXNOAOHF_cjs = require('./chunk-XXNOAOHF.cjs');
 var chunkOY3KKXHH_cjs = require('./chunk-OY3KKXHH.cjs');
-var chunkDE3QTAUQ_cjs = require('./chunk-DE3QTAUQ.cjs');
+var chunkJEVLYWVQ_cjs = require('./chunk-JEVLYWVQ.cjs');
 var zod = require('zod');
 
 var apiErrorSchema = zod.z.object({
@@ -12,7 +12,7 @@ var apiErrorSchema = zod.z.object({
   path: zod.z.string()
 });
 var apiErrorResponseSchema = apiErrorSchema.extend({
-  code: zod.z.enum(Object.values(chunkDE3QTAUQ_cjs.BACKEND_ERROR_CODES)).optional().describe(
+  code: zod.z.enum(Object.values(chunkJEVLYWVQ_cjs.BACKEND_ERROR_CODES)).optional().describe(
     "Canonical error code from `@flatie/shared/errors` (`BACKEND_ERROR_CODES`). Present when the backend raised a `DomainException`; absent for generic HTTP errors (network failures, unhandled exceptions, validation-pipe rejections)."
   )
 }).describe("Standard error envelope returned by the Flatie backend on 4xx and 5xx responses.");
@@ -344,14 +344,13 @@ var BUILDING_LIMITS = {
 };
 var createBuildingSchema = zod.z.object({
   name: zod.z.string().min(BUILDING_LIMITS.NAME_MIN, "Name is required").max(BUILDING_LIMITS.NAME_MAX, `Name must be at most ${BUILDING_LIMITS.NAME_MAX} characters`).describe("Display name of the building shown throughout the UI."),
-  address: zod.z.string().min(BUILDING_LIMITS.ADDRESS_MIN, "Address is required").max(
-    BUILDING_LIMITS.ADDRESS_MAX,
-    `Address must be at most ${BUILDING_LIMITS.ADDRESS_MAX} characters`
-  ).describe("Full postal address including street and city."),
-  streetId: uuidSchema.describe(
-    "UUID of the street record the building belongs to; used to normalise address data."
+  addressId: uuidSchema.optional().describe(
+    "UUID of an existing address record. When provided, streetId/houseNumber are ignored."
   ),
-  houseNumber: zod.z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN, "House number is required").max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).describe('Street/house number including any suffix (e.g. "12A", "5B").'),
+  streetId: uuidSchema.optional().describe(
+    "UUID of the street record. Required when addressId is not provided (address will be resolved or created)."
+  ),
+  houseNumber: zod.z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN, "House number is required").max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).optional().describe('Street/house number (e.g. "12A", "16/1"). Required when addressId is not provided.'),
   type: buildingTypeSchema,
   totalUnits: zod.z.coerce.number().int().min(BUILDING_LIMITS.UNITS_MIN, "Building must have at least 1 unit").max(
     BUILDING_LIMITS.UNITS_MAX,
@@ -389,9 +388,12 @@ var createBuildingSchema = zod.z.object({
 });
 var updateBuildingSchema = zod.z.object({
   name: zod.z.string().min(BUILDING_LIMITS.NAME_MIN).max(BUILDING_LIMITS.NAME_MAX).optional().describe("New display name of the building."),
-  address: zod.z.string().min(BUILDING_LIMITS.ADDRESS_MIN).max(BUILDING_LIMITS.ADDRESS_MAX).optional().describe("New full postal address."),
+  addressId: uuidSchema.optional().describe("UUID of the new address record to assign to this building."),
+  streetId: uuidSchema.optional().describe("UUID of the street record. Used with houseNumber to resolve or create an address."),
+  houseNumber: zod.z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN).max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).optional().describe(
+    'Street/house number (e.g. "12A", "16/1"). Used with streetId to resolve an address.'
+  ),
   type: buildingTypeSchema.optional(),
-  houseNumber: zod.z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN).max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).optional().describe('Street/house number (e.g. "12A"). Used as first HR01 reference segment.'),
   totalUnits: zod.z.coerce.number().int().min(BUILDING_LIMITS.UNITS_MIN).max(BUILDING_LIMITS.UNITS_MAX).optional().describe("Revised total unit count."),
   isStratified: multipartBoolean().optional().describe("Toggles whether the building is stratified (per-unit title deeds)."),
   removeHouseRulesFile: multipartBoolean().optional().describe(
@@ -1245,6 +1247,53 @@ var buildingFundsLedgerResponseSchema = zod.z.object({
   ),
   rows: zod.z.array(buildingFundsLedgerRowSchema).describe("One entry per co-owner with any owned area on the building.")
 }).meta({ id: "BuildingFundsLedgerResponse" });
+var conversationParticipantSchema = zod.z.looseObject({
+  id: zod.z.string().describe("Participation record ID."),
+  userId: zod.z.string().describe("UUID of the participant user."),
+  name: zod.z.string().describe("Participant display name."),
+  image: zod.z.string().nullable().optional().describe("Avatar URL; null when the user has no profile image."),
+  roleType: zod.z.string().nullable().optional().describe("Building role type of the participant; null when not applicable."),
+  lastReadAt: zod.z.string().describe("ISO-8601 timestamp of the last message this participant has read.")
+}).describe("A participant in a chat conversation.");
+var conversationLastMessageSchema = zod.z.looseObject({
+  id: zod.z.string().describe("UUID of the message."),
+  content: zod.z.string().describe("Plain-text message body (may be truncated for preview)."),
+  senderId: zod.z.string().describe("UUID of the user who sent the message."),
+  senderName: zod.z.string().describe("Display name of the sender."),
+  createdAt: zod.z.string().describe("ISO-8601 timestamp when the message was sent.")
+}).describe("Last message preview embedded in conversation list responses.");
+var conversationResponseSchema = zod.z.looseObject({
+  id: zod.z.string().describe("UUID of the conversation."),
+  buildingId: zod.z.string().describe("UUID of the building this conversation belongs to."),
+  type: zod.z.enum([ConversationType.DIRECT, ConversationType.GROUP]).describe("`direct` for 1:1 threads, `group` for named multi-user conversations."),
+  name: zod.z.string().nullable().optional().describe("Group name; null for direct conversations."),
+  participants: zod.z.array(conversationParticipantSchema).describe("All participants in the conversation."),
+  lastMessage: conversationLastMessageSchema.nullable().optional().describe("Most recent message; null when no messages have been sent."),
+  unreadCount: zod.z.number().describe("Number of unread messages for the calling user in this conversation."),
+  lastMessageAt: zod.z.string().describe("ISO-8601 timestamp of the most recent message."),
+  createdAt: zod.z.string().describe("ISO-8601 timestamp when the conversation was created.")
+}).describe("Conversation response from list and detail endpoints.");
+var chatMessageResponseSchema = zod.z.looseObject({
+  id: zod.z.string().describe("UUID of the message."),
+  conversationId: zod.z.string().describe("UUID of the parent conversation."),
+  senderId: zod.z.string().describe("UUID of the user who sent the message."),
+  senderName: zod.z.string().describe("Display name of the sender."),
+  senderImage: zod.z.string().nullable().optional().describe("Avatar URL of the sender; null when no profile image is set."),
+  senderRoleType: zod.z.string().nullable().optional().describe("Building role type of the sender; null when not applicable."),
+  content: zod.z.string().describe("Plain-text message body."),
+  createdAt: zod.z.string().describe("ISO-8601 timestamp when the message was sent.")
+}).describe("Chat message response from message list endpoints.");
+var conversationsListResponseSchema = zod.z.looseObject({
+  data: zod.z.array(conversationResponseSchema).describe("Page of conversations."),
+  nextCursor: zod.z.string().nullable().optional().describe("Opaque cursor for the next page; null when there are no more results.")
+}).describe("Cursor-paginated list of conversations.");
+var messagesListResponseSchema = zod.z.looseObject({
+  data: zod.z.array(chatMessageResponseSchema).describe("Page of messages."),
+  nextCursor: zod.z.string().nullable().optional().describe("Opaque cursor for the next page; null when there are no more results.")
+}).describe("Cursor-paginated list of chat messages.");
+var unreadCountResponseSchema = zod.z.looseObject({
+  unreadCount: zod.z.number().describe("Total number of unread messages across all conversations.")
+}).describe("Unread message count for a building.");
 var commentResponseSchema = zod.z.looseObject({
   id: zod.z.string().uuid(),
   entityType: zod.z.string().describe(
@@ -1262,6 +1311,77 @@ var commentResponseSchema = zod.z.looseObject({
     "True when the calling user is allowed to delete this comment (author or moderator)."
   )
 });
+var commonStatusOptions = [
+  chunkOY3KKXHH_cjs.CommonStatus.ACTIVE,
+  chunkOY3KKXHH_cjs.CommonStatus.COMPLETED,
+  chunkOY3KKXHH_cjs.CommonStatus.CANCELLED
+];
+var approvalStatusOptions = [
+  chunkOY3KKXHH_cjs.ApprovalStatus.PENDING,
+  chunkOY3KKXHH_cjs.ApprovalStatus.APPROVED,
+  chunkOY3KKXHH_cjs.ApprovalStatus.REJECTED
+];
+var maintenanceStatusOptions = [
+  chunkOY3KKXHH_cjs.MaintenanceStatus.PENDING,
+  chunkOY3KKXHH_cjs.MaintenanceStatus.IN_PROGRESS,
+  chunkOY3KKXHH_cjs.MaintenanceStatus.COMPLETED,
+  chunkOY3KKXHH_cjs.MaintenanceStatus.CANCELLED
+];
+var failureStatusOptions = [
+  chunkOY3KKXHH_cjs.FailureStatus.PENDING,
+  chunkOY3KKXHH_cjs.FailureStatus.IN_PROGRESS,
+  chunkOY3KKXHH_cjs.FailureStatus.RESOLVED
+];
+var priorityOptions = ["normal", "urgent"];
+var CommonStatusSchema = zod.z.enum(commonStatusOptions);
+var ApprovalStatusSchema = zod.z.enum(approvalStatusOptions);
+var MaintenanceStatusSchema = zod.z.enum(maintenanceStatusOptions);
+var FailureStatusSchema = zod.z.enum(failureStatusOptions);
+var PrioritySchema = zod.z.enum(priorityOptions);
+
+// src/schemas/responses/documents.ts
+var documentLinkedRecordSchema = zod.z.looseObject({
+  type: zod.z.enum(["notice", "maintenance_log", "failure_report", "poll"]).describe("Kind of entity this document is linked to."),
+  id: zod.z.string().describe("UUID of the linked entity."),
+  title: zod.z.string().optional().nullable().describe("Title of the linked entity."),
+  status: FailureStatusSchema.optional().nullable().describe("Status of the linked failure report; null for other entity types."),
+  contractor: zod.z.string().optional().nullable().describe("Contractor name from linked maintenance log; null for other entity types."),
+  cost: zod.z.number().optional().nullable().describe("Cost from linked maintenance log; null when not recorded."),
+  financedBy: maintenanceFinancedBySchema.optional().nullable().describe("Funding source from linked maintenance log; null for other entity types."),
+  warranty: zod.z.boolean().optional().nullable().describe("Whether the linked maintenance work is under warranty."),
+  createdAt: zod.z.string().optional().nullable().describe("ISO-8601 creation timestamp."),
+  updatedAt: zod.z.string().optional().nullable().describe("ISO-8601 last-edit timestamp.")
+}).describe("Reference to an entity linked to a document.");
+var documentFileSchema = zod.z.looseObject({
+  id: zod.z.string().describe("UUID of the file record."),
+  fileUrl: zod.z.string().describe("URL to download or preview the file."),
+  fileName: zod.z.string().describe("Original file name as uploaded."),
+  mimeType: zod.z.string().optional().nullable().describe("MIME type of the file; null when not detected."),
+  fileSize: zod.z.number().optional().nullable().describe("File size in bytes; null when not recorded."),
+  createdAt: zod.z.union([zod.z.string(), zod.z.date()]).describe("Timestamp when the file was uploaded.")
+}).describe("Individual file within a document container.");
+var documentResponseSchema = zod.z.looseObject({
+  id: zod.z.string().uuid().describe("UUID of the document."),
+  containerId: zod.z.string().uuid().optional().describe("UUID of the parent container; absent for standalone documents."),
+  buildingId: zod.z.string().uuid().describe("UUID of the building this document belongs to."),
+  title: zod.z.string().describe("Document title displayed in the UI."),
+  description: zod.z.string().optional().nullable().describe("Optional description; null when not provided."),
+  documentUrl: zod.z.string().optional().nullable().describe("Legacy single-file URL; null for multi-file documents."),
+  files: zod.z.array(documentFileSchema).optional().default([]).describe("File attachments; empty array when no files are attached."),
+  uploadedBy: zod.z.string().uuid().describe("UUID of the user who uploaded the document."),
+  uploadedByName: zod.z.string().describe("Display name of the uploader."),
+  createdAt: zod.z.union([zod.z.string(), zod.z.date()]).describe("ISO-8601 timestamp when the document was created."),
+  updatedAt: zod.z.union([zod.z.string(), zod.z.date()]).nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited."),
+  canEdit: zod.z.boolean().describe("True when the calling user may edit this document."),
+  canDelete: zod.z.boolean().describe("True when the calling user may delete this document."),
+  isPrivate: zod.z.boolean().optional().default(false).describe("True when the document is visible only to managers."),
+  type: zod.z.enum(["document", "notice", "failure_report", "maintenance_log", "poll"]).optional().describe("Source entity type; absent for standalone documents."),
+  sourceId: zod.z.string().optional().describe("UUID of the source entity when type is set; absent for standalone documents."),
+  sourceTitle: zod.z.string().optional().describe("Title of the source entity for quick display; absent for standalone documents."),
+  linkedRecords: zod.z.array(documentLinkedRecordSchema).optional().default([]).describe("Entities linked to this document; empty when none."),
+  visibility: zod.z.enum(["public", "private"]).optional().describe("Document visibility level; absent when the building uses default visibility.")
+}).describe("Document response from list and detail endpoints.");
+var paginatedDocumentsResponseSchema = paginatedResponseSchema(documentResponseSchema);
 var eventUserSchema = zod.z.looseObject({
   id: zod.z.string().describe("UUID of the user."),
   name: zod.z.string().describe("User display name.")
@@ -1320,33 +1440,6 @@ var eventResponseSchema = zod.z.looseObject({
   )
 });
 var paginatedEventsResponseSchema = paginatedResponseSchema(eventResponseSchema);
-var commonStatusOptions = [
-  chunkOY3KKXHH_cjs.CommonStatus.ACTIVE,
-  chunkOY3KKXHH_cjs.CommonStatus.COMPLETED,
-  chunkOY3KKXHH_cjs.CommonStatus.CANCELLED
-];
-var approvalStatusOptions = [
-  chunkOY3KKXHH_cjs.ApprovalStatus.PENDING,
-  chunkOY3KKXHH_cjs.ApprovalStatus.APPROVED,
-  chunkOY3KKXHH_cjs.ApprovalStatus.REJECTED
-];
-var maintenanceStatusOptions = [
-  chunkOY3KKXHH_cjs.MaintenanceStatus.PENDING,
-  chunkOY3KKXHH_cjs.MaintenanceStatus.IN_PROGRESS,
-  chunkOY3KKXHH_cjs.MaintenanceStatus.COMPLETED,
-  chunkOY3KKXHH_cjs.MaintenanceStatus.CANCELLED
-];
-var failureStatusOptions = [
-  chunkOY3KKXHH_cjs.FailureStatus.PENDING,
-  chunkOY3KKXHH_cjs.FailureStatus.IN_PROGRESS,
-  chunkOY3KKXHH_cjs.FailureStatus.RESOLVED
-];
-var priorityOptions = ["normal", "urgent"];
-var CommonStatusSchema = zod.z.enum(commonStatusOptions);
-var ApprovalStatusSchema = zod.z.enum(approvalStatusOptions);
-var MaintenanceStatusSchema = zod.z.enum(maintenanceStatusOptions);
-var FailureStatusSchema = zod.z.enum(failureStatusOptions);
-var PrioritySchema = zod.z.enum(priorityOptions);
 var nestedFileSchema = zod.z.looseObject({
   id: zod.z.string().uuid(),
   title: zod.z.string().describe("Human-readable file name displayed in the UI."),
@@ -1943,8 +2036,13 @@ exports.buildingUserEntitySchema = buildingUserEntitySchema;
 exports.businessPartnerResponseSchema = businessPartnerResponseSchema;
 exports.camtImportResponseSchema = camtImportResponseSchema;
 exports.certiliaUserinfoSchema = certiliaUserinfoSchema;
+exports.chatMessageResponseSchema = chatMessageResponseSchema;
 exports.commentResponseSchema = commentResponseSchema;
 exports.commonStatusOptions = commonStatusOptions;
+exports.conversationLastMessageSchema = conversationLastMessageSchema;
+exports.conversationParticipantSchema = conversationParticipantSchema;
+exports.conversationResponseSchema = conversationResponseSchema;
+exports.conversationsListResponseSchema = conversationsListResponseSchema;
 exports.copyFaqsSchema = copyFaqsSchema;
 exports.copyTransactionCategoriesSchema = copyTransactionCategoriesSchema;
 exports.createBuildingSchema = createBuildingSchema;
@@ -1964,6 +2062,9 @@ exports.cursorQuerySchema = cursorQuerySchema;
 exports.dateRangeParamsSchema = dateRangeParamsSchema;
 exports.dateRangeWithValidationSchema = dateRangeWithValidationSchema;
 exports.dateTimeSchema = dateTimeSchema;
+exports.documentFileSchema = documentFileSchema;
+exports.documentLinkedRecordSchema = documentLinkedRecordSchema;
+exports.documentResponseSchema = documentResponseSchema;
 exports.emailMessageSchema = emailMessageSchema;
 exports.emailSchema = emailSchema;
 exports.emailThreadDetailSchema = emailThreadDetailSchema;
@@ -1992,6 +2093,7 @@ exports.maintenanceLogEventSchema = maintenanceLogEventSchema;
 exports.maintenanceLogResponseSchema = maintenanceLogResponseSchema;
 exports.maintenanceStatusOptions = maintenanceStatusOptions;
 exports.messageResponseSchema = messageResponseSchema;
+exports.messagesListResponseSchema = messagesListResponseSchema;
 exports.multipartArray = multipartArray;
 exports.multipartBoolean = multipartBoolean;
 exports.noticeEventSchema = noticeEventSchema;
@@ -2006,6 +2108,7 @@ exports.orgQuotaListSchema = orgQuotaListSchema;
 exports.ownerResponseSchema = ownerResponseSchema;
 exports.paginatedApartmentsResponseSchema = paginatedApartmentsResponseSchema;
 exports.paginatedBuildingsResponseSchema = paginatedBuildingsResponseSchema;
+exports.paginatedDocumentsResponseSchema = paginatedDocumentsResponseSchema;
 exports.paginatedEmailThreadsResponseSchema = paginatedEmailThreadsResponseSchema;
 exports.paginatedEventsResponseSchema = paginatedEventsResponseSchema;
 exports.paginatedFailureReportsResponseSchema = paginatedFailureReportsResponseSchema;
@@ -2034,6 +2137,7 @@ exports.storageUnitSchema = storageUnitSchema;
 exports.storageUnitUserSchema = storageUnitUserSchema;
 exports.strongPasswordSchema = strongPasswordSchema;
 exports.timeSchema = timeSchema;
+exports.unreadCountResponseSchema = unreadCountResponseSchema;
 exports.updateBuildingSchema = updateBuildingSchema;
 exports.updateBusinessPartnerSchema = updateBusinessPartnerSchema;
 exports.updateConversationSchema = updateConversationSchema;
@@ -2057,5 +2161,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-ACDY7K6W.cjs.map
-//# sourceMappingURL=chunk-ACDY7K6W.cjs.map
+//# sourceMappingURL=chunk-EVC5KG6I.cjs.map
+//# sourceMappingURL=chunk-EVC5KG6I.cjs.map

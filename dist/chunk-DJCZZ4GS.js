@@ -1,6 +1,6 @@
 import { optionalIbanSchema } from './chunk-WK7VOCOE.js';
 import { ApartmentRole, OrgRole, OrgType, BuildingType, BuildingRole, PricuvaRefMode, FundsSource, QUOTA_RESOURCE_TYPES, FailureUnitType, FailureLocationType, Priority, FailureStatus, ORG_QUOTA_RESOURCE_TYPES, PollType, TransactionType, PlatformRole, BuildingStatus, CommonStatus, ApprovalStatus, MaintenanceStatus, NotificationType } from './chunk-ANLWV62L.js';
-import { BACKEND_ERROR_CODES } from './chunk-2AGAVFFE.js';
+import { BACKEND_ERROR_CODES } from './chunk-XYPWKJXJ.js';
 import { z } from 'zod';
 
 var apiErrorSchema = z.object({
@@ -342,14 +342,13 @@ var BUILDING_LIMITS = {
 };
 var createBuildingSchema = z.object({
   name: z.string().min(BUILDING_LIMITS.NAME_MIN, "Name is required").max(BUILDING_LIMITS.NAME_MAX, `Name must be at most ${BUILDING_LIMITS.NAME_MAX} characters`).describe("Display name of the building shown throughout the UI."),
-  address: z.string().min(BUILDING_LIMITS.ADDRESS_MIN, "Address is required").max(
-    BUILDING_LIMITS.ADDRESS_MAX,
-    `Address must be at most ${BUILDING_LIMITS.ADDRESS_MAX} characters`
-  ).describe("Full postal address including street and city."),
-  streetId: uuidSchema.describe(
-    "UUID of the street record the building belongs to; used to normalise address data."
+  addressId: uuidSchema.optional().describe(
+    "UUID of an existing address record. When provided, streetId/houseNumber are ignored."
   ),
-  houseNumber: z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN, "House number is required").max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).describe('Street/house number including any suffix (e.g. "12A", "5B").'),
+  streetId: uuidSchema.optional().describe(
+    "UUID of the street record. Required when addressId is not provided (address will be resolved or created)."
+  ),
+  houseNumber: z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN, "House number is required").max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).optional().describe('Street/house number (e.g. "12A", "16/1"). Required when addressId is not provided.'),
   type: buildingTypeSchema,
   totalUnits: z.coerce.number().int().min(BUILDING_LIMITS.UNITS_MIN, "Building must have at least 1 unit").max(
     BUILDING_LIMITS.UNITS_MAX,
@@ -387,9 +386,12 @@ var createBuildingSchema = z.object({
 });
 var updateBuildingSchema = z.object({
   name: z.string().min(BUILDING_LIMITS.NAME_MIN).max(BUILDING_LIMITS.NAME_MAX).optional().describe("New display name of the building."),
-  address: z.string().min(BUILDING_LIMITS.ADDRESS_MIN).max(BUILDING_LIMITS.ADDRESS_MAX).optional().describe("New full postal address."),
+  addressId: uuidSchema.optional().describe("UUID of the new address record to assign to this building."),
+  streetId: uuidSchema.optional().describe("UUID of the street record. Used with houseNumber to resolve or create an address."),
+  houseNumber: z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN).max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).optional().describe(
+    'Street/house number (e.g. "12A", "16/1"). Used with streetId to resolve an address.'
+  ),
   type: buildingTypeSchema.optional(),
-  houseNumber: z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN).max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).optional().describe('Street/house number (e.g. "12A"). Used as first HR01 reference segment.'),
   totalUnits: z.coerce.number().int().min(BUILDING_LIMITS.UNITS_MIN).max(BUILDING_LIMITS.UNITS_MAX).optional().describe("Revised total unit count."),
   isStratified: multipartBoolean().optional().describe("Toggles whether the building is stratified (per-unit title deeds)."),
   removeHouseRulesFile: multipartBoolean().optional().describe(
@@ -1243,6 +1245,53 @@ var buildingFundsLedgerResponseSchema = z.object({
   ),
   rows: z.array(buildingFundsLedgerRowSchema).describe("One entry per co-owner with any owned area on the building.")
 }).meta({ id: "BuildingFundsLedgerResponse" });
+var conversationParticipantSchema = z.looseObject({
+  id: z.string().describe("Participation record ID."),
+  userId: z.string().describe("UUID of the participant user."),
+  name: z.string().describe("Participant display name."),
+  image: z.string().nullable().optional().describe("Avatar URL; null when the user has no profile image."),
+  roleType: z.string().nullable().optional().describe("Building role type of the participant; null when not applicable."),
+  lastReadAt: z.string().describe("ISO-8601 timestamp of the last message this participant has read.")
+}).describe("A participant in a chat conversation.");
+var conversationLastMessageSchema = z.looseObject({
+  id: z.string().describe("UUID of the message."),
+  content: z.string().describe("Plain-text message body (may be truncated for preview)."),
+  senderId: z.string().describe("UUID of the user who sent the message."),
+  senderName: z.string().describe("Display name of the sender."),
+  createdAt: z.string().describe("ISO-8601 timestamp when the message was sent.")
+}).describe("Last message preview embedded in conversation list responses.");
+var conversationResponseSchema = z.looseObject({
+  id: z.string().describe("UUID of the conversation."),
+  buildingId: z.string().describe("UUID of the building this conversation belongs to."),
+  type: z.enum([ConversationType.DIRECT, ConversationType.GROUP]).describe("`direct` for 1:1 threads, `group` for named multi-user conversations."),
+  name: z.string().nullable().optional().describe("Group name; null for direct conversations."),
+  participants: z.array(conversationParticipantSchema).describe("All participants in the conversation."),
+  lastMessage: conversationLastMessageSchema.nullable().optional().describe("Most recent message; null when no messages have been sent."),
+  unreadCount: z.number().describe("Number of unread messages for the calling user in this conversation."),
+  lastMessageAt: z.string().describe("ISO-8601 timestamp of the most recent message."),
+  createdAt: z.string().describe("ISO-8601 timestamp when the conversation was created.")
+}).describe("Conversation response from list and detail endpoints.");
+var chatMessageResponseSchema = z.looseObject({
+  id: z.string().describe("UUID of the message."),
+  conversationId: z.string().describe("UUID of the parent conversation."),
+  senderId: z.string().describe("UUID of the user who sent the message."),
+  senderName: z.string().describe("Display name of the sender."),
+  senderImage: z.string().nullable().optional().describe("Avatar URL of the sender; null when no profile image is set."),
+  senderRoleType: z.string().nullable().optional().describe("Building role type of the sender; null when not applicable."),
+  content: z.string().describe("Plain-text message body."),
+  createdAt: z.string().describe("ISO-8601 timestamp when the message was sent.")
+}).describe("Chat message response from message list endpoints.");
+var conversationsListResponseSchema = z.looseObject({
+  data: z.array(conversationResponseSchema).describe("Page of conversations."),
+  nextCursor: z.string().nullable().optional().describe("Opaque cursor for the next page; null when there are no more results.")
+}).describe("Cursor-paginated list of conversations.");
+var messagesListResponseSchema = z.looseObject({
+  data: z.array(chatMessageResponseSchema).describe("Page of messages."),
+  nextCursor: z.string().nullable().optional().describe("Opaque cursor for the next page; null when there are no more results.")
+}).describe("Cursor-paginated list of chat messages.");
+var unreadCountResponseSchema = z.looseObject({
+  unreadCount: z.number().describe("Total number of unread messages across all conversations.")
+}).describe("Unread message count for a building.");
 var commentResponseSchema = z.looseObject({
   id: z.string().uuid(),
   entityType: z.string().describe(
@@ -1260,6 +1309,77 @@ var commentResponseSchema = z.looseObject({
     "True when the calling user is allowed to delete this comment (author or moderator)."
   )
 });
+var commonStatusOptions = [
+  CommonStatus.ACTIVE,
+  CommonStatus.COMPLETED,
+  CommonStatus.CANCELLED
+];
+var approvalStatusOptions = [
+  ApprovalStatus.PENDING,
+  ApprovalStatus.APPROVED,
+  ApprovalStatus.REJECTED
+];
+var maintenanceStatusOptions = [
+  MaintenanceStatus.PENDING,
+  MaintenanceStatus.IN_PROGRESS,
+  MaintenanceStatus.COMPLETED,
+  MaintenanceStatus.CANCELLED
+];
+var failureStatusOptions = [
+  FailureStatus.PENDING,
+  FailureStatus.IN_PROGRESS,
+  FailureStatus.RESOLVED
+];
+var priorityOptions = ["normal", "urgent"];
+var CommonStatusSchema = z.enum(commonStatusOptions);
+var ApprovalStatusSchema = z.enum(approvalStatusOptions);
+var MaintenanceStatusSchema = z.enum(maintenanceStatusOptions);
+var FailureStatusSchema = z.enum(failureStatusOptions);
+var PrioritySchema = z.enum(priorityOptions);
+
+// src/schemas/responses/documents.ts
+var documentLinkedRecordSchema = z.looseObject({
+  type: z.enum(["notice", "maintenance_log", "failure_report", "poll"]).describe("Kind of entity this document is linked to."),
+  id: z.string().describe("UUID of the linked entity."),
+  title: z.string().optional().nullable().describe("Title of the linked entity."),
+  status: FailureStatusSchema.optional().nullable().describe("Status of the linked failure report; null for other entity types."),
+  contractor: z.string().optional().nullable().describe("Contractor name from linked maintenance log; null for other entity types."),
+  cost: z.number().optional().nullable().describe("Cost from linked maintenance log; null when not recorded."),
+  financedBy: maintenanceFinancedBySchema.optional().nullable().describe("Funding source from linked maintenance log; null for other entity types."),
+  warranty: z.boolean().optional().nullable().describe("Whether the linked maintenance work is under warranty."),
+  createdAt: z.string().optional().nullable().describe("ISO-8601 creation timestamp."),
+  updatedAt: z.string().optional().nullable().describe("ISO-8601 last-edit timestamp.")
+}).describe("Reference to an entity linked to a document.");
+var documentFileSchema = z.looseObject({
+  id: z.string().describe("UUID of the file record."),
+  fileUrl: z.string().describe("URL to download or preview the file."),
+  fileName: z.string().describe("Original file name as uploaded."),
+  mimeType: z.string().optional().nullable().describe("MIME type of the file; null when not detected."),
+  fileSize: z.number().optional().nullable().describe("File size in bytes; null when not recorded."),
+  createdAt: z.union([z.string(), z.date()]).describe("Timestamp when the file was uploaded.")
+}).describe("Individual file within a document container.");
+var documentResponseSchema = z.looseObject({
+  id: z.string().uuid().describe("UUID of the document."),
+  containerId: z.string().uuid().optional().describe("UUID of the parent container; absent for standalone documents."),
+  buildingId: z.string().uuid().describe("UUID of the building this document belongs to."),
+  title: z.string().describe("Document title displayed in the UI."),
+  description: z.string().optional().nullable().describe("Optional description; null when not provided."),
+  documentUrl: z.string().optional().nullable().describe("Legacy single-file URL; null for multi-file documents."),
+  files: z.array(documentFileSchema).optional().default([]).describe("File attachments; empty array when no files are attached."),
+  uploadedBy: z.string().uuid().describe("UUID of the user who uploaded the document."),
+  uploadedByName: z.string().describe("Display name of the uploader."),
+  createdAt: z.union([z.string(), z.date()]).describe("ISO-8601 timestamp when the document was created."),
+  updatedAt: z.union([z.string(), z.date()]).nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited."),
+  canEdit: z.boolean().describe("True when the calling user may edit this document."),
+  canDelete: z.boolean().describe("True when the calling user may delete this document."),
+  isPrivate: z.boolean().optional().default(false).describe("True when the document is visible only to managers."),
+  type: z.enum(["document", "notice", "failure_report", "maintenance_log", "poll"]).optional().describe("Source entity type; absent for standalone documents."),
+  sourceId: z.string().optional().describe("UUID of the source entity when type is set; absent for standalone documents."),
+  sourceTitle: z.string().optional().describe("Title of the source entity for quick display; absent for standalone documents."),
+  linkedRecords: z.array(documentLinkedRecordSchema).optional().default([]).describe("Entities linked to this document; empty when none."),
+  visibility: z.enum(["public", "private"]).optional().describe("Document visibility level; absent when the building uses default visibility.")
+}).describe("Document response from list and detail endpoints.");
+var paginatedDocumentsResponseSchema = paginatedResponseSchema(documentResponseSchema);
 var eventUserSchema = z.looseObject({
   id: z.string().describe("UUID of the user."),
   name: z.string().describe("User display name.")
@@ -1318,33 +1438,6 @@ var eventResponseSchema = z.looseObject({
   )
 });
 var paginatedEventsResponseSchema = paginatedResponseSchema(eventResponseSchema);
-var commonStatusOptions = [
-  CommonStatus.ACTIVE,
-  CommonStatus.COMPLETED,
-  CommonStatus.CANCELLED
-];
-var approvalStatusOptions = [
-  ApprovalStatus.PENDING,
-  ApprovalStatus.APPROVED,
-  ApprovalStatus.REJECTED
-];
-var maintenanceStatusOptions = [
-  MaintenanceStatus.PENDING,
-  MaintenanceStatus.IN_PROGRESS,
-  MaintenanceStatus.COMPLETED,
-  MaintenanceStatus.CANCELLED
-];
-var failureStatusOptions = [
-  FailureStatus.PENDING,
-  FailureStatus.IN_PROGRESS,
-  FailureStatus.RESOLVED
-];
-var priorityOptions = ["normal", "urgent"];
-var CommonStatusSchema = z.enum(commonStatusOptions);
-var ApprovalStatusSchema = z.enum(approvalStatusOptions);
-var MaintenanceStatusSchema = z.enum(maintenanceStatusOptions);
-var FailureStatusSchema = z.enum(failureStatusOptions);
-var PrioritySchema = z.enum(priorityOptions);
 var nestedFileSchema = z.looseObject({
   id: z.string().uuid(),
   title: z.string().describe("Human-readable file name displayed in the UI."),
@@ -1892,6 +1985,6 @@ var pollVotersResponseSchema = z.looseObject({
 });
 var paginatedPollsResponseSchema = paginatedResponseSchema(pollResponseSchema);
 
-export { ARCHIVE_TYPES, ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, baseEntitySchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, commentResponseSchema, commonStatusOptions, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createEmailThreadRequestSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createOwnerSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgQuotaConfigSchema, orgQuotaEntrySchema, orgQuotaListSchema, ownerResponseSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, registerSchema, reorderFaqsSchema, replyEmailThreadRequestSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, updateBuildingSchema, updateBusinessPartnerSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-BIN5YYAW.js.map
-//# sourceMappingURL=chunk-BIN5YYAW.js.map
+export { ARCHIVE_TYPES, ApprovalStatusSchema, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, baseEntitySchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createEmailThreadRequestSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createOwnerSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, messagesListResponseSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgQuotaConfigSchema, orgQuotaEntrySchema, orgQuotaListSchema, ownerResponseSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, registerSchema, reorderFaqsSchema, replyEmailThreadRequestSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, unreadCountResponseSchema, updateBuildingSchema, updateBusinessPartnerSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
+//# sourceMappingURL=chunk-DJCZZ4GS.js.map
+//# sourceMappingURL=chunk-DJCZZ4GS.js.map

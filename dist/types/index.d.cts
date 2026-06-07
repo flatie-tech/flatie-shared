@@ -1,7 +1,7 @@
 import { B as BuildingType, P as PollType } from '../poll-type.enum-CGV5tBqR.cjs';
 import { B as BuildingRole, P as Permission, O as OrgRole, b as PlatformRole } from '../role.enum-BTOXn9M9.cjs';
 import { F as FailureStatus, e as TransactionType, T as TransactionCategory, C as CommonStatus } from '../status.enum-BYlt7_Fs.cjs';
-export { D as DateRangeParams, P as PaginatedResponse, a as PaginationParams, c as createPaginatedResponse } from '../pagination.types-CKR9lS7u.cjs';
+export { C as CursorPaginatedResponse, D as DateRangeParams, P as PaginatedResponse, a as PaginationParams, c as createPaginatedResponse } from '../pagination.types-BdLhL-Jg.cjs';
 
 /**
  * Base entity with common fields for all database entities
@@ -443,6 +443,7 @@ interface User extends BaseEntity {
     image?: string | null;
     phone?: string | null;
     address?: string | null;
+    oib?: string | null;
     agreedToTermsAndConditions?: boolean | null;
     termsAgreedAt?: Date | string | null;
 }

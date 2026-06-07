@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { Strict } from './_strict';
 
 /**
  * Expected-vs-paid building-funds ledger for a building over a single
@@ -88,5 +89,5 @@ export const buildingFundsLedgerResponseSchema = z
   })
   .meta({ id: 'BuildingFundsLedgerResponse' });
 
-export type BuildingFundsLedgerRow = z.infer<typeof buildingFundsLedgerRowSchema>;
-export type BuildingFundsLedgerResponse = z.infer<typeof buildingFundsLedgerResponseSchema>;
+export type BuildingFundsLedgerRow = Strict<z.infer<typeof buildingFundsLedgerRowSchema>>;
+export type BuildingFundsLedgerResponse = Strict<z.infer<typeof buildingFundsLedgerResponseSchema>>;

@@ -1,8 +1,59 @@
-import { P as PaginatedResponse } from '../pagination.types-CKR9lS7u.cjs';
+import { P as PaginatedResponse } from '../pagination.types-BdLhL-Jg.cjs';
 import { z } from 'zod';
 import { BackendErrorCode } from '../errors/index.cjs';
 import { P as Permission, S as ScopedDomain, a as ScopedAction, B as BuildingRole, O as OrgRole, b as PlatformRole } from '../role.enum-BTOXn9M9.cjs';
 import { F as FailureStatus, P as Priority } from '../status.enum-BYlt7_Fs.cjs';
+
+/**
+ * Croatian house number normalization and parsing.
+ *
+ * Croatian house numbers follow patterns defined by Pravilnik NN 117/2022:
+ * - Plain number: "42"
+ * - Number + letter suffix (infill): "42A", "22B"
+ * - Number/sub-number (multiple entrances): "16/1", "16/2"
+ * - BB (bez broja — no assigned number, rural): "BB"
+ */
+/**
+ * Normalize a raw house number input to its canonical form.
+ * - Trims whitespace
+ * - Uppercases
+ * - Strips spaces between digits and letters ("42 A" → "42A")
+ * - Strips spaces around slash ("16 / 1" → "16/1")
+ * - "bb" → "BB"
+ *
+ * Returns null for empty/whitespace-only input or invalid values.
+ */
+declare function normalizeHouseNumber(raw: string): string | null;
+/**
+ * Check whether a raw house number string is valid after normalization.
+ */
+declare function isValidHouseNumber(raw: string): boolean;
+interface ParsedHouseNumber {
+    number: number;
+    letter?: string;
+    subNumber?: number;
+}
+/**
+ * Parse a normalized house number into structured components for sorting.
+ * Expects already-normalized input (uppercase, no spaces).
+ *
+ * "42"   → { number: 42 }
+ * "42A"  → { number: 42, letter: "A" }
+ * "16/1" → { number: 16, subNumber: 1 }
+ * "BB"   → null
+ */
+declare function parseHouseNumber(normalized: string): ParsedHouseNumber | null;
+interface AddressParts {
+    street: string;
+    houseNumber: string;
+    postalCode: string;
+    city: string;
+}
+/**
+ * Format address components into the canonical Croatian display string.
+ * "Ilica 42A, 10000 Zagreb"
+ */
+declare function formatAddress(parts: AddressParts): string;
 
 /**
  * Locale utilities — shared across web, mobile, and backend so app-locale
@@ -336,4 +387,4 @@ declare function getDateRange(filter: 'today' | 'yesterday' | 'week' | 'month'):
  */
 declare function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(func: T, delay: number): (...args: Parameters<T>) => void;
 
-export { type ActionFlags, DATETIME_FORMATS, DATE_FORMATS, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, type ParsedApiError, type PermissionChecker, type PermissionSubject, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type StatusVariant, TIME_FORMATS, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatCurrencyByLocale, formatDate as formatDateByLocale, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isManagerialRole, normalizePaginatedResponse, parseApiError, parseData, priorityVariant };
+export { type ActionFlags, type AddressParts, DATETIME_FORMATS, DATE_FORMATS, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, type ParsedApiError, type ParsedHouseNumber, type PermissionChecker, type PermissionSubject, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type StatusVariant, TIME_FORMATS, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatAddress, formatCurrency, formatCurrencyByLocale, formatDate as formatDateByLocale, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isManagerialRole, isValidHouseNumber, normalizeHouseNumber, normalizePaginatedResponse, parseApiError, parseData, parseHouseNumber, priorityVariant };

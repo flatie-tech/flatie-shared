@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { paginatedResponseSchema } from '../pagination.schema';
+import type { Strict } from './_strict';
 
 const emailDirectionSchema = z
   .enum(['outbound', 'inbound'])
@@ -105,8 +106,10 @@ export const emailThreadDetailSchema = emailThreadSchema
 
 export const paginatedEmailThreadsResponseSchema = paginatedResponseSchema(emailThreadSchema);
 
-export type EmailDirection = z.infer<typeof emailDirectionSchema>;
-export type EmailMessage = z.infer<typeof emailMessageSchema>;
-export type EmailThread = z.infer<typeof emailThreadSchema>;
-export type EmailThreadDetail = z.infer<typeof emailThreadDetailSchema>;
-export type PaginatedEmailThreadsResponse = z.infer<typeof paginatedEmailThreadsResponseSchema>;
+export type EmailDirection = Strict<z.infer<typeof emailDirectionSchema>>;
+export type EmailMessage = Strict<z.infer<typeof emailMessageSchema>>;
+export type EmailThread = Strict<z.infer<typeof emailThreadSchema>>;
+export type EmailThreadDetail = Strict<z.infer<typeof emailThreadDetailSchema>>;
+export type PaginatedEmailThreadsResponse = Strict<
+  z.infer<typeof paginatedEmailThreadsResponseSchema>
+>;

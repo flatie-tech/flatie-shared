@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { paginatedResponseSchema } from '../pagination.schema';
 import { nestedEventSchema, nestedFileSchema } from './_nested';
+import type { Strict } from './_strict';
 
 export const noticeResponseSchema = z.looseObject({
   id: z.string().uuid(),
@@ -63,5 +64,5 @@ export const noticeResponseSchema = z.looseObject({
 
 export const paginatedNoticesResponseSchema = paginatedResponseSchema(noticeResponseSchema);
 
-export type NoticeResponse = z.infer<typeof noticeResponseSchema>;
-export type PaginatedNoticesResponse = z.infer<typeof paginatedNoticesResponseSchema>;
+export type NoticeResponse = Strict<z.infer<typeof noticeResponseSchema>>;
+export type PaginatedNoticesResponse = Strict<z.infer<typeof paginatedNoticesResponseSchema>>;

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { pollTypeSchema } from '../entities/poll.schema';
 import { paginatedResponseSchema } from '../pagination.schema';
+import type { Strict } from './_strict';
 
 const pollStatusSchema = z
   .enum(['active', 'completed', 'cancelled'])
@@ -289,7 +290,7 @@ export const pollVotersResponseSchema = z.looseObject({
 
 export const paginatedPollsResponseSchema = paginatedResponseSchema(pollResponseSchema);
 
-export type PollResponse = z.infer<typeof pollResponseSchema>;
-export type PollResults = z.infer<typeof pollResultsSchema>;
-export type PollVotersResponse = z.infer<typeof pollVotersResponseSchema>;
-export type PaginatedPollsResponse = z.infer<typeof paginatedPollsResponseSchema>;
+export type PollResponse = Strict<z.infer<typeof pollResponseSchema>>;
+export type PollResults = Strict<z.infer<typeof pollResultsSchema>>;
+export type PollVotersResponse = Strict<z.infer<typeof pollVotersResponseSchema>>;
+export type PaginatedPollsResponse = Strict<z.infer<typeof paginatedPollsResponseSchema>>;

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { Strict } from './_strict';
 
 /**
  * Response shape returned by bare-action endpoints (approve, archive, restore,
@@ -18,4 +19,4 @@ export const messageResponseSchema = z.object({
     ),
 });
 
-export type MessageResponse = z.infer<typeof messageResponseSchema>;
+export type MessageResponse = Strict<z.infer<typeof messageResponseSchema>>;

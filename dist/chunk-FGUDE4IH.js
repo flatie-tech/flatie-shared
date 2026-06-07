@@ -1,6 +1,31 @@
 import { BuildingRole, PlatformRole, OrgRole, SCOPED_PERMISSIONS, APPROVE_PERMISSIONS, FailureStatus, Priority } from './chunk-ANLWV62L.js';
-import { isBackendErrorCode } from './chunk-2AGAVFFE.js';
-import { createPaginatedResponse } from './chunk-W3SU22LA.js';
+import { isBackendErrorCode } from './chunk-XYPWKJXJ.js';
+import { createPaginatedResponse } from './chunk-E4FOXN63.js';
+
+// src/utils/house-number.ts
+var HOUSE_NUMBER_PATTERN = /^\d{1,4}[A-Z]?(?:\/\d{1,3})?$|^BB$/;
+function normalizeHouseNumber(raw) {
+  if (!raw || !raw.trim()) return null;
+  const normalized = raw.trim().toUpperCase().replace(/\s+/g, "").replace(/\s*\/\s*/g, "/");
+  if (!HOUSE_NUMBER_PATTERN.test(normalized)) return null;
+  return normalized;
+}
+function isValidHouseNumber(raw) {
+  return normalizeHouseNumber(raw) !== null;
+}
+function parseHouseNumber(normalized) {
+  if (normalized === "BB") return null;
+  const match = normalized.match(/^(\d{1,4})([A-Z])?(?:\/(\d{1,3}))?$/);
+  if (!match) return null;
+  const result = { number: Number.parseInt(match[1], 10) };
+  if (match[2]) result.letter = match[2];
+  if (match[3]) result.subNumber = Number.parseInt(match[3], 10);
+  return result;
+}
+function formatAddress(parts) {
+  const streetPart = [parts.street, parts.houseNumber].filter(Boolean).join(" ");
+  return `${streetPart}, ${parts.postalCode} ${parts.city}`;
+}
 
 // src/utils/locale.ts
 var LOCALE_MAP = {
@@ -332,6 +357,6 @@ function debounce(func, delay) {
   };
 }
 
-export { DATETIME_FORMATS, DATE_FORMATS, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, TIME_FORMATS, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatCurrencyByLocale, formatDate, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isManagerialRole, normalizePaginatedResponse, parseApiError, parseData, priorityVariant };
-//# sourceMappingURL=chunk-VBFNF7JD.js.map
-//# sourceMappingURL=chunk-VBFNF7JD.js.map
+export { DATETIME_FORMATS, DATE_FORMATS, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, TIME_FORMATS, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatAddress, formatCurrency, formatCurrencyByLocale, formatDate, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isManagerialRole, isValidHouseNumber, normalizeHouseNumber, normalizePaginatedResponse, parseApiError, parseData, parseHouseNumber, priorityVariant };
+//# sourceMappingURL=chunk-FGUDE4IH.js.map
+//# sourceMappingURL=chunk-FGUDE4IH.js.map

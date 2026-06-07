@@ -15,6 +15,15 @@ export interface DateRangeParams {
 }
 
 /**
+ * Cursor-based paginated response (used by chat and other infinite-scroll endpoints)
+ */
+export interface CursorPaginatedResponse<T> {
+  data: T[];
+  nextCursor?: string | null;
+  hasMore?: boolean;
+}
+
+/**
  * Paginated response wrapper
  */
 export interface PaginatedResponse<T> {

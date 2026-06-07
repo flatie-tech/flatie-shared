@@ -1,13 +1,13 @@
 'use strict';
 
 require('../chunk-TCHOIK53.cjs');
-var chunkIGBERUWL_cjs = require('../chunk-IGBERUWL.cjs');
+var chunkOOJKTZT4_cjs = require('../chunk-OOJKTZT4.cjs');
 
 
 
 Object.defineProperty(exports, "createPaginatedResponse", {
   enumerable: true,
-  get: function () { return chunkIGBERUWL_cjs.createPaginatedResponse; }
+  get: function () { return chunkOOJKTZT4_cjs.createPaginatedResponse; }
 });
 //# sourceMappingURL=index.cjs.map
 //# sourceMappingURL=index.cjs.map

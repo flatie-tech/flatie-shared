@@ -13,6 +13,14 @@ interface DateRangeParams {
     toDate?: string;
 }
 /**
+ * Cursor-based paginated response (used by chat and other infinite-scroll endpoints)
+ */
+interface CursorPaginatedResponse<T> {
+    data: T[];
+    nextCursor?: string | null;
+    hasMore?: boolean;
+}
+/**
  * Paginated response wrapper
  */
 interface PaginatedResponse<T> {
@@ -29,4 +37,4 @@ interface PaginatedResponse<T> {
  */
 declare function createPaginatedResponse<T>(data: T[], count: number, offset: number, limit: number): PaginatedResponse<T>;
 
-export { type DateRangeParams as D, type PaginatedResponse as P, type PaginationParams as a, createPaginatedResponse as c };
+export { type CursorPaginatedResponse as C, type DateRangeParams as D, type PaginatedResponse as P, type PaginationParams as a, createPaginatedResponse as c };

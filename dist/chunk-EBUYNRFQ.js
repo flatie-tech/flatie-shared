@@ -1,5 +1,3 @@
-'use strict';
-
 // src/urls/index.ts
 var API_VERSION = "v1";
 var API_ROUTES = {
@@ -39,6 +37,7 @@ var API_ROUTES = {
     PENDING: "/buildings/my/pending",
     RECENT: (id) => `/buildings/${id}/recent`,
     SEARCH: "/buildings/search",
+    CHECK_ADDRESS: "/buildings/check-address",
     BUILDING_SEARCH: (id) => `/buildings/${id}/search`,
     JOIN_REQUESTS: (id) => `/buildings/${id}/join-requests`,
     JOIN_REQUEST_APPROVE: (id, requestId) => `/buildings/${id}/join-requests/${requestId}/approve`,
@@ -250,7 +249,9 @@ var API_ROUTES = {
   },
   // ── Addresses ────────────────────────────────────────────────────────
   ADDRESSES: {
-    AUTOCOMPLETE: "/addresses/autocomplete"
+    AUTOCOMPLETE: "/addresses/autocomplete",
+    SEARCH: "/addresses/search",
+    BY_STREET: (streetId) => `/addresses/by-street/${streetId}`
   },
   // ── Subscriptions & Billing ──────────────────────────────────────────
   SUBSCRIPTIONS: {
@@ -261,7 +262,6 @@ var API_ROUTES = {
   }
 };
 
-exports.API_ROUTES = API_ROUTES;
-exports.API_VERSION = API_VERSION;
-//# sourceMappingURL=chunk-ERXSYVYK.cjs.map
-//# sourceMappingURL=chunk-ERXSYVYK.cjs.map
+export { API_ROUTES, API_VERSION };
+//# sourceMappingURL=chunk-EBUYNRFQ.js.map
+//# sourceMappingURL=chunk-EBUYNRFQ.js.map

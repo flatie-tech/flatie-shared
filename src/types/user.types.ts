@@ -10,6 +10,7 @@ export interface User extends BaseEntity {
   image?: string | null;
   phone?: string | null;
   address?: string | null;
+  oib?: string | null;
   agreedToTermsAndConditions?: boolean | null;
   termsAgreedAt?: Date | string | null;
 }

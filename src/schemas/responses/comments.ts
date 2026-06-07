@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { Strict } from './_strict';
 
 export const commentResponseSchema = z.looseObject({
   id: z.string().uuid(),
@@ -34,4 +35,4 @@ export const commentResponseSchema = z.looseObject({
     ),
 });
 
-export type CommentResponse = z.infer<typeof commentResponseSchema>;
+export type CommentResponse = Strict<z.infer<typeof commentResponseSchema>>;

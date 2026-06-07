@@ -46,6 +46,7 @@ export const API_ROUTES = {
     PENDING: '/buildings/my/pending',
     RECENT: (id: string) => `/buildings/${id}/recent`,
     SEARCH: '/buildings/search',
+    CHECK_ADDRESS: '/buildings/check-address',
     BUILDING_SEARCH: (id: string) => `/buildings/${id}/search`,
     JOIN_REQUESTS: (id: string) => `/buildings/${id}/join-requests`,
     JOIN_REQUEST_APPROVE: (id: string, requestId: string) =>
@@ -338,6 +339,8 @@ export const API_ROUTES = {
   // ── Addresses ────────────────────────────────────────────────────────
   ADDRESSES: {
     AUTOCOMPLETE: '/addresses/autocomplete',
+    SEARCH: '/addresses/search',
+    BY_STREET: (streetId: string) => `/addresses/by-street/${streetId}`,
   },
 
   // ── Subscriptions & Billing ──────────────────────────────────────────

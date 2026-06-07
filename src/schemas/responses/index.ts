@@ -38,8 +38,38 @@ export {
   buildingFundsLedgerResponseSchema,
   buildingFundsLedgerRowSchema,
 } from './building-funds-ledger';
+export type {
+  ChatMessageResponse,
+  ConversationLastMessage,
+  ConversationParticipant,
+  ConversationResponse,
+  ConversationsListResponse,
+  MessagesListResponse,
+  UnreadCountResponse,
+} from './chat';
+export {
+  chatMessageResponseSchema,
+  conversationLastMessageSchema,
+  conversationParticipantSchema,
+  conversationResponseSchema,
+  conversationsListResponseSchema,
+  messagesListResponseSchema,
+  unreadCountResponseSchema,
+} from './chat';
 export type { CommentResponse } from './comments';
 export { commentResponseSchema } from './comments';
+export type {
+  DocumentFile,
+  DocumentLinkedRecord,
+  DocumentResponse,
+  PaginatedDocumentsResponse,
+} from './documents';
+export {
+  documentFileSchema,
+  documentLinkedRecordSchema,
+  documentResponseSchema,
+  paginatedDocumentsResponseSchema,
+} from './documents';
 export type { EventResponse, PaginatedEventsResponse } from './events';
 export { eventResponseSchema, paginatedEventsResponseSchema } from './events';
 export type {

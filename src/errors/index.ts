@@ -83,6 +83,9 @@ export const BACKEND_ERROR_CODES = {
   BUILDING_NOT_PENDING_APPROVAL: 'BUILDING_NOT_PENDING_APPROVAL',
   USER_ALREADY_PLATFORM_MEMBER: 'USER_ALREADY_PLATFORM_MEMBER',
 
+  // Address / building duplicate
+  BUILDING_ALREADY_EXISTS_AT_ADDRESS: 'BUILDING_ALREADY_EXISTS_AT_ADDRESS',
+
   // ── Consensus poll identity verification (Certilia OIDC) ────────────
   // Plain vote attempted on a CONSENSUS poll — frontend must route the
   // user through the identity-challenge flow instead.

@@ -52,7 +52,12 @@ export type {
   NoticeWithCreator,
 } from './notice.types';
 // Pagination types
-export type { DateRangeParams, PaginatedResponse, PaginationParams } from './pagination.types';
+export type {
+  CursorPaginatedResponse,
+  DateRangeParams,
+  PaginatedResponse,
+  PaginationParams,
+} from './pagination.types';
 export { createPaginatedResponse } from './pagination.types';
 // Permission context (used by the pure evaluator in utils)
 export type {

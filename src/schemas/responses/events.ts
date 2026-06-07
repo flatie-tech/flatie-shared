@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { paginatedResponseSchema } from '../pagination.schema';
+import type { Strict } from './_strict';
 
 const eventUserSchema = z
   .looseObject({
@@ -125,5 +126,5 @@ export const eventResponseSchema = z.looseObject({
 
 export const paginatedEventsResponseSchema = paginatedResponseSchema(eventResponseSchema);
 
-export type EventResponse = z.infer<typeof eventResponseSchema>;
-export type PaginatedEventsResponse = z.infer<typeof paginatedEventsResponseSchema>;
+export type EventResponse = Strict<z.infer<typeof eventResponseSchema>>;
+export type PaginatedEventsResponse = Strict<z.infer<typeof paginatedEventsResponseSchema>>;

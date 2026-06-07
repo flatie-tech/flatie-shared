@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { Strict } from './_strict';
 
 export const ARCHIVE_TYPES = [
   'apartments',
@@ -66,5 +67,5 @@ export const listArchivedResponseSchema = z.object({
     .describe('Archived rows across all registered archive types, sorted by archivedAt desc.'),
 });
 
-export type ArchivedItem = z.infer<typeof archivedItemSchema>;
-export type ListArchivedResponse = z.infer<typeof listArchivedResponseSchema>;
+export type ArchivedItem = Strict<z.infer<typeof archivedItemSchema>>;
+export type ListArchivedResponse = Strict<z.infer<typeof listArchivedResponseSchema>>;

@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { maintenanceFinancedBySchema } from '../entities/maintenance-log.schema';
 import { paginatedResponseSchema } from '../pagination.schema';
 import { nestedEventSchema, nestedFileSchema, pollReferenceSchema } from './_nested';
+import type { Strict } from './_strict';
 
 const failureReportReferenceSchema = z
   .looseObject({
@@ -107,7 +108,7 @@ export const paginatedMaintenanceLogsResponseSchema = paginatedResponseSchema(
   maintenanceLogResponseSchema,
 );
 
-export type MaintenanceLogResponse = z.infer<typeof maintenanceLogResponseSchema>;
-export type PaginatedMaintenanceLogsResponse = z.infer<
-  typeof paginatedMaintenanceLogsResponseSchema
+export type MaintenanceLogResponse = Strict<z.infer<typeof maintenanceLogResponseSchema>>;
+export type PaginatedMaintenanceLogsResponse = Strict<
+  z.infer<typeof paginatedMaintenanceLogsResponseSchema>
 >;

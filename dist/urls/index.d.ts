@@ -38,6 +38,7 @@ declare const API_ROUTES: {
         readonly PENDING: "/buildings/my/pending";
         readonly RECENT: (id: string) => string;
         readonly SEARCH: "/buildings/search";
+        readonly CHECK_ADDRESS: "/buildings/check-address";
         readonly BUILDING_SEARCH: (id: string) => string;
         readonly JOIN_REQUESTS: (id: string) => string;
         readonly JOIN_REQUEST_APPROVE: (id: string, requestId: string) => string;
@@ -228,6 +229,8 @@ declare const API_ROUTES: {
     };
     readonly ADDRESSES: {
         readonly AUTOCOMPLETE: "/addresses/autocomplete";
+        readonly SEARCH: "/addresses/search";
+        readonly BY_STREET: (streetId: string) => string;
     };
     readonly SUBSCRIPTIONS: {
         readonly BASE: "/subscriptions";

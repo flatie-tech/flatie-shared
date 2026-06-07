@@ -4,6 +4,14 @@
  * Common utilities for use across frontend, mobile, and backend.
  */
 
+// Croatian house number normalization and address formatting
+export type { AddressParts, ParsedHouseNumber } from './house-number';
+export {
+  formatAddress,
+  isValidHouseNumber,
+  normalizeHouseNumber,
+  parseHouseNumber,
+} from './house-number';
 // Locale-aware date / currency formatting
 export {
   DATE_FORMATS,
