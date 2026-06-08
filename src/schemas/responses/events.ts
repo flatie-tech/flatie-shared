@@ -97,6 +97,7 @@ export const eventResponseSchema = z.looseObject({
   canApprove: z
     .boolean()
     .describe('True when the calling user is allowed to approve or reject this event.'),
+  isOwner: z.boolean().describe('True when the calling user is the creator of this event.'),
   onlineMeetingUrl: z
     .string()
     .nullable()

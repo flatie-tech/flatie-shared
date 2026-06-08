@@ -237,6 +237,7 @@ interface ActionFlags {
     canEdit: boolean;
     canDelete: boolean;
     canApprove: boolean;
+    isOwner: boolean;
 }
 declare function canDo(subject: PermissionSubject, permission: Permission): boolean;
 declare function canDoOnResource(subject: PermissionSubject, domain: ScopedDomain, action: ScopedAction, resourceOwnerId: string): boolean;

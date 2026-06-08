@@ -17,7 +17,7 @@ export const API_ROUTES = {
     RESET_PASSWORD: '/auth/reset-password',
     VERIFY_OTP: '/auth/verify-otp',
     UPDATE_USER: '/auth/update-user',
-    UPDATE_PASSWORD: '/auth/update-password',
+    CHANGE_PASSWORD: '/auth/change-password',
   },
 
   // ── Users ─────────────────────────────────────────────────────────────

@@ -83,6 +83,7 @@ describe('createPermissionChecker', () => {
         canEdit: true,
         canDelete: true,
         canApprove: true,
+        isOwner: true,
       });
     });
 
@@ -91,6 +92,7 @@ describe('createPermissionChecker', () => {
         canEdit: true,
         canDelete: false,
         canApprove: true,
+        isOwner: false,
       });
     });
   });
@@ -106,6 +108,7 @@ describe('createPermissionChecker', () => {
         canEdit: false,
         canDelete: false,
         canApprove: false,
+        isOwner: false,
       });
     });
 

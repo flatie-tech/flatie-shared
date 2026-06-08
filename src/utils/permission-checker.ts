@@ -10,6 +10,7 @@ const EMPTY_ACTION_FLAGS: ActionFlags = {
   canEdit: false,
   canDelete: false,
   canApprove: false,
+  isOwner: false,
 };
 
 /**

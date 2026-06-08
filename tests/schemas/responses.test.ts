@@ -118,6 +118,7 @@ describe('Event response schemas', () => {
       canEdit: true,
       canDelete: true,
       canApprove: false,
+      isOwner: true,
       onlineMeetingUrl: null,
       meetingMinutes: null,
       minuteTakerId: null,
@@ -141,6 +142,7 @@ describe('Event response schemas', () => {
       canEdit: false,
       canDelete: false,
       canApprove: false,
+      isOwner: false,
     };
     expect(() => eventResponseSchema.parse(payload)).not.toThrow();
   });
@@ -203,6 +205,7 @@ describe('Poll response schemas', () => {
       canApprove: false,
       canEdit: false,
       canDelete: false,
+      isOwner: false,
       canVote: false,
       hasUserVoted: true,
       userVotedOptionIndex: 0,
@@ -273,6 +276,7 @@ describe('Nested event schema (widened in v0.18.2)', () => {
       canApprove: false,
       canEdit: false,
       canDelete: false,
+      isOwner: false,
       events: [nestedEvent],
     };
     expect(() => noticeResponseSchema.parse(payload)).not.toThrow();
@@ -290,6 +294,7 @@ describe('Nested event schema (widened in v0.18.2)', () => {
       createdAt: TIMESTAMP,
       canEdit: false,
       canDelete: false,
+      isOwner: false,
     };
     expect(() => maintenanceLogResponseSchema.parse(payload)).not.toThrow();
   });
@@ -306,6 +311,7 @@ describe('Nested event schema (widened in v0.18.2)', () => {
       canApprove: false,
       canEdit: false,
       canDelete: false,
+      isOwner: false,
       events: [
         {
           id: EVENT_ID,
@@ -336,6 +342,7 @@ describe('Failure report response (polls field added in v0.18.2)', () => {
       canDelete: false,
       canApprove: false,
       canStatus: false,
+      isOwner: false,
       polls: [
         {
           id: POLL_ID,
@@ -361,6 +368,7 @@ describe('Failure report response (polls field added in v0.18.2)', () => {
       canDelete: false,
       canApprove: false,
       canStatus: false,
+      isOwner: false,
     };
     const parsed = failureReportResponseSchema.parse(payload);
     expect(parsed.polls).toEqual([]);

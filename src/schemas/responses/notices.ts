@@ -56,6 +56,7 @@ export const noticeResponseSchema = z.looseObject({
   canApprove: z.boolean().describe('True when the calling user may approve or reject the notice.'),
   canEdit: z.boolean().describe('True when the calling user may edit the notice.'),
   canDelete: z.boolean().describe('True when the calling user may delete the notice.'),
+  isOwner: z.boolean().describe('True when the calling user is the creator of this notice.'),
   events: z
     .array(nestedEventSchema)
     .default([])

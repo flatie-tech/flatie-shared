@@ -23,6 +23,7 @@ export interface ActionFlags {
   canEdit: boolean;
   canDelete: boolean;
   canApprove: boolean;
+  isOwner: boolean;
 }
 
 export function canDo(subject: PermissionSubject, permission: Permission): boolean {
@@ -59,6 +60,7 @@ export function computeActionFlags(
     canEdit: canDoOnResource(subject, domain, 'update', resourceOwnerId),
     canDelete: canDoOnResource(subject, domain, 'delete', resourceOwnerId),
     canApprove: approvePermission ? canDo(subject, approvePermission) : false,
+    isOwner: subject.userId === resourceOwnerId,
   };
 }
 

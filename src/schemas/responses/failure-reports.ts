@@ -90,6 +90,7 @@ export const failureReportResponseSchema = z.looseObject({
   canEdit: z.boolean().describe('True when the calling user is allowed to edit this report.'),
   canDelete: z.boolean().describe('True when the calling user is allowed to delete this report.'),
   canApprove: z.boolean().describe('True when the calling user may approve or reject the report.'),
+  isOwner: z.boolean().describe('True when the calling user is the creator of this report.'),
   canStatus: z
     .boolean()
     .describe(

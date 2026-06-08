@@ -86,6 +86,7 @@ export const maintenanceLogResponseSchema = z.looseObject({
     .describe('ISO-8601 timestamp of the last edit; null when never edited.'),
   canEdit: z.boolean().describe('True when the calling user may edit this log.'),
   canDelete: z.boolean().describe('True when the calling user may delete this log.'),
+  isOwner: z.boolean().describe('True when the calling user is the creator of this log.'),
   polls: z
     .array(pollReferenceSchema)
     .default([])

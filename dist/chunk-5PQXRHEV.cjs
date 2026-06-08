@@ -1,3 +1,5 @@
+'use strict';
+
 // src/urls/index.ts
 var API_VERSION = "v1";
 var API_ROUTES = {
@@ -11,7 +13,7 @@ var API_ROUTES = {
     RESET_PASSWORD: "/auth/reset-password",
     VERIFY_OTP: "/auth/verify-otp",
     UPDATE_USER: "/auth/update-user",
-    UPDATE_PASSWORD: "/auth/update-password"
+    CHANGE_PASSWORD: "/auth/change-password"
   },
   // ── Users ─────────────────────────────────────────────────────────────
   USERS: {
@@ -262,6 +264,7 @@ var API_ROUTES = {
   }
 };
 
-export { API_ROUTES, API_VERSION };
-//# sourceMappingURL=chunk-EBUYNRFQ.js.map
-//# sourceMappingURL=chunk-EBUYNRFQ.js.map
+exports.API_ROUTES = API_ROUTES;
+exports.API_VERSION = API_VERSION;
+//# sourceMappingURL=chunk-5PQXRHEV.cjs.map
+//# sourceMappingURL=chunk-5PQXRHEV.cjs.map

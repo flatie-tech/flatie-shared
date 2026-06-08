@@ -2309,6 +2309,7 @@ declare const documentResponseSchema: z.ZodObject<{
     updatedAt: z.ZodOptional<z.ZodNullable<z.ZodUnion<readonly [z.ZodString, z.ZodDate]>>>;
     canEdit: z.ZodBoolean;
     canDelete: z.ZodBoolean;
+    isOwner: z.ZodBoolean;
     isPrivate: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
     type: z.ZodOptional<z.ZodEnum<{
         notice: "notice";
@@ -2371,6 +2372,7 @@ declare const paginatedDocumentsResponseSchema: z.ZodObject<{
         updatedAt: z.ZodOptional<z.ZodNullable<z.ZodUnion<readonly [z.ZodString, z.ZodDate]>>>;
         canEdit: z.ZodBoolean;
         canDelete: z.ZodBoolean;
+        isOwner: z.ZodBoolean;
         isPrivate: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
         type: z.ZodOptional<z.ZodEnum<{
             notice: "notice";
@@ -2453,6 +2455,7 @@ declare const eventResponseSchema: z.ZodObject<{
     canEdit: z.ZodBoolean;
     canDelete: z.ZodBoolean;
     canApprove: z.ZodBoolean;
+    isOwner: z.ZodBoolean;
     onlineMeetingUrl: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     meetingMinutes: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     minuteTakerId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
@@ -2487,6 +2490,7 @@ declare const paginatedEventsResponseSchema: z.ZodObject<{
         canEdit: z.ZodBoolean;
         canDelete: z.ZodBoolean;
         canApprove: z.ZodBoolean;
+        isOwner: z.ZodBoolean;
         onlineMeetingUrl: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         meetingMinutes: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         minuteTakerId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
@@ -2535,6 +2539,7 @@ declare const failureReportResponseSchema: z.ZodObject<{
     canEdit: z.ZodBoolean;
     canDelete: z.ZodBoolean;
     canApprove: z.ZodBoolean;
+    isOwner: z.ZodBoolean;
     canStatus: z.ZodBoolean;
     locationType: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     commonAreaDescription: z.ZodNullable<z.ZodOptional<z.ZodString>>;
@@ -2603,6 +2608,7 @@ declare const paginatedFailureReportsResponseSchema: z.ZodObject<{
         canEdit: z.ZodBoolean;
         canDelete: z.ZodBoolean;
         canApprove: z.ZodBoolean;
+        isOwner: z.ZodBoolean;
         canStatus: z.ZodBoolean;
         locationType: z.ZodNullable<z.ZodOptional<z.ZodString>>;
         commonAreaDescription: z.ZodNullable<z.ZodOptional<z.ZodString>>;
@@ -2737,6 +2743,7 @@ declare const maintenanceLogResponseSchema: z.ZodObject<{
     updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     canEdit: z.ZodBoolean;
     canDelete: z.ZodBoolean;
+    isOwner: z.ZodBoolean;
     polls: z.ZodDefault<z.ZodArray<z.ZodObject<{
         id: z.ZodString;
         question: z.ZodString;
@@ -2797,6 +2804,7 @@ declare const paginatedMaintenanceLogsResponseSchema: z.ZodObject<{
         updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         canEdit: z.ZodBoolean;
         canDelete: z.ZodBoolean;
+        isOwner: z.ZodBoolean;
         polls: z.ZodDefault<z.ZodArray<z.ZodObject<{
             id: z.ZodString;
             question: z.ZodString;
@@ -2850,6 +2858,7 @@ declare const noticeResponseSchema: z.ZodObject<{
     canApprove: z.ZodBoolean;
     canEdit: z.ZodBoolean;
     canDelete: z.ZodBoolean;
+    isOwner: z.ZodBoolean;
     events: z.ZodDefault<z.ZodArray<z.ZodObject<{
         id: z.ZodString;
         title: z.ZodString;
@@ -2887,6 +2896,7 @@ declare const paginatedNoticesResponseSchema: z.ZodObject<{
         canApprove: z.ZodBoolean;
         canEdit: z.ZodBoolean;
         canDelete: z.ZodBoolean;
+        isOwner: z.ZodBoolean;
         events: z.ZodDefault<z.ZodArray<z.ZodObject<{
             id: z.ZodString;
             title: z.ZodString;
@@ -3239,6 +3249,7 @@ declare const pollResultsSchema: z.ZodObject<{
     canApprove: z.ZodBoolean;
     canEdit: z.ZodBoolean;
     canDelete: z.ZodBoolean;
+    isOwner: z.ZodBoolean;
     canVote: z.ZodBoolean;
     hasUserVoted: z.ZodBoolean;
     userVotedOptionIndex: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;

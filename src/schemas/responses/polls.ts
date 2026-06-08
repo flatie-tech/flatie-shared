@@ -224,6 +224,7 @@ export const pollResultsSchema = z.looseObject({
   canApprove: z.boolean().describe('True when the calling user may approve or reject the poll.'),
   canEdit: z.boolean().describe('True when the calling user may edit this poll.'),
   canDelete: z.boolean().describe('True when the calling user may delete this poll.'),
+  isOwner: z.boolean().describe('True when the calling user is the creator of this poll.'),
   canVote: z
     .boolean()
     .describe(

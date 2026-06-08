@@ -1374,6 +1374,7 @@ var documentResponseSchema = zod.z.looseObject({
   updatedAt: zod.z.union([zod.z.string(), zod.z.date()]).nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited."),
   canEdit: zod.z.boolean().describe("True when the calling user may edit this document."),
   canDelete: zod.z.boolean().describe("True when the calling user may delete this document."),
+  isOwner: zod.z.boolean().describe("True when the calling user is the creator of this document."),
   isPrivate: zod.z.boolean().optional().default(false).describe("True when the document is visible only to managers."),
   type: zod.z.enum(["document", "notice", "failure_report", "maintenance_log", "poll"]).optional().describe("Source entity type; absent for standalone documents."),
   sourceId: zod.z.string().optional().describe("UUID of the source entity when type is set; absent for standalone documents."),
@@ -1428,6 +1429,7 @@ var eventResponseSchema = zod.z.looseObject({
   canEdit: zod.z.boolean().describe("True when the calling user is allowed to edit this event."),
   canDelete: zod.z.boolean().describe("True when the calling user is allowed to delete this event."),
   canApprove: zod.z.boolean().describe("True when the calling user is allowed to approve or reject this event."),
+  isOwner: zod.z.boolean().describe("True when the calling user is the creator of this event."),
   onlineMeetingUrl: zod.z.string().nullable().optional().describe("Optional join URL for online meetings; null for in-person events."),
   meetingMinutes: zod.z.string().nullable().optional().describe(
     "Rich-text minutes captured during the meeting; null until the minute-taker submits them."
@@ -1516,6 +1518,7 @@ var failureReportResponseSchema = zod.z.looseObject({
   canEdit: zod.z.boolean().describe("True when the calling user is allowed to edit this report."),
   canDelete: zod.z.boolean().describe("True when the calling user is allowed to delete this report."),
   canApprove: zod.z.boolean().describe("True when the calling user may approve or reject the report."),
+  isOwner: zod.z.boolean().describe("True when the calling user is the creator of this report."),
   canStatus: zod.z.boolean().describe(
     "True when the calling user may change the lifecycle status (e.g. mark as in progress or resolved)."
   ),
@@ -1625,6 +1628,7 @@ var maintenanceLogResponseSchema = zod.z.looseObject({
   updatedAt: zod.z.string().nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited."),
   canEdit: zod.z.boolean().describe("True when the calling user may edit this log."),
   canDelete: zod.z.boolean().describe("True when the calling user may delete this log."),
+  isOwner: zod.z.boolean().describe("True when the calling user is the creator of this log."),
   polls: zod.z.array(pollReferenceSchema).default([]).describe("Polls linked to this log (e.g. consensus to authorise the expense); empty if none."),
   failureReports: zod.z.array(failureReportReferenceSchema).optional().describe(
     "Failure reports this log was produced to resolve; absent when the log is standalone."
@@ -1656,6 +1660,7 @@ var noticeResponseSchema = zod.z.looseObject({
   canApprove: zod.z.boolean().describe("True when the calling user may approve or reject the notice."),
   canEdit: zod.z.boolean().describe("True when the calling user may edit the notice."),
   canDelete: zod.z.boolean().describe("True when the calling user may delete the notice."),
+  isOwner: zod.z.boolean().describe("True when the calling user is the creator of this notice."),
   events: zod.z.array(nestedEventSchema).default([]).describe("Calendar events linked to the notice (e.g. planned works window); empty when none.")
 });
 var paginatedNoticesResponseSchema = paginatedResponseSchema(noticeResponseSchema);
@@ -1952,6 +1957,7 @@ var pollResultsSchema = zod.z.looseObject({
   canApprove: zod.z.boolean().describe("True when the calling user may approve or reject the poll."),
   canEdit: zod.z.boolean().describe("True when the calling user may edit this poll."),
   canDelete: zod.z.boolean().describe("True when the calling user may delete this poll."),
+  isOwner: zod.z.boolean().describe("True when the calling user is the creator of this poll."),
   canVote: zod.z.boolean().describe(
     "True when the calling user is eligible to vote and has not yet voted (and the poll is still active)."
   ),
@@ -2161,5 +2167,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-EVC5KG6I.cjs.map
-//# sourceMappingURL=chunk-EVC5KG6I.cjs.map
+//# sourceMappingURL=chunk-35FPJCC5.cjs.map
+//# sourceMappingURL=chunk-35FPJCC5.cjs.map

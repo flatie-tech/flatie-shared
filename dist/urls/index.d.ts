@@ -14,7 +14,7 @@ declare const API_ROUTES: {
         readonly RESET_PASSWORD: "/auth/reset-password";
         readonly VERIFY_OTP: "/auth/verify-otp";
         readonly UPDATE_USER: "/auth/update-user";
-        readonly UPDATE_PASSWORD: "/auth/update-password";
+        readonly CHANGE_PASSWORD: "/auth/change-password";
     };
     readonly USERS: {
         readonly ME: "/users/me";

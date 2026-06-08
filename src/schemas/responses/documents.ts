@@ -93,6 +93,7 @@ export const documentResponseSchema = z
       .describe('ISO-8601 timestamp of the last edit; null when never edited.'),
     canEdit: z.boolean().describe('True when the calling user may edit this document.'),
     canDelete: z.boolean().describe('True when the calling user may delete this document.'),
+    isOwner: z.boolean().describe('True when the calling user is the creator of this document.'),
     isPrivate: z
       .boolean()
       .optional()
