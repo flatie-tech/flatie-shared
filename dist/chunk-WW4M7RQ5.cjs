@@ -1088,6 +1088,7 @@ var buildingFundsSchema = zod.z.looseObject({
 }).describe("Summary of the building\u2019s current fund balance and currency.");
 var buildingResponseSchema = zod.z.looseObject({
   id: zod.z.string().uuid(),
+  slug: zod.z.string().nullable().optional().describe("URL-friendly slug derived from the building address."),
   name: zod.z.string().describe("Building display name."),
   address: zod.z.string().describe("Full postal address of the building."),
   coverImage: zod.z.string().optional().nullable().describe("Absolute URL of the cover photo, or null when no cover image is set."),
@@ -1114,6 +1115,7 @@ var buildingResponseSchema = zod.z.looseObject({
 });
 var buildingDetailResponseSchema = zod.z.looseObject({
   id: zod.z.string().uuid(),
+  slug: zod.z.string().nullable().optional().describe("URL-friendly slug derived from the building address."),
   name: zod.z.string().describe("Building display name."),
   address: zod.z.string().describe("Full postal address of the building."),
   coverImage: zod.z.string().nullable().optional().describe("Absolute URL of the cover photo, or null when no cover image is set."),
@@ -2167,5 +2169,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-35FPJCC5.cjs.map
-//# sourceMappingURL=chunk-35FPJCC5.cjs.map
+//# sourceMappingURL=chunk-WW4M7RQ5.cjs.map
+//# sourceMappingURL=chunk-WW4M7RQ5.cjs.map

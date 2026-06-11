@@ -51,6 +51,11 @@ const buildingFundsSchema = z
  */
 export const buildingResponseSchema = z.looseObject({
   id: z.string().uuid(),
+  slug: z
+    .string()
+    .nullable()
+    .optional()
+    .describe('URL-friendly slug derived from the building address.'),
   name: z.string().describe('Building display name.'),
   address: z.string().describe('Full postal address of the building.'),
   coverImage: z
@@ -130,6 +135,11 @@ export const buildingResponseSchema = z.looseObject({
  */
 export const buildingDetailResponseSchema = z.looseObject({
   id: z.string().uuid(),
+  slug: z
+    .string()
+    .nullable()
+    .optional()
+    .describe('URL-friendly slug derived from the building address.'),
   name: z.string().describe('Building display name.'),
   address: z.string().describe('Full postal address of the building.'),
   coverImage: z

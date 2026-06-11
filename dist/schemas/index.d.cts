@@ -1834,6 +1834,7 @@ type ListArchivedResponse = Strict<z.infer<typeof listArchivedResponseSchema>>;
  */
 declare const buildingResponseSchema: z.ZodObject<{
     id: z.ZodString;
+    slug: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     name: z.ZodString;
     address: z.ZodString;
     coverImage: z.ZodNullable<z.ZodOptional<z.ZodString>>;
@@ -1864,6 +1865,7 @@ declare const buildingResponseSchema: z.ZodObject<{
  */
 declare const buildingDetailResponseSchema: z.ZodObject<{
     id: z.ZodString;
+    slug: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     name: z.ZodString;
     address: z.ZodString;
     coverImage: z.ZodOptional<z.ZodNullable<z.ZodString>>;
@@ -1928,6 +1930,7 @@ declare const buildingDetailResponseSchema: z.ZodObject<{
 declare const paginatedBuildingsResponseSchema: z.ZodObject<{
     data: z.ZodArray<z.ZodObject<{
         id: z.ZodString;
+        slug: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         name: z.ZodString;
         address: z.ZodString;
         coverImage: z.ZodNullable<z.ZodOptional<z.ZodString>>;

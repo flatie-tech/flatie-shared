@@ -8,6 +8,7 @@ import type { BaseEntity, UserCreatedEntity } from './base-entity.types';
 export interface Building extends UserCreatedEntity {
   name: string;
   address: string;
+  slug?: string | null;
   coverImage?: string | null;
   type: BuildingType;
   totalUnits: number;
