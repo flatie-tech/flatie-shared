@@ -44,6 +44,9 @@ var BACKEND_ERROR_CODES = {
   USER_ALREADY_MEMBER: "USER_ALREADY_MEMBER",
   // Permission refused — resource-neutral 403 marker
   INSUFFICIENT_PERMISSIONS: "INSUFFICIENT_PERMISSIONS",
+  ROLE_ESCALATION_DENIED: "ROLE_ESCALATION_DENIED",
+  SELF_ROLE_EDIT_DENIED: "SELF_ROLE_EDIT_DENIED",
+  LAST_ADMIN_DEMOTION_DENIED: "LAST_ADMIN_DEMOTION_DENIED",
   // Validation
   INVALID_OIB: "INVALID_OIB",
   INVALID_PHONE: "INVALID_PHONE",
@@ -104,5 +107,5 @@ function isBackendErrorCode(code) {
 
 exports.BACKEND_ERROR_CODES = BACKEND_ERROR_CODES;
 exports.isBackendErrorCode = isBackendErrorCode;
-//# sourceMappingURL=chunk-JEVLYWVQ.cjs.map
-//# sourceMappingURL=chunk-JEVLYWVQ.cjs.map
+//# sourceMappingURL=chunk-MWEBBLN7.cjs.map
+//# sourceMappingURL=chunk-MWEBBLN7.cjs.map
