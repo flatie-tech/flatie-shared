@@ -47,6 +47,7 @@ declare const API_ROUTES: {
         readonly IMPORT_PREVIEW: (id: string) => string;
         readonly IMPORT_COMMIT: (id: string) => string;
         readonly QUOTAS: (id: string) => string;
+        readonly AI_USAGE: (id: string) => string;
     };
     readonly APARTMENTS: {
         readonly LIST: (buildingId: string) => string;

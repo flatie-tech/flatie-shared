@@ -331,6 +331,10 @@ declare const widgetKeys: {
  * All query keys combined for easy access
  */
 declare const queryKeys: {
+    readonly aiUsage: {
+        all: readonly ["aiUsage"];
+        detail: (buildingId: string) => readonly ["aiUsage", string];
+    };
     readonly user: {
         all: readonly ["user"];
         lists: () => readonly ["user", "list"];

@@ -57,6 +57,7 @@ export const API_ROUTES = {
     IMPORT_PREVIEW: (id: string) => `/buildings/${id}/import/preview`,
     IMPORT_COMMIT: (id: string) => `/buildings/${id}/import/commit`,
     QUOTAS: (id: string) => `/buildings/${id}/quotas`,
+    AI_USAGE: (id: string) => `/buildings/${id}/ai-usage`,
   },
 
   // ── Apartments ────────────────────────────────────────────────────────

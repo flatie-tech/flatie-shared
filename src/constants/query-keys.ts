@@ -351,10 +351,16 @@ export const widgetKeys = {
   notices: (buildingId: string) => [...widgetKeys.all, 'notices', buildingId] as const,
 };
 
+export const aiUsageKeys = {
+  all: ['aiUsage'] as const,
+  detail: (buildingId: string) => [...aiUsageKeys.all, buildingId] as const,
+};
+
 /**
  * All query keys combined for easy access
  */
 export const queryKeys = {
+  aiUsage: aiUsageKeys,
   user: userKeys,
   building: buildingKeys,
   buildingEmail: buildingEmailKeys,

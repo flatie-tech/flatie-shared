@@ -45,7 +45,8 @@ var API_ROUTES = {
     IMPORT_TEMPLATE: (id) => `/buildings/${id}/import/template`,
     IMPORT_PREVIEW: (id) => `/buildings/${id}/import/preview`,
     IMPORT_COMMIT: (id) => `/buildings/${id}/import/commit`,
-    QUOTAS: (id) => `/buildings/${id}/quotas`
+    QUOTAS: (id) => `/buildings/${id}/quotas`,
+    AI_USAGE: (id) => `/buildings/${id}/ai-usage`
   },
   // ── Apartments ────────────────────────────────────────────────────────
   APARTMENTS: {
@@ -263,5 +264,5 @@ var API_ROUTES = {
 };
 
 export { API_ROUTES, API_VERSION };
-//# sourceMappingURL=chunk-25E2HMYY.js.map
-//# sourceMappingURL=chunk-25E2HMYY.js.map
+//# sourceMappingURL=chunk-SO2I3R5U.js.map
+//# sourceMappingURL=chunk-SO2I3R5U.js.map
