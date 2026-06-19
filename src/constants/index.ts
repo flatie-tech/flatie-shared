@@ -4,6 +4,7 @@ export { DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT } from './defaults';
 export {
   adminBuildingKeys,
   adminKeys,
+  aiUsageKeys,
   apartmentKeys,
   blogKeys,
   buildingEmailKeys,
