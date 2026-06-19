@@ -75,9 +75,9 @@ This is codified as feedback memory: "After a breaking `@flatie/shared` release,
 
 Release workflow + semver policy: `flatie-shared/docs/versioning.md`.
 
-## Mobile special case
+## Mobile note
 
-`flatie-mobile` does not currently import `@flatie/shared` — domain enums are duplicated locally because Expo SDK 54 + RN 0.81 hold TS / Zod versions back. Current state + planned migration: `flatie-mobile/docs/shared-types-sync.md`. Until the migration, shared-package changes that affect enums / schemas must be mirrored manually in the mobile copy.
+`flatie-mobile` consumes `@flatie/shared` via pinned GitHub tags (`github:flatie-tech/flatie-shared#vX.Y.Z`) — never `file:`. EAS cloud builds can't resolve local `file:` paths, so mobile always uses the tagged remote. Frontend and backend use `file:` during local development and switch to a tag before pushing.
 
 ## Doc hygiene
 
@@ -88,4 +88,4 @@ If the consumption pattern changes (new consumer, new protocol, new workspace la
 
 ---
 
-_Last verified against: `flatie-shared@6f0e0b8` on 2026-04-28. Re-run `flatie-docs/scripts/verify/run-all.sh` and update this line whenever you do a deeper review._
+_Last verified against: `flatie-shared@1b36cc3` on 2026-06-19. Re-run `flatie-docs/scripts/verify/run-all.sh` and update this line whenever you do a deeper review._

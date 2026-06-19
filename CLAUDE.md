@@ -2,7 +2,7 @@
 
 ## What this repo is
 
-`@flatie/shared` — the cross-consumer source of truth for Flatie's types, enums, Zod schemas, API route constants, design tokens, and error codes. Consumed by `flatie-backend`, `flatie-frontend`, and (eventually) `flatie-mobile`. Built with tsup (dual ESM + CJS output) and published as a git-tagged dependency or `file:` local link.
+`@flatie/shared` — the cross-consumer source of truth for Flatie's types, enums, Zod schemas, API route constants, design tokens, and error codes. Consumed by `flatie-backend`, `flatie-frontend`, and `flatie-mobile`. Built with tsup (dual ESM + CJS output) and published as a git-tagged dependency or `file:` local link.
 
 Full product orientation: [`../flatie-docs/team-knowledge/15-what-is-flatie.md`](../flatie-docs/team-knowledge/15-what-is-flatie.md).
 
@@ -11,7 +11,7 @@ Full product orientation: [`../flatie-docs/team-knowledge/15-what-is-flatie.md`]
 - **Stack:** Node 20+, pnpm, TypeScript, tsup, Vitest, Biome
 - **Validation:** Zod 4 (peer dependency — consumers bring their own)
 - **Current version:** see `package.json`
-- **Consumers:** backend + frontend via `file:../flatie-shared` (local) or `github:flatie-tech/flatie-shared#<tag>` (CI/prod); mobile not yet — see `../flatie-mobile/docs/shared-types-sync.md`
+- **Consumers:** backend + frontend via `file:../flatie-shared` (local) or `github:flatie-tech/flatie-shared#<tag>` (CI/prod); mobile via `github:` tags only (EAS cloud builds can't resolve `file:` paths)
 - **Never `pnpm link`** consumers — it breaks Next.js Turbopack and leaves persistent `pnpm-workspace.yaml` overrides
 
 ## When doing X, read Y
@@ -38,7 +38,7 @@ When you change X, check whether doc Y needs updating:
 - **Change the release flow** → `docs/versioning.md`
 - **Drift from backend / frontend expectations** → document in `docs/error-code-audit.md` (for error codes) or add a contract test
 
-Mobile is still decoupled: any change that affects what mobile duplicates must be logged in `../flatie-mobile/docs/shared-types-sync.md` under "Known drifts".
+Mobile consumes shared via pinned GitHub tags — breaking changes must be bumped in all three consumers in the same session.
 
 ## Directory structure
 
@@ -87,6 +87,6 @@ pnpm release          # (see docs/versioning.md for the full flow)
 ## Key design decisions
 
 - **Const objects over TypeScript enums** — permissions, roles, etc. are `as const` objects. TypeScript enums create nominal types that break across package boundaries.
-- **Zod 4 as peer dependency** — backend + frontend both use Zod 4; schemas import directly by consumers. Mobile stays on Zod 3 (Expo SDK holds it back) → currently duplicates its schemas locally.
+- **Zod 4 as peer dependency** — all three consumers (backend, frontend, mobile) use Zod 4; schemas import directly.
 - **Permission mappings live in this package** — `Permission` enum, `canAssign*()` helpers, AND the role → permission mappings (`src/constants/role-permissions.ts`: `BUILDING_ROLE_PERMISSIONS`, `ORG_ROLE_PERMISSIONS`, `PLATFORM_ROLE_PERMISSIONS`). They moved here from the backend in v0.7.0 so clients can evaluate permissions without an API round-trip. `flatie-backend/src/shared/constants/permission-mappings.ts` is now just a re-export (plus a temporary local patch until the shared dep is bumped past it).
 - **Unified permission checker** — `createPermissionChecker(subject)` (`src/utils/permission-checker.ts`) is the single isomorphic `can()` surface (Flatie's analogue of Clerk's `has()`); it backs both the backend guards and the client hooks over `PermissionSubject` (`{ userId, permissions }`). The raw `string[]` helpers in `src/utils/permissions.ts` are deprecated in its favour.
