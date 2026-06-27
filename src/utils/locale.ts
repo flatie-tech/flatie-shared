@@ -20,15 +20,22 @@ export const LOCALE_MAP: Record<string, string> = {
 };
 
 const DEFAULT_LOCALE = 'en-US';
+const KNOWN_BCP47 = new Set(Object.values(LOCALE_MAP));
 
 /**
  * Resolve a short app-locale code to a BCP-47 locale, falling back to
  * `en-US` when the code is unknown. Accepts `undefined` so callers can
  * pass an optional locale through without a separate guard.
+ *
+ * Also accepts BCP-47 strings that are already in the map's value set
+ * (e.g. `'hr-HR'`) and passes them through, so callers that already
+ * normalised once don't get silently downgraded to `en-US`.
  */
 export function getDateLocale(appLocale: string | undefined | null): string {
   if (!appLocale) return DEFAULT_LOCALE;
-  return LOCALE_MAP[appLocale] ?? DEFAULT_LOCALE;
+  if (LOCALE_MAP[appLocale]) return LOCALE_MAP[appLocale];
+  if (KNOWN_BCP47.has(appLocale)) return appLocale;
+  return DEFAULT_LOCALE;
 }
 
 const DEFAULT_DATE_OPTIONS: Intl.DateTimeFormatOptions = {

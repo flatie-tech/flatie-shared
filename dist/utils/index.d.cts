@@ -74,6 +74,10 @@ declare const LOCALE_MAP: Record<string, string>;
  * Resolve a short app-locale code to a BCP-47 locale, falling back to
  * `en-US` when the code is unknown. Accepts `undefined` so callers can
  * pass an optional locale through without a separate guard.
+ *
+ * Also accepts BCP-47 strings that are already in the map's value set
+ * (e.g. `'hr-HR'`) and passes them through, so callers that already
+ * normalised once don't get silently downgraded to `en-US`.
  */
 declare function getDateLocale(appLocale: string | undefined | null): string;
 declare const DATE_FORMATS: {
