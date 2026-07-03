@@ -70,4 +70,4 @@ export const phoneSchema = z
 /**
  * Address schema. Allows empty string or a value up to 200 characters.
  */
-export const addressSchema = z.string().max(200, 'Address must be at most 200 characters');
+export const addressSchema = z.string().max(200);

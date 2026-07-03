@@ -1,41 +1,41 @@
 'use strict';
 
-var chunkSLKO3TRC_cjs = require('../chunk-SLKO3TRC.cjs');
+var chunkIHUEEK2O_cjs = require('../chunk-IHUEEK2O.cjs');
 var chunkXXNOAOHF_cjs = require('../chunk-XXNOAOHF.cjs');
 
 
 
 Object.defineProperty(exports, "addressSchema", {
   enumerable: true,
-  get: function () { return chunkSLKO3TRC_cjs.addressSchema; }
+  get: function () { return chunkIHUEEK2O_cjs.addressSchema; }
 });
 Object.defineProperty(exports, "isUuid", {
   enumerable: true,
-  get: function () { return chunkSLKO3TRC_cjs.isUuid; }
+  get: function () { return chunkIHUEEK2O_cjs.isUuid; }
 });
 Object.defineProperty(exports, "oibSchema", {
   enumerable: true,
-  get: function () { return chunkSLKO3TRC_cjs.oibSchema; }
+  get: function () { return chunkIHUEEK2O_cjs.oibSchema; }
 });
 Object.defineProperty(exports, "optionalOibSchema", {
   enumerable: true,
-  get: function () { return chunkSLKO3TRC_cjs.optionalOibSchema; }
+  get: function () { return chunkIHUEEK2O_cjs.optionalOibSchema; }
 });
 Object.defineProperty(exports, "phoneSchema", {
   enumerable: true,
-  get: function () { return chunkSLKO3TRC_cjs.phoneSchema; }
+  get: function () { return chunkIHUEEK2O_cjs.phoneSchema; }
 });
 Object.defineProperty(exports, "toUuid", {
   enumerable: true,
-  get: function () { return chunkSLKO3TRC_cjs.toUuid; }
+  get: function () { return chunkIHUEEK2O_cjs.toUuid; }
 });
 Object.defineProperty(exports, "unsafeUuid", {
   enumerable: true,
-  get: function () { return chunkSLKO3TRC_cjs.unsafeUuid; }
+  get: function () { return chunkIHUEEK2O_cjs.unsafeUuid; }
 });
 Object.defineProperty(exports, "uuidStringSchema", {
   enumerable: true,
-  get: function () { return chunkSLKO3TRC_cjs.uuidStringSchema; }
+  get: function () { return chunkIHUEEK2O_cjs.uuidStringSchema; }
 });
 Object.defineProperty(exports, "ibanSchema", {
   enumerable: true,

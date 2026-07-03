@@ -16,8 +16,8 @@ var apiErrorResponseSchema = apiErrorSchema.extend({
     "Canonical error code from `@flatie/shared/errors` (`BACKEND_ERROR_CODES`). Present when the backend raised a `DomainException`; absent for generic HTTP errors (network failures, unhandled exceptions, validation-pipe rejections)."
   )
 }).describe("Standard error envelope returned by the Flatie backend on 4xx and 5xx responses.");
-var emailSchema = zod.z.string().email("Invalid email address");
-var passwordSchema = zod.z.string().min(8, "Password must be at least 8 characters long").max(100, "Password must not exceed 100 characters");
+var emailSchema = zod.z.string().email();
+var passwordSchema = zod.z.string().min(8).max(100);
 var strongPasswordSchema = passwordSchema.regex(/[A-Z]/, "Password must contain at least one uppercase letter").regex(/[a-z]/, "Password must contain at least one lowercase letter").regex(/[0-9]/, "Password must contain at least one number");
 var loginSchema = zod.z.object({
   email: emailSchema,
@@ -25,7 +25,7 @@ var loginSchema = zod.z.object({
   rememberMe: zod.z.boolean().optional().default(false)
 });
 var registerSchema = zod.z.object({
-  name: zod.z.string().min(3, "Name must be at least 3 characters long").max(50, "Name must be at most 50 characters long"),
+  name: zod.z.string().min(3).max(50),
   email: emailSchema,
   password: strongPasswordSchema,
   passwordConfirmation: zod.z.string(),
@@ -41,7 +41,7 @@ var forgotPasswordSchema = zod.z.object({
 });
 var resetPasswordSchema = zod.z.object({
   email: emailSchema,
-  token: zod.z.string().min(1, "Token is required"),
+  token: zod.z.string().min(1),
   password: strongPasswordSchema,
   passwordConfirmation: zod.z.string()
 }).refine((data) => data.password === data.passwordConfirmation, {
@@ -50,7 +50,7 @@ var resetPasswordSchema = zod.z.object({
 });
 var verifyOtpSchema = zod.z.object({
   email: emailSchema,
-  otp: zod.z.string().min(4, "OTP must be 4 digits").max(4, "OTP must be 4 digits")
+  otp: zod.z.string().min(4).max(4)
 });
 var updatePasswordSchema = zod.z.object({
   currentPassword: passwordSchema,
@@ -2169,5 +2169,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-2R3JDZUI.cjs.map
-//# sourceMappingURL=chunk-2R3JDZUI.cjs.map
+//# sourceMappingURL=chunk-LN3USFVI.cjs.map
+//# sourceMappingURL=chunk-LN3USFVI.cjs.map

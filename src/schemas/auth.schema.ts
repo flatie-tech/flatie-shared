@@ -3,12 +3,9 @@ import { z } from 'zod';
 /**
  * Common field schemas for authentication
  */
-export const emailSchema = z.string().email('Invalid email address');
+export const emailSchema = z.string().email();
 
-export const passwordSchema = z
-  .string()
-  .min(8, 'Password must be at least 8 characters long')
-  .max(100, 'Password must not exceed 100 characters');
+export const passwordSchema = z.string().min(8).max(100);
 
 export const strongPasswordSchema = passwordSchema
   .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
@@ -29,10 +26,7 @@ export const loginSchema = z.object({
  */
 export const registerSchema = z
   .object({
-    name: z
-      .string()
-      .min(3, 'Name must be at least 3 characters long')
-      .max(50, 'Name must be at most 50 characters long'),
+    name: z.string().min(3).max(50),
     email: emailSchema,
     password: strongPasswordSchema,
     passwordConfirmation: z.string(),
@@ -58,7 +52,7 @@ export const forgotPasswordSchema = z.object({
 export const resetPasswordSchema = z
   .object({
     email: emailSchema,
-    token: z.string().min(1, 'Token is required'),
+    token: z.string().min(1),
     password: strongPasswordSchema,
     passwordConfirmation: z.string(),
   })
@@ -72,7 +66,7 @@ export const resetPasswordSchema = z
  */
 export const verifyOtpSchema = z.object({
   email: emailSchema,
-  otp: z.string().min(4, 'OTP must be 4 digits').max(4, 'OTP must be 4 digits'),
+  otp: z.string().min(4).max(4),
 });
 
 /**
