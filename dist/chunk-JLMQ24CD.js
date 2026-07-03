@@ -173,7 +173,7 @@ var colors = {
 
 // src/tokens/radii.ts
 var radii = {
-  radius: "0.625rem"
+  radius: "0.75rem"
 };
 
 // src/tokens/themes.ts
@@ -267,5 +267,5 @@ var themes = {
 };
 
 export { colors, radii, themes };
-//# sourceMappingURL=chunk-CVM7NQHG.js.map
-//# sourceMappingURL=chunk-CVM7NQHG.js.map
+//# sourceMappingURL=chunk-JLMQ24CD.js.map
+//# sourceMappingURL=chunk-JLMQ24CD.js.map

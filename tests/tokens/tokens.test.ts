@@ -62,7 +62,7 @@ describe('design tokens', () => {
 
   describe('radii', () => {
     it('exports the base radius', () => {
-      expect(radii.radius).toBe('0.625rem');
+      expect(radii.radius).toBe('0.75rem');
     });
   });
 

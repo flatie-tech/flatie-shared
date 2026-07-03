@@ -1,7 +1,6 @@
 'use strict';
 
 var z = require('zod');
-var core = require('zod/v4/core');
 
 function _interopNamespace(e) {
   if (e && e.__esModule) return e;
@@ -24,118 +23,222 @@ function _interopNamespace(e) {
 var z__namespace = /*#__PURE__*/_interopNamespace(z);
 
 // src/locales/index.ts
+
+// src/locales/de.ts
 var error = () => {
-  const Sizable = {
-    string: { unit: "znakova", verb: "imati" },
-    file: { unit: "bajtova", verb: "imati" },
-    array: { unit: "elemenata", verb: "imati" },
-    set: { unit: "elemenata", verb: "imati" }
-  };
-  function getSizing(origin) {
-    return Sizable[origin] ?? null;
-  }
   const FormatDictionary = {
-    regex: "unos",
-    email: "adresa e-po\u0161te",
+    email: "E-Mail-Adresse",
     url: "URL",
-    emoji: "emoji",
     uuid: "UUID",
-    uuidv4: "UUIDv4",
-    uuidv6: "UUIDv6",
-    nanoid: "nanoid",
-    guid: "GUID",
-    cuid: "cuid",
-    cuid2: "cuid2",
-    ulid: "ULID",
-    xid: "XID",
-    ksuid: "KSUID",
-    datetime: "ISO datum i vrijeme",
-    date: "ISO datum",
-    time: "ISO vrijeme",
-    duration: "ISO trajanje",
-    ipv4: "IPv4 adresa",
-    ipv6: "IPv6 adresa",
-    cidrv4: "IPv4 raspon",
-    cidrv6: "IPv6 raspon",
-    base64: "Base64 string",
-    base64url: "Base64 URL string",
-    json_string: "JSON string",
-    e164: "E.164 broj",
-    jwt: "JWT",
-    template_literal: "unos"
-  };
-  const TypeDictionary = {
-    nan: "NaN",
-    number: "broj",
-    array: "niz"
+    datetime: "Datum und Uhrzeit",
+    date: "Datum",
+    time: "Uhrzeit",
+    duration: "Dauer",
+    ipv4: "IPv4-Adresse",
+    ipv6: "IPv6-Adresse",
+    e164: "Telefonnummer"
   };
   return (issue) => {
+    const isMissing = issue.input === void 0 || issue.input === null;
     switch (issue.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue.expected] ?? issue.expected;
-        const receivedType = core.util.getParsedType(issue.input);
-        const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue.expected)) {
-          return `Neva\u017Ee\u0107i unos: o\u010Dekivano instanceof ${issue.expected}, primljeno ${received}`;
-        }
-        return `Neva\u017Ee\u0107i unos: o\u010Dekivano ${expected}, primljeno ${received}`;
-      }
-      case "invalid_value":
-        if (issue.values.length === 1)
-          return `Neva\u017Ee\u0107i unos: o\u010Dekivano ${core.util.stringifyPrimitive(issue.values[0])}`;
-        return `Neva\u017Ee\u0107a opcija: o\u010Dekivano jedno od ${core.util.joinValues(issue.values, "|")}`;
-      case "too_big": {
-        const adj = issue.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue.origin);
-        if (sizing)
-          return `Preveliko: o\u010Dekivano da ${issue.origin ?? "vrijednost"} ima ${adj}${issue.maximum.toString()} ${sizing.unit ?? "elemenata"}`;
-        return `Preveliko: o\u010Dekivano da ${issue.origin ?? "vrijednost"} bude ${adj}${issue.maximum.toString()}`;
+        if (isMissing) return "Dieses Feld ist erforderlich.";
+        if (issue.expected === "number") return "Bitte eine g\xFCltige Zahl eingeben.";
+        return "Bitte einen g\xFCltigen Wert eingeben.";
       }
       case "too_small": {
-        const adj = issue.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue.origin);
-        if (sizing) {
-          return `Premalo: o\u010Dekivano da ${issue.origin} ima ${adj}${issue.minimum.toString()} ${sizing.unit}`;
+        const min = Number(issue.minimum);
+        if (issue.origin === "string") {
+          if (min <= 1) return "Dieses Feld ist erforderlich.";
+          return `Bitte mindestens ${min} Zeichen eingeben.`;
         }
-        return `Premalo: o\u010Dekivano da ${issue.origin} bude ${adj}${issue.minimum.toString()}`;
+        if (issue.origin === "array" || issue.origin === "set") {
+          return `Bitte mindestens ${min} Optionen ausw\xE4hlen.`;
+        }
+        if (issue.inclusive) return `Bitte einen Wert von ${min} oder mehr eingeben.`;
+        return `Bitte einen Wert gr\xF6\xDFer als ${min} eingeben.`;
+      }
+      case "too_big": {
+        const max = Number(issue.maximum);
+        if (issue.origin === "string") return `Bitte h\xF6chstens ${max} Zeichen eingeben.`;
+        if (issue.origin === "array" || issue.origin === "set") {
+          return `Bitte h\xF6chstens ${max} Optionen ausw\xE4hlen.`;
+        }
+        if (issue.inclusive) return `Bitte einen Wert von ${max} oder weniger eingeben.`;
+        return `Bitte einen Wert kleiner als ${max} eingeben.`;
       }
       case "invalid_format": {
         const _issue = issue;
         if (_issue.format === "starts_with")
-          return `Neva\u017Ee\u0107i string: mora zapo\u010Deti s "${_issue.prefix}"`;
-        if (_issue.format === "ends_with")
-          return `Neva\u017Ee\u0107i string: mora zavr\u0161iti s "${_issue.suffix}"`;
-        if (_issue.format === "includes")
-          return `Neva\u017Ee\u0107i string: mora sadr\u017Eavati "${_issue.includes}"`;
-        if (_issue.format === "regex")
-          return `Neva\u017Ee\u0107i string: mora odgovarati uzorku ${_issue.pattern}`;
-        return `Neva\u017Ee\u0107e: ${FormatDictionary[_issue.format] ?? issue.format}`;
+          return `Die Eingabe muss mit "${_issue.prefix}" beginnen.`;
+        if (_issue.format === "ends_with") return `Die Eingabe muss mit "${_issue.suffix}" enden.`;
+        if (_issue.format === "includes") return `Die Eingabe muss "${_issue.includes}" enthalten.`;
+        if (_issue.format === "email") return "Bitte eine g\xFCltige E-Mail-Adresse eingeben.";
+        if (_issue.format === "url") return "Bitte eine g\xFCltige URL eingeben.";
+        if (_issue.format === "regex") return "Bitte eine g\xFCltige Eingabe machen.";
+        return `Bitte einen g\xFCltigen Wert eingeben (${FormatDictionary[_issue.format] ?? _issue.format}).`;
       }
+      case "invalid_value":
+        return "Bitte eine g\xFCltige Option w\xE4hlen.";
       case "not_multiple_of":
-        return `Neva\u017Ee\u0107i broj: mora biti vi\u0161ekratnik od ${issue.divisor}`;
-      case "unrecognized_keys":
-        return `${issue.keys.length > 1 ? "Nepoznati klju\u010Devi" : "Nepoznati klju\u010D"}: ${core.util.joinValues(issue.keys, ", ")}`;
-      case "invalid_key":
-        return `Neva\u017Ee\u0107i klju\u010D u ${issue.origin}`;
-      case "invalid_union":
-        return "Neva\u017Ee\u0107i unos";
-      case "invalid_element":
-        return `Neva\u017Ee\u0107a vrijednost u ${issue.origin}`;
+        return `Bitte ein Vielfaches von ${issue.divisor} eingeben.`;
       default:
-        return "Neva\u017Ee\u0107i unos";
+        return "Bitte die Eingaben \xFCberpr\xFCfen.";
     }
   };
 };
-function hr_default() {
+function de_default() {
   return {
     localeError: error()
   };
 }
 
+// src/locales/en.ts
+var error2 = () => {
+  const FormatDictionary = {
+    email: "email address",
+    url: "URL",
+    uuid: "UUID",
+    datetime: "date and time",
+    date: "date",
+    time: "time",
+    duration: "duration",
+    ipv4: "IPv4 address",
+    ipv6: "IPv6 address",
+    e164: "phone number"
+  };
+  return (issue) => {
+    const isMissing = issue.input === void 0 || issue.input === null;
+    switch (issue.code) {
+      case "invalid_type": {
+        if (isMissing) return "This field is required.";
+        if (issue.expected === "number") return "Please enter a valid number.";
+        return "Please enter a valid value.";
+      }
+      case "too_small": {
+        const min = Number(issue.minimum);
+        if (issue.origin === "string") {
+          if (min <= 1) return "This field is required.";
+          return `Please use at least ${min} characters.`;
+        }
+        if (issue.origin === "array" || issue.origin === "set") {
+          return `Please select at least ${min} items.`;
+        }
+        if (issue.inclusive) return `Please enter a value of ${min} or more.`;
+        return `Please enter a value greater than ${min}.`;
+      }
+      case "too_big": {
+        const max = Number(issue.maximum);
+        if (issue.origin === "string") return `Please use ${max} characters or fewer.`;
+        if (issue.origin === "array" || issue.origin === "set") {
+          return `Please select ${max} items or fewer.`;
+        }
+        if (issue.inclusive) return `Please enter a value of ${max} or less.`;
+        return `Please enter a value less than ${max}.`;
+      }
+      case "invalid_format": {
+        const _issue = issue;
+        if (_issue.format === "starts_with") return `Input must start with "${_issue.prefix}".`;
+        if (_issue.format === "ends_with") return `Input must end with "${_issue.suffix}".`;
+        if (_issue.format === "includes") return `Input must include "${_issue.includes}".`;
+        if (_issue.format === "email") return "Please enter a valid email address.";
+        if (_issue.format === "url") return "Please enter a valid URL.";
+        if (_issue.format === "regex") return "Please enter a valid value.";
+        return `Please enter a valid ${FormatDictionary[_issue.format] ?? _issue.format}.`;
+      }
+      case "invalid_value":
+        return "Please choose a valid option.";
+      case "not_multiple_of":
+        return `Please enter a multiple of ${issue.divisor}.`;
+      default:
+        return "Please check your input.";
+    }
+  };
+};
+function en_default() {
+  return {
+    localeError: error2()
+  };
+}
+
+// src/locales/hr.ts
+var error3 = () => {
+  const FormatDictionary = {
+    email: "adresa e-po\u0161te",
+    url: "URL",
+    uuid: "UUID",
+    datetime: "datum i vrijeme",
+    date: "datum",
+    time: "vrijeme",
+    duration: "trajanje",
+    ipv4: "IPv4 adresa",
+    ipv6: "IPv6 adresa",
+    e164: "telefonski broj"
+  };
+  return (issue) => {
+    const isMissing = issue.input === void 0 || issue.input === null;
+    switch (issue.code) {
+      case "invalid_type": {
+        if (isMissing) return "Ovo polje je obavezno.";
+        if (issue.expected === "number") return "Unesite ispravan broj.";
+        return "Unesite ispravnu vrijednost.";
+      }
+      case "too_small": {
+        const min = Number(issue.minimum);
+        if (issue.origin === "string") {
+          if (min <= 1) return "Ovo polje je obavezno.";
+          return `Unesite barem ${min} znakova.`;
+        }
+        if (issue.origin === "array" || issue.origin === "set") {
+          return `Odaberite barem ${min} stavki.`;
+        }
+        if (issue.inclusive) return `Unesite vrijednost ${min} ili ve\u0107u.`;
+        return `Unesite vrijednost ve\u0107u od ${min}.`;
+      }
+      case "too_big": {
+        const max = Number(issue.maximum);
+        if (issue.origin === "string") return `Unesite najvi\u0161e ${max} znakova.`;
+        if (issue.origin === "array" || issue.origin === "set") {
+          return `Odaberite najvi\u0161e ${max} stavki.`;
+        }
+        if (issue.inclusive) return `Unesite vrijednost ${max} ili manju.`;
+        return `Unesite vrijednost manju od ${max}.`;
+      }
+      case "invalid_format": {
+        const _issue = issue;
+        if (_issue.format === "starts_with") return `Unos mora zapo\u010Deti s "${_issue.prefix}".`;
+        if (_issue.format === "ends_with") return `Unos mora zavr\u0161iti s "${_issue.suffix}".`;
+        if (_issue.format === "includes") return `Unos mora sadr\u017Eavati "${_issue.includes}".`;
+        if (_issue.format === "email") return "Unesite ispravnu adresu e-po\u0161te.";
+        if (_issue.format === "url") return "Unesite ispravan URL.";
+        if (_issue.format === "regex") return "Unesite ispravan unos.";
+        return `Unesite ispravnu vrijednost (${FormatDictionary[_issue.format] ?? _issue.format}).`;
+      }
+      case "invalid_value":
+        return "Odaberite jednu od ponu\u0111enih opcija.";
+      case "not_multiple_of":
+        return `Unesite vi\u0161ekratnik broja ${issue.divisor}.`;
+      default:
+        return "Provjerite unesene podatke.";
+    }
+  };
+};
+function hr_default() {
+  return {
+    localeError: error3()
+  };
+}
+
 // src/locales/index.ts
+var CUSTOM_LOCALES = {
+  hr: hr_default,
+  en: en_default,
+  de: de_default
+};
 function setZodLocale(lang) {
-  if (lang === "hr") {
-    z__namespace.config(hr_default());
+  const custom = CUSTOM_LOCALES[lang];
+  if (custom) {
+    z__namespace.config(custom());
     return;
   }
   const builtIn = z__namespace.locales[lang];
@@ -144,6 +247,8 @@ function setZodLocale(lang) {
   }
 }
 
+exports.deLocale = de_default;
+exports.enLocale = en_default;
 exports.hrLocale = hr_default;
 exports.setZodLocale = setZodLocale;
 //# sourceMappingURL=index.cjs.map

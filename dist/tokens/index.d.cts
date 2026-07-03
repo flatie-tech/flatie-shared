@@ -175,7 +175,7 @@ type ColorTokenName = keyof typeof colors;
  * own scale.
  */
 declare const radii: {
-    readonly radius: "0.625rem";
+    readonly radius: "0.75rem";
 };
 type RadiusTokenName = keyof typeof radii;
 

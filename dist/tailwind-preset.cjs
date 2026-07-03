@@ -172,7 +172,7 @@ const tokens = {
       }
     }
   },
-  "radius": "0.625rem"
+  "radius": "0.75rem"
 };
 
 const preset = {

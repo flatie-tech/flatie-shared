@@ -5,7 +5,7 @@
  */
 
 export const radii = {
-  radius: '0.625rem',
+  radius: '0.75rem',
 } as const;
 
 export type RadiusTokenName = keyof typeof radii;

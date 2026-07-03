@@ -1,5 +1,19 @@
 # @flatie/shared
 
+## 0.46.0
+
+### Minor Changes
+
+- Zod validation messages are now user-facing across all three locales. `hr` was
+  reworded from Zod's developer-facing tone into polite, imperative messages;
+  curated `en` and `de` locales were added that override Zod's built-in maps so
+  the wording is consistent everywhere. Empty/missing input now renders a clean
+  "required" message instead of a type/length error. `setZodLocale` registers all
+  three custom locales and still falls back to Zod's built-ins for other languages.
+
+  Also bumps the base radius token (`radii.radius`) from `0.625rem` to `0.75rem`,
+  softening default corner rounding across consumers that bind the token.
+
 ## 0.40.0
 
 ### Minor Changes

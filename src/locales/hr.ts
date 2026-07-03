@@ -1,118 +1,84 @@
-import type {
-  $ZodErrorMap,
-  $ZodInvalidTypeExpected,
-  $ZodStringFormatIssues,
-  $ZodStringFormats,
-} from 'zod/v4/core';
-import { util } from 'zod/v4/core';
+import type { $ZodErrorMap, $ZodStringFormatIssues, $ZodStringFormats } from 'zod/v4/core';
 
+/**
+ * Croatian Zod error map — user-facing tone.
+ *
+ * Unlike Zod's built-in maps (which read like debugger output), these are
+ * written for end users filling in forms: polite, imperative, no `<=`/`>=`
+ * jargon. This map is only the *fallback* — schemas that set their own
+ * `.min(1, { message })` still win. Because a global error map can't see the
+ * field label, messages are friendly-but-generic ("Ovo polje je obavezno.",
+ * not "E-pošta je obavezna.").
+ */
 const error: () => $ZodErrorMap = () => {
-  const Sizable: Record<string, { unit: string; verb: string }> = {
-    string: { unit: 'znakova', verb: 'imati' },
-    file: { unit: 'bajtova', verb: 'imati' },
-    array: { unit: 'elemenata', verb: 'imati' },
-    set: { unit: 'elemenata', verb: 'imati' },
-  };
-
-  function getSizing(origin: string): { unit: string; verb: string } | null {
-    return Sizable[origin] ?? null;
-  }
-
+  // Friendly names for string formats, used in the invalid_format fallback.
   const FormatDictionary: {
     [k in $ZodStringFormats | (string & {})]?: string;
   } = {
-    regex: 'unos',
     email: 'adresa e-pošte',
     url: 'URL',
-    emoji: 'emoji',
     uuid: 'UUID',
-    uuidv4: 'UUIDv4',
-    uuidv6: 'UUIDv6',
-    nanoid: 'nanoid',
-    guid: 'GUID',
-    cuid: 'cuid',
-    cuid2: 'cuid2',
-    ulid: 'ULID',
-    xid: 'XID',
-    ksuid: 'KSUID',
-    datetime: 'ISO datum i vrijeme',
-    date: 'ISO datum',
-    time: 'ISO vrijeme',
-    duration: 'ISO trajanje',
+    datetime: 'datum i vrijeme',
+    date: 'datum',
+    time: 'vrijeme',
+    duration: 'trajanje',
     ipv4: 'IPv4 adresa',
     ipv6: 'IPv6 adresa',
-    cidrv4: 'IPv4 raspon',
-    cidrv6: 'IPv6 raspon',
-    base64: 'Base64 string',
-    base64url: 'Base64 URL string',
-    json_string: 'JSON string',
-    e164: 'E.164 broj',
-    jwt: 'JWT',
-    template_literal: 'unos',
-  };
-
-  const TypeDictionary: {
-    [k in $ZodInvalidTypeExpected | (string & {})]?: string;
-  } = {
-    nan: 'NaN',
-    number: 'broj',
-    array: 'niz',
+    e164: 'telefonski broj',
   };
 
   return (issue) => {
+    const isMissing = issue.input === undefined || issue.input === null;
+
     switch (issue.code) {
       case 'invalid_type': {
-        const expected = TypeDictionary[issue.expected] ?? issue.expected;
-        const receivedType = util.getParsedType(issue.input);
-        const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue.expected)) {
-          return `Nevažeći unos: očekivano instanceof ${issue.expected}, primljeno ${received}`;
-        }
-        return `Nevažeći unos: očekivano ${expected}, primljeno ${received}`;
+        if (isMissing) return 'Ovo polje je obavezno.';
+        if (issue.expected === 'number') return 'Unesite ispravan broj.';
+        return 'Unesite ispravnu vrijednost.';
       }
-      case 'invalid_value':
-        if (issue.values.length === 1)
-          return `Nevažeći unos: očekivano ${util.stringifyPrimitive(issue.values[0])}`;
-        return `Nevažeća opcija: očekivano jedno od ${util.joinValues(issue.values, '|')}`;
-      case 'too_big': {
-        const adj = issue.inclusive ? '<=' : '<';
-        const sizing = getSizing(issue.origin);
-        if (sizing)
-          return `Preveliko: očekivano da ${issue.origin ?? 'vrijednost'} ima ${adj}${issue.maximum.toString()} ${sizing.unit ?? 'elemenata'}`;
-        return `Preveliko: očekivano da ${issue.origin ?? 'vrijednost'} bude ${adj}${issue.maximum.toString()}`;
-      }
+
       case 'too_small': {
-        const adj = issue.inclusive ? '>=' : '>';
-        const sizing = getSizing(issue.origin);
-        if (sizing) {
-          return `Premalo: očekivano da ${issue.origin} ima ${adj}${issue.minimum.toString()} ${sizing.unit}`;
+        const min = Number(issue.minimum);
+        if (issue.origin === 'string') {
+          if (min <= 1) return 'Ovo polje je obavezno.';
+          return `Unesite barem ${min} znakova.`;
         }
-        return `Premalo: očekivano da ${issue.origin} bude ${adj}${issue.minimum.toString()}`;
+        if (issue.origin === 'array' || issue.origin === 'set') {
+          return `Odaberite barem ${min} stavki.`;
+        }
+        if (issue.inclusive) return `Unesite vrijednost ${min} ili veću.`;
+        return `Unesite vrijednost veću od ${min}.`;
       }
+
+      case 'too_big': {
+        const max = Number(issue.maximum);
+        if (issue.origin === 'string') return `Unesite najviše ${max} znakova.`;
+        if (issue.origin === 'array' || issue.origin === 'set') {
+          return `Odaberite najviše ${max} stavki.`;
+        }
+        if (issue.inclusive) return `Unesite vrijednost ${max} ili manju.`;
+        return `Unesite vrijednost manju od ${max}.`;
+      }
+
       case 'invalid_format': {
         const _issue = issue as $ZodStringFormatIssues;
-        if (_issue.format === 'starts_with')
-          return `Nevažeći string: mora započeti s "${_issue.prefix}"`;
-        if (_issue.format === 'ends_with')
-          return `Nevažeći string: mora završiti s "${_issue.suffix}"`;
-        if (_issue.format === 'includes')
-          return `Nevažeći string: mora sadržavati "${_issue.includes}"`;
-        if (_issue.format === 'regex')
-          return `Nevažeći string: mora odgovarati uzorku ${_issue.pattern}`;
-        return `Nevažeće: ${FormatDictionary[_issue.format] ?? issue.format}`;
+        if (_issue.format === 'starts_with') return `Unos mora započeti s "${_issue.prefix}".`;
+        if (_issue.format === 'ends_with') return `Unos mora završiti s "${_issue.suffix}".`;
+        if (_issue.format === 'includes') return `Unos mora sadržavati "${_issue.includes}".`;
+        if (_issue.format === 'email') return 'Unesite ispravnu adresu e-pošte.';
+        if (_issue.format === 'url') return 'Unesite ispravan URL.';
+        if (_issue.format === 'regex') return 'Unesite ispravan unos.';
+        return `Unesite ispravnu vrijednost (${FormatDictionary[_issue.format] ?? _issue.format}).`;
       }
+
+      case 'invalid_value':
+        return 'Odaberite jednu od ponuđenih opcija.';
+
       case 'not_multiple_of':
-        return `Nevažeći broj: mora biti višekratnik od ${issue.divisor}`;
-      case 'unrecognized_keys':
-        return `${issue.keys.length > 1 ? 'Nepoznati ključevi' : 'Nepoznati ključ'}: ${util.joinValues(issue.keys, ', ')}`;
-      case 'invalid_key':
-        return `Nevažeći ključ u ${issue.origin}`;
-      case 'invalid_union':
-        return 'Nevažeći unos';
-      case 'invalid_element':
-        return `Nevažeća vrijednost u ${issue.origin}`;
+        return `Unesite višekratnik broja ${issue.divisor}.`;
+
       default:
-        return 'Nevažeći unos';
+        return 'Provjerite unesene podatke.';
     }
   };
 };
