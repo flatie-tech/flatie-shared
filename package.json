@@ -1,6 +1,6 @@
 {
   "name": "@flatie/shared",
-  "version": "0.45.3",
+  "version": "0.45.4",
   "description": "Shared types, schemas, and utilities for Flatie applications",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -116,6 +116,16 @@
       "require": {
         "types": "./dist/validation/index.d.cts",
         "default": "./dist/validation/index.cjs"
+      }
+    },
+    "./locales": {
+      "import": {
+        "types": "./dist/locales/index.d.ts",
+        "default": "./dist/locales/index.js"
+      },
+      "require": {
+        "types": "./dist/locales/index.d.cts",
+        "default": "./dist/locales/index.cjs"
       }
     }
   },
