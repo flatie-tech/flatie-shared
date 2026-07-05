@@ -2,7 +2,7 @@
 
 var chunkXXNOAOHF_cjs = require('./chunk-XXNOAOHF.cjs');
 var chunkOY3KKXHH_cjs = require('./chunk-OY3KKXHH.cjs');
-var chunk6W5Z5YZC_cjs = require('./chunk-6W5Z5YZC.cjs');
+var chunkKYLZKN6T_cjs = require('./chunk-KYLZKN6T.cjs');
 var zod = require('zod');
 
 var apiErrorSchema = zod.z.object({
@@ -12,7 +12,7 @@ var apiErrorSchema = zod.z.object({
   path: zod.z.string()
 });
 var apiErrorResponseSchema = apiErrorSchema.extend({
-  code: zod.z.enum(Object.values(chunk6W5Z5YZC_cjs.BACKEND_ERROR_CODES)).optional().describe(
+  code: zod.z.enum(Object.values(chunkKYLZKN6T_cjs.BACKEND_ERROR_CODES)).optional().describe(
     "Canonical error code from `@flatie/shared/errors` (`BACKEND_ERROR_CODES`). Present when the backend raised a `DomainException`; absent for generic HTTP errors (network failures, unhandled exceptions, validation-pipe rejections)."
   )
 }).describe("Standard error envelope returned by the Flatie backend on 4xx and 5xx responses.");
@@ -2169,5 +2169,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-LN3USFVI.cjs.map
-//# sourceMappingURL=chunk-LN3USFVI.cjs.map
+//# sourceMappingURL=chunk-G5HRDKWF.cjs.map
+//# sourceMappingURL=chunk-G5HRDKWF.cjs.map
