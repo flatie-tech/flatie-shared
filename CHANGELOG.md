@@ -1,5 +1,14 @@
 # @flatie/shared
 
+## 0.47.0
+
+### Minor Changes
+
+- Add `GEOCODE_NO_ADDRESS`, `GEOCODE_ADDRESS_NOT_FOUND`, and
+  `GEOCODE_COORDINATES_NOT_FOUND` to `BACKEND_ERROR_CODES`, so the building
+  geocode endpoint's three failure modes carry a machine-readable code instead
+  of a plain message string.
+
 ## 0.46.0
 
 ### Minor Changes

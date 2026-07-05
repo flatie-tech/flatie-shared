@@ -1,3 +1,5 @@
+'use strict';
+
 // src/errors/index.ts
 var BACKEND_ERROR_CODES = {
   // Auth
@@ -98,12 +100,17 @@ var BACKEND_ERROR_CODES = {
   // ── Signature-based voting ────────────────────────────────────────
   SIGNATURE_VOTE_NOT_PENDING: "SIGNATURE_VOTE_NOT_PENDING",
   SIGNATURE_FILE_REQUIRED: "SIGNATURE_FILE_REQUIRED",
-  INVALID_SIGNATURE_FILE: "INVALID_SIGNATURE_FILE"
+  INVALID_SIGNATURE_FILE: "INVALID_SIGNATURE_FILE",
+  // ── Building geocoding ──────────────────────────────────────────────
+  GEOCODE_NO_ADDRESS: "GEOCODE_NO_ADDRESS",
+  GEOCODE_ADDRESS_NOT_FOUND: "GEOCODE_ADDRESS_NOT_FOUND",
+  GEOCODE_COORDINATES_NOT_FOUND: "GEOCODE_COORDINATES_NOT_FOUND"
 };
 function isBackendErrorCode(code) {
   return typeof code === "string" && Object.values(BACKEND_ERROR_CODES).includes(code);
 }
 
-export { BACKEND_ERROR_CODES, isBackendErrorCode };
-//# sourceMappingURL=chunk-YNRAXLZM.js.map
-//# sourceMappingURL=chunk-YNRAXLZM.js.map
+exports.BACKEND_ERROR_CODES = BACKEND_ERROR_CODES;
+exports.isBackendErrorCode = isBackendErrorCode;
+//# sourceMappingURL=chunk-KYLZKN6T.cjs.map
+//# sourceMappingURL=chunk-KYLZKN6T.cjs.map
