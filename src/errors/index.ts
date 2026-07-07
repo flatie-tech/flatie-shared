@@ -108,6 +108,16 @@ export const BACKEND_ERROR_CODES = {
   // logged-in user's Flatie account.
   CERTILIA_EMAIL_MISMATCH: 'CERTILIA_EMAIL_MISMATCH',
 
+  // ── Tiered verification ───────────────────────────────────────────
+  // Voter's durable verification tier is below the building's required
+  // minimum for a CONSENSUS vote (rep-configured `minVerificationTierForConsensus`).
+  INSUFFICIENT_VERIFICATION_TIER: 'INSUFFICIENT_VERIFICATION_TIER',
+  // A representative tried to set a required tier below the legal minimum
+  // for the building's decision thresholds (ZUOZ Čl. 40).
+  VERIFICATION_TIER_BELOW_LEGAL_MINIMUM: 'VERIFICATION_TIER_BELOW_LEGAL_MINIMUM',
+  // KYC vendor identity verification did not complete successfully.
+  KYC_VERIFICATION_FAILED: 'KYC_VERIFICATION_FAILED',
+
   // ── Signature-based voting ────────────────────────────────────────
   SIGNATURE_VOTE_NOT_PENDING: 'SIGNATURE_VOTE_NOT_PENDING',
   SIGNATURE_FILE_REQUIRED: 'SIGNATURE_FILE_REQUIRED',

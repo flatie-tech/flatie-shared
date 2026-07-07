@@ -4,7 +4,11 @@ export { BuildingStatus, OrgStatus } from './building-status.enum';
 export { BuildingType } from './building-type.enum';
 export { FailureLocationType, FailureUnitType } from './failure-location.enum';
 export { FundsSource, TransactionSource } from './funds-source.enum';
-export { IdentityVerificationMethod } from './identity-verification.enum';
+export {
+  IdentityVerificationMethod,
+  methodToTier,
+  VerificationTier,
+} from './identity-verification.enum';
 export { JoinRequestStatus } from './join-request-status.enum';
 export { MaintenanceLogFinancedBy } from './maintenance-log.enum';
 export {

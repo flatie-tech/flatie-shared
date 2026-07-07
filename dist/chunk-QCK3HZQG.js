@@ -1,5 +1,5 @@
-import { BuildingRole, PlatformRole, OrgRole, SCOPED_PERMISSIONS, APPROVE_PERMISSIONS, FailureStatus, Priority } from './chunk-ANLWV62L.js';
-import { isBackendErrorCode } from './chunk-Q6RJXUXC.js';
+import { BuildingRole, PlatformRole, OrgRole, SCOPED_PERMISSIONS, APPROVE_PERMISSIONS, FailureStatus, Priority } from './chunk-KPQFXKN4.js';
+import { isBackendErrorCode } from './chunk-PFFGEZJU.js';
 import { createPaginatedResponse } from './chunk-E4FOXN63.js';
 
 // src/utils/house-number.ts
@@ -363,5 +363,5 @@ function debounce(func, delay) {
 }
 
 export { DATETIME_FORMATS, DATE_FORMATS, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, TIME_FORMATS, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatAddress, formatCurrency, formatCurrencyByLocale, formatDate, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isManagerialRole, isValidHouseNumber, normalizeHouseNumber, normalizePaginatedResponse, parseApiError, parseData, parseHouseNumber, priorityVariant };
-//# sourceMappingURL=chunk-OFOLPEKF.js.map
-//# sourceMappingURL=chunk-OFOLPEKF.js.map
+//# sourceMappingURL=chunk-QCK3HZQG.js.map
+//# sourceMappingURL=chunk-QCK3HZQG.js.map

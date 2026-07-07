@@ -57,8 +57,33 @@ var TransactionSource = {
 // src/enums/identity-verification.enum.ts
 var IdentityVerificationMethod = {
   PRINTED_SIGNATURE: "printed_signature",
-  CERTILIA: "certilia"
+  CERTILIA: "certilia",
+  KYC_VENDOR: "kyc_vendor",
+  OIB_SELF_DECLARED: "oib_self_declared"
 };
+var VerificationTier = {
+  /** Account exists, email verified. No identity claim. */
+  UNVERIFIED: 0,
+  /** OIB self-declared, checksum-valid, unique. Data quality only. */
+  OIB: 1,
+  /** One-time identity proof (KYC doc+liveness, bank-level, or rep-attested signature). */
+  IDENTITY: 2,
+  /** eID / qualified electronic signature (Certilia). Legally binding equivalence. */
+  QUALIFIED: 3
+};
+function methodToTier(method) {
+  switch (method) {
+    case IdentityVerificationMethod.CERTILIA:
+      return VerificationTier.QUALIFIED;
+    case IdentityVerificationMethod.PRINTED_SIGNATURE:
+    case IdentityVerificationMethod.KYC_VENDOR:
+      return VerificationTier.IDENTITY;
+    case IdentityVerificationMethod.OIB_SELF_DECLARED:
+      return VerificationTier.OIB;
+    default:
+      return VerificationTier.UNVERIFIED;
+  }
+}
 
 // src/enums/join-request-status.enum.ts
 var JoinRequestStatus = {
@@ -598,10 +623,12 @@ exports.TransactionSource = TransactionSource;
 exports.TransactionType = TransactionType;
 exports.UNIMPLEMENTED_NOTIFICATION_TYPES = UNIMPLEMENTED_NOTIFICATION_TYPES;
 exports.UnitType = UnitType;
+exports.VerificationTier = VerificationTier;
 exports.WASTE_SUBTYPE_NOTIFICATION_MAP = WASTE_SUBTYPE_NOTIFICATION_MAP;
 exports.canAssignOrgRole = canAssignOrgRole;
 exports.canAssignPlatformRole = canAssignPlatformRole;
 exports.canAssignRole = canAssignRole;
 exports.domainPermissions = domainPermissions;
-//# sourceMappingURL=chunk-OY3KKXHH.cjs.map
-//# sourceMappingURL=chunk-OY3KKXHH.cjs.map
+exports.methodToTier = methodToTier;
+//# sourceMappingURL=chunk-WNYMLRYU.cjs.map
+//# sourceMappingURL=chunk-WNYMLRYU.cjs.map

@@ -1,5 +1,15 @@
 # @flatie/shared
 
+## 0.48.0
+
+### Minor Changes
+
+- Add tiered identity-verification primitives. New `VerificationTier` enum
+  (UNVERIFIED/OIB/IDENTITY/QUALIFIED as numeric ordinals) and a `methodToTier()`
+  helper; `IdentityVerificationMethod` gains `KYC_VENDOR` and `OIB_SELF_DECLARED`.
+  Adds `INSUFFICIENT_VERIFICATION_TIER`, `VERIFICATION_TIER_BELOW_LEGAL_MINIMUM`,
+  and `KYC_VERIFICATION_FAILED` to `BACKEND_ERROR_CODES`.
+
 ## 0.47.0
 
 ### Minor Changes

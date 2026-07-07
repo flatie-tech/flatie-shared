@@ -55,8 +55,33 @@ var TransactionSource = {
 // src/enums/identity-verification.enum.ts
 var IdentityVerificationMethod = {
   PRINTED_SIGNATURE: "printed_signature",
-  CERTILIA: "certilia"
+  CERTILIA: "certilia",
+  KYC_VENDOR: "kyc_vendor",
+  OIB_SELF_DECLARED: "oib_self_declared"
 };
+var VerificationTier = {
+  /** Account exists, email verified. No identity claim. */
+  UNVERIFIED: 0,
+  /** OIB self-declared, checksum-valid, unique. Data quality only. */
+  OIB: 1,
+  /** One-time identity proof (KYC doc+liveness, bank-level, or rep-attested signature). */
+  IDENTITY: 2,
+  /** eID / qualified electronic signature (Certilia). Legally binding equivalence. */
+  QUALIFIED: 3
+};
+function methodToTier(method) {
+  switch (method) {
+    case IdentityVerificationMethod.CERTILIA:
+      return VerificationTier.QUALIFIED;
+    case IdentityVerificationMethod.PRINTED_SIGNATURE:
+    case IdentityVerificationMethod.KYC_VENDOR:
+      return VerificationTier.IDENTITY;
+    case IdentityVerificationMethod.OIB_SELF_DECLARED:
+      return VerificationTier.OIB;
+    default:
+      return VerificationTier.UNVERIFIED;
+  }
+}
 
 // src/enums/join-request-status.enum.ts
 var JoinRequestStatus = {
@@ -544,6 +569,6 @@ var UnitType = {
   COMMERCIAL: "commercial"
 };
 
-export { APPROVE_PERMISSIONS, ApartmentRole, ApprovalStatus, BUILDING_ROLE_RANK, BuildingOtpExpiry, BuildingRole, BuildingStatus, BuildingType, CommonStatus, DevicePlatform, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, IdentityVerificationMethod, JoinRequestStatus, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, ORG_ROLE_RANK, OrgQuotaResourceType, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, Permission, PlatformRole, PollStatus, PollType, PollVoteStatus, PricuvaRefMode, Priority, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions };
-//# sourceMappingURL=chunk-ANLWV62L.js.map
-//# sourceMappingURL=chunk-ANLWV62L.js.map
+export { APPROVE_PERMISSIONS, ApartmentRole, ApprovalStatus, BUILDING_ROLE_RANK, BuildingOtpExpiry, BuildingRole, BuildingStatus, BuildingType, CommonStatus, DevicePlatform, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, IdentityVerificationMethod, JoinRequestStatus, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, ORG_ROLE_RANK, OrgQuotaResourceType, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, Permission, PlatformRole, PollStatus, PollType, PollVoteStatus, PricuvaRefMode, Priority, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions, methodToTier };
+//# sourceMappingURL=chunk-KPQFXKN4.js.map
+//# sourceMappingURL=chunk-KPQFXKN4.js.map

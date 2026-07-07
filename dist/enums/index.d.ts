@@ -71,8 +71,32 @@ type TransactionSource = (typeof TransactionSource)[keyof typeof TransactionSour
 declare const IdentityVerificationMethod: {
     readonly PRINTED_SIGNATURE: "printed_signature";
     readonly CERTILIA: "certilia";
+    readonly KYC_VENDOR: "kyc_vendor";
+    readonly OIB_SELF_DECLARED: "oib_self_declared";
 };
 type IdentityVerificationMethod = (typeof IdentityVerificationMethod)[keyof typeof IdentityVerificationMethod];
+/**
+ * Durable per-user identity assurance level. Numeric ordinals so building
+ * policy can compare with `>=` and the value stores as a smallint.
+ *
+ * Grounded in Croatian ZUOZ (NN 152/2024) Čl. 40, which accepts consent
+ * "with proof of identity OR a qualified electronic signature":
+ *  - IDENTITY (2) satisfies the "dokaz identiteta" limb,
+ *  - QUALIFIED (3) is the eID/QES limb.
+ */
+declare const VerificationTier: {
+    /** Account exists, email verified. No identity claim. */
+    readonly UNVERIFIED: 0;
+    /** OIB self-declared, checksum-valid, unique. Data quality only. */
+    readonly OIB: 1;
+    /** One-time identity proof (KYC doc+liveness, bank-level, or rep-attested signature). */
+    readonly IDENTITY: 2;
+    /** eID / qualified electronic signature (Certilia). Legally binding equivalence. */
+    readonly QUALIFIED: 3;
+};
+type VerificationTier = (typeof VerificationTier)[keyof typeof VerificationTier];
+/** Map a verification method to the durable tier it confers. */
+declare function methodToTier(method: IdentityVerificationMethod): VerificationTier;
 
 declare const JoinRequestStatus: {
     readonly PENDING: "pending";
@@ -248,4 +272,4 @@ declare const UnitType: {
 };
 type UnitType = (typeof UnitType)[keyof typeof UnitType];
 
-export { ApartmentRole, BuildingOtpExpiry, BuildingStatus, DevicePlatform, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, JoinRequestStatus, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, OrgQuotaResourceType, OrgStatus, OrgType, PollStatus, PollVoteStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, TransactionSource, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, WASTE_SUBTYPE_NOTIFICATION_MAP };
+export { ApartmentRole, BuildingOtpExpiry, BuildingStatus, DevicePlatform, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, JoinRequestStatus, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, OrgQuotaResourceType, OrgStatus, OrgType, PollStatus, PollVoteStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, TransactionSource, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, WASTE_SUBTYPE_NOTIFICATION_MAP, methodToTier };

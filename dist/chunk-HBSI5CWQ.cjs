@@ -1,7 +1,7 @@
 'use strict';
 
-var chunkOY3KKXHH_cjs = require('./chunk-OY3KKXHH.cjs');
-var chunkKYLZKN6T_cjs = require('./chunk-KYLZKN6T.cjs');
+var chunkWNYMLRYU_cjs = require('./chunk-WNYMLRYU.cjs');
+var chunkQJNF5EVJ_cjs = require('./chunk-QJNF5EVJ.cjs');
 var chunkOOJKTZT4_cjs = require('./chunk-OOJKTZT4.cjs');
 
 // src/utils/house-number.ts
@@ -184,7 +184,7 @@ var parseApiError = (error) => {
   const response = readProp(error, "response");
   const data = readProp(response, "data");
   const rawCode = readProp(data, "code");
-  const code = chunkKYLZKN6T_cjs.isBackendErrorCode(rawCode) ? rawCode : null;
+  const code = chunkQJNF5EVJ_cjs.isBackendErrorCode(rawCode) ? rawCode : null;
   const dataMessage = readProp(data, "message");
   const errorMessage = readProp(error, "message");
   const message = typeof dataMessage === "string" && dataMessage.length > 0 && dataMessage || typeof errorMessage === "string" && errorMessage.length > 0 && errorMessage || "Unknown error";
@@ -198,13 +198,13 @@ function canDo(subject, permission) {
   return subject.permissions.includes(permission);
 }
 function canDoOnResource(subject, domain, action, resourceOwnerId) {
-  const scopedPerms = chunkOY3KKXHH_cjs.SCOPED_PERMISSIONS[domain]?.[action];
+  const scopedPerms = chunkWNYMLRYU_cjs.SCOPED_PERMISSIONS[domain]?.[action];
   if (!scopedPerms) return false;
   if (subject.permissions.includes(scopedPerms.any)) return true;
   return subject.permissions.includes(scopedPerms.own) && resourceOwnerId === subject.userId;
 }
 function computeActionFlags(subject, domain, resourceOwnerId) {
-  const approvePermission = chunkOY3KKXHH_cjs.APPROVE_PERMISSIONS[domain];
+  const approvePermission = chunkWNYMLRYU_cjs.APPROVE_PERMISSIONS[domain];
   return {
     canEdit: canDoOnResource(subject, domain, "update", resourceOwnerId),
     canDelete: canDoOnResource(subject, domain, "delete", resourceOwnerId),
@@ -247,52 +247,52 @@ function hasAllPermissions(userPermissions, permissions) {
 
 // src/utils/role-helpers.ts
 var MANAGERIAL_BUILDING_ROLES = [
-  chunkOY3KKXHH_cjs.BuildingRole.OWNER_REPRESENTATIVE,
-  chunkOY3KKXHH_cjs.BuildingRole.DEPUTY_REPRESENTATIVE
+  chunkWNYMLRYU_cjs.BuildingRole.OWNER_REPRESENTATIVE,
+  chunkWNYMLRYU_cjs.BuildingRole.DEPUTY_REPRESENTATIVE
 ];
 function isManagerialRole(role) {
   return MANAGERIAL_BUILDING_ROLES.includes(role);
 }
 var ROLE_TRANSLATION_KEYS = {
   // Building roles
-  [chunkOY3KKXHH_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
-  [chunkOY3KKXHH_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
-  [chunkOY3KKXHH_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER",
-  [chunkOY3KKXHH_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT",
+  [chunkWNYMLRYU_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
+  [chunkWNYMLRYU_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
+  [chunkWNYMLRYU_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER",
+  [chunkWNYMLRYU_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT",
   // Org roles
-  [chunkOY3KKXHH_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
-  [chunkOY3KKXHH_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
-  [chunkOY3KKXHH_cjs.OrgRole.REFERENT]: "roles.REFERENT",
-  [chunkOY3KKXHH_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE",
+  [chunkWNYMLRYU_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
+  [chunkWNYMLRYU_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
+  [chunkWNYMLRYU_cjs.OrgRole.REFERENT]: "roles.REFERENT",
+  [chunkWNYMLRYU_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE",
   // Platform roles
-  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
-  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
-  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
-  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
+  [chunkWNYMLRYU_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
+  [chunkWNYMLRYU_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
+  [chunkWNYMLRYU_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
+  [chunkWNYMLRYU_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
 };
 var ROLE_DESCRIPTION_KEYS = {
-  [chunkOY3KKXHH_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
-  [chunkOY3KKXHH_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
-  [chunkOY3KKXHH_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
-  [chunkOY3KKXHH_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
-  [chunkOY3KKXHH_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
-  [chunkOY3KKXHH_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
-  [chunkOY3KKXHH_cjs.OrgRole.REFERENT]: "roles.REFERENT_DESC",
-  [chunkOY3KKXHH_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
-  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
-  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
-  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
-  [chunkOY3KKXHH_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
+  [chunkWNYMLRYU_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
+  [chunkWNYMLRYU_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
+  [chunkWNYMLRYU_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
+  [chunkWNYMLRYU_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
+  [chunkWNYMLRYU_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
+  [chunkWNYMLRYU_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
+  [chunkWNYMLRYU_cjs.OrgRole.REFERENT]: "roles.REFERENT_DESC",
+  [chunkWNYMLRYU_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
+  [chunkWNYMLRYU_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
+  [chunkWNYMLRYU_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
+  [chunkWNYMLRYU_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
+  [chunkWNYMLRYU_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
 };
 
 // src/utils/status-variants.ts
 function failureStatusVariant(status) {
   switch (status) {
-    case chunkOY3KKXHH_cjs.FailureStatus.PENDING:
+    case chunkWNYMLRYU_cjs.FailureStatus.PENDING:
       return "info";
-    case chunkOY3KKXHH_cjs.FailureStatus.IN_PROGRESS:
+    case chunkWNYMLRYU_cjs.FailureStatus.IN_PROGRESS:
       return "warning";
-    case chunkOY3KKXHH_cjs.FailureStatus.RESOLVED:
+    case chunkWNYMLRYU_cjs.FailureStatus.RESOLVED:
       return "success";
     default:
       return "neutral";
@@ -300,9 +300,9 @@ function failureStatusVariant(status) {
 }
 function priorityVariant(priority) {
   switch (priority) {
-    case chunkOY3KKXHH_cjs.Priority.URGENT:
+    case chunkWNYMLRYU_cjs.Priority.URGENT:
       return "danger";
-    case chunkOY3KKXHH_cjs.Priority.NORMAL:
+    case chunkWNYMLRYU_cjs.Priority.NORMAL:
       return "neutral";
     default:
       return "neutral";
@@ -400,5 +400,5 @@ exports.parseApiError = parseApiError;
 exports.parseData = parseData;
 exports.parseHouseNumber = parseHouseNumber;
 exports.priorityVariant = priorityVariant;
-//# sourceMappingURL=chunk-Y2EA77VC.cjs.map
-//# sourceMappingURL=chunk-Y2EA77VC.cjs.map
+//# sourceMappingURL=chunk-HBSI5CWQ.cjs.map
+//# sourceMappingURL=chunk-HBSI5CWQ.cjs.map
