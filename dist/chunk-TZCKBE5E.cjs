@@ -1,6 +1,7 @@
 'use strict';
 
 var chunkXXNOAOHF_cjs = require('./chunk-XXNOAOHF.cjs');
+var chunkNQLL5CZO_cjs = require('./chunk-NQLL5CZO.cjs');
 var chunkW7WUC4AM_cjs = require('./chunk-W7WUC4AM.cjs');
 var chunkL63CW4MD_cjs = require('./chunk-L63CW4MD.cjs');
 var zod = require('zod');
@@ -989,6 +990,30 @@ var permissionsResponseSchema = zod.z.object({
   orgId: zod.z.string().uuid().optional(),
   chatVisibleToCoOwners: zod.z.boolean().optional()
 });
+var aiChatMessageSchema = zod.z.object({
+  id: zod.z.string().optional().describe("Client-generated message id (AI SDK UIMessage id)."),
+  role: zod.z.enum(["user", "assistant", "system"]).describe("Author of the message in the conversation history."),
+  content: zod.z.string().max(chunkNQLL5CZO_cjs.AI_CHAT_LIMITS.MAX_MESSAGE_CHARS).optional().describe("Plain-text body; legacy shape, superseded by parts."),
+  parts: zod.z.array(zod.z.any()).optional().refine(
+    (parts) => parts === void 0 || parts.every(
+      (part) => typeof part?.text !== "string" || part.text.length <= chunkNQLL5CZO_cjs.AI_CHAT_LIMITS.MAX_MESSAGE_CHARS
+    ),
+    { message: `Text part exceeds ${chunkNQLL5CZO_cjs.AI_CHAT_LIMITS.MAX_MESSAGE_CHARS} characters` }
+  ).describe(
+    "AI SDK UIMessage parts (text, tool invocations, ...). Text parts are capped at MAX_MESSAGE_CHARS."
+  )
+});
+var aiChatRequestSchema = zod.z.object({
+  id: zod.z.string().optional().describe("AI SDK chat/session id."),
+  trigger: zod.z.string().optional().describe("AI SDK submit trigger metadata; ignored by the API."),
+  buildingId: zod.z.string().optional().describe(
+    "Building context for the turn. When present, building-data tools are attached and the building AI budget applies; without it the assistant answers from general knowledge only."
+  ),
+  locale: zod.z.enum(["hr", "en", "de"]).optional().describe(
+    "The user\u2019s active UI locale, sent per request so the assistant locks its reply language without relying on content inference (unreliable on small models). Defaults to hr."
+  ),
+  messages: zod.z.array(aiChatMessageSchema).min(1).max(chunkNQLL5CZO_cjs.AI_CHAT_LIMITS.MAX_MESSAGES).describe("Full client-held conversation history, newest last; the server windows it.")
+});
 var createEmailThreadRequestSchema = zod.z.object({
   recipientEmail: zod.z.string().email().describe("Primary To address of the first outbound message."),
   recipientName: zod.z.string().optional().describe(
@@ -1027,6 +1052,19 @@ var messageResponseSchema = zod.z.object({
     'Human-readable confirmation that the action completed successfully (e.g., "Notice approved").'
   )
 });
+var aiUsageResponseSchema = zod.z.looseObject({
+  buildingId: zod.z.string().describe("UUID of the building this usage row belongs to."),
+  period: zod.z.string().describe("Billing period key in YYYY-MM (UTC calendar month); resets implicitly."),
+  spentMicroUsd: zod.z.number().describe("Estimated AI spend accumulated by the whole building this period, in micro-USD."),
+  messageCount: zod.z.number().describe("Number of AI chat replies the building has consumed this period."),
+  capMicroUsd: zod.z.number().describe("Monthly building cap in micro-USD ($1 base, $6 with the AI add-on)."),
+  userSpentMicroUsd: zod.z.number().optional().describe(
+    "Requesting user\u2019s own spend this period, in micro-USD. Omitted when the per-user tracker (Redis) is unavailable."
+  ),
+  userCapMicroUsd: zod.z.number().optional().describe(
+    "Requesting user\u2019s personal share of the building cap, in micro-USD (fairness limit so one member cannot drain the building budget). Omitted with userSpentMicroUsd."
+  )
+}).describe("AI chat budget usage for one building in the current monthly period.");
 var ARCHIVE_TYPES = [
   "apartments",
   "blog_posts",
@@ -2019,6 +2057,9 @@ exports.POLL_TYPES = POLL_TYPES;
 exports.PrioritySchema = PrioritySchema;
 exports.TRANSACTION_CATEGORY_LIMITS = TRANSACTION_CATEGORY_LIMITS;
 exports.addOrgMemberSchema = addOrgMemberSchema;
+exports.aiChatMessageSchema = aiChatMessageSchema;
+exports.aiChatRequestSchema = aiChatRequestSchema;
+exports.aiUsageResponseSchema = aiUsageResponseSchema;
 exports.apartmentRoleSchema = apartmentRoleSchema;
 exports.apartmentSchema = apartmentSchema;
 exports.apartmentUserSchema = apartmentUserSchema;
@@ -2171,5 +2212,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-42FPULCM.cjs.map
-//# sourceMappingURL=chunk-42FPULCM.cjs.map
+//# sourceMappingURL=chunk-TZCKBE5E.cjs.map
+//# sourceMappingURL=chunk-TZCKBE5E.cjs.map

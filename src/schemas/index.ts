@@ -66,6 +66,8 @@ export { permissionsResponseSchema, roleTypeSchema } from './permissions.schema'
 
 // Request schemas (PATCH/PUT payloads: id + optional body fields)
 export type {
+  AiChatMessagePayload,
+  AiChatRequestPayload,
   CreateEmailThreadRequestPayload,
   ReplyEmailThreadRequestPayload,
   UpdateFailureReportRequestPayload,
@@ -74,6 +76,8 @@ export type {
   UpdatePollRequestPayload,
 } from './requests';
 export {
+  aiChatMessageSchema,
+  aiChatRequestSchema,
   createEmailThreadRequestSchema,
   replyEmailThreadRequestSchema,
   updateFailureReportRequestSchema,
@@ -84,6 +88,7 @@ export {
 
 // Response schemas
 export type {
+  AiUsageResponse,
   ArchivedItem,
   ArchiveType,
   BuildingDetailResponse,
@@ -130,6 +135,7 @@ export type {
 } from './responses';
 export {
   ARCHIVE_TYPES,
+  aiUsageResponseSchema,
   archivedItemSchema,
   archiveTypeSchema,
   buildingDetailResponseSchema,

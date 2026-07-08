@@ -1,5 +1,7 @@
 export type { MessageResponse } from './action';
 export { messageResponseSchema } from './action';
+export type { AiUsageResponse } from './ai-usage';
+export { aiUsageResponseSchema } from './ai-usage';
 export type { ArchivedItem, ArchiveType, ListArchivedResponse } from './archive';
 export {
   ARCHIVE_TYPES,

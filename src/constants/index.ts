@@ -1,3 +1,5 @@
+// AI chat guardrails (request caps + server history window)
+export { AI_CHAT_LIMITS } from './ai-chat';
 // Defaults
 export { DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT } from './defaults';
 // Query keys for React Query / TanStack Query

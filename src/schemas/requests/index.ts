@@ -13,6 +13,8 @@
 // Zod-inferred payload types here are the contract-of-truth going
 // forward.
 
+export type { AiChatMessagePayload, AiChatRequestPayload } from './ai-chat';
+export { aiChatMessageSchema, aiChatRequestSchema } from './ai-chat';
 export type { CreateEmailThreadRequestPayload } from './create-email-thread';
 export { createEmailThreadRequestSchema } from './create-email-thread';
 export type { ReplyEmailThreadRequestPayload } from './reply-email-thread';
