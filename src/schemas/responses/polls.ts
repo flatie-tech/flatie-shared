@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { PollCannotVoteReason } from '../../enums/poll-cannot-vote-reason.enum';
 import { pollTypeSchema } from '../entities/poll.schema';
 import { paginatedResponseSchema } from '../pagination.schema';
 import type { Strict } from './_strict';
@@ -230,6 +231,10 @@ export const pollResultsSchema = z.looseObject({
     .describe(
       'True when the calling user is eligible to vote and has not yet voted (and the poll is still active).',
     ),
+  cannotVoteReason: z
+    .enum(Object.values(PollCannotVoteReason) as [PollCannotVoteReason, ...PollCannotVoteReason[]])
+    .optional()
+    .describe('Machine-readable reason the caller cannot vote (present when canVote is false).'),
   hasUserVoted: z.boolean().describe('True when the calling user has already voted on this poll.'),
   userVotedOptionIndex: z
     .number()

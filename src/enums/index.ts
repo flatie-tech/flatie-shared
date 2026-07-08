@@ -31,6 +31,10 @@ export {
   type ScopedAction,
   type ScopedDomain,
 } from './permission.enum';
+export {
+  POLL_CANNOT_VOTE_REASON_KEY,
+  PollCannotVoteReason,
+} from './poll-cannot-vote-reason.enum';
 export { PollStatus } from './poll-status.enum';
 export { PollType } from './poll-type.enum';
 export { PollVoteStatus } from './poll-vote-status.enum';

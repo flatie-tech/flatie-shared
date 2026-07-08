@@ -63,6 +63,7 @@ export { createPaginatedResponse } from './pagination.types';
 export type {
   BuildingContextFromOrg,
   BuildingContextFromRole,
+  BuildingMembership,
   BuildingPermissionContext,
   PermissionContext,
 } from './permission-context';

@@ -206,6 +206,41 @@ declare const OrgType: {
 };
 type OrgType = (typeof OrgType)[keyof typeof OrgType];
 
+/**
+ * Machine-readable reason the calling user cannot vote on a poll. Returned
+ * alongside `canVote: false` so the client can show a specific "why" (a locked
+ * icon + tooltip) instead of a generic "not eligible" message.
+ *
+ * Ordering note (backend emits the first matching reason): most-final first, so
+ * a voter sees the least-actionable blocker last.
+ */
+declare const PollCannotVoteReason: {
+    /** Already cast a ballot on this poll. */
+    readonly ALREADY_VOTED: "ALREADY_VOTED";
+    /** Poll is completed/cancelled or its deadline has passed. */
+    readonly POLL_ENDED: "POLL_ENDED";
+    /** Poll has not been approved by a representative yet. */
+    readonly NOT_APPROVED: "NOT_APPROVED";
+    /** Caller's role does not include `poll:vote`. */
+    readonly NO_VOTE_PERMISSION: "NO_VOTE_PERMISSION";
+    /** Caller reaches the building only via org/platform admin access — no co-owner membership here. */
+    readonly NON_VOTER_CONTEXT: "NON_VOTER_CONTEXT";
+    /** Not in the poll's scoped-user list, or zero ownership surface on a building-wide consensus poll. */
+    readonly NOT_ELIGIBLE_SCOPE: "NOT_ELIGIBLE_SCOPE";
+    /** Consensus poll needs the user's OIB on file first (resolved in-flow via a dialog). */
+    readonly NEEDS_OIB: "NEEDS_OIB";
+    /** Building requires a higher verification tier than the caller can currently reach. */
+    readonly NEEDS_IDENTITY: "NEEDS_IDENTITY";
+};
+type PollCannotVoteReason = (typeof PollCannotVoteReason)[keyof typeof PollCannotVoteReason];
+/**
+ * Reason → i18n key suffix. Web reads `Polls.cannotVoteReason.<suffix>` (next-intl),
+ * mobile reads `polls.cannotVoteReason.<suffix>` (i18next). Owning the suffixes here
+ * guarantees both apps use identical key names, and a new reason is a type error
+ * until this map handles it.
+ */
+declare const POLL_CANNOT_VOTE_REASON_KEY: Record<PollCannotVoteReason, string>;
+
 declare const PollStatus: {
     readonly ACTIVE: "active";
     readonly COMPLETED: "completed";
@@ -272,4 +307,4 @@ declare const UnitType: {
 };
 type UnitType = (typeof UnitType)[keyof typeof UnitType];
 
-export { ApartmentRole, BuildingOtpExpiry, BuildingStatus, DevicePlatform, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, JoinRequestStatus, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, OrgQuotaResourceType, OrgStatus, OrgType, PollStatus, PollVoteStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, TransactionSource, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, WASTE_SUBTYPE_NOTIFICATION_MAP, methodToTier };
+export { ApartmentRole, BuildingOtpExpiry, BuildingStatus, DevicePlatform, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, JoinRequestStatus, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, OrgQuotaResourceType, OrgStatus, OrgType, POLL_CANNOT_VOTE_REASON_KEY, PollCannotVoteReason, PollStatus, PollVoteStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, TransactionSource, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, WASTE_SUBTYPE_NOTIFICATION_MAP, methodToTier };

@@ -1,5 +1,3 @@
-'use strict';
-
 // src/enums/apartment-role.enum.ts
 var ApartmentRole = {
   OWNER: "owner",
@@ -398,6 +396,36 @@ var APPROVE_PERMISSIONS = {
   failure_report: "failure_report:approve"
 };
 
+// src/enums/poll-cannot-vote-reason.enum.ts
+var PollCannotVoteReason = {
+  /** Already cast a ballot on this poll. */
+  ALREADY_VOTED: "ALREADY_VOTED",
+  /** Poll is completed/cancelled or its deadline has passed. */
+  POLL_ENDED: "POLL_ENDED",
+  /** Poll has not been approved by a representative yet. */
+  NOT_APPROVED: "NOT_APPROVED",
+  /** Caller's role does not include `poll:vote`. */
+  NO_VOTE_PERMISSION: "NO_VOTE_PERMISSION",
+  /** Caller reaches the building only via org/platform admin access — no co-owner membership here. */
+  NON_VOTER_CONTEXT: "NON_VOTER_CONTEXT",
+  /** Not in the poll's scoped-user list, or zero ownership surface on a building-wide consensus poll. */
+  NOT_ELIGIBLE_SCOPE: "NOT_ELIGIBLE_SCOPE",
+  /** Consensus poll needs the user's OIB on file first (resolved in-flow via a dialog). */
+  NEEDS_OIB: "NEEDS_OIB",
+  /** Building requires a higher verification tier than the caller can currently reach. */
+  NEEDS_IDENTITY: "NEEDS_IDENTITY"
+};
+var POLL_CANNOT_VOTE_REASON_KEY = {
+  ALREADY_VOTED: "alreadyVoted",
+  POLL_ENDED: "pollEnded",
+  NOT_APPROVED: "notApproved",
+  NO_VOTE_PERMISSION: "noVotePermission",
+  NON_VOTER_CONTEXT: "nonVoterContext",
+  NOT_ELIGIBLE_SCOPE: "notEligibleScope",
+  NEEDS_OIB: "needsOib",
+  NEEDS_IDENTITY: "needsIdentity"
+};
+
 // src/enums/poll-status.enum.ts
 var PollStatus = {
   ACTIVE: "active",
@@ -571,64 +599,6 @@ var UnitType = {
   COMMERCIAL: "commercial"
 };
 
-exports.APPROVE_PERMISSIONS = APPROVE_PERMISSIONS;
-exports.ApartmentRole = ApartmentRole;
-exports.ApprovalStatus = ApprovalStatus;
-exports.BUILDING_ROLE_RANK = BUILDING_ROLE_RANK;
-exports.BuildingOtpExpiry = BuildingOtpExpiry;
-exports.BuildingRole = BuildingRole;
-exports.BuildingStatus = BuildingStatus;
-exports.BuildingType = BuildingType;
-exports.CommonStatus = CommonStatus;
-exports.DevicePlatform = DevicePlatform;
-exports.FailureLocationType = FailureLocationType;
-exports.FailureStatus = FailureStatus;
-exports.FailureType = FailureType;
-exports.FailureUnitType = FailureUnitType;
-exports.FileCategory = FileCategory;
-exports.Frequency = Frequency;
-exports.FundsSource = FundsSource;
-exports.IdentityVerificationMethod = IdentityVerificationMethod;
-exports.JoinRequestStatus = JoinRequestStatus;
-exports.MaintenanceLogFinancedBy = MaintenanceLogFinancedBy;
-exports.MaintenanceStatus = MaintenanceStatus;
-exports.MaintenanceType = MaintenanceType;
-exports.NOTIFICATION_TYPE_CATEGORY = NOTIFICATION_TYPE_CATEGORY;
-exports.NotificationCategory = NotificationCategory;
-exports.NotificationChannel = NotificationChannel;
-exports.NotificationDeliveryStatus = NotificationDeliveryStatus;
-exports.NotificationType = NotificationType;
-exports.ORG_QUOTA_DEFAULT_DAILY_LIMITS = ORG_QUOTA_DEFAULT_DAILY_LIMITS;
-exports.ORG_QUOTA_RESOURCE_TYPES = ORG_QUOTA_RESOURCE_TYPES;
-exports.ORG_ROLE_RANK = ORG_ROLE_RANK;
-exports.OrgQuotaResourceType = OrgQuotaResourceType;
-exports.OrgRole = OrgRole;
-exports.OrgStatus = OrgStatus;
-exports.OrgType = OrgType;
-exports.PLATFORM_ROLE_RANK = PLATFORM_ROLE_RANK;
-exports.Permission = Permission;
-exports.PlatformRole = PlatformRole;
-exports.PollStatus = PollStatus;
-exports.PollType = PollType;
-exports.PollVoteStatus = PollVoteStatus;
-exports.PricuvaRefMode = PricuvaRefMode;
-exports.Priority = Priority;
-exports.QUOTA_DEFAULT_DAILY_LIMITS = QUOTA_DEFAULT_DAILY_LIMITS;
-exports.QUOTA_RESOURCE_TYPES = QUOTA_RESOURCE_TYPES;
-exports.QuotaResourceType = QuotaResourceType;
-exports.SCOPED_DOMAINS = SCOPED_DOMAINS;
-exports.SCOPED_PERMISSIONS = SCOPED_PERMISSIONS;
-exports.TransactionCategory = TransactionCategory;
-exports.TransactionSource = TransactionSource;
-exports.TransactionType = TransactionType;
-exports.UNIMPLEMENTED_NOTIFICATION_TYPES = UNIMPLEMENTED_NOTIFICATION_TYPES;
-exports.UnitType = UnitType;
-exports.VerificationTier = VerificationTier;
-exports.WASTE_SUBTYPE_NOTIFICATION_MAP = WASTE_SUBTYPE_NOTIFICATION_MAP;
-exports.canAssignOrgRole = canAssignOrgRole;
-exports.canAssignPlatformRole = canAssignPlatformRole;
-exports.canAssignRole = canAssignRole;
-exports.domainPermissions = domainPermissions;
-exports.methodToTier = methodToTier;
-//# sourceMappingURL=chunk-WNYMLRYU.cjs.map
-//# sourceMappingURL=chunk-WNYMLRYU.cjs.map
+export { APPROVE_PERMISSIONS, ApartmentRole, ApprovalStatus, BUILDING_ROLE_RANK, BuildingOtpExpiry, BuildingRole, BuildingStatus, BuildingType, CommonStatus, DevicePlatform, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, IdentityVerificationMethod, JoinRequestStatus, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, ORG_ROLE_RANK, OrgQuotaResourceType, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, POLL_CANNOT_VOTE_REASON_KEY, Permission, PlatformRole, PollCannotVoteReason, PollStatus, PollType, PollVoteStatus, PricuvaRefMode, Priority, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions, methodToTier };
+//# sourceMappingURL=chunk-OXXILOAR.js.map
+//# sourceMappingURL=chunk-OXXILOAR.js.map

@@ -1865,6 +1865,9 @@ declare const buildingResponseSchema: z.ZodObject<{
  */
 declare const buildingDetailResponseSchema: z.ZodObject<{
     id: z.ZodString;
+    status: z.ZodOptional<z.ZodEnum<{
+        [x: string]: string;
+    }>>;
     slug: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     name: z.ZodString;
     address: z.ZodString;
@@ -3254,6 +3257,16 @@ declare const pollResultsSchema: z.ZodObject<{
     canDelete: z.ZodBoolean;
     isOwner: z.ZodBoolean;
     canVote: z.ZodBoolean;
+    cannotVoteReason: z.ZodOptional<z.ZodEnum<{
+        ALREADY_VOTED: "ALREADY_VOTED";
+        POLL_ENDED: "POLL_ENDED";
+        NOT_APPROVED: "NOT_APPROVED";
+        NO_VOTE_PERMISSION: "NO_VOTE_PERMISSION";
+        NON_VOTER_CONTEXT: "NON_VOTER_CONTEXT";
+        NOT_ELIGIBLE_SCOPE: "NOT_ELIGIBLE_SCOPE";
+        NEEDS_OIB: "NEEDS_OIB";
+        NEEDS_IDENTITY: "NEEDS_IDENTITY";
+    }>>;
     hasUserVoted: z.ZodBoolean;
     userVotedOptionIndex: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
     scopedUnits: z.ZodOptional<z.ZodArray<z.ZodObject<{

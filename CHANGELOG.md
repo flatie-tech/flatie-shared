@@ -1,5 +1,21 @@
 # @flatie/shared
 
+## 0.49.0
+
+### Minor Changes
+
+- Poll "cannot vote" reasons and building membership on the permission
+  context. New `PollCannotVoteReason` enum + `POLL_CANNOT_VOTE_REASON_KEY`
+  (enum → i18n key suffix shared by web and mobile) and an optional
+  `cannotVoteReason` field on `pollResultsSchema`, so clients can explain a
+  blocked vote instead of a generic "not eligible". New `BuildingMembership`
+  interface carried as `membership` on both building permission-context
+  variants — the caller's direct `building_roles` identity (role + ownership
+  surface), which the access merge must never drop even when org/platform
+  permissions win. Adds `POLL_NOT_APPROVED` and `CONSENSUS_TIER_TOO_LOW` to
+  `BACKEND_ERROR_CODES`, and documents the top-level `status` field on
+  `buildingDetailResponseSchema`.
+
 ## 0.48.0
 
 ### Minor Changes

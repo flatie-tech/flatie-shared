@@ -135,6 +135,9 @@ export const buildingResponseSchema = z.looseObject({
  */
 export const buildingDetailResponseSchema = z.looseObject({
   id: z.string().uuid(),
+  status: buildingStatusSchema
+    .optional()
+    .describe('Platform onboarding status (`pending`, `active`, `rejected`).'),
   slug: z
     .string()
     .nullable()

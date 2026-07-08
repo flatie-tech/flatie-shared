@@ -1,5 +1,3 @@
-'use strict';
-
 // src/errors/index.ts
 var BACKEND_ERROR_CODES = {
   // Auth
@@ -56,8 +54,10 @@ var BACKEND_ERROR_CODES = {
   CONVERSATION_NOT_FOUND: "CONVERSATION_NOT_FOUND",
   // Poll lifecycle
   POLL_NOT_ACTIVE: "POLL_NOT_ACTIVE",
+  POLL_NOT_APPROVED: "POLL_NOT_APPROVED",
   POLL_EXPIRED: "POLL_EXPIRED",
   USER_ALREADY_VOTED: "USER_ALREADY_VOTED",
+  CONSENSUS_TIER_TOO_LOW: "CONSENSUS_TIER_TOO_LOW",
   // Join request workflow
   JOIN_REQUEST_PENDING: "JOIN_REQUEST_PENDING",
   JOIN_REQUEST_NOT_FOUND: "JOIN_REQUEST_NOT_FOUND",
@@ -119,7 +119,6 @@ function isBackendErrorCode(code) {
   return typeof code === "string" && Object.values(BACKEND_ERROR_CODES).includes(code);
 }
 
-exports.BACKEND_ERROR_CODES = BACKEND_ERROR_CODES;
-exports.isBackendErrorCode = isBackendErrorCode;
-//# sourceMappingURL=chunk-QJNF5EVJ.cjs.map
-//# sourceMappingURL=chunk-QJNF5EVJ.cjs.map
+export { BACKEND_ERROR_CODES, isBackendErrorCode };
+//# sourceMappingURL=chunk-7MJOTQYT.js.map
+//# sourceMappingURL=chunk-7MJOTQYT.js.map
