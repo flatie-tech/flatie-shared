@@ -129,6 +129,11 @@ declare const API_ROUTES: {
         readonly DETAIL: (buildingId: string, maintenanceLogId: string) => string;
         readonly RESTORE: (buildingId: string, maintenanceLogId: string) => string;
     };
+    readonly LINKS: {
+        readonly LIST: (buildingId: string) => string;
+        readonly CREATE: (buildingId: string) => string;
+        readonly DELETE: (buildingId: string) => string;
+    };
     readonly FILES: {
         readonly LIST: (buildingId: string) => string;
         readonly DETAIL: (buildingId: string, documentId: string) => string;

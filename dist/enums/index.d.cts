@@ -1,5 +1,6 @@
 export { B as BuildingType, P as PollType } from '../poll-type.enum-CGV5tBqR.cjs';
-export { A as APPROVE_PERMISSIONS, f as BUILDING_ROLE_RANK, B as BuildingRole, j as ORG_ROLE_RANK, O as OrgRole, k as PLATFORM_ROLE_RANK, P as Permission, b as PlatformRole, c as SCOPED_DOMAINS, e as SCOPED_PERMISSIONS, a as ScopedAction, S as ScopedDomain, g as canAssignOrgRole, h as canAssignPlatformRole, i as canAssignRole, d as domainPermissions } from '../role.enum-BTOXn9M9.cjs';
+export { E as EntityLinkType, L as LinkableEntityType } from '../entity-link.enum-wTDJirUV.cjs';
+export { A as APPROVE_PERMISSIONS, f as BUILDING_ROLE_RANK, B as BuildingRole, j as ORG_ROLE_RANK, O as OrgRole, k as PLATFORM_ROLE_RANK, P as Permission, b as PlatformRole, c as SCOPED_DOMAINS, e as SCOPED_PERMISSIONS, a as ScopedAction, S as ScopedDomain, g as canAssignOrgRole, h as canAssignPlatformRole, i as canAssignRole, d as domainPermissions } from '../role.enum-a_XALYng.cjs';
 export { A as ApprovalStatus, C as CommonStatus, F as FailureStatus, a as FailureType, b as FileCategory, c as Frequency, M as MaintenanceStatus, d as MaintenanceType, P as Priority, T as TransactionCategory, e as TransactionType } from '../status.enum-BYlt7_Fs.cjs';
 
 declare const ApartmentRole: {

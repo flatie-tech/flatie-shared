@@ -1,8 +1,6 @@
-'use strict';
-
-var chunkW7WUC4AM_cjs = require('./chunk-W7WUC4AM.cjs');
-var chunkL63CW4MD_cjs = require('./chunk-L63CW4MD.cjs');
-var chunkOOJKTZT4_cjs = require('./chunk-OOJKTZT4.cjs');
+import { BuildingRole, PlatformRole, OrgRole, SCOPED_PERMISSIONS, APPROVE_PERMISSIONS, FailureStatus, Priority } from './chunk-FU32KUV4.js';
+import { isBackendErrorCode } from './chunk-7MJOTQYT.js';
+import { createPaginatedResponse } from './chunk-E4FOXN63.js';
 
 // src/utils/google-calendar.ts
 function toGoogleUtc(value) {
@@ -146,7 +144,7 @@ function formatCurrencyByLocale(amount, locale, currency = "EUR") {
 // src/utils/pagination.ts
 function normalizePaginatedResponse(input, fallbackLimit = 10) {
   if (Array.isArray(input)) {
-    return chunkOOJKTZT4_cjs.createPaginatedResponse(input, input.length, 0, input.length);
+    return createPaginatedResponse(input, input.length, 0, input.length);
   }
   if (input && typeof input === "object") {
     const response = input;
@@ -155,9 +153,9 @@ function normalizePaginatedResponse(input, fallbackLimit = 10) {
     const count = response.count ?? response.total ?? response.totalCount ?? (Array.isArray(data) ? data.length : 0);
     const page = response.page ?? response.currentPage ?? (response.offset !== void 0 && limit ? Math.floor(response.offset / limit) + 1 : 1);
     const offset = response.offset !== void 0 ? response.offset : limit && page ? (page - 1) * limit : 0;
-    return chunkOOJKTZT4_cjs.createPaginatedResponse(Array.isArray(data) ? data : [], count, offset, limit);
+    return createPaginatedResponse(Array.isArray(data) ? data : [], count, offset, limit);
   }
-  return chunkOOJKTZT4_cjs.createPaginatedResponse([], 0, 0, fallbackLimit);
+  return createPaginatedResponse([], 0, 0, fallbackLimit);
 }
 function extractPaginatedItems(response, itemsKey) {
   if (Array.isArray(response)) {
@@ -218,7 +216,7 @@ var parseApiError = (error) => {
   const response = readProp(error, "response");
   const data = readProp(response, "data");
   const rawCode = readProp(data, "code");
-  const code = chunkL63CW4MD_cjs.isBackendErrorCode(rawCode) ? rawCode : null;
+  const code = isBackendErrorCode(rawCode) ? rawCode : null;
   const dataMessage = readProp(data, "message");
   const errorMessage = readProp(error, "message");
   const message = typeof dataMessage === "string" && dataMessage.length > 0 && dataMessage || typeof errorMessage === "string" && errorMessage.length > 0 && errorMessage || "Unknown error";
@@ -232,13 +230,13 @@ function canDo(subject, permission) {
   return subject.permissions.includes(permission);
 }
 function canDoOnResource(subject, domain, action, resourceOwnerId) {
-  const scopedPerms = chunkW7WUC4AM_cjs.SCOPED_PERMISSIONS[domain]?.[action];
+  const scopedPerms = SCOPED_PERMISSIONS[domain]?.[action];
   if (!scopedPerms) return false;
   if (subject.permissions.includes(scopedPerms.any)) return true;
   return subject.permissions.includes(scopedPerms.own) && resourceOwnerId === subject.userId;
 }
 function computeActionFlags(subject, domain, resourceOwnerId) {
-  const approvePermission = chunkW7WUC4AM_cjs.APPROVE_PERMISSIONS[domain];
+  const approvePermission = APPROVE_PERMISSIONS[domain];
   return {
     canEdit: canDoOnResource(subject, domain, "update", resourceOwnerId),
     canDelete: canDoOnResource(subject, domain, "delete", resourceOwnerId),
@@ -281,52 +279,52 @@ function hasAllPermissions(userPermissions, permissions) {
 
 // src/utils/role-helpers.ts
 var MANAGERIAL_BUILDING_ROLES = [
-  chunkW7WUC4AM_cjs.BuildingRole.OWNER_REPRESENTATIVE,
-  chunkW7WUC4AM_cjs.BuildingRole.DEPUTY_REPRESENTATIVE
+  BuildingRole.OWNER_REPRESENTATIVE,
+  BuildingRole.DEPUTY_REPRESENTATIVE
 ];
 function isManagerialRole(role) {
   return MANAGERIAL_BUILDING_ROLES.includes(role);
 }
 var ROLE_TRANSLATION_KEYS = {
   // Building roles
-  [chunkW7WUC4AM_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
-  [chunkW7WUC4AM_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
-  [chunkW7WUC4AM_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER",
-  [chunkW7WUC4AM_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT",
+  [BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
+  [BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
+  [BuildingRole.CO_OWNER]: "roles.CO_OWNER",
+  [BuildingRole.RESIDENT]: "roles.RESIDENT",
   // Org roles
-  [chunkW7WUC4AM_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
-  [chunkW7WUC4AM_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
-  [chunkW7WUC4AM_cjs.OrgRole.REFERENT]: "roles.REFERENT",
-  [chunkW7WUC4AM_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE",
+  [OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
+  [OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
+  [OrgRole.REFERENT]: "roles.REFERENT",
+  [OrgRole.OPERATIVE]: "roles.OPERATIVE",
   // Platform roles
-  [chunkW7WUC4AM_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
-  [chunkW7WUC4AM_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
-  [chunkW7WUC4AM_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
-  [chunkW7WUC4AM_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
+  [PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
+  [PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
+  [PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
+  [PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
 };
 var ROLE_DESCRIPTION_KEYS = {
-  [chunkW7WUC4AM_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
-  [chunkW7WUC4AM_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
-  [chunkW7WUC4AM_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
-  [chunkW7WUC4AM_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
-  [chunkW7WUC4AM_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
-  [chunkW7WUC4AM_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
-  [chunkW7WUC4AM_cjs.OrgRole.REFERENT]: "roles.REFERENT_DESC",
-  [chunkW7WUC4AM_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
-  [chunkW7WUC4AM_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
-  [chunkW7WUC4AM_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
-  [chunkW7WUC4AM_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
-  [chunkW7WUC4AM_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
+  [BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
+  [BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
+  [BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
+  [BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
+  [OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
+  [OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
+  [OrgRole.REFERENT]: "roles.REFERENT_DESC",
+  [OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
+  [PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
+  [PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
+  [PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
+  [PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
 };
 
 // src/utils/status-variants.ts
 function failureStatusVariant(status) {
   switch (status) {
-    case chunkW7WUC4AM_cjs.FailureStatus.PENDING:
+    case FailureStatus.PENDING:
       return "info";
-    case chunkW7WUC4AM_cjs.FailureStatus.IN_PROGRESS:
+    case FailureStatus.IN_PROGRESS:
       return "warning";
-    case chunkW7WUC4AM_cjs.FailureStatus.RESOLVED:
+    case FailureStatus.RESOLVED:
       return "success";
     default:
       return "neutral";
@@ -334,9 +332,9 @@ function failureStatusVariant(status) {
 }
 function priorityVariant(priority) {
   switch (priority) {
-    case chunkW7WUC4AM_cjs.Priority.URGENT:
+    case Priority.URGENT:
       return "danger";
-    case chunkW7WUC4AM_cjs.Priority.NORMAL:
+    case Priority.NORMAL:
       return "neutral";
     default:
       return "neutral";
@@ -398,42 +396,6 @@ function debounce(func, delay) {
   };
 }
 
-exports.DATETIME_FORMATS = DATETIME_FORMATS;
-exports.DATE_FORMATS = DATE_FORMATS;
-exports.LOCALE_MAP = LOCALE_MAP;
-exports.MANAGERIAL_BUILDING_ROLES = MANAGERIAL_BUILDING_ROLES;
-exports.ParseError = ParseError;
-exports.ROLE_DESCRIPTION_KEYS = ROLE_DESCRIPTION_KEYS;
-exports.ROLE_TRANSLATION_KEYS = ROLE_TRANSLATION_KEYS;
-exports.TIME_FORMATS = TIME_FORMATS;
-exports.buildGoogleCalendarUrl = buildGoogleCalendarUrl;
-exports.calculatePaginationMeta = calculatePaginationMeta;
-exports.canDo = canDo;
-exports.canDoOnResource = canDoOnResource;
-exports.computeActionFlags = computeActionFlags;
-exports.createPermissionChecker = createPermissionChecker;
-exports.debounce = debounce;
-exports.extractPaginatedItems = extractPaginatedItems;
-exports.failureStatusVariant = failureStatusVariant;
-exports.formatAddress = formatAddress;
-exports.formatCurrency = formatCurrency;
-exports.formatCurrencyByLocale = formatCurrencyByLocale;
-exports.formatDate = formatDate;
-exports.formatDateTime = formatDateTime;
-exports.formatText = formatText;
-exports.getContextUserId = getContextUserId;
-exports.getDateLocale = getDateLocale;
-exports.getDateRange = getDateRange;
-exports.hasAllPermissions = hasAllPermissions;
-exports.hasAnyPermission = hasAnyPermission;
-exports.hasPermission = hasPermission;
-exports.isManagerialRole = isManagerialRole;
-exports.isValidHouseNumber = isValidHouseNumber;
-exports.normalizeHouseNumber = normalizeHouseNumber;
-exports.normalizePaginatedResponse = normalizePaginatedResponse;
-exports.parseApiError = parseApiError;
-exports.parseData = parseData;
-exports.parseHouseNumber = parseHouseNumber;
-exports.priorityVariant = priorityVariant;
-//# sourceMappingURL=chunk-6CKSMLNG.cjs.map
-//# sourceMappingURL=chunk-6CKSMLNG.cjs.map
+export { DATETIME_FORMATS, DATE_FORMATS, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, TIME_FORMATS, buildGoogleCalendarUrl, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatAddress, formatCurrency, formatCurrencyByLocale, formatDate, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isManagerialRole, isValidHouseNumber, normalizeHouseNumber, normalizePaginatedResponse, parseApiError, parseData, parseHouseNumber, priorityVariant };
+//# sourceMappingURL=chunk-SIFXSWU2.js.map
+//# sourceMappingURL=chunk-SIFXSWU2.js.map

@@ -1,5 +1,3 @@
-'use strict';
-
 // src/urls/index.ts
 var API_VERSION = "v1";
 var API_ROUTES = {
@@ -141,6 +139,12 @@ var API_ROUTES = {
     DETAIL: (buildingId, maintenanceLogId) => `/buildings/${buildingId}/maintenance-logs/${maintenanceLogId}`,
     RESTORE: (buildingId, maintenanceLogId) => `/buildings/${buildingId}/maintenance-logs/${maintenanceLogId}/restore`
   },
+  // ── Entity Links ─────────────────────────────────────────────────────
+  LINKS: {
+    LIST: (buildingId) => `/buildings/${buildingId}/links`,
+    CREATE: (buildingId) => `/buildings/${buildingId}/links`,
+    DELETE: (buildingId) => `/buildings/${buildingId}/links`
+  },
   // ── Documents / Files ────────────────────────────────────────────────
   FILES: {
     LIST: (buildingId) => `/buildings/${buildingId}/files`,
@@ -265,7 +269,6 @@ var API_ROUTES = {
   }
 };
 
-exports.API_ROUTES = API_ROUTES;
-exports.API_VERSION = API_VERSION;
-//# sourceMappingURL=chunk-GOEDEL6Z.cjs.map
-//# sourceMappingURL=chunk-GOEDEL6Z.cjs.map
+export { API_ROUTES, API_VERSION };
+//# sourceMappingURL=chunk-UU7Q5WJX.js.map
+//# sourceMappingURL=chunk-UU7Q5WJX.js.map

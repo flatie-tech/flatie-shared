@@ -117,7 +117,7 @@ declare const Permission: {
     readonly PLATFORM_VIEW_ARCHIVE: "platform:view_archive";
 };
 type Permission = (typeof Permission)[keyof typeof Permission];
-declare const SCOPED_PERMISSIONS: Record<"notice" | "poll" | "event" | "document" | "failure_report" | "maintenance_log", Record<ScopedAction, {
+declare const SCOPED_PERMISSIONS: Record<"document" | "failure_report" | "maintenance_log" | "notice" | "event" | "poll", Record<ScopedAction, {
     own: Permission;
     any: Permission;
 }>>;

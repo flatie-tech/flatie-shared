@@ -1,4 +1,5 @@
-import { P as Permission, B as BuildingRole, O as OrgRole, b as PlatformRole } from '../role.enum-BTOXn9M9.cjs';
+import { L as LinkableEntityType, E as EntityLinkType } from '../entity-link.enum-wTDJirUV.cjs';
+import { P as Permission, B as BuildingRole, O as OrgRole, b as PlatformRole } from '../role.enum-a_XALYng.cjs';
 
 declare const AI_CHAT_LIMITS: {
     /** Hard ceiling on the messages array per request. */
@@ -22,6 +23,37 @@ declare const AI_CHAT_LIMITS: {
 declare const DEFAULT_PAGINATION_LIMIT = 10;
 /** Maximum pagination page size the backend accepts. */
 declare const MAX_PAGINATION_LIMIT = 100;
+
+/**
+ * A legal (source, target, linkType) triple for the generic links API.
+ * `'*'` on source/target means "any type in RELATED_TO_LINKABLE_TYPES".
+ */
+interface EntityLinkRule {
+    readonly source: LinkableEntityType | '*';
+    readonly target: LinkableEntityType | '*';
+    readonly linkType: EntityLinkType;
+}
+/**
+ * Entity types the wildcard `related_to` rule spans. Deliberately excludes
+ * `expense_transaction` — expenses relate to logs through `expense_for`.
+ */
+declare const RELATED_TO_LINKABLE_TYPES: readonly LinkableEntityType[];
+/**
+ * Every (source, target, linkType) triple the generic links API accepts.
+ * The first six mirror the links the entity create/update flows already
+ * write inline; `related_to` is the free-form association available
+ * between any two linkable entities.
+ *
+ * Note: `schedule` is reserved for inline-created events that die with
+ * their parent — the generic API must not create schedule links to
+ * pre-existing events (use `related_to` instead).
+ */
+declare const ALLOWED_ENTITY_LINKS: readonly EntityLinkRule[];
+/**
+ * Whether the generic links API may create/delete a link with this triple.
+ * Self-links (same id would be caught upstream; same type pairs are fine).
+ */
+declare function isEntityLinkAllowed(source: LinkableEntityType, target: LinkableEntityType, linkType: EntityLinkType): boolean;
 
 /**
  * React Query Key Factory
@@ -122,6 +154,11 @@ declare const eventKeys: {
     }];
     details: () => readonly ["event", "detail"];
     detail: (id: string) => readonly ["event", "detail", string];
+};
+declare const entityLinkKeys: {
+    all: readonly ["entityLink"];
+    lists: () => readonly ["entityLink", "list"];
+    list: (entityType: string, entityId: string) => readonly ["entityLink", "list", string, string];
 };
 declare const failureReportKeys: {
     all: readonly ["failureReport"];
@@ -630,4 +667,4 @@ declare const ADMIN_ORG_PERMISSIONS: Permission[];
 /** Admin platform-scope permissions — same as PLATFORM_ADMIN. */
 declare const ADMIN_PLATFORM_PERMISSIONS: Permission[];
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, AI_CHAT_LIMITS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, blogKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, AI_CHAT_LIMITS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, type EntityLinkRule, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, blogKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, isEntityLinkAllowed, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };

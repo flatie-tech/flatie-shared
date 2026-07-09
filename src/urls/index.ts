@@ -200,6 +200,13 @@ export const API_ROUTES = {
       `/buildings/${buildingId}/maintenance-logs/${maintenanceLogId}/restore`,
   },
 
+  // ── Entity Links ─────────────────────────────────────────────────────
+  LINKS: {
+    LIST: (buildingId: string) => `/buildings/${buildingId}/links`,
+    CREATE: (buildingId: string) => `/buildings/${buildingId}/links`,
+    DELETE: (buildingId: string) => `/buildings/${buildingId}/links`,
+  },
+
   // ── Documents / Files ────────────────────────────────────────────────
   FILES: {
     LIST: (buildingId: string) => `/buildings/${buildingId}/files`,

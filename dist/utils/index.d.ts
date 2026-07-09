@@ -1,7 +1,7 @@
 import { P as PaginatedResponse } from '../pagination.types-BdLhL-Jg.js';
 import { z } from 'zod';
 import { BackendErrorCode } from '../errors/index.js';
-import { P as Permission, S as ScopedDomain, a as ScopedAction, B as BuildingRole, O as OrgRole, b as PlatformRole } from '../role.enum-BTOXn9M9.js';
+import { P as Permission, S as ScopedDomain, a as ScopedAction, B as BuildingRole, O as OrgRole, b as PlatformRole } from '../role.enum-a_XALYng.js';
 import { F as FailureStatus, P as Priority } from '../status.enum-BYlt7_Fs.js';
 
 /**

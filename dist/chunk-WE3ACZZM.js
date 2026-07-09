@@ -1,8 +1,59 @@
-import { domainPermissions, BuildingRole, OrgRole, PlatformRole, Permission } from './chunk-OXXILOAR.js';
+import { LinkableEntityType, EntityLinkType, domainPermissions, BuildingRole, OrgRole, PlatformRole, Permission } from './chunk-FU32KUV4.js';
 
 // src/constants/defaults.ts
 var DEFAULT_PAGINATION_LIMIT = 10;
 var MAX_PAGINATION_LIMIT = 100;
+
+// src/constants/entity-link-rules.ts
+var RELATED_TO_LINKABLE_TYPES = [
+  LinkableEntityType.NOTICE,
+  LinkableEntityType.EVENT,
+  LinkableEntityType.POLL,
+  LinkableEntityType.MAINTENANCE_LOG,
+  LinkableEntityType.FAILURE_REPORT,
+  LinkableEntityType.FILE
+];
+var ALLOWED_ENTITY_LINKS = [
+  {
+    source: LinkableEntityType.NOTICE,
+    target: LinkableEntityType.EVENT,
+    linkType: EntityLinkType.SCHEDULE
+  },
+  {
+    source: LinkableEntityType.MAINTENANCE_LOG,
+    target: LinkableEntityType.EVENT,
+    linkType: EntityLinkType.SCHEDULE
+  },
+  {
+    source: LinkableEntityType.FAILURE_REPORT,
+    target: LinkableEntityType.EVENT,
+    linkType: EntityLinkType.SCHEDULE
+  },
+  {
+    source: LinkableEntityType.FAILURE_REPORT,
+    target: LinkableEntityType.MAINTENANCE_LOG,
+    linkType: EntityLinkType.RESOLVED_BY
+  },
+  {
+    source: LinkableEntityType.MAINTENANCE_LOG,
+    target: LinkableEntityType.POLL,
+    linkType: EntityLinkType.BASED_ON
+  },
+  {
+    source: LinkableEntityType.EXPENSE_TRANSACTION,
+    target: LinkableEntityType.MAINTENANCE_LOG,
+    linkType: EntityLinkType.EXPENSE_FOR
+  },
+  { source: "*", target: "*", linkType: EntityLinkType.RELATED_TO }
+];
+function isEntityLinkAllowed(source, target, linkType) {
+  return ALLOWED_ENTITY_LINKS.some((rule) => {
+    if (rule.linkType !== linkType) return false;
+    const sourceOk = rule.source === "*" ? RELATED_TO_LINKABLE_TYPES.includes(source) : rule.source === source;
+    const targetOk = rule.target === "*" ? RELATED_TO_LINKABLE_TYPES.includes(target) : rule.target === target;
+    return sourceOk && targetOk;
+  });
+}
 
 // src/constants/query-keys.ts
 var userKeys = {
@@ -69,6 +120,11 @@ var eventKeys = {
   list: (filters = {}) => [...eventKeys.lists(), { ...filters }],
   details: () => [...eventKeys.all, "detail"],
   detail: (id) => [...eventKeys.details(), id]
+};
+var entityLinkKeys = {
+  all: ["entityLink"],
+  lists: () => [...entityLinkKeys.all, "list"],
+  list: (entityType, entityId) => [...entityLinkKeys.lists(), entityType, entityId]
 };
 var failureReportKeys = {
   all: ["failureReport"],
@@ -473,6 +529,6 @@ var ALL_PERMISSIONS = unique(Object.values(Permission));
 var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[OrgRole.ORG_ADMIN];
 var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_ADMIN];
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, blogKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };
-//# sourceMappingURL=chunk-R7KIYQG5.js.map
-//# sourceMappingURL=chunk-R7KIYQG5.js.map
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, blogKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, isEntityLinkAllowed, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };
+//# sourceMappingURL=chunk-WE3ACZZM.js.map
+//# sourceMappingURL=chunk-WE3ACZZM.js.map

@@ -105,6 +105,25 @@ export {
   createBusinessPartnerSchema,
   updateBusinessPartnerSchema,
 } from './business-partner.schema';
+// Entity-link schemas (generic links API)
+export type {
+  CreateEntityLinkRequest,
+  DeleteEntityLinkQuery,
+  DeleteEntityLinkRequest,
+  EntityLinkEndpoint,
+  GetEntityLinksQuery,
+} from './entity-link.schema';
+export {
+  createEntityLinkRequestSchema,
+  deleteEntityLinkQuerySchema,
+  deleteEntityLinkRequestSchema,
+  ENTITY_LINK_TYPES,
+  entityLinkEndpointSchema,
+  entityLinkTypeSchema,
+  getEntityLinksQuerySchema,
+  LINKABLE_ENTITY_TYPES,
+  linkableEntityTypeSchema,
+} from './entity-link.schema';
 export type {
   CreateEventSchema,
   EventColorOption,

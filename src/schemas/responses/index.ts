@@ -72,6 +72,8 @@ export {
   documentResponseSchema,
   paginatedDocumentsResponseSchema,
 } from './documents';
+export type { EntityLinkReference, EntityLinksResponse } from './entity-links';
+export { entityLinkReferenceSchema, entityLinksResponseSchema } from './entity-links';
 export type { EventResponse, PaginatedEventsResponse } from './events';
 export { eventResponseSchema, paginatedEventsResponseSchema } from './events';
 export type {

@@ -98,6 +98,13 @@ export const eventKeys = {
   detail: (id: string) => [...eventKeys.details(), id] as const,
 };
 
+export const entityLinkKeys = {
+  all: ['entityLink'] as const,
+  lists: () => [...entityLinkKeys.all, 'list'] as const,
+  list: (entityType: string, entityId: string) =>
+    [...entityLinkKeys.lists(), entityType, entityId] as const,
+};
+
 export const failureReportKeys = {
   all: ['failureReport'] as const,
   lists: () => [...failureReportKeys.all, 'list'] as const,

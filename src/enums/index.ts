@@ -2,6 +2,7 @@ export { ApartmentRole } from './apartment-role.enum';
 export { BuildingOtpExpiry } from './building-otp-expiry.enum';
 export { BuildingStatus, OrgStatus } from './building-status.enum';
 export { BuildingType } from './building-type.enum';
+export { EntityLinkType, LinkableEntityType } from './entity-link.enum';
 export { FailureLocationType, FailureUnitType } from './failure-location.enum';
 export { FundsSource, TransactionSource } from './funds-source.enum';
 export {
