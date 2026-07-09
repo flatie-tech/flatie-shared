@@ -1,4 +1,12 @@
-import { BuildingRole, OrgRole, PlatformRole } from '../enums';
+import { ApartmentRole, BuildingRole, OrgRole, PlatformRole } from '../enums';
+
+/**
+ * Every role value that UIs render as a label/badge. `ApartmentRole.TENANT`
+ * is included because the web role picker surfaces it as a UI-only role
+ * (persisted as `CO_OWNER` on the backend); `ApartmentRole.OWNER` is never
+ * displayed as a role label, so it stays out.
+ */
+export type DisplayableRole = BuildingRole | OrgRole | PlatformRole | typeof ApartmentRole.TENANT;
 
 /**
  * Building roles that grant admin-level access to building management.
@@ -31,12 +39,15 @@ export function isManagerialRole(role: BuildingRole): boolean {
  *
  * Each app must provide a matching `roles.<KEY>` translation for all locales it supports.
  */
-export const ROLE_TRANSLATION_KEYS: Record<BuildingRole | OrgRole | PlatformRole, string> = {
+export const ROLE_TRANSLATION_KEYS: Record<DisplayableRole, string> = {
   // Building roles
   [BuildingRole.OWNER_REPRESENTATIVE]: 'roles.OWNER_REPRESENTATIVE',
   [BuildingRole.DEPUTY_REPRESENTATIVE]: 'roles.DEPUTY_REPRESENTATIVE',
   [BuildingRole.CO_OWNER]: 'roles.CO_OWNER',
   [BuildingRole.RESIDENT]: 'roles.RESIDENT',
+
+  // Apartment role surfaced by the web role picker (UI-only; persists as CO_OWNER)
+  [ApartmentRole.TENANT]: 'roles.TENANT',
 
   // Org roles
   [OrgRole.ORG_ADMIN]: 'roles.ORG_ADMIN',
@@ -57,11 +68,12 @@ export const ROLE_TRANSLATION_KEYS: Record<BuildingRole | OrgRole | PlatformRole
  *
  * Same pattern as `ROLE_TRANSLATION_KEYS` — apps resolve via `t()`.
  */
-export const ROLE_DESCRIPTION_KEYS: Record<BuildingRole | OrgRole | PlatformRole, string> = {
+export const ROLE_DESCRIPTION_KEYS: Record<DisplayableRole, string> = {
   [BuildingRole.OWNER_REPRESENTATIVE]: 'roles.OWNER_REPRESENTATIVE_DESC',
   [BuildingRole.DEPUTY_REPRESENTATIVE]: 'roles.DEPUTY_REPRESENTATIVE_DESC',
   [BuildingRole.CO_OWNER]: 'roles.CO_OWNER_DESC',
   [BuildingRole.RESIDENT]: 'roles.RESIDENT_DESC',
+  [ApartmentRole.TENANT]: 'roles.TENANT_DESC',
 
   [OrgRole.ORG_ADMIN]: 'roles.ORG_ADMIN_DESC',
   [OrgRole.SUPERVISOR]: 'roles.SUPERVISOR_DESC',
@@ -73,3 +85,52 @@ export const ROLE_DESCRIPTION_KEYS: Record<BuildingRole | OrgRole | PlatformRole
   [PlatformRole.PLATFORM_SUPPORT]: 'roles.PLATFORM_SUPPORT_DESC',
   [PlatformRole.PLATFORM_OPERATIVE]: 'roles.PLATFORM_OPERATIVE_DESC',
 };
+
+/**
+ * Semantic badge color for a role. Each app maps these to its own styling
+ * (web: `BADGE_COLORS` classes; mobile: `Badge` variants) — shared only fixes
+ * WHICH semantic color a role gets so badges look the same everywhere.
+ */
+export type RoleBadgeColor = 'info' | 'success' | 'warning' | 'purple' | 'amber' | 'neutral';
+
+/**
+ * Single source of truth for role badge colors across web and mobile.
+ *
+ * Colors match the pre-existing correct surfaces (web building members table
+ * and role-switcher badges) so this introduces no visual change there.
+ */
+export const ROLE_BADGE_COLORS: Record<DisplayableRole, RoleBadgeColor> = {
+  // Building roles
+  [BuildingRole.OWNER_REPRESENTATIVE]: 'info',
+  [BuildingRole.DEPUTY_REPRESENTATIVE]: 'success',
+  [BuildingRole.CO_OWNER]: 'warning',
+  [BuildingRole.RESIDENT]: 'neutral',
+  [ApartmentRole.TENANT]: 'neutral',
+
+  // Org roles
+  [OrgRole.ORG_ADMIN]: 'purple',
+  [OrgRole.SUPERVISOR]: 'info',
+  [OrgRole.REFERENT]: 'success',
+  [OrgRole.OPERATIVE]: 'amber',
+
+  // Platform roles
+  [PlatformRole.PLATFORM_ADMIN]: 'purple',
+  [PlatformRole.PLATFORM_MODERATOR]: 'info',
+  [PlatformRole.PLATFORM_SUPPORT]: 'success',
+  [PlatformRole.PLATFORM_OPERATIVE]: 'amber',
+};
+
+/**
+ * Resolve the badge descriptor for a role value coming off the wire.
+ *
+ * Unknown values fall back to a neutral badge with a `roles.<value>` key so
+ * a new role added to the backend degrades to the raw value in the UI instead
+ * of crashing — the app-level locale-completeness tests catch the gap.
+ */
+export function getRoleBadge(role: string): { translationKey: string; color: RoleBadgeColor } {
+  const known = role as DisplayableRole;
+  return {
+    translationKey: ROLE_TRANSLATION_KEYS[known] ?? `roles.${role}`,
+    color: ROLE_BADGE_COLORS[known] ?? 'neutral',
+  };
+}

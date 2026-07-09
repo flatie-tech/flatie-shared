@@ -1,3 +1,5 @@
+'use strict';
+
 // src/errors/index.ts
 var BACKEND_ERROR_CODES = {
   // Auth
@@ -52,6 +54,9 @@ var BACKEND_ERROR_CODES = {
   VALIDATION_ERROR: "VALIDATION_ERROR",
   // Chat — conversation-scoped (distinct from "event" or "building")
   CONVERSATION_NOT_FOUND: "CONVERSATION_NOT_FOUND",
+  // Target co-owner has not opted in to co-owner DMs (building chat only;
+  // org-scoped chat has no visibility mechanic)
+  CHAT_TARGET_NOT_MESSAGEABLE: "CHAT_TARGET_NOT_MESSAGEABLE",
   // Poll lifecycle
   POLL_NOT_ACTIVE: "POLL_NOT_ACTIVE",
   POLL_NOT_APPROVED: "POLL_NOT_APPROVED",
@@ -119,6 +124,7 @@ function isBackendErrorCode(code) {
   return typeof code === "string" && Object.values(BACKEND_ERROR_CODES).includes(code);
 }
 
-export { BACKEND_ERROR_CODES, isBackendErrorCode };
-//# sourceMappingURL=chunk-7MJOTQYT.js.map
-//# sourceMappingURL=chunk-7MJOTQYT.js.map
+exports.BACKEND_ERROR_CODES = BACKEND_ERROR_CODES;
+exports.isBackendErrorCode = isBackendErrorCode;
+//# sourceMappingURL=chunk-D6K3XHDT.cjs.map
+//# sourceMappingURL=chunk-D6K3XHDT.cjs.map

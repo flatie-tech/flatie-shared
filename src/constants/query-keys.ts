@@ -215,6 +215,15 @@ export const chatKeys = {
   buildingUsers: (buildingId: string, search?: string) =>
     [...chatKeys.all, 'buildingUsers', buildingId, search] as const,
   selfUser: (buildingId: string) => [...chatKeys.all, 'selfUser', buildingId] as const,
+
+  // Org-scoped chat. The literal 'org' segment keeps these disjoint from the
+  // buildingId-keyed entries above even when a building and an org share an id space.
+  orgConversations: (orgId: string) => [...chatKeys.all, 'conversations', 'org', orgId] as const,
+  orgConversation: (orgId: string, conversationId: string) =>
+    [...chatKeys.all, 'conversation', 'org', orgId, conversationId] as const,
+  orgMessages: (orgId: string, conversationId: string) =>
+    [...chatKeys.all, 'messages', 'org', orgId, conversationId] as const,
+  orgUnreadCount: (orgId: string) => [...chatKeys.all, 'unreadCount', 'org', orgId] as const,
 };
 
 export const dashboardSummaryKeys = {

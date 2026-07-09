@@ -180,6 +180,11 @@ declare const API_ROUTES: {
         readonly MESSAGES: (buildingId: string, conversationId: string) => string;
         readonly MARK_READ: (buildingId: string, conversationId: string) => string;
         readonly UNREAD_COUNT: (buildingId: string) => string;
+        readonly ORG_CONVERSATIONS: (orgId: string) => string;
+        readonly ORG_CONVERSATION: (orgId: string, conversationId: string) => string;
+        readonly ORG_MESSAGES: (orgId: string, conversationId: string) => string;
+        readonly ORG_MARK_READ: (orgId: string, conversationId: string) => string;
+        readonly ORG_UNREAD_COUNT: (orgId: string) => string;
     };
     readonly NOTIFICATIONS: {
         readonly LIST: "/notifications";

@@ -18,6 +18,9 @@ import { BuildingRole, OrgRole, Permission, PlatformRole } from '../../src/enums
  *    rep-only role checks they replaced).
  *  - PLATFORM_VIEW_ARCHIVE is PLATFORM_ADMIN-only (behaviour-equivalent to the
  *    previous role-equality guard).
+ *  - Org-scoped chat group creation is gated by CHAT_CREATE_GROUP on the org
+ *    context (backend org-chat controller + client can() checks), so the
+ *    ORG_ADMIN/SUPERVISOR-only pins below are load-bearing for that feature.
  */
 
 const REP_BUILDING_GRANTS = [

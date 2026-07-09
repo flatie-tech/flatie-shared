@@ -2437,7 +2437,8 @@ declare const conversationLastMessageSchema: z.ZodObject<{
 }, z.core.$loose>;
 declare const conversationResponseSchema: z.ZodObject<{
     id: z.ZodString;
-    buildingId: z.ZodString;
+    buildingId: z.ZodNullable<z.ZodString>;
+    orgId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     type: z.ZodEnum<{
         direct: "direct";
         group: "group";
@@ -2475,7 +2476,8 @@ declare const chatMessageResponseSchema: z.ZodObject<{
 declare const conversationsListResponseSchema: z.ZodObject<{
     data: z.ZodArray<z.ZodObject<{
         id: z.ZodString;
-        buildingId: z.ZodString;
+        buildingId: z.ZodNullable<z.ZodString>;
+        orgId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         type: z.ZodEnum<{
             direct: "direct";
             group: "group";

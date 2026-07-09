@@ -1,5 +1,27 @@
 # @flatie/shared
 
+## 0.53.0
+
+### Minor Changes
+
+- Chat: building-DM eligibility + org-scoped chat + role badges.
+  - New `canMessageUser` / `getMessageableUsers` utils (`MessageableUserShape`) —
+    the single building-chat DM-eligibility rule shared by web, mobile, and the
+    backend docs; caller managerial-ness must come from the caller's direct
+    building role. Org chat deliberately has no eligibility mechanic.
+  - New error code `CHAT_TARGET_NOT_MESSAGEABLE` (target co-owner hasn't opted
+    in to co-owner DMs) — replaces the misleading generic
+    `INSUFFICIENT_PERMISSIONS` on that path.
+  - New `ROLE_BADGE_COLORS` (`RoleBadgeColor` semantic names) + `getRoleBadge`
+    — one role→color source of truth for badges on web and mobile.
+    `ROLE_TRANSLATION_KEYS`/`ROLE_DESCRIPTION_KEYS` gain `ApartmentRole.TENANT`
+    (new `DisplayableRole` union).
+  - New `CHAT_CONVERSATIONS_POLL_MS` so web and mobile can't drift on polling.
+  - Org-scoped chat contract: `API_ROUTES.CHAT.ORG_*` route builders,
+    `chatKeys.org*` query keys, and `conversationResponseSchema` now carries
+    `buildingId: string | null` + optional `orgId` (exactly one set; building
+    payloads are unchanged on the wire).
+
 ## 0.51.0
 
 ### Minor Changes

@@ -280,6 +280,16 @@ export const API_ROUTES = {
     MARK_READ: (buildingId: string, conversationId: string) =>
       `/buildings/${buildingId}/conversations/${conversationId}/read`,
     UNREAD_COUNT: (buildingId: string) => `/buildings/${buildingId}/conversations/unread-count`,
+
+    // Org-scoped chat (org members messaging each other; mirrors the building routes)
+    ORG_CONVERSATIONS: (orgId: string) => `/organizations/${orgId}/conversations`,
+    ORG_CONVERSATION: (orgId: string, conversationId: string) =>
+      `/organizations/${orgId}/conversations/${conversationId}`,
+    ORG_MESSAGES: (orgId: string, conversationId: string) =>
+      `/organizations/${orgId}/conversations/${conversationId}/messages`,
+    ORG_MARK_READ: (orgId: string, conversationId: string) =>
+      `/organizations/${orgId}/conversations/${conversationId}/read`,
+    ORG_UNREAD_COUNT: (orgId: string) => `/organizations/${orgId}/conversations/unread-count`,
   },
 
   // ── Notifications ────────────────────────────────────────────────────

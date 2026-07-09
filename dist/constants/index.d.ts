@@ -267,6 +267,10 @@ declare const chatKeys: {
     unreadCount: (buildingId: string) => readonly ["chat", "unreadCount", string];
     buildingUsers: (buildingId: string, search?: string) => readonly ["chat", "buildingUsers", string, string | undefined];
     selfUser: (buildingId: string) => readonly ["chat", "selfUser", string];
+    orgConversations: (orgId: string) => readonly ["chat", "conversations", "org", string];
+    orgConversation: (orgId: string, conversationId: string) => readonly ["chat", "conversation", "org", string, string];
+    orgMessages: (orgId: string, conversationId: string) => readonly ["chat", "messages", "org", string, string];
+    orgUnreadCount: (orgId: string) => readonly ["chat", "unreadCount", "org", string];
 };
 declare const dashboardSummaryKeys: {
     all: readonly ["dashboardSummary"];
@@ -567,6 +571,10 @@ declare const queryKeys: {
         unreadCount: (buildingId: string) => readonly ["chat", "unreadCount", string];
         buildingUsers: (buildingId: string, search?: string) => readonly ["chat", "buildingUsers", string, string | undefined];
         selfUser: (buildingId: string) => readonly ["chat", "selfUser", string];
+        orgConversations: (orgId: string) => readonly ["chat", "conversations", "org", string];
+        orgConversation: (orgId: string, conversationId: string) => readonly ["chat", "conversation", "org", string, string];
+        orgMessages: (orgId: string, conversationId: string) => readonly ["chat", "messages", "org", string, string];
+        orgUnreadCount: (orgId: string) => readonly ["chat", "unreadCount", "org", string];
     };
     readonly dashboardSummary: {
         all: readonly ["dashboardSummary"];

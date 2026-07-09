@@ -56,6 +56,9 @@ export const BACKEND_ERROR_CODES = {
 
   // Chat — conversation-scoped (distinct from "event" or "building")
   CONVERSATION_NOT_FOUND: 'CONVERSATION_NOT_FOUND',
+  // Target co-owner has not opted in to co-owner DMs (building chat only;
+  // org-scoped chat has no visibility mechanic)
+  CHAT_TARGET_NOT_MESSAGEABLE: 'CHAT_TARGET_NOT_MESSAGEABLE',
 
   // Poll lifecycle
   POLL_NOT_ACTIVE: 'POLL_NOT_ACTIVE',

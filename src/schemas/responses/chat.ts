@@ -15,7 +15,9 @@ export const conversationParticipantSchema = z
       .string()
       .nullable()
       .optional()
-      .describe('Building role type of the participant; null when not applicable.'),
+      .describe(
+        "Participant role within the conversation's scope — a building role for building chats, an org role for org chats; null when not applicable.",
+      ),
     lastReadAt: z
       .string()
       .describe('ISO-8601 timestamp of the last message this participant has read.'),
@@ -35,7 +37,17 @@ export const conversationLastMessageSchema = z
 export const conversationResponseSchema = z
   .looseObject({
     id: z.string().describe('UUID of the conversation.'),
-    buildingId: z.string().describe('UUID of the building this conversation belongs to.'),
+    buildingId: z
+      .string()
+      .nullable()
+      .describe('UUID of the building this conversation belongs to; null for org-scoped chats.'),
+    orgId: z
+      .string()
+      .nullable()
+      .optional()
+      .describe(
+        'UUID of the organization this conversation belongs to; null/absent for building-scoped chats. Exactly one of buildingId/orgId is set.',
+      ),
     type: z
       .enum([ConversationType.DIRECT, ConversationType.GROUP])
       .describe('`direct` for 1:1 threads, `group` for named multi-user conversations.'),
@@ -70,7 +82,9 @@ export const chatMessageResponseSchema = z
       .string()
       .nullable()
       .optional()
-      .describe('Building role type of the sender; null when not applicable.'),
+      .describe(
+        "Sender role within the conversation's scope — a building role for building chats, an org role for org chats; null when not applicable.",
+      ),
     content: z.string().describe('Plain-text message body.'),
     createdAt: z.string().describe('ISO-8601 timestamp when the message was sent.'),
   })
@@ -102,7 +116,7 @@ export const unreadCountResponseSchema = z
   .looseObject({
     unreadCount: z.number().describe('Total number of unread messages across all conversations.'),
   })
-  .describe('Unread message count for a building.');
+  .describe('Unread message count for a chat scope (building or organization).');
 
 import type { Strict } from './_strict';
 

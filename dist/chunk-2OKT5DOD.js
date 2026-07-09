@@ -1,5 +1,3 @@
-'use strict';
-
 // src/urls/index.ts
 var API_VERSION = "v1";
 var API_ROUTES = {
@@ -198,7 +196,13 @@ var API_ROUTES = {
     CONVERSATION: (buildingId, conversationId) => `/buildings/${buildingId}/conversations/${conversationId}`,
     MESSAGES: (buildingId, conversationId) => `/buildings/${buildingId}/conversations/${conversationId}/messages`,
     MARK_READ: (buildingId, conversationId) => `/buildings/${buildingId}/conversations/${conversationId}/read`,
-    UNREAD_COUNT: (buildingId) => `/buildings/${buildingId}/conversations/unread-count`
+    UNREAD_COUNT: (buildingId) => `/buildings/${buildingId}/conversations/unread-count`,
+    // Org-scoped chat (org members messaging each other; mirrors the building routes)
+    ORG_CONVERSATIONS: (orgId) => `/organizations/${orgId}/conversations`,
+    ORG_CONVERSATION: (orgId, conversationId) => `/organizations/${orgId}/conversations/${conversationId}`,
+    ORG_MESSAGES: (orgId, conversationId) => `/organizations/${orgId}/conversations/${conversationId}/messages`,
+    ORG_MARK_READ: (orgId, conversationId) => `/organizations/${orgId}/conversations/${conversationId}/read`,
+    ORG_UNREAD_COUNT: (orgId) => `/organizations/${orgId}/conversations/unread-count`
   },
   // ── Notifications ────────────────────────────────────────────────────
   NOTIFICATIONS: {
@@ -271,7 +275,6 @@ var API_ROUTES = {
   }
 };
 
-exports.API_ROUTES = API_ROUTES;
-exports.API_VERSION = API_VERSION;
-//# sourceMappingURL=chunk-L45ELF4M.cjs.map
-//# sourceMappingURL=chunk-L45ELF4M.cjs.map
+export { API_ROUTES, API_VERSION };
+//# sourceMappingURL=chunk-2OKT5DOD.js.map
+//# sourceMappingURL=chunk-2OKT5DOD.js.map

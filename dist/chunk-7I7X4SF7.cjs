@@ -212,7 +212,13 @@ var chatKeys = {
   messages: (buildingId, conversationId) => [...chatKeys.all, "messages", buildingId, conversationId],
   unreadCount: (buildingId) => [...chatKeys.all, "unreadCount", buildingId],
   buildingUsers: (buildingId, search) => [...chatKeys.all, "buildingUsers", buildingId, search],
-  selfUser: (buildingId) => [...chatKeys.all, "selfUser", buildingId]
+  selfUser: (buildingId) => [...chatKeys.all, "selfUser", buildingId],
+  // Org-scoped chat. The literal 'org' segment keeps these disjoint from the
+  // buildingId-keyed entries above even when a building and an org share an id space.
+  orgConversations: (orgId) => [...chatKeys.all, "conversations", "org", orgId],
+  orgConversation: (orgId, conversationId) => [...chatKeys.all, "conversation", "org", orgId, conversationId],
+  orgMessages: (orgId, conversationId) => [...chatKeys.all, "messages", "org", orgId, conversationId],
+  orgUnreadCount: (orgId) => [...chatKeys.all, "unreadCount", "org", orgId]
 };
 var dashboardSummaryKeys = {
   all: ["dashboardSummary"],
@@ -578,5 +584,5 @@ exports.unitReminderKeys = unitReminderKeys;
 exports.unitSearchKeys = unitSearchKeys;
 exports.userKeys = userKeys;
 exports.widgetKeys = widgetKeys;
-//# sourceMappingURL=chunk-GHCVQEH6.cjs.map
-//# sourceMappingURL=chunk-GHCVQEH6.cjs.map
+//# sourceMappingURL=chunk-7I7X4SF7.cjs.map
+//# sourceMappingURL=chunk-7I7X4SF7.cjs.map

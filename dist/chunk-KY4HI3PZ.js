@@ -210,7 +210,13 @@ var chatKeys = {
   messages: (buildingId, conversationId) => [...chatKeys.all, "messages", buildingId, conversationId],
   unreadCount: (buildingId) => [...chatKeys.all, "unreadCount", buildingId],
   buildingUsers: (buildingId, search) => [...chatKeys.all, "buildingUsers", buildingId, search],
-  selfUser: (buildingId) => [...chatKeys.all, "selfUser", buildingId]
+  selfUser: (buildingId) => [...chatKeys.all, "selfUser", buildingId],
+  // Org-scoped chat. The literal 'org' segment keeps these disjoint from the
+  // buildingId-keyed entries above even when a building and an org share an id space.
+  orgConversations: (orgId) => [...chatKeys.all, "conversations", "org", orgId],
+  orgConversation: (orgId, conversationId) => [...chatKeys.all, "conversation", "org", orgId, conversationId],
+  orgMessages: (orgId, conversationId) => [...chatKeys.all, "messages", "org", orgId, conversationId],
+  orgUnreadCount: (orgId) => [...chatKeys.all, "unreadCount", "org", orgId]
 };
 var dashboardSummaryKeys = {
   all: ["dashboardSummary"],
@@ -530,5 +536,5 @@ var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[OrgRole.ORG_ADMIN];
 var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_ADMIN];
 
 export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, blogKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, isEntityLinkAllowed, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };
-//# sourceMappingURL=chunk-WE3ACZZM.js.map
-//# sourceMappingURL=chunk-WE3ACZZM.js.map
+//# sourceMappingURL=chunk-KY4HI3PZ.js.map
+//# sourceMappingURL=chunk-KY4HI3PZ.js.map

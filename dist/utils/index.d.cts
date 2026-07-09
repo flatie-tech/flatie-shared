@@ -2,7 +2,46 @@ import { P as PaginatedResponse } from '../pagination.types-BdLhL-Jg.cjs';
 import { z } from 'zod';
 import { BackendErrorCode } from '../errors/index.cjs';
 import { P as Permission, S as ScopedDomain, a as ScopedAction, B as BuildingRole, O as OrgRole, b as PlatformRole } from '../role.enum-a_XALYng.cjs';
+import { A as ApartmentRole } from '../apartment-role.enum-CNJsuYgq.cjs';
 import { F as FailureStatus, P as Priority } from '../status.enum-BYlt7_Fs.cjs';
+
+/**
+ * Minimal structural shape of a chat-target candidate.
+ *
+ * Deliberately loose so both web's `BuildingUserResponse` and mobile's
+ * `BuildingUser` fit without adapters — callers with a legacy flat `role`
+ * field normalize to `{ buildingRole: { roleType } }` before filtering.
+ */
+interface MessageableUserShape {
+    buildingRole?: {
+        roleType?: string | null;
+        chatVisibleToCoOwners?: boolean | null;
+    } | null;
+}
+/**
+ * Whether `caller` may open a direct conversation with `target` in a
+ * BUILDING-scoped chat.
+ *
+ * Rules (mirrors the backend's `createDirectConversation` check):
+ * - Managerial callers (owner/deputy representative) may message anyone.
+ * - Everyone else may message representatives, plus co-owners who opted in
+ *   via `chatVisibleToCoOwners`. A missing/undefined flag counts as opted out.
+ *
+ * `callerIsManagerial` is an input on purpose: every consumer must derive it
+ * from the caller's DIRECT building role (`isManagerialRole(role)`), never
+ * from org or platform roles — building chat is building-member-only.
+ *
+ * Org-scoped chat does NOT use this filter: any org member may message any
+ * other org member.
+ */
+declare function canMessageUser(callerIsManagerial: boolean, target: MessageableUserShape): boolean;
+/**
+ * Filter a building-user list down to the users the caller may DM.
+ *
+ * @example
+ * const eligible = getMessageableUsers(users, isManagerialRole(myBuildingRole));
+ */
+declare function getMessageableUsers<T extends MessageableUserShape>(users: readonly T[], callerIsManagerial: boolean): T[];
 
 /**
  * Google Calendar "add event" template-URL builder.
@@ -334,6 +373,13 @@ declare function hasAnyPermission(userPermissions: string[], permissions: Permis
 declare function hasAllPermissions(userPermissions: string[], permissions: Permission[]): boolean;
 
 /**
+ * Every role value that UIs render as a label/badge. `ApartmentRole.TENANT`
+ * is included because the web role picker surfaces it as a UI-only role
+ * (persisted as `CO_OWNER` on the backend); `ApartmentRole.OWNER` is never
+ * displayed as a role label, so it stays out.
+ */
+type DisplayableRole = BuildingRole | OrgRole | PlatformRole | typeof ApartmentRole.TENANT;
+/**
  * Building roles that grant admin-level access to building management.
  *
  * `CO_OWNER` is a regular building member (reads + own content); representatives
@@ -357,14 +403,38 @@ declare function isManagerialRole(role: BuildingRole): boolean;
  *
  * Each app must provide a matching `roles.<KEY>` translation for all locales it supports.
  */
-declare const ROLE_TRANSLATION_KEYS: Record<BuildingRole | OrgRole | PlatformRole, string>;
+declare const ROLE_TRANSLATION_KEYS: Record<DisplayableRole, string>;
 /**
  * Description-variant translation keys for roles (typically for onboarding screens
  * or role-selection UIs where a sentence-length explanation accompanies the label).
  *
  * Same pattern as `ROLE_TRANSLATION_KEYS` — apps resolve via `t()`.
  */
-declare const ROLE_DESCRIPTION_KEYS: Record<BuildingRole | OrgRole | PlatformRole, string>;
+declare const ROLE_DESCRIPTION_KEYS: Record<DisplayableRole, string>;
+/**
+ * Semantic badge color for a role. Each app maps these to its own styling
+ * (web: `BADGE_COLORS` classes; mobile: `Badge` variants) — shared only fixes
+ * WHICH semantic color a role gets so badges look the same everywhere.
+ */
+type RoleBadgeColor = 'info' | 'success' | 'warning' | 'purple' | 'amber' | 'neutral';
+/**
+ * Single source of truth for role badge colors across web and mobile.
+ *
+ * Colors match the pre-existing correct surfaces (web building members table
+ * and role-switcher badges) so this introduces no visual change there.
+ */
+declare const ROLE_BADGE_COLORS: Record<DisplayableRole, RoleBadgeColor>;
+/**
+ * Resolve the badge descriptor for a role value coming off the wire.
+ *
+ * Unknown values fall back to a neutral badge with a `roles.<value>` key so
+ * a new role added to the backend degrades to the raw value in the UI instead
+ * of crashing — the app-level locale-completeness tests catch the gap.
+ */
+declare function getRoleBadge(role: string): {
+    translationKey: string;
+    color: RoleBadgeColor;
+};
 
 /**
  * Semantic variant names for a design system's status indicators.
@@ -420,4 +490,4 @@ declare function getDateRange(filter: 'today' | 'yesterday' | 'week' | 'month'):
  */
 declare function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(func: T, delay: number): (...args: Parameters<T>) => void;
 
-export { type ActionFlags, type AddressParts, DATETIME_FORMATS, DATE_FORMATS, type GoogleCalendarEventInput, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, type ParsedApiError, type ParsedHouseNumber, type PermissionChecker, type PermissionSubject, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type StatusVariant, TIME_FORMATS, buildGoogleCalendarUrl, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatAddress, formatCurrency, formatCurrencyByLocale, formatDate as formatDateByLocale, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isManagerialRole, isValidHouseNumber, normalizeHouseNumber, normalizePaginatedResponse, parseApiError, parseData, parseHouseNumber, priorityVariant };
+export { type ActionFlags, type AddressParts, DATETIME_FORMATS, DATE_FORMATS, type DisplayableRole, type GoogleCalendarEventInput, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, type MessageableUserShape, ParseError, type ParsedApiError, type ParsedHouseNumber, type PermissionChecker, type PermissionSubject, ROLE_BADGE_COLORS, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type RoleBadgeColor, type StatusVariant, TIME_FORMATS, buildGoogleCalendarUrl, calculatePaginationMeta, canDo, canDoOnResource, canMessageUser, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatAddress, formatCurrency, formatCurrencyByLocale, formatDate as formatDateByLocale, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, getMessageableUsers, getRoleBadge, hasAllPermissions, hasAnyPermission, hasPermission, isManagerialRole, isValidHouseNumber, normalizeHouseNumber, normalizePaginatedResponse, parseApiError, parseData, parseHouseNumber, priorityVariant };

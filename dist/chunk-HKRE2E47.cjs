@@ -3,7 +3,7 @@
 var chunkXXNOAOHF_cjs = require('./chunk-XXNOAOHF.cjs');
 var chunkNQLL5CZO_cjs = require('./chunk-NQLL5CZO.cjs');
 var chunkZVYMV2WM_cjs = require('./chunk-ZVYMV2WM.cjs');
-var chunkL63CW4MD_cjs = require('./chunk-L63CW4MD.cjs');
+var chunkD6K3XHDT_cjs = require('./chunk-D6K3XHDT.cjs');
 var zod = require('zod');
 
 var apiErrorSchema = zod.z.object({
@@ -13,7 +13,7 @@ var apiErrorSchema = zod.z.object({
   path: zod.z.string()
 });
 var apiErrorResponseSchema = apiErrorSchema.extend({
-  code: zod.z.enum(Object.values(chunkL63CW4MD_cjs.BACKEND_ERROR_CODES)).optional().describe(
+  code: zod.z.enum(Object.values(chunkD6K3XHDT_cjs.BACKEND_ERROR_CODES)).optional().describe(
     "Canonical error code from `@flatie/shared/errors` (`BACKEND_ERROR_CODES`). Present when the backend raised a `DomainException`; absent for generic HTTP errors (network failures, unhandled exceptions, validation-pipe rejections)."
   )
 }).describe("Standard error envelope returned by the Flatie backend on 4xx and 5xx responses.");
@@ -1365,7 +1365,9 @@ var conversationParticipantSchema = zod.z.looseObject({
   userId: zod.z.string().describe("UUID of the participant user."),
   name: zod.z.string().describe("Participant display name."),
   image: zod.z.string().nullable().optional().describe("Avatar URL; null when the user has no profile image."),
-  roleType: zod.z.string().nullable().optional().describe("Building role type of the participant; null when not applicable."),
+  roleType: zod.z.string().nullable().optional().describe(
+    "Participant role within the conversation's scope \u2014 a building role for building chats, an org role for org chats; null when not applicable."
+  ),
   lastReadAt: zod.z.string().describe("ISO-8601 timestamp of the last message this participant has read.")
 }).describe("A participant in a chat conversation.");
 var conversationLastMessageSchema = zod.z.looseObject({
@@ -1377,7 +1379,10 @@ var conversationLastMessageSchema = zod.z.looseObject({
 }).describe("Last message preview embedded in conversation list responses.");
 var conversationResponseSchema = zod.z.looseObject({
   id: zod.z.string().describe("UUID of the conversation."),
-  buildingId: zod.z.string().describe("UUID of the building this conversation belongs to."),
+  buildingId: zod.z.string().nullable().describe("UUID of the building this conversation belongs to; null for org-scoped chats."),
+  orgId: zod.z.string().nullable().optional().describe(
+    "UUID of the organization this conversation belongs to; null/absent for building-scoped chats. Exactly one of buildingId/orgId is set."
+  ),
   type: zod.z.enum([ConversationType.DIRECT, ConversationType.GROUP]).describe("`direct` for 1:1 threads, `group` for named multi-user conversations."),
   name: zod.z.string().nullable().optional().describe("Group name; null for direct conversations."),
   participants: zod.z.array(conversationParticipantSchema).describe("All participants in the conversation."),
@@ -1392,7 +1397,9 @@ var chatMessageResponseSchema = zod.z.looseObject({
   senderId: zod.z.string().describe("UUID of the user who sent the message."),
   senderName: zod.z.string().describe("Display name of the sender."),
   senderImage: zod.z.string().nullable().optional().describe("Avatar URL of the sender; null when no profile image is set."),
-  senderRoleType: zod.z.string().nullable().optional().describe("Building role type of the sender; null when not applicable."),
+  senderRoleType: zod.z.string().nullable().optional().describe(
+    "Sender role within the conversation's scope \u2014 a building role for building chats, an org role for org chats; null when not applicable."
+  ),
   content: zod.z.string().describe("Plain-text message body."),
   createdAt: zod.z.string().describe("ISO-8601 timestamp when the message was sent.")
 }).describe("Chat message response from message list endpoints.");
@@ -1406,7 +1413,7 @@ var messagesListResponseSchema = zod.z.looseObject({
 }).describe("Cursor-paginated list of chat messages.");
 var unreadCountResponseSchema = zod.z.looseObject({
   unreadCount: zod.z.number().describe("Total number of unread messages across all conversations.")
-}).describe("Unread message count for a building.");
+}).describe("Unread message count for a chat scope (building or organization).");
 var commentResponseSchema = zod.z.looseObject({
   id: zod.z.string().uuid(),
   entityType: zod.z.string().describe(
@@ -2309,5 +2316,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-PMH3YZAL.cjs.map
-//# sourceMappingURL=chunk-PMH3YZAL.cjs.map
+//# sourceMappingURL=chunk-HKRE2E47.cjs.map
+//# sourceMappingURL=chunk-HKRE2E47.cjs.map

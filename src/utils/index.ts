@@ -4,6 +4,9 @@
  * Common utilities for use across frontend, mobile, and backend.
  */
 
+// Chat DM eligibility (building-scoped; org chat has no visibility mechanic)
+export type { MessageableUserShape } from './chat-eligibility';
+export { canMessageUser, getMessageableUsers } from './chat-eligibility';
 // Google Calendar "add event" template-URL builder
 export type { GoogleCalendarEventInput } from './google-calendar';
 export { buildGoogleCalendarUrl } from './google-calendar';
@@ -50,9 +53,12 @@ export {
 // Permission utilities (deprecated — prefer createPermissionChecker)
 export { hasAllPermissions, hasAnyPermission, hasPermission } from './permissions';
 // Role helpers
+export type { DisplayableRole, RoleBadgeColor } from './role-helpers';
 export {
+  getRoleBadge,
   isManagerialRole,
   MANAGERIAL_BUILDING_ROLES,
+  ROLE_BADGE_COLORS,
   ROLE_DESCRIPTION_KEYS,
   ROLE_TRANSLATION_KEYS,
 } from './role-helpers';
