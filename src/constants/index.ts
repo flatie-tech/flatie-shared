@@ -1,7 +1,11 @@
 // AI chat guardrails (request caps + server history window)
 export { AI_CHAT_LIMITS } from './ai-chat';
 // Defaults
-export { DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT } from './defaults';
+export {
+  CHAT_CONVERSATIONS_POLL_MS,
+  DEFAULT_PAGINATION_LIMIT,
+  MAX_PAGINATION_LIMIT,
+} from './defaults';
 // Entity-link rules (which (source, target, linkType) triples the links API accepts)
 export {
   ALLOWED_ENTITY_LINKS,

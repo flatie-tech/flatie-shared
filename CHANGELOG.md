@@ -1,5 +1,12 @@
 # @flatie/shared
 
+## 0.53.1
+
+### Patch Changes
+
+- Export `CHAT_CONVERSATIONS_POLL_MS` from the constants barrel — it was added
+  in 0.53.0 but never re-exported, so the published package did not expose it.
+
 ## 0.53.0
 
 ### Minor Changes
