@@ -205,6 +205,7 @@ export const API_ROUTES = {
     LIST: (buildingId: string) => `/buildings/${buildingId}/links`,
     CREATE: (buildingId: string) => `/buildings/${buildingId}/links`,
     DELETE: (buildingId: string) => `/buildings/${buildingId}/links`,
+    COUNTS: (buildingId: string) => `/buildings/${buildingId}/links/counts`,
   },
 
   // ── Documents / Files ────────────────────────────────────────────────

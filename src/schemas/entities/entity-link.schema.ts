@@ -73,8 +73,28 @@ export const getEntityLinksQuerySchema = z.object({
   entityType: linkableEntityTypeSchema,
 });
 
+/**
+ * Query params for the batch link-count lookup. `ids` is a comma-separated
+ * list of UUIDs (query-string friendly, unambiguous across serializers); it is
+ * split, trimmed, and validated as UUIDs. Capped to keep the count query bounded.
+ */
+export const getEntityLinkCountsQuerySchema = z.object({
+  entityType: linkableEntityTypeSchema,
+  ids: z
+    .string()
+    .describe('Comma-separated list of entity UUIDs to count links for.')
+    .transform((value) =>
+      value
+        .split(',')
+        .map((part) => part.trim())
+        .filter(Boolean),
+    )
+    .pipe(z.array(uuidSchema).min(1).max(200)),
+});
+
 export type EntityLinkEndpoint = z.infer<typeof entityLinkEndpointSchema>;
 export type CreateEntityLinkRequest = z.infer<typeof createEntityLinkRequestSchema>;
 export type DeleteEntityLinkRequest = z.infer<typeof deleteEntityLinkRequestSchema>;
 export type DeleteEntityLinkQuery = z.infer<typeof deleteEntityLinkQuerySchema>;
 export type GetEntityLinksQuery = z.infer<typeof getEntityLinksQuerySchema>;
+export type GetEntityLinkCountsQuery = z.infer<typeof getEntityLinkCountsQuerySchema>;

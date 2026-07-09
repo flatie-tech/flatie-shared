@@ -133,6 +133,7 @@ declare const API_ROUTES: {
         readonly LIST: (buildingId: string) => string;
         readonly CREATE: (buildingId: string) => string;
         readonly DELETE: (buildingId: string) => string;
+        readonly COUNTS: (buildingId: string) => string;
     };
     readonly FILES: {
         readonly LIST: (buildingId: string) => string;

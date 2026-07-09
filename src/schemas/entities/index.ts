@@ -111,6 +111,7 @@ export type {
   DeleteEntityLinkQuery,
   DeleteEntityLinkRequest,
   EntityLinkEndpoint,
+  GetEntityLinkCountsQuery,
   GetEntityLinksQuery,
 } from './entity-link.schema';
 export {
@@ -120,6 +121,7 @@ export {
   ENTITY_LINK_TYPES,
   entityLinkEndpointSchema,
   entityLinkTypeSchema,
+  getEntityLinkCountsQuerySchema,
   getEntityLinksQuerySchema,
   LINKABLE_ENTITY_TYPES,
   linkableEntityTypeSchema,

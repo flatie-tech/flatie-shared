@@ -543,6 +543,12 @@ var getEntityLinksQuerySchema = zod.z.object({
   entityId: uuidSchema.describe("UUID of the anchor entity."),
   entityType: linkableEntityTypeSchema
 });
+var getEntityLinkCountsQuerySchema = zod.z.object({
+  entityType: linkableEntityTypeSchema,
+  ids: zod.z.string().describe("Comma-separated list of entity UUIDs to count links for.").transform(
+    (value) => value.split(",").map((part) => part.trim()).filter(Boolean)
+  ).pipe(zod.z.array(uuidSchema).min(1).max(200))
+});
 var EVENT_TYPES = [
   "service",
   "inspection",
@@ -1503,6 +1509,12 @@ var documentResponseSchema = zod.z.looseObject({
   visibility: zod.z.enum(["public", "private"]).optional().describe("Document visibility level; absent when the building uses default visibility.")
 }).describe("Document response from list and detail endpoints.");
 var paginatedDocumentsResponseSchema = paginatedResponseSchema(documentResponseSchema);
+var entityLinkMetadataSchema = zod.z.looseObject({
+  status: zod.z.string().nullable().optional().describe("Raw status enum value (e.g. failure-report status); the client localizes it."),
+  date: zod.z.string().nullable().optional().describe("Primary ISO date for the entity (created/start); the client formats per locale."),
+  amount: zod.z.number().nullable().optional().describe("Monetary amount (e.g. expense/maintenance cost); the client formats as currency."),
+  secondary: zod.z.string().nullable().optional().describe("Already-human supplementary text such as a contractor name or accounting period.")
+}).describe("Per-type display metadata for a linked entity; all fields optional and raw.");
 var entityLinkReferenceSchema = zod.z.looseObject({
   id: zod.z.string().uuid().describe("UUID of the entity on the far end of the link."),
   type: linkableEntityTypeSchema.describe("Kind of entity on the far end."),
@@ -1510,11 +1522,15 @@ var entityLinkReferenceSchema = zod.z.looseObject({
   direction: zod.z.enum(["outgoing", "incoming"]).describe(
     "Whether the anchor entity is the source (`outgoing`) or the target (`incoming`) of the stored link row."
   ),
-  title: zod.z.string().nullable().optional().describe("Display title of the far entity; null when it has none.")
+  title: zod.z.string().nullable().optional().describe("Display title of the far entity; null when it has none."),
+  metadata: entityLinkMetadataSchema.nullable().optional().describe("Optional per-type display metadata (status, date, amount, secondary text).")
 }).describe("A link from the anchor entity to another entity, with display enrichment.");
 var entityLinksResponseSchema = zod.z.looseObject({
   links: zod.z.array(entityLinkReferenceSchema).describe("Every link touching the anchor entity, outgoing and incoming.")
 }).describe("All links touching the anchor entity, in both directions.");
+var entityLinkCountsResponseSchema = zod.z.looseObject({
+  counts: zod.z.record(zod.z.string(), zod.z.number()).describe("Map of entity id \u2192 number of entity links touching it.")
+}).describe("Batch link counts keyed by entity id.");
 var eventUserSchema = zod.z.looseObject({
   id: zod.z.string().describe("UUID of the user."),
   name: zod.z.string().describe("User display name.")
@@ -2217,7 +2233,9 @@ exports.emailMessageSchema = emailMessageSchema;
 exports.emailSchema = emailSchema;
 exports.emailThreadDetailSchema = emailThreadDetailSchema;
 exports.emailThreadSchema = emailThreadSchema;
+exports.entityLinkCountsResponseSchema = entityLinkCountsResponseSchema;
 exports.entityLinkEndpointSchema = entityLinkEndpointSchema;
+exports.entityLinkMetadataSchema = entityLinkMetadataSchema;
 exports.entityLinkReferenceSchema = entityLinkReferenceSchema;
 exports.entityLinkTypeSchema = entityLinkTypeSchema;
 exports.entityLinksResponseSchema = entityLinksResponseSchema;
@@ -2233,6 +2251,7 @@ exports.forgotPasswordSchema = forgotPasswordSchema;
 exports.garageRoleSchema = garageRoleSchema;
 exports.garageSchema = garageSchema;
 exports.garageUserSchema = garageUserSchema;
+exports.getEntityLinkCountsQuerySchema = getEntityLinkCountsQuerySchema;
 exports.getEntityLinksQuerySchema = getEntityLinksQuerySchema;
 exports.getOrgBuildingsQuerySchema = getOrgBuildingsQuerySchema;
 exports.getOrgMembersQuerySchema = getOrgMembersQuerySchema;
@@ -2316,5 +2335,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-HKRE2E47.cjs.map
-//# sourceMappingURL=chunk-HKRE2E47.cjs.map
+//# sourceMappingURL=chunk-WIZB5EBZ.cjs.map
+//# sourceMappingURL=chunk-WIZB5EBZ.cjs.map

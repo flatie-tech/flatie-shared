@@ -1,5 +1,21 @@
 # @flatie/shared
 
+## 0.54.0
+
+### Minor Changes
+
+- Entity links: display metadata + batch link counts (Connections UI support).
+
+  - `entityLinkReferenceSchema` gains an optional `metadata` object
+    (`entityLinkMetadataSchema` / `EntityLinkMetadata`): raw, unformatted
+    per-type display fields — `status` (enum value, client-localized), `date`
+    (ISO), `amount` (number), `secondary` (already-human text like a contractor
+    name or accounting period). Purely additive; existing consumers that ignore
+    it are unaffected.
+  - New `entityLinkCountsResponseSchema` / `EntityLinkCountsResponse` and
+    `API_ROUTES.LINKS.COUNTS(buildingId)` for a batch "how many links touch each
+    entity" lookup, powering link-count indicators on list/card rows.
+
 ## 0.53.1
 
 ### Patch Changes
