@@ -4,6 +4,40 @@ var chunkW7WUC4AM_cjs = require('./chunk-W7WUC4AM.cjs');
 var chunkL63CW4MD_cjs = require('./chunk-L63CW4MD.cjs');
 var chunkOOJKTZT4_cjs = require('./chunk-OOJKTZT4.cjs');
 
+// src/utils/google-calendar.ts
+function toGoogleUtc(value) {
+  const date = value instanceof Date ? value : new Date(value);
+  return `${date.toISOString().slice(0, 19).replace(/[-:]/g, "")}Z`;
+}
+var RRULE_FREQ = {
+  weekly: "FREQ=WEEKLY",
+  biweekly: "FREQ=WEEKLY;INTERVAL=2",
+  monthly: "FREQ=MONTHLY",
+  yearly: "FREQ=YEARLY"
+};
+function buildGoogleCalendarUrl(event) {
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: event.title,
+    dates: `${toGoogleUtc(event.startDate)}/${toGoogleUtc(event.endDate)}`
+  });
+  const detailParts = [];
+  if (event.description) detailParts.push(event.description);
+  if (event.onlineMeetingUrl) detailParts.push(event.onlineMeetingUrl);
+  if (detailParts.length > 0) {
+    params.set("details", detailParts.join("\n\n"));
+  }
+  if (event.location) {
+    params.set("location", event.location);
+  }
+  const freq = event.recurrenceType ? RRULE_FREQ[event.recurrenceType] : void 0;
+  if (freq && !event.isRecurrenceInstance) {
+    const until = event.recurrenceEndDate ? `;UNTIL=${toGoogleUtc(event.recurrenceEndDate)}` : "";
+    params.set("recur", `RRULE:${freq}${until}`);
+  }
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}
+
 // src/utils/house-number.ts
 var HOUSE_NUMBER_PATTERN = /^\d{1,4}[A-Z]?(?:\/\d{1,3})?$|^BB$/;
 function normalizeHouseNumber(raw) {
@@ -372,6 +406,7 @@ exports.ParseError = ParseError;
 exports.ROLE_DESCRIPTION_KEYS = ROLE_DESCRIPTION_KEYS;
 exports.ROLE_TRANSLATION_KEYS = ROLE_TRANSLATION_KEYS;
 exports.TIME_FORMATS = TIME_FORMATS;
+exports.buildGoogleCalendarUrl = buildGoogleCalendarUrl;
 exports.calculatePaginationMeta = calculatePaginationMeta;
 exports.canDo = canDo;
 exports.canDoOnResource = canDoOnResource;
@@ -400,5 +435,5 @@ exports.parseApiError = parseApiError;
 exports.parseData = parseData;
 exports.parseHouseNumber = parseHouseNumber;
 exports.priorityVariant = priorityVariant;
-//# sourceMappingURL=chunk-NNH3UZRA.cjs.map
-//# sourceMappingURL=chunk-NNH3UZRA.cjs.map
+//# sourceMappingURL=chunk-6CKSMLNG.cjs.map
+//# sourceMappingURL=chunk-6CKSMLNG.cjs.map

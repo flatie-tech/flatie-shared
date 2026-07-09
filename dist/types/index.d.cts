@@ -87,11 +87,15 @@ interface BuildingOTPResponse {
 /**
  * Event type
  */
-type EventType = 'service' | 'inspection' | 'maintenance' | 'meeting' | 'discussion' | 'planned_works' | 'other';
+type EventType = 'service' | 'inspection' | 'maintenance' | 'meeting' | 'discussion' | 'planned_works' | 'waste_collection' | 'other';
 /**
  * Event color
  */
 type EventColor = 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'orange' | 'gray';
+/**
+ * Recurrence cadence
+ */
+type RecurrenceType = 'none' | 'weekly' | 'biweekly' | 'monthly' | 'yearly';
 /**
  * Event entity
  */
@@ -104,6 +108,15 @@ interface Event extends BaseEntity {
     startDate: Date | string;
     endDate: Date | string;
     color: EventColor;
+    approved: boolean;
+    isAnonymous: boolean;
+    allowComments: boolean;
+    recurrenceType: RecurrenceType;
+    recurrenceEndDate?: Date | string | null;
+    subtype?: string | null;
+    onlineMeetingUrl?: string | null;
+    meetingMinutes?: string | null;
+    minuteTakerId?: string | null;
 }
 /**
  * Event with creator info for API responses
@@ -125,6 +138,15 @@ interface CreateEventRequest {
     startDate: string;
     endDate: string;
     color: EventColor;
+    isAnonymous?: boolean;
+    allowComments?: boolean;
+    recurrenceType?: RecurrenceType;
+    recurrenceEndDate?: string;
+    subtype?: string;
+    onlineMeetingUrl?: string;
+    meetingMinutes?: string;
+    minuteTakerId?: string;
+    fileIds?: string[];
 }
 
 /**
@@ -492,4 +514,4 @@ interface UserBuildingRole {
     permissions: string[];
 }
 
-export type { BaseEntity, Building, BuildingContextFromOrg, BuildingContextFromRole, BuildingEntity, BuildingFund, BuildingMember, BuildingMembership, BuildingOTPResponse, BuildingPermissionContext, BuildingUser, BuildingUserEntity, BuildingWithRole, CreateEventRequest, CreateFailureReportRequest, CreateMaintenanceLogRequest, CreateNoticeRequest, CreatePollRequest, CreateRecurringTemplateRequest, CreateTransactionRequest, Event, EventColor, EventType, EventWithCreator, FailureReport, FailureReportWithCreator, FinancialGraphData, FinancialSummary, MaintenanceFinancedBy, MaintenanceLog, MaintenanceLogWithCreator, Notice, NoticeWithCreator, PermissionContext, PermissionFields, PermissionScope, PermissionsResponse, Poll, PollOptionResult, PollVote, PollWithResults, RecurringTemplate, Session, Transaction, User, UserBuildingRole, UserCreatedEntity, UserWithBuildings, VoteRequest };
+export type { BaseEntity, Building, BuildingContextFromOrg, BuildingContextFromRole, BuildingEntity, BuildingFund, BuildingMember, BuildingMembership, BuildingOTPResponse, BuildingPermissionContext, BuildingUser, BuildingUserEntity, BuildingWithRole, CreateEventRequest, CreateFailureReportRequest, CreateMaintenanceLogRequest, CreateNoticeRequest, CreatePollRequest, CreateRecurringTemplateRequest, CreateTransactionRequest, Event, EventColor, EventType, EventWithCreator, FailureReport, FailureReportWithCreator, FinancialGraphData, FinancialSummary, MaintenanceFinancedBy, MaintenanceLog, MaintenanceLogWithCreator, Notice, NoticeWithCreator, PermissionContext, PermissionFields, PermissionScope, PermissionsResponse, Poll, PollOptionResult, PollVote, PollWithResults, RecurrenceType, RecurringTemplate, Session, Transaction, User, UserBuildingRole, UserCreatedEntity, UserWithBuildings, VoteRequest };

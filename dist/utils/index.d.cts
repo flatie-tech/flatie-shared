@@ -5,6 +5,34 @@ import { P as Permission, S as ScopedDomain, a as ScopedAction, B as BuildingRol
 import { F as FailureStatus, P as Priority } from '../status.enum-BYlt7_Fs.cjs';
 
 /**
+ * Google Calendar "add event" template-URL builder.
+ *
+ * Produces a `calendar.google.com/calendar/render?action=TEMPLATE` link that
+ * opens Google Calendar (web or app) with the event prefilled — no OAuth, no
+ * API. Used by the web and mobile event detail views.
+ */
+interface GoogleCalendarEventInput {
+    title: string;
+    /** UTC instant — ISO-8601 string (as sent on the wire) or Date. */
+    startDate: string | Date;
+    endDate: string | Date;
+    description?: string | null;
+    /** Appended to the details block on its own line when present. */
+    onlineMeetingUrl?: string | null;
+    /** Optional free-text location; the param is omitted when absent. */
+    location?: string | null;
+    /** `none` | `weekly` | `biweekly` | `monthly` | `yearly` (or null). */
+    recurrenceType?: string | null;
+    recurrenceEndDate?: string | Date | null;
+    /**
+     * True for an expanded occurrence of a recurring event — the link then
+     * adds that single occurrence and never emits a recurrence rule.
+     */
+    isRecurrenceInstance?: boolean;
+}
+declare function buildGoogleCalendarUrl(event: GoogleCalendarEventInput): string;
+
+/**
  * Croatian house number normalization and parsing.
  *
  * Croatian house numbers follow patterns defined by Pravilnik NN 117/2022:
@@ -392,4 +420,4 @@ declare function getDateRange(filter: 'today' | 'yesterday' | 'week' | 'month'):
  */
 declare function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(func: T, delay: number): (...args: Parameters<T>) => void;
 
-export { type ActionFlags, type AddressParts, DATETIME_FORMATS, DATE_FORMATS, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, type ParsedApiError, type ParsedHouseNumber, type PermissionChecker, type PermissionSubject, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type StatusVariant, TIME_FORMATS, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatAddress, formatCurrency, formatCurrencyByLocale, formatDate as formatDateByLocale, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isManagerialRole, isValidHouseNumber, normalizeHouseNumber, normalizePaginatedResponse, parseApiError, parseData, parseHouseNumber, priorityVariant };
+export { type ActionFlags, type AddressParts, DATETIME_FORMATS, DATE_FORMATS, type GoogleCalendarEventInput, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, type ParsedApiError, type ParsedHouseNumber, type PermissionChecker, type PermissionSubject, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type StatusVariant, TIME_FORMATS, buildGoogleCalendarUrl, calculatePaginationMeta, canDo, canDoOnResource, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatAddress, formatCurrency, formatCurrencyByLocale, formatDate as formatDateByLocale, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, hasAllPermissions, hasAnyPermission, hasPermission, isManagerialRole, isValidHouseNumber, normalizeHouseNumber, normalizePaginatedResponse, parseApiError, parseData, parseHouseNumber, priorityVariant };

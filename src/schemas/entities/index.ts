@@ -109,6 +109,7 @@ export type {
   CreateEventSchema,
   EventColorOption,
   EventTypeOption,
+  RecurrenceTypeOption,
   TimeSchema,
   UpdateEventSchema,
 } from './event.schema';
@@ -120,6 +121,8 @@ export {
   EVENT_TYPES,
   eventColorSchema,
   eventTypeSchema,
+  RECURRENCE_TYPES,
+  recurrenceTypeSchema,
   timeSchema,
   updateEventSchema,
 } from './event.schema';

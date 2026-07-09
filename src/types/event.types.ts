@@ -10,12 +10,18 @@ export type EventType =
   | 'meeting'
   | 'discussion'
   | 'planned_works'
+  | 'waste_collection'
   | 'other';
 
 /**
  * Event color
  */
 export type EventColor = 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'orange' | 'gray';
+
+/**
+ * Recurrence cadence
+ */
+export type RecurrenceType = 'none' | 'weekly' | 'biweekly' | 'monthly' | 'yearly';
 
 /**
  * Event entity
@@ -29,6 +35,15 @@ export interface Event extends BaseEntity {
   startDate: Date | string;
   endDate: Date | string;
   color: EventColor;
+  approved: boolean;
+  isAnonymous: boolean;
+  allowComments: boolean;
+  recurrenceType: RecurrenceType;
+  recurrenceEndDate?: Date | string | null;
+  subtype?: string | null;
+  onlineMeetingUrl?: string | null;
+  meetingMinutes?: string | null;
+  minuteTakerId?: string | null;
 }
 
 /**
@@ -52,4 +67,13 @@ export interface CreateEventRequest {
   startDate: string;
   endDate: string;
   color: EventColor;
+  isAnonymous?: boolean;
+  allowComments?: boolean;
+  recurrenceType?: RecurrenceType;
+  recurrenceEndDate?: string;
+  subtype?: string;
+  onlineMeetingUrl?: string;
+  meetingMinutes?: string;
+  minuteTakerId?: string;
+  fileIds?: string[];
 }

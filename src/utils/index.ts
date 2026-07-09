@@ -4,6 +4,9 @@
  * Common utilities for use across frontend, mobile, and backend.
  */
 
+// Google Calendar "add event" template-URL builder
+export type { GoogleCalendarEventInput } from './google-calendar';
+export { buildGoogleCalendarUrl } from './google-calendar';
 // Croatian house number normalization and address formatting
 export type { AddressParts, ParsedHouseNumber } from './house-number';
 export {

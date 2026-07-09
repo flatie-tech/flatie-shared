@@ -21,6 +21,7 @@ export type {
   EventColor,
   EventType,
   EventWithCreator,
+  RecurrenceType,
 } from './event.types';
 // Failure report types
 export type {

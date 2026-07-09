@@ -1,5 +1,22 @@
 # @flatie/shared
 
+## 0.51.0
+
+### Minor Changes
+
+- Refresh event entity schemas to match the backend contract and add a Google
+  Calendar link builder. `EVENT_TYPES` gains `waste_collection` (+ color-map
+  entry); new `RECURRENCE_TYPES` / `recurrenceTypeSchema` / `RecurrenceType`;
+  `createEventSchema`/`updateEventSchema` now carry recurrence, subtype,
+  anonymity, comments toggle, meeting fields (`onlineMeetingUrl`,
+  `meetingMinutes`, `minuteTakerId`) and `fileIds`, with required title and an
+  end-after-start refinement; description max aligned to the backend's 500.
+  `Event`/`CreateEventRequest` types extended to match. New
+  `buildGoogleCalendarUrl(event)` util (`GoogleCalendarEventInput`) produces a
+  prefilled calendar.google.com TEMPLATE link with UTC dates, details from
+  description + meeting URL, optional location, and an RRULE for recurring
+  events (suppressed for expanded recurrence instances).
+
 ## 0.49.0
 
 ### Minor Changes

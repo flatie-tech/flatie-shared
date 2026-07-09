@@ -503,9 +503,11 @@ var EVENT_TYPES = [
   "meeting",
   "discussion",
   "planned_works",
+  "waste_collection",
   "other"
 ];
 var EVENT_COLORS = ["blue", "green", "red", "yellow", "purple", "orange", "gray"];
+var RECURRENCE_TYPES = ["none", "weekly", "biweekly", "monthly", "yearly"];
 var EVENT_TYPE_COLOR_MAP = {
   service: "blue",
   inspection: "purple",
@@ -513,12 +515,14 @@ var EVENT_TYPE_COLOR_MAP = {
   meeting: "green",
   discussion: "yellow",
   planned_works: "red",
+  waste_collection: "green",
   other: "gray"
 };
 var eventTypeSchema = zod.z.enum(EVENT_TYPES).describe(
-  "Kind of calendar event: `service` (routine service call), `inspection` (regulatory/safety check), `maintenance` (contractor work), `meeting` (residents gathering), `discussion` (informal), `planned_works` (scheduled project), `other` (miscellaneous)."
+  "Kind of calendar event: `service` (routine service call), `inspection` (regulatory/safety check), `maintenance` (contractor work), `meeting` (residents gathering), `discussion` (informal), `planned_works` (scheduled project), `waste_collection` (waste pickup, uses `subtype`), `other` (miscellaneous)."
 );
 var eventColorSchema = zod.z.enum(EVENT_COLORS).describe("Display colour used when rendering the event on the calendar.");
+var recurrenceTypeSchema = zod.z.enum(RECURRENCE_TYPES).describe("Recurrence cadence; `none` for one-off events.");
 var timeSchema = zod.z.object({
   hour: zod.z.number().min(0).max(23).describe("Hour component in 24-hour format, 0\u201323."),
   minute: zod.z.number().min(0).max(59).describe("Minute component, 0\u201359.")
@@ -527,18 +531,39 @@ var createEventSchema = zod.z.object({
   buildingId: uuidSchema.describe("UUID of the building the event belongs to."),
   type: eventTypeSchema,
   title: zod.z.string().min(1, "Title is required").max(100, "Title must be at most 100 characters").describe("Short event title shown on the calendar, 1\u2013100 chars."),
-  description: zod.z.string().max(2e3, "Description must be at most 2000 characters").optional().describe("Free-text details about the event; omitted when the event is self-explanatory."),
+  description: zod.z.string().max(500, "Description must be at most 500 characters").optional().describe("Free-text details about the event; omitted when the event is self-explanatory."),
   startDate: zod.z.coerce.date({ error: "Start date is required" }).describe("Event start \u2014 accepts an ISO-8601 string or Date, stored as a timestamp."),
   endDate: zod.z.coerce.date({ error: "End date is required" }).describe("Event end \u2014 accepts an ISO-8601 string or Date; must not precede `startDate`."),
-  color: eventColorSchema
+  color: eventColorSchema,
+  isAnonymous: multipartBoolean().optional().describe("True hides the creator's identity from other residents."),
+  allowComments: multipartBoolean().optional().describe("False disables the comment thread on this event."),
+  recurrenceType: recurrenceTypeSchema.optional(),
+  recurrenceEndDate: zod.z.coerce.date().optional().describe("Date after which the recurrence stops; omitted for open-ended recurrence."),
+  subtype: zod.z.string().optional().describe("Free-form subtype qualifier (waste-collection types like `mixed`, `bio`)."),
+  onlineMeetingUrl: zod.z.string().url().max(500).optional().or(zod.z.literal("")).describe("Join URL for online meetings; empty or omitted for in-person events."),
+  meetingMinutes: zod.z.string().max(1e4).optional().describe("Rich-text minutes captured during the meeting."),
+  minuteTakerId: uuidSchema.optional().describe("UUID of the user assigned to record meeting minutes."),
+  fileIds: zod.z.array(uuidSchema).optional().describe("UUIDs of previously uploaded files to attach to the event.")
+}).refine((data) => data.endDate >= data.startDate, {
+  message: "endDate must not precede startDate",
+  path: ["endDate"]
 });
 var updateEventSchema = zod.z.object({
   type: eventTypeSchema.optional(),
   title: zod.z.string().min(1).max(100).optional().describe("Revised title, 1\u2013100 chars."),
-  description: zod.z.string().max(2e3).optional().describe("Revised description, max 2000 chars."),
+  description: zod.z.string().max(500).optional().describe("Revised description, max 500 chars."),
   startDate: zod.z.coerce.date().optional().describe("Revised start \u2014 accepts an ISO-8601 string or Date."),
   endDate: zod.z.coerce.date().optional().describe("Revised end \u2014 accepts an ISO-8601 string or Date."),
-  color: eventColorSchema.optional()
+  color: eventColorSchema.optional(),
+  isAnonymous: multipartBoolean().optional(),
+  allowComments: multipartBoolean().optional(),
+  recurrenceType: recurrenceTypeSchema.optional(),
+  recurrenceEndDate: zod.z.coerce.date().optional(),
+  subtype: zod.z.string().optional(),
+  onlineMeetingUrl: zod.z.string().url().max(500).optional().or(zod.z.literal("")),
+  meetingMinutes: zod.z.string().max(1e4).optional(),
+  minuteTakerId: uuidSchema.optional(),
+  fileIds: zod.z.array(uuidSchema).optional()
 });
 var FAILURE_REPORT_LIMITS = {
   TITLE_MIN: 1,
@@ -2055,6 +2080,7 @@ exports.ORGANIZATION_LIMITS = ORGANIZATION_LIMITS;
 exports.POLL_LIMITS = POLL_LIMITS;
 exports.POLL_TYPES = POLL_TYPES;
 exports.PrioritySchema = PrioritySchema;
+exports.RECURRENCE_TYPES = RECURRENCE_TYPES;
 exports.TRANSACTION_CATEGORY_LIMITS = TRANSACTION_CATEGORY_LIMITS;
 exports.addOrgMemberSchema = addOrgMemberSchema;
 exports.aiChatMessageSchema = aiChatMessageSchema;
@@ -2176,6 +2202,7 @@ exports.pollResultsSchema = pollResultsSchema;
 exports.pollTypeSchema = pollTypeSchema;
 exports.pollVotersResponseSchema = pollVotersResponseSchema;
 exports.priorityOptions = priorityOptions;
+exports.recurrenceTypeSchema = recurrenceTypeSchema;
 exports.registerSchema = registerSchema;
 exports.reorderFaqsSchema = reorderFaqsSchema;
 exports.replyEmailThreadRequestSchema = replyEmailThreadRequestSchema;
@@ -2212,5 +2239,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-TZCKBE5E.cjs.map
-//# sourceMappingURL=chunk-TZCKBE5E.cjs.map
+//# sourceMappingURL=chunk-ARWFS4ZE.cjs.map
+//# sourceMappingURL=chunk-ARWFS4ZE.cjs.map
