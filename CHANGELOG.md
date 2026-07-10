@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.55.1
+
+### Patch Changes
+
+- Fix: re-export the v0.55.0 representative/building-settings response schemas from the package root barrel (`schemas/index.ts` uses explicit named blocks, so `responses/index.ts` alone wasn't reachable via `@flatie/shared`). Adds a root-reachability regression test.
+
 ## 0.55.0
 
 ### Minor Changes

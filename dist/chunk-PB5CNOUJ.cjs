@@ -1426,7 +1426,7 @@ var buildingFundsLedgerResponseSchema = zod.z.object({
   ),
   rows: zod.z.array(buildingFundsLedgerRowSchema).describe("One entry per co-owner with any owned area on the building.")
 }).meta({ id: "BuildingFundsLedgerResponse" });
-zod.z.looseObject({
+var buildingSettingsResponseSchema = zod.z.looseObject({
   id: zod.z.string().uuid().optional(),
   buildingId: zod.z.string().uuid().optional(),
   ownershipPercentageSource: zod.z.enum(["units", "users"]).nullable().optional().describe(
@@ -2257,7 +2257,7 @@ var repUserItemSchema = zod.z.looseObject({
   buildings: zod.z.array(repUserBuildingSchema).describe("All of the user\u2019s associations within the caller\u2019s buildings."),
   isYou: zod.z.boolean().describe("True when this row is the calling user.")
 }).describe("A user visible to the calling representative, flattened across buildings.");
-paginatedResponseSchema(repUserItemSchema);
+var paginatedRepUsersResponseSchema = paginatedResponseSchema(repUserItemSchema);
 var repBuildingManagerSchema = zod.z.looseObject({
   name: zod.z.string().describe("Display name of the assigned management-firm contact."),
   email: zod.z.string().describe("Contact email for the assigned manager.")
@@ -2281,7 +2281,7 @@ var repBuildingItemSchema = zod.z.looseObject({
 }).describe(
   "A building managed by the calling representative, as listed in the rep buildings table."
 );
-paginatedResponseSchema(repBuildingItemSchema);
+var paginatedRepBuildingsResponseSchema = paginatedResponseSchema(repBuildingItemSchema);
 var REP_RECENT_ACTIVITY_TYPES = [
   "notice",
   "maintenance",
@@ -2305,7 +2305,7 @@ var repBuildingActivitySchema = zod.z.looseObject({
   buildingType: buildingTypeSchema,
   lastActivityAt: zod.z.string().describe("ISO-8601 timestamp of the most recent activity.")
 }).describe('A building with activity in the last 24 hours ("buildings updated" list).');
-zod.z.looseObject({
+var repDashboardSummaryResponseSchema = zod.z.looseObject({
   buildings: zod.z.looseObject({
     total: zod.z.number().describe("Total buildings managed by the caller."),
     addedThisMonth: zod.z.number().describe("Buildings added this calendar month."),
@@ -2384,6 +2384,7 @@ exports.POLL_LIMITS = POLL_LIMITS;
 exports.POLL_TYPES = POLL_TYPES;
 exports.PrioritySchema = PrioritySchema;
 exports.RECURRENCE_TYPES = RECURRENCE_TYPES;
+exports.REP_RECENT_ACTIVITY_TYPES = REP_RECENT_ACTIVITY_TYPES;
 exports.TRANSACTION_CATEGORY_LIMITS = TRANSACTION_CATEGORY_LIMITS;
 exports.addOrgMemberSchema = addOrgMemberSchema;
 exports.aiChatMessageSchema = aiChatMessageSchema;
@@ -2411,6 +2412,7 @@ exports.buildingQuotaConfigSchema = buildingQuotaConfigSchema;
 exports.buildingQuotaEntrySchema = buildingQuotaEntrySchema;
 exports.buildingQuotaListSchema = buildingQuotaListSchema;
 exports.buildingResponseSchema = buildingResponseSchema;
+exports.buildingSettingsResponseSchema = buildingSettingsResponseSchema;
 exports.buildingTypeSchema = buildingTypeSchema;
 exports.buildingUserEntitySchema = buildingUserEntitySchema;
 exports.businessPartnerResponseSchema = businessPartnerResponseSchema;
@@ -2510,6 +2512,8 @@ exports.paginatedFailureReportsResponseSchema = paginatedFailureReportsResponseS
 exports.paginatedMaintenanceLogsResponseSchema = paginatedMaintenanceLogsResponseSchema;
 exports.paginatedNoticesResponseSchema = paginatedNoticesResponseSchema;
 exports.paginatedPollsResponseSchema = paginatedPollsResponseSchema;
+exports.paginatedRepBuildingsResponseSchema = paginatedRepBuildingsResponseSchema;
+exports.paginatedRepUsersResponseSchema = paginatedRepUsersResponseSchema;
 exports.paginatedResponseSchema = paginatedResponseSchema;
 exports.paginationParamsSchema = paginationParamsSchema;
 exports.passwordSchema = passwordSchema;
@@ -2523,6 +2527,13 @@ exports.priorityOptions = priorityOptions;
 exports.recurrenceTypeSchema = recurrenceTypeSchema;
 exports.registerSchema = registerSchema;
 exports.reorderFaqsSchema = reorderFaqsSchema;
+exports.repBuildingActivitySchema = repBuildingActivitySchema;
+exports.repBuildingItemSchema = repBuildingItemSchema;
+exports.repDashboardSummaryResponseSchema = repDashboardSummaryResponseSchema;
+exports.repRecentActivitySchema = repRecentActivitySchema;
+exports.repRecentActivityTypeSchema = repRecentActivityTypeSchema;
+exports.repUserBuildingSchema = repUserBuildingSchema;
+exports.repUserItemSchema = repUserItemSchema;
 exports.replyEmailThreadRequestSchema = replyEmailThreadRequestSchema;
 exports.resetPasswordSchema = resetPasswordSchema;
 exports.roleTypeSchema = roleTypeSchema;
@@ -2559,5 +2570,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-PT6SNWA6.cjs.map
-//# sourceMappingURL=chunk-PT6SNWA6.cjs.map
+//# sourceMappingURL=chunk-PB5CNOUJ.cjs.map
+//# sourceMappingURL=chunk-PB5CNOUJ.cjs.map

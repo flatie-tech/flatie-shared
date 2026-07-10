@@ -176,3 +176,16 @@ describe('representative list param contracts', () => {
     expect(getRepUsersParamsSchema.safeParse({ limit: 101 }).success).toBe(false);
   });
 });
+
+describe('root barrel reachability', () => {
+  it('exposes the rep contracts from the package root (v0.55.0 missed this)', async () => {
+    const root = await import('../../src');
+    expect(root.paginatedRepUsersResponseSchema).toBeDefined();
+    expect(root.paginatedRepBuildingsResponseSchema).toBeDefined();
+    expect(root.repDashboardSummaryResponseSchema).toBeDefined();
+    expect(root.buildingSettingsResponseSchema).toBeDefined();
+    expect(root.getRepUsersParamsSchema).toBeDefined();
+    expect(root.violatesVotingMethodLock).toBeDefined();
+    expect(root.incomeKeys).toBeDefined();
+  });
+});
