@@ -457,6 +457,25 @@ var buildingQuotaListSchema = zod.z.object({
   buildingId: zod.z.string().uuid(),
   quotas: zod.z.array(buildingQuotaEntrySchema)
 });
+var updateBuildingSettingsSchema = zod.z.object({
+  ownershipPercentageSource: zod.z.enum(["units", "users"]).nullable().optional().describe("Ownership-percentage source for consensus polls; null resets to auto-detect."),
+  requireApprovalForNotices: zod.z.boolean().optional(),
+  requireApprovalForFailureReports: zod.z.boolean().optional(),
+  requireApprovalForPolls: zod.z.boolean().optional(),
+  requireApprovalForEvents: zod.z.boolean().optional(),
+  allowAnonymousPosting: zod.z.boolean().optional(),
+  faqEnabled: zod.z.boolean().optional(),
+  houseRulesEnabled: zod.z.boolean().optional(),
+  chatEnabled: zod.z.boolean().optional(),
+  commentsEnabled: zod.z.boolean().optional(),
+  votingCertiliaEnabled: zod.z.boolean().optional(),
+  votingPrintedSignatureEnabled: zod.z.boolean().optional(),
+  minVerificationTierForConsensus: zod.z.number().int().min(0).max(3).optional().describe(
+    "Minimum durable VerificationTier ordinal for CONSENSUS ballots. The backend enforces the ZUOZ legal floor (IDENTITY = 2) and consistency with the printed-signature toggle."
+  ),
+  addonAiEnabled: zod.z.boolean().optional(),
+  addonStorage5gbEnabled: zod.z.boolean().optional()
+});
 var businessPartnerResponseSchema = zod.z.object({
   id: zod.z.string().uuid(),
   organizationId: zod.z.string().uuid(),
@@ -735,6 +754,21 @@ var garageSchema = zod.z.looseObject({
   updatedAt: zod.z.string(),
   users: zod.z.array(garageUserSchema).describe("Owners and tenants currently attached to the garage.")
 });
+var incomeAmountSchema = zod.z.coerce.number().min(0, "amount must be >= 0").refine((v) => /^-?\d+(\.\d{1,2})?$/.test(v.toString()), {
+  message: "amount must have at most 2 decimal places"
+}).describe("Income amount in EUR, at most two decimal places.");
+var createIncomeSchema = zod.z.object({
+  categoryId: zod.z.string().uuid().optional().describe("Income transaction-category to file this entry under."),
+  amount: incomeAmountSchema,
+  description: zod.z.string().max(500).optional(),
+  period: zod.z.string().max(50).optional().describe('Free-form billing period label (e.g. "2026-06").')
+}).strict();
+var updateIncomeSchema = zod.z.object({
+  categoryId: zod.z.string().uuid().optional(),
+  amount: incomeAmountSchema.optional(),
+  description: zod.z.string().max(500).optional(),
+  period: zod.z.string().max(50).optional()
+}).strict();
 var MAINTENANCE_FINANCED_BY = ["building_funds", "insurance", "co_owner"];
 var maintenanceFinancedBySchema = zod.z.enum(MAINTENANCE_FINANCED_BY).describe(
   "Funding source of the work: `building_funds` (paid from the common fund), `insurance` (covered by an insurance claim), or `co_owner` (paid directly by an individual co-owner)."
@@ -1068,6 +1102,32 @@ var permissionsResponseSchema = zod.z.object({
   orgId: zod.z.string().uuid().optional(),
   chatVisibleToCoOwners: zod.z.boolean().optional()
 });
+var sortOrderSchema = zod.z.enum(["asc", "desc"]).describe("Sort direction applied to `sortBy`.");
+var getRepUsersParamsSchema = zod.z.object({
+  search: zod.z.string().optional().describe("Free-text filter matched against user name and email."),
+  buildingRole: zod.z.enum([
+    chunkZVYMV2WM_cjs.BuildingRole.OWNER_REPRESENTATIVE,
+    chunkZVYMV2WM_cjs.BuildingRole.DEPUTY_REPRESENTATIVE,
+    chunkZVYMV2WM_cjs.BuildingRole.CO_OWNER
+  ]).optional().describe("Restrict to users holding this role in at least one of the caller\u2019s buildings."),
+  fromDate: zod.z.string().optional().describe("Inclusive lower bound (ISO date) on the user\u2019s earliest building-join date."),
+  toDate: zod.z.string().optional().describe("Inclusive upper bound (ISO date) on the user\u2019s earliest building-join date."),
+  limit: zod.z.coerce.number().min(1).max(100).optional().default(50),
+  offset: zod.z.coerce.number().min(0).optional().default(0),
+  sortBy: zod.z.string().optional().default("createdAt"),
+  sortOrder: sortOrderSchema.optional().default("desc")
+});
+var getRepBuildingsParamsSchema = zod.z.object({
+  search: zod.z.string().optional().describe("Free-text filter matched against building name and address."),
+  type: zod.z.enum([chunkZVYMV2WM_cjs.BuildingType.RESIDENTIAL, chunkZVYMV2WM_cjs.BuildingType.COMMERCIAL, chunkZVYMV2WM_cjs.BuildingType.RESIDENTIAL_COMMERCIAL]).optional().describe("Restrict to a single building usage type."),
+  status: zod.z.string().optional().describe("Restrict to a building lifecycle status (`pending`, `active`, `rejected`)."),
+  fromDate: zod.z.string().optional().describe("Inclusive lower bound (ISO date) on the building creation date."),
+  toDate: zod.z.string().optional().describe("Inclusive upper bound (ISO date) on the building creation date."),
+  limit: zod.z.coerce.number().min(1).max(100).optional().default(20),
+  offset: zod.z.coerce.number().min(0).optional().default(0),
+  sortBy: zod.z.string().optional().default("createdAt"),
+  sortOrder: sortOrderSchema.optional().default("desc")
+});
 var aiChatMessageSchema = zod.z.object({
   id: zod.z.string().optional().describe("Client-generated message id (AI SDK UIMessage id)."),
   role: zod.z.enum(["user", "assistant", "system"]).describe("Author of the message in the conversation history."),
@@ -1366,6 +1426,35 @@ var buildingFundsLedgerResponseSchema = zod.z.object({
   ),
   rows: zod.z.array(buildingFundsLedgerRowSchema).describe("One entry per co-owner with any owned area on the building.")
 }).meta({ id: "BuildingFundsLedgerResponse" });
+zod.z.looseObject({
+  id: zod.z.string().uuid().optional(),
+  buildingId: zod.z.string().uuid().optional(),
+  ownershipPercentageSource: zod.z.enum(["units", "users"]).nullable().optional().describe(
+    "Which ownership-percentage source consensus polls use: `units` (unit surface areas) or `users` (per-user shares). Null = auto-detect (units when the building has units, users otherwise)."
+  ),
+  requireApprovalForNotices: zod.z.boolean().describe("When true, co-owner notices need representative approval before publishing."),
+  requireApprovalForFailureReports: zod.z.boolean().describe("When true, failure reports need representative approval before publishing."),
+  requireApprovalForPolls: zod.z.boolean().describe("When true, co-owner polls need representative approval before opening."),
+  requireApprovalForEvents: zod.z.boolean().describe("When true, co-owner events need representative approval before publishing."),
+  allowAnonymousPosting: zod.z.boolean().describe("When true, co-owners may post notices/reports without their name shown."),
+  faqEnabled: zod.z.boolean().describe("Whether the FAQ section is available in this building."),
+  houseRulesEnabled: zod.z.boolean().describe("Whether the house-rules section is available in this building."),
+  chatEnabled: zod.z.boolean().describe("Whether building chat is available in this building."),
+  commentsEnabled: zod.z.boolean().describe("Whether commenting on notices/reports is available in this building."),
+  votingCertiliaEnabled: zod.z.boolean().describe(
+    "Whether the Certilia eID online voting path is offered on CONSENSUS polls. Subject to the last-method-lock invariant."
+  ),
+  votingPrintedSignatureEnabled: zod.z.boolean().describe(
+    "Whether the printed-signature voting path (rep-reviewed paper ballots) is offered on CONSENSUS polls. Subject to the last-method-lock invariant."
+  ),
+  minVerificationTierForConsensus: zod.z.number().int().describe(
+    "Minimum durable VerificationTier ordinal a co-owner must hold to cast a binding CONSENSUS vote. The backend enforces the ZUOZ legal floor."
+  ),
+  addonAiEnabled: zod.z.boolean().optional().describe("Whether the AI add-on is enabled (billed on the next HUB-3 invoice)."),
+  addonStorage5gbEnabled: zod.z.boolean().optional().describe("Whether the 5 GB storage add-on is enabled."),
+  createdAt: zod.z.string().nullable().optional(),
+  updatedAt: zod.z.string().nullable().optional()
+}).describe("Payload of `GET /buildings/:buildingId/settings`.");
 var conversationParticipantSchema = zod.z.looseObject({
   id: zod.z.string().describe("Participation record ID."),
   userId: zod.z.string().describe("UUID of the participant user."),
@@ -2141,6 +2230,136 @@ var pollVotersResponseSchema = zod.z.looseObject({
   voters: zod.z.array(pollVoterSchema).describe("Individual voter entries with their chosen option.")
 });
 var paginatedPollsResponseSchema = paginatedResponseSchema(pollResponseSchema);
+var repUserRoleSchema = zod.z.enum([
+  chunkZVYMV2WM_cjs.BuildingRole.OWNER_REPRESENTATIVE,
+  chunkZVYMV2WM_cjs.BuildingRole.DEPUTY_REPRESENTATIVE,
+  chunkZVYMV2WM_cjs.BuildingRole.CO_OWNER,
+  chunkZVYMV2WM_cjs.BuildingRole.RESIDENT
+]).describe("Role the user holds within the specific building association.");
+var repUserBuildingSchema = zod.z.looseObject({
+  buildingId: zod.z.string().uuid(),
+  buildingName: zod.z.string().describe("Display name of the associated building."),
+  buildingAddress: zod.z.string().describe("Full postal address of the associated building."),
+  roleType: repUserRoleSchema,
+  buildingSurfacePercentage: zod.z.string().describe(
+    'The user\u2019s ownership share of the building surface, serialized as a decimal string (e.g. "12.50").'
+  ),
+  createdAt: zod.z.string().describe("ISO-8601 timestamp when the user joined this building."),
+  canEdit: zod.z.boolean().describe("True when the caller may edit this association (role, surface share)."),
+  canKick: zod.z.boolean().describe("True when the caller may remove the user from this building.")
+}).describe("One building association of a user visible to the calling representative.");
+var repUserItemSchema = zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  name: zod.z.string().describe("User display name."),
+  email: zod.z.string().describe("User contact email."),
+  phone: zod.z.string().nullable().optional().describe("Contact phone, or null when the user has not set one."),
+  address: zod.z.string().nullable().optional().describe("User postal address, or null when not provided."),
+  buildings: zod.z.array(repUserBuildingSchema).describe("All of the user\u2019s associations within the caller\u2019s buildings."),
+  isYou: zod.z.boolean().describe("True when this row is the calling user.")
+}).describe("A user visible to the calling representative, flattened across buildings.");
+paginatedResponseSchema(repUserItemSchema);
+var repBuildingManagerSchema = zod.z.looseObject({
+  name: zod.z.string().describe("Display name of the assigned management-firm contact."),
+  email: zod.z.string().describe("Contact email for the assigned manager.")
+}).describe("Summary of the building\u2019s assigned management-firm contact.");
+var repBuildingFundsSchema = zod.z.looseObject({
+  currentBalance: zod.z.string().describe('Current fund balance as a decimal string (e.g. "27820.54").'),
+  currency: zod.z.string().describe("Currency symbol or code displayed alongside the balance.")
+}).describe("Summary of the building\u2019s current fund balance.");
+var repBuildingItemSchema = zod.z.looseObject({
+  id: zod.z.string().uuid(),
+  name: zod.z.string().describe("Building display name."),
+  address: zod.z.string().describe("Full postal address of the building."),
+  type: buildingTypeSchema,
+  status: zod.z.string().describe("Building lifecycle status (`pending`, `active`, `rejected`)."),
+  totalUnits: zod.z.number().describe("Declared number of individual units."),
+  manager: repBuildingManagerSchema,
+  funds: repBuildingFundsSchema,
+  createdAt: zod.z.string().describe("ISO-8601 timestamp when the building record was created."),
+  updatedAt: zod.z.string().nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited."),
+  coverImage: zod.z.string().nullable().optional().describe("Absolute URL of the cover photo, or null when no cover image is set.")
+}).describe(
+  "A building managed by the calling representative, as listed in the rep buildings table."
+);
+paginatedResponseSchema(repBuildingItemSchema);
+var REP_RECENT_ACTIVITY_TYPES = [
+  "notice",
+  "maintenance",
+  "failure_report",
+  "user_joined"
+];
+var repRecentActivityTypeSchema = zod.z.enum(REP_RECENT_ACTIVITY_TYPES).describe("Kind of event surfaced in the recent-activity feed.");
+var repRecentActivitySchema = zod.z.looseObject({
+  buildingId: zod.z.string().describe("UUID of the building the activity happened in."),
+  buildingName: zod.z.string().describe("Display name of the building."),
+  activityType: repRecentActivityTypeSchema,
+  description: zod.z.string().describe("Human-readable one-line summary of the activity."),
+  timestamp: zod.z.string().describe("ISO-8601 timestamp of the activity."),
+  userId: zod.z.string().nullable().optional().describe("UUID of the acting user, when the activity has an actor."),
+  userName: zod.z.string().nullable().optional().describe("Display name of the acting user, when the activity has an actor.")
+}).describe("One row of the representative dashboard recent-activity feed.");
+var repBuildingActivitySchema = zod.z.looseObject({
+  buildingId: zod.z.string().describe("UUID of the building."),
+  buildingName: zod.z.string().describe("Display name of the building."),
+  buildingAddress: zod.z.string().describe("Full postal address of the building."),
+  buildingType: buildingTypeSchema,
+  lastActivityAt: zod.z.string().describe("ISO-8601 timestamp of the most recent activity.")
+}).describe('A building with activity in the last 24 hours ("buildings updated" list).');
+zod.z.looseObject({
+  buildings: zod.z.looseObject({
+    total: zod.z.number().describe("Total buildings managed by the caller."),
+    addedThisMonth: zod.z.number().describe("Buildings added this calendar month."),
+    byType: zod.z.looseObject({
+      residential: zod.z.number().describe("Residential buildings managed by the caller."),
+      commercial: zod.z.number().describe("Commercial buildings managed by the caller.")
+    }).describe("Building counts split by usage type.")
+  }).describe("Building statistics for the caller\u2019s portfolio."),
+  users: zod.z.looseObject({
+    total: zod.z.number().describe("Total users across the caller\u2019s buildings."),
+    managers: zod.z.number().describe("Users holding a managerial role."),
+    newThisMonth: zod.z.number().describe("Users who joined this calendar month."),
+    byRole: zod.z.looseObject({
+      admin: zod.z.number().describe("Users counted under the admin bucket."),
+      manager: zod.z.number().describe("Users counted under the manager bucket."),
+      tenant: zod.z.number().describe("Users counted under the tenant bucket.")
+    }).describe("User counts split by coarse role bucket.")
+  }).describe("User statistics across the caller\u2019s buildings."),
+  activities: zod.z.looseObject({
+    notices: zod.z.looseObject({
+      total: zod.z.number().describe("All notices across the caller\u2019s buildings."),
+      pending: zod.z.number().describe("Notices awaiting representative approval."),
+      today: zod.z.number().describe("Notices created today.")
+    }).describe("Notice counts."),
+    maintenanceLogs: zod.z.looseObject({
+      total: zod.z.number().describe("All maintenance logs across the caller\u2019s buildings."),
+      today: zod.z.number().describe("Maintenance logs created today.")
+    }).describe("Maintenance-log counts."),
+    failureReports: zod.z.looseObject({
+      total: zod.z.number().describe("All failure reports across the caller\u2019s buildings."),
+      open: zod.z.number().describe("Reports not yet resolved."),
+      resolved: zod.z.number().describe("Reports already resolved."),
+      today: zod.z.number().describe("Reports submitted today.")
+    }).describe("Failure-report counts.")
+  }).describe("Activity statistics per content type."),
+  polls: zod.z.looseObject({
+    active: zod.z.number().describe("Approved polls currently open for voting."),
+    pendingApproval: zod.z.number().describe("Polls awaiting representative approval."),
+    expiringSoon: zod.z.number().describe("Active polls with a deadline within 48 hours.")
+  }).nullable().optional().describe("Poll statistics; absent when the caller has no poll access."),
+  funds: zod.z.looseObject({
+    totalBalance: zod.z.string().describe("Sum of all building fund balances as a decimal string."),
+    buildingsWithFunds: zod.z.number().describe("Buildings that have a fund record."),
+    negativeBalanceCount: zod.z.number().describe("Buildings with a negative fund balance.")
+  }).nullable().optional().describe("Fund-balance statistics; absent when the caller has no financial access."),
+  recentActivity: zod.z.array(repRecentActivitySchema).describe("Most recent activities across the caller\u2019s buildings, newest first."),
+  buildingsWithActivity: zod.z.array(repBuildingActivitySchema).describe("Buildings with activity in the last 24 hours."),
+  totalUsers: zod.z.number().describe("Total unique users across all of the caller\u2019s buildings."),
+  totalManagers: zod.z.number().describe("Total unique building managers."),
+  newManagersThisMonth: zod.z.number().describe("Managers who joined this calendar month."),
+  newUsersThisMonth: zod.z.number().describe("Users who joined this calendar month."),
+  activitiesLast24Hours: zod.z.number().describe("Total activities in the last 24 hours."),
+  pendingSignatureVotes: zod.z.number().nullable().optional().describe("Printed-signature votes awaiting representative review (rep scope only).")
+}).describe("Payload of `GET /representatives/dashboard/summary`.");
 
 exports.ARCHIVE_TYPES = ARCHIVE_TYPES;
 exports.ApprovalStatusSchema = ApprovalStatusSchema;
@@ -2214,6 +2433,7 @@ exports.createEntityLinkRequestSchema = createEntityLinkRequestSchema;
 exports.createEventSchema = createEventSchema;
 exports.createFailureReportSchema = createFailureReportSchema;
 exports.createFaqSchema = createFaqSchema;
+exports.createIncomeSchema = createIncomeSchema;
 exports.createMaintenanceLogSchema = createMaintenanceLogSchema;
 exports.createNoticeSchema = createNoticeSchema;
 exports.createOrganizationSchema = createOrganizationSchema;
@@ -2255,6 +2475,8 @@ exports.getEntityLinkCountsQuerySchema = getEntityLinkCountsQuerySchema;
 exports.getEntityLinksQuerySchema = getEntityLinksQuerySchema;
 exports.getOrgBuildingsQuerySchema = getOrgBuildingsQuerySchema;
 exports.getOrgMembersQuerySchema = getOrgMembersQuerySchema;
+exports.getRepBuildingsParamsSchema = getRepBuildingsParamsSchema;
+exports.getRepUsersParamsSchema = getRepUsersParamsSchema;
 exports.getTransactionCategoriesQuerySchema = getTransactionCategoriesQuerySchema;
 exports.inviteOrgMemberSchema = inviteOrgMemberSchema;
 exports.joinBuildingWithOtpSchema = joinBuildingWithOtpSchema;
@@ -2313,12 +2535,14 @@ exports.strongPasswordSchema = strongPasswordSchema;
 exports.timeSchema = timeSchema;
 exports.unreadCountResponseSchema = unreadCountResponseSchema;
 exports.updateBuildingSchema = updateBuildingSchema;
+exports.updateBuildingSettingsSchema = updateBuildingSettingsSchema;
 exports.updateBusinessPartnerSchema = updateBusinessPartnerSchema;
 exports.updateConversationSchema = updateConversationSchema;
 exports.updateEventSchema = updateEventSchema;
 exports.updateFailureReportRequestSchema = updateFailureReportRequestSchema;
 exports.updateFailureReportSchema = updateFailureReportSchema;
 exports.updateFaqSchema = updateFaqSchema;
+exports.updateIncomeSchema = updateIncomeSchema;
 exports.updateMaintenanceLogRequestSchema = updateMaintenanceLogRequestSchema;
 exports.updateMaintenanceLogSchema = updateMaintenanceLogSchema;
 exports.updateNoticeRequestSchema = updateNoticeRequestSchema;
@@ -2335,5 +2559,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-WIZB5EBZ.cjs.map
-//# sourceMappingURL=chunk-WIZB5EBZ.cjs.map
+//# sourceMappingURL=chunk-PT6SNWA6.cjs.map
+//# sourceMappingURL=chunk-PT6SNWA6.cjs.map

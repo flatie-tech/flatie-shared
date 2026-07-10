@@ -1,5 +1,5 @@
 import { L as LinkableEntityType, E as EntityLinkType } from '../entity-link.enum-wTDJirUV.cjs';
-import { P as Permission, B as BuildingRole, O as OrgRole, b as PlatformRole } from '../role.enum-a_XALYng.cjs';
+import { P as Permission, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-CnSGOT1c.cjs';
 
 declare const AI_CHAT_LIMITS: {
     /** Hard ceiling on the messages array per request. */
@@ -202,6 +202,15 @@ declare const fundsKeys: {
     transactions: (buildingId: string, filters?: Record<string, unknown>) => readonly ["funds", "transactions", string, {
         readonly [x: string]: unknown;
     }];
+};
+declare const incomeKeys: {
+    all: readonly ["income"];
+    lists: () => readonly ["income", "list"];
+    list: (buildingId: string, filters?: Record<string, unknown>) => readonly ["income", "list", string, {
+        readonly [x: string]: unknown;
+    }];
+    details: () => readonly ["income", "detail"];
+    detail: (id: string) => readonly ["income", "detail", string];
 };
 declare const permissionKeys: {
     all: readonly ["permission"];
@@ -602,6 +611,15 @@ declare const queryKeys: {
         detail: (id: string) => readonly ["garage", "detail", string];
         floors: (buildingId: string) => readonly ["garage", "floors", string];
     };
+    readonly income: {
+        all: readonly ["income"];
+        lists: () => readonly ["income", "list"];
+        list: (buildingId: string, filters?: Record<string, unknown>) => readonly ["income", "list", string, {
+            readonly [x: string]: unknown;
+        }];
+        details: () => readonly ["income", "detail"];
+        detail: (id: string) => readonly ["income", "detail", string];
+    };
     readonly layout: {
         all: readonly ["layout"];
         sidebar: () => readonly ["layout", "sidebar"];
@@ -680,4 +698,4 @@ declare const ADMIN_ORG_PERMISSIONS: Permission[];
 /** Admin platform-scope permissions — same as PLATFORM_ADMIN. */
 declare const ADMIN_PLATFORM_PERMISSIONS: Permission[];
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, AI_CHAT_LIMITS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, type EntityLinkRule, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, blogKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, isEntityLinkAllowed, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, AI_CHAT_LIMITS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, type EntityLinkRule, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, blogKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, incomeKeys, isEntityLinkAllowed, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };

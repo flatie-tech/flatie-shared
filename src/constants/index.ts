@@ -32,6 +32,7 @@ export {
   faqKeys,
   fundsKeys,
   garageKeys,
+  incomeKeys,
   layoutKeys,
   maintenanceLogKeys,
   noticeKeys,

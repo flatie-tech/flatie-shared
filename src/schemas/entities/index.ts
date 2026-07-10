@@ -94,6 +94,9 @@ export {
   buildingQuotaEntrySchema,
   buildingQuotaListSchema,
 } from './building-quota.schema';
+// Building settings schemas
+export type { UpdateBuildingSettingsSchema } from './building-settings.schema';
+export { updateBuildingSettingsSchema } from './building-settings.schema';
 // Business partner schemas
 export type {
   BusinessPartnerResponse,
@@ -164,6 +167,9 @@ export {
 // Garage schemas
 export type { Garage, GarageRole, GarageUser } from './garage.schema';
 export { garageRoleSchema, garageSchema, garageUserSchema } from './garage.schema';
+// Income-transaction schemas (manual funds mode income ledger)
+export type { CreateIncomeSchema, UpdateIncomeSchema } from './income-transaction.schema';
+export { createIncomeSchema, updateIncomeSchema } from './income-transaction.schema';
 export type {
   CreateMaintenanceLogSchema,
   MaintenanceFinancedByOption,

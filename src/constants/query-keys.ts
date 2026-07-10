@@ -143,6 +143,15 @@ export const fundsKeys = {
     [...fundsKeys.all, 'transactions', buildingId, { ...filters }] as const,
 };
 
+export const incomeKeys = {
+  all: ['income'] as const,
+  lists: () => [...incomeKeys.all, 'list'] as const,
+  list: (buildingId: string, filters: Record<string, unknown> = {}) =>
+    [...incomeKeys.lists(), buildingId, { ...filters }] as const,
+  details: () => [...incomeKeys.all, 'detail'] as const,
+  detail: (id: string) => [...incomeKeys.details(), id] as const,
+};
+
 export const permissionKeys = {
   all: ['permission'] as const,
   lists: () => [...permissionKeys.all, 'list'] as const,
@@ -397,6 +406,7 @@ export const queryKeys = {
   dashboardSummary: dashboardSummaryKeys,
   faq: faqKeys,
   garage: garageKeys,
+  income: incomeKeys,
   layout: layoutKeys,
   notification: notificationKeys,
   platformBuilding: platformBuildingKeys,

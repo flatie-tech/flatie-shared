@@ -65,6 +65,14 @@ export {
 // Status variants (semantic design-system mappers)
 export type { StatusVariant } from './status-variants';
 export { failureStatusVariant, priorityVariant } from './status-variants';
+// Voting-method last-method-lock invariant (building settings)
+export type { VotingMethodSetting, VotingMethodState } from './voting-methods';
+export {
+  isLastEnabledVotingMethod,
+  resolveVotingMethods,
+  VOTING_METHOD_SETTINGS,
+  violatesVotingMethodLock,
+} from './voting-methods';
 
 /**
  * Format a snake_case or SCREAMING_SNAKE_CASE string to Title Case

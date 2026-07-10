@@ -152,4 +152,4 @@ type PlatformRole = (typeof PlatformRole)[keyof typeof PlatformRole];
 declare const PLATFORM_ROLE_RANK: Record<PlatformRole, number>;
 declare function canAssignPlatformRole(assignerRole: PlatformRole, targetRole: PlatformRole): boolean;
 
-export { APPROVE_PERMISSIONS as A, BuildingRole as B, OrgRole as O, Permission as P, type ScopedDomain as S, type ScopedAction as a, PlatformRole as b, SCOPED_DOMAINS as c, domainPermissions as d, SCOPED_PERMISSIONS as e, BUILDING_ROLE_RANK as f, canAssignOrgRole as g, canAssignPlatformRole as h, canAssignRole as i, ORG_ROLE_RANK as j, PLATFORM_ROLE_RANK as k };
+export { APPROVE_PERMISSIONS as A, BUILDING_ROLE_RANK as B, ORG_ROLE_RANK as O, Permission as P, SCOPED_DOMAINS as S, SCOPED_PERMISSIONS as a, type ScopedAction as b, type ScopedDomain as c, domainPermissions as d, BuildingRole as e, canAssignOrgRole as f, canAssignPlatformRole as g, canAssignRole as h, OrgRole as i, PLATFORM_ROLE_RANK as j, PlatformRole as k };

@@ -40,6 +40,8 @@ export {
   buildingFundsLedgerResponseSchema,
   buildingFundsLedgerRowSchema,
 } from './building-funds-ledger';
+export type { BuildingSettingsResponse } from './building-settings';
+export { buildingSettingsResponseSchema } from './building-settings';
 export type {
   ChatMessageResponse,
   ConversationLastMessage,
@@ -130,3 +132,26 @@ export {
   pollResultsSchema,
   pollVotersResponseSchema,
 } from './polls';
+export type {
+  PaginatedRepBuildingsResponse,
+  PaginatedRepUsersResponse,
+  RepBuildingActivity,
+  RepBuildingItem,
+  RepDashboardSummaryResponse,
+  RepRecentActivity,
+  RepRecentActivityType,
+  RepUserBuilding,
+  RepUserItem,
+} from './representatives';
+export {
+  paginatedRepBuildingsResponseSchema,
+  paginatedRepUsersResponseSchema,
+  REP_RECENT_ACTIVITY_TYPES,
+  repBuildingActivitySchema,
+  repBuildingItemSchema,
+  repDashboardSummaryResponseSchema,
+  repRecentActivitySchema,
+  repRecentActivityTypeSchema,
+  repUserBuildingSchema,
+  repUserItemSchema,
+} from './representatives';

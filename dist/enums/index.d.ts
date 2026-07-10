@@ -1,7 +1,7 @@
 export { A as ApartmentRole } from '../apartment-role.enum-CNJsuYgq.js';
 export { B as BuildingType, P as PollType } from '../poll-type.enum-CGV5tBqR.js';
 export { E as EntityLinkType, L as LinkableEntityType } from '../entity-link.enum-wTDJirUV.js';
-export { A as APPROVE_PERMISSIONS, f as BUILDING_ROLE_RANK, B as BuildingRole, j as ORG_ROLE_RANK, O as OrgRole, k as PLATFORM_ROLE_RANK, P as Permission, b as PlatformRole, c as SCOPED_DOMAINS, e as SCOPED_PERMISSIONS, a as ScopedAction, S as ScopedDomain, g as canAssignOrgRole, h as canAssignPlatformRole, i as canAssignRole, d as domainPermissions } from '../role.enum-a_XALYng.js';
+export { A as APPROVE_PERMISSIONS, B as BUILDING_ROLE_RANK, e as BuildingRole, O as ORG_ROLE_RANK, i as OrgRole, j as PLATFORM_ROLE_RANK, P as Permission, k as PlatformRole, S as SCOPED_DOMAINS, a as SCOPED_PERMISSIONS, b as ScopedAction, c as ScopedDomain, f as canAssignOrgRole, g as canAssignPlatformRole, h as canAssignRole, d as domainPermissions } from '../role.enum-CnSGOT1c.js';
 export { A as ApprovalStatus, C as CommonStatus, F as FailureStatus, a as FailureType, b as FileCategory, c as Frequency, M as MaintenanceStatus, d as MaintenanceType, P as Priority, T as TransactionCategory, e as TransactionType } from '../status.enum-BYlt7_Fs.js';
 
 declare const BuildingOtpExpiry: {

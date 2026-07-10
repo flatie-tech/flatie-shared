@@ -63,6 +63,9 @@ export { paginatedResponseSchema, paginationParamsSchema } from './pagination.sc
 // Permission schemas
 export type { PermissionsResponseSchema } from './permissions.schema';
 export { permissionsResponseSchema, roleTypeSchema } from './permissions.schema';
+// Representative list query-param contracts
+export type { GetRepBuildingsParams, GetRepUsersParams } from './rep-list-params.schema';
+export { getRepBuildingsParamsSchema, getRepUsersParamsSchema } from './rep-list-params.schema';
 
 // Request schemas (PATCH/PUT payloads: id + optional body fields)
 export type {

@@ -1,5 +1,17 @@
 # @flatie/shared
 
+## 0.55.0
+
+### Minor Changes
+
+- Representative-experience parity contracts (rep-parity program phase 0):
+
+  - `responses/representatives.ts` — `repUserItemSchema` / `repBuildingItemSchema` with paginated envelopes (`paginatedRepUsersResponseSchema`, `paginatedRepBuildingsResponseSchema`) and `repDashboardSummaryResponseSchema` (incl. `recentActivity` + `buildingsWithActivity` feeds and the `repRecentActivityTypeSchema` enum for route mapping).
+  - `rep-list-params.schema.ts` — `getRepUsersParamsSchema` / `getRepBuildingsParamsSchema` query-param contracts mirroring the backend DTOs (search/filter/sort/limit/offset with backend defaults).
+  - `responses/building-settings.ts` — `buildingSettingsResponseSchema`; `entities/building-settings.schema.ts` — `updateBuildingSettingsSchema` (full field set incl. voting methods, consensus tier, ownership-percentage source).
+  - `utils/voting-methods.ts` — last-method-lock invariant helpers (`violatesVotingMethodLock`, `isLastEnabledVotingMethod`, `resolveVotingMethods`) so clients can lock the final voting-method toggle instead of hitting a server error.
+  - `entities/income-transaction.schema.ts` — `createIncomeSchema` / `updateIncomeSchema` for the manual income ledger; new `incomeKeys` query-key factory.
+
 ## 0.54.0
 
 ### Minor Changes
