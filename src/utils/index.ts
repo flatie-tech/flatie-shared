@@ -7,6 +7,8 @@
 // Chat DM eligibility (building-scoped; org chat has no visibility mechanic)
 export type { MessageableUserShape } from './chat-eligibility';
 export { canMessageUser, getMessageableUsers } from './chat-eligibility';
+// Locale-aware currency formatting with €→EUR + cent-rounding normalization
+export { formatCurrencyEUR } from './currency';
 // Google Calendar "add event" template-URL builder
 export type { GoogleCalendarEventInput } from './google-calendar';
 export { buildGoogleCalendarUrl } from './google-calendar';
@@ -18,6 +20,8 @@ export {
   normalizeHouseNumber,
   parseHouseNumber,
 } from './house-number';
+// Avatar-fallback initials
+export { getInitials } from './initials';
 // Locale-aware date / currency formatting
 export {
   DATE_FORMATS,
