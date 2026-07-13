@@ -123,6 +123,12 @@ export const eventResponseSchema = z.looseObject({
     .describe(
       'Entities (failure reports, maintenance logs, notices) that reference this event as their schedule; empty when none do.',
     ),
+  createdAt: z
+    .string()
+    .optional()
+    .describe(
+      'ISO-8601 timestamp when the event was created; absent on synthesized recurrence instances.',
+    ),
 });
 
 export const paginatedEventsResponseSchema = paginatedResponseSchema(eventResponseSchema);

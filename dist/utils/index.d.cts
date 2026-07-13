@@ -6,31 +6,6 @@ import { A as ApartmentRole } from '../apartment-role.enum-CNJsuYgq.cjs';
 import { F as FailureStatus, P as Priority } from '../status.enum-BYlt7_Fs.cjs';
 
 /**
- * Locale-aware EUR-ish currency formatting with the two normalizations the
- * apps were hand-rolling at every call site (identical copies lived in the
- * frontend's BuildingsTable + funds PDF hook and mobile's funds helpers):
- *
- *  - a literal `'€'` currency value (stored on some legacy rows) is
- *    normalized to the ISO `'EUR'` code Intl expects;
- *  - the amount is rounded to cents before formatting so float artifacts
- *    (e.g. 12.004999) don't leak into rendered totals.
- *
- * `undefined` renders as `'-'` — the table-cell convention.
- */
-declare function formatCurrencyEUR(amount: number | undefined, locale: string, currency?: string): string;
-
-/**
- * Initials for avatar fallbacks: first character of the first two words,
- * uppercased. Ported verbatim from the frontend's UserInitials component —
- * the same logic was copy-pasted six times across frontend and mobile.
- *
- * `getInitials('Ana Barić')  → 'AB'`
- * `getInitials('ana')        → 'A'`
- * `getInitials('')           → ''`
- */
-declare function getInitials(name: string): string;
-
-/**
  * Minimal structural shape of a chat-target candidate.
  *
  * Deliberately loose so both web's `BuildingUserResponse` and mobile's
@@ -67,6 +42,20 @@ declare function canMessageUser(callerIsManagerial: boolean, target: Messageable
  * const eligible = getMessageableUsers(users, isManagerialRole(myBuildingRole));
  */
 declare function getMessageableUsers<T extends MessageableUserShape>(users: readonly T[], callerIsManagerial: boolean): T[];
+
+/**
+ * Locale-aware EUR-ish currency formatting with the two normalizations the
+ * apps were hand-rolling at every call site (identical copies lived in the
+ * frontend's BuildingsTable + funds PDF hook and mobile's funds helpers):
+ *
+ *  - a literal `'€'` currency value (stored on some legacy rows) is
+ *    normalized to the ISO `'EUR'` code Intl expects;
+ *  - the amount is rounded to cents before formatting so float artifacts
+ *    (e.g. 12.004999) don't leak into rendered totals.
+ *
+ * `undefined` renders as `'-'` — the table-cell convention.
+ */
+declare function formatCurrencyEUR(amount: number | undefined, locale: string, currency?: string): string;
 
 /**
  * Google Calendar "add event" template-URL builder.
@@ -146,6 +135,17 @@ interface AddressParts {
  * "Ilica 42A, 10000 Zagreb"
  */
 declare function formatAddress(parts: AddressParts): string;
+
+/**
+ * Initials for avatar fallbacks: first character of the first two words,
+ * uppercased. Ported verbatim from the frontend's UserInitials component —
+ * the same logic was copy-pasted six times across frontend and mobile.
+ *
+ * `getInitials('Ana Barić')  → 'AB'`
+ * `getInitials('ana')        → 'A'`
+ * `getInitials('')           → ''`
+ */
+declare function getInitials(name: string): string;
 
 /**
  * Locale utilities — shared across web, mobile, and backend so app-locale

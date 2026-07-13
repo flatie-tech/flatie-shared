@@ -3004,6 +3004,7 @@ declare const eventResponseSchema: z.ZodObject<{
         type: z.ZodString;
         title: z.ZodString;
     }, z.core.$loose>>>;
+    createdAt: z.ZodOptional<z.ZodString>;
 }, z.core.$loose>;
 declare const paginatedEventsResponseSchema: z.ZodObject<{
     data: z.ZodArray<z.ZodObject<{
@@ -3039,6 +3040,7 @@ declare const paginatedEventsResponseSchema: z.ZodObject<{
             type: z.ZodString;
             title: z.ZodString;
         }, z.core.$loose>>>;
+        createdAt: z.ZodOptional<z.ZodString>;
     }, z.core.$loose>>;
     count: z.ZodNumber;
     page: z.ZodNumber;

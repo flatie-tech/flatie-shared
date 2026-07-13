@@ -1676,6 +1676,9 @@ var eventResponseSchema = zod.z.looseObject({
   ),
   usedAsScheduleBy: zod.z.array(entityScheduleReferenceSchema).optional().describe(
     "Entities (failure reports, maintenance logs, notices) that reference this event as their schedule; empty when none do."
+  ),
+  createdAt: zod.z.string().optional().describe(
+    "ISO-8601 timestamp when the event was created; absent on synthesized recurrence instances."
   )
 });
 var paginatedEventsResponseSchema = paginatedResponseSchema(eventResponseSchema);
@@ -2570,5 +2573,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-PB5CNOUJ.cjs.map
-//# sourceMappingURL=chunk-PB5CNOUJ.cjs.map
+//# sourceMappingURL=chunk-B3JG2SN7.cjs.map
+//# sourceMappingURL=chunk-B3JG2SN7.cjs.map
