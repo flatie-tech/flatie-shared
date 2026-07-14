@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.57.0
+
+### Minor Changes
+
+- Add `API_ROUTES.NOTIFICATIONS.UNREAD` (`PATCH /notifications/unread`) for marking notifications back to unread — the mirror of the existing `READ` route. Additive; no schema change (`notificationResponseSchema` already models unread via `read`/`readAt`).
+
 ## 0.55.1
 
 ### Patch Changes

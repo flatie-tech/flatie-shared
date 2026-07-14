@@ -194,6 +194,7 @@ declare const API_ROUTES: {
         readonly UNREAD_COUNT: "/notifications/unread-count";
         readonly UNREAD_COUNT_BY_CATEGORY: "/notifications/unread-count/by-category";
         readonly READ: "/notifications/read";
+        readonly UNREAD: "/notifications/unread";
         readonly READ_ALL: "/notifications/read-all";
         readonly READ_CATEGORY: (category: string) => string;
         readonly READ_CHAT: (conversationId: string) => string;

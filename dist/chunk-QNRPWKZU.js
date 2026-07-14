@@ -1,5 +1,3 @@
-'use strict';
-
 // src/urls/index.ts
 var API_VERSION = "v1";
 var API_ROUTES = {
@@ -215,6 +213,7 @@ var API_ROUTES = {
     UNREAD_COUNT: "/notifications/unread-count",
     UNREAD_COUNT_BY_CATEGORY: "/notifications/unread-count/by-category",
     READ: "/notifications/read",
+    UNREAD: "/notifications/unread",
     READ_ALL: "/notifications/read-all",
     READ_CATEGORY: (category) => `/notifications/read-category/${category}`,
     READ_CHAT: (conversationId) => `/notifications/read-chat/${conversationId}`
@@ -278,7 +277,6 @@ var API_ROUTES = {
   }
 };
 
-exports.API_ROUTES = API_ROUTES;
-exports.API_VERSION = API_VERSION;
-//# sourceMappingURL=chunk-D7M5MQRX.cjs.map
-//# sourceMappingURL=chunk-D7M5MQRX.cjs.map
+export { API_ROUTES, API_VERSION };
+//# sourceMappingURL=chunk-QNRPWKZU.js.map
+//# sourceMappingURL=chunk-QNRPWKZU.js.map

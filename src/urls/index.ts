@@ -301,6 +301,7 @@ export const API_ROUTES = {
     UNREAD_COUNT: '/notifications/unread-count',
     UNREAD_COUNT_BY_CATEGORY: '/notifications/unread-count/by-category',
     READ: '/notifications/read',
+    UNREAD: '/notifications/unread',
     READ_ALL: '/notifications/read-all',
     READ_CATEGORY: (category: string) => `/notifications/read-category/${category}`,
     READ_CHAT: (conversationId: string) => `/notifications/read-chat/${conversationId}`,
