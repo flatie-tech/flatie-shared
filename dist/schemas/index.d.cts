@@ -309,6 +309,130 @@ declare const paginatedApartmentsResponseSchema: z.ZodObject<{
 type PaginatedApartmentsResponse = z.infer<typeof paginatedApartmentsResponseSchema>;
 
 /**
+ * Validation constants for boards.
+ */
+declare const BOARD_LIMITS: {
+    readonly NAME_MIN: 1;
+    readonly NAME_MAX: 60;
+    readonly DESCRIPTION_MAX: 500;
+};
+/**
+ * Create board request schema — matches `POST /buildings/:buildingId/boards`.
+ * buildingId comes from the URL, not the body.
+ */
+declare const createBoardSchema: z.ZodObject<{
+    name: z.ZodString;
+    description: z.ZodOptional<z.ZodString>;
+    visibility: z.ZodOptional<z.ZodEnum<{
+        building: "building";
+        representatives: "representatives";
+    }>>;
+}, z.core.$strip>;
+/**
+ * Update board request schema — all fields optional.
+ */
+declare const updateBoardSchema: z.ZodObject<{
+    name: z.ZodOptional<z.ZodString>;
+    description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    visibility: z.ZodOptional<z.ZodEnum<{
+        building: "building";
+        representatives: "representatives";
+    }>>;
+}, z.core.$strip>;
+/**
+ * Validation constants for board (Kanban) cards.
+ */
+declare const BOARD_CARD_LIMITS: {
+    readonly TITLE_MIN: 1;
+    readonly TITLE_MAX: 100;
+    readonly DESCRIPTION_MAX: 2000;
+    readonly CHECKLIST_MAX_ITEMS: 50;
+    readonly CHECKLIST_ITEM_MIN: 1;
+    readonly CHECKLIST_ITEM_MAX: 200;
+};
+/**
+ * A single checklist item on a card. `id` is server-assigned when omitted so
+ * the client can add items optimistically without minting ids itself.
+ */
+declare const boardCardChecklistItemSchema: z.ZodObject<{
+    id: z.ZodOptional<z.ZodString>;
+    text: z.ZodString;
+    done: z.ZodDefault<z.ZodBoolean>;
+}, z.core.$strip>;
+/**
+ * Create board card request schema — matches
+ * `POST /buildings/:buildingId/board/cards` (JSON body).
+ * buildingId comes from the URL, not the body.
+ */
+declare const createBoardCardSchema: z.ZodObject<{
+    title: z.ZodString;
+    description: z.ZodOptional<z.ZodString>;
+    status: z.ZodOptional<z.ZodEnum<{
+        todo: "todo";
+        in_progress: "in_progress";
+        done: "done";
+    }>>;
+    priority: z.ZodOptional<z.ZodEnum<{
+        normal: "normal";
+        urgent: "urgent";
+    }>>;
+    dueDate: z.ZodOptional<z.ZodNullable<z.ZodCoercedDate<unknown>>>;
+    assignedTo: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    checklist: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        id: z.ZodOptional<z.ZodString>;
+        text: z.ZodString;
+        done: z.ZodDefault<z.ZodBoolean>;
+    }, z.core.$strip>>>;
+    allowComments: z.ZodOptional<z.ZodBoolean>;
+}, z.core.$strip>;
+/**
+ * Update board card request schema — all fields optional. Column moves go
+ * through the dedicated move endpoint, not here, but `status` is still
+ * accepted for non-drag edits (e.g. the card detail modal).
+ */
+declare const updateBoardCardSchema: z.ZodObject<{
+    title: z.ZodOptional<z.ZodString>;
+    description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    status: z.ZodOptional<z.ZodEnum<{
+        todo: "todo";
+        in_progress: "in_progress";
+        done: "done";
+    }>>;
+    priority: z.ZodOptional<z.ZodEnum<{
+        normal: "normal";
+        urgent: "urgent";
+    }>>;
+    dueDate: z.ZodOptional<z.ZodNullable<z.ZodCoercedDate<unknown>>>;
+    assignedTo: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    checklist: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        id: z.ZodOptional<z.ZodString>;
+        text: z.ZodString;
+        done: z.ZodDefault<z.ZodBoolean>;
+    }, z.core.$strip>>>;
+    allowComments: z.ZodOptional<z.ZodBoolean>;
+}, z.core.$strip>;
+/**
+ * Move board card request schema — matches
+ * `PATCH /buildings/:buildingId/board/cards/:id/move`. Drives drag-and-drop:
+ * the client computes a fractional `position` (midpoint between neighbours)
+ * so a move never has to reindex the rest of the column.
+ */
+declare const moveBoardCardSchema: z.ZodObject<{
+    status: z.ZodEnum<{
+        todo: "todo";
+        in_progress: "in_progress";
+        done: "done";
+    }>;
+    position: z.ZodNumber;
+}, z.core.$strip>;
+type CreateBoardSchema = z.infer<typeof createBoardSchema>;
+type UpdateBoardSchema = z.infer<typeof updateBoardSchema>;
+type BoardCardChecklistItemSchema = z.infer<typeof boardCardChecklistItemSchema>;
+type CreateBoardCardSchema = z.infer<typeof createBoardCardSchema>;
+type UpdateBoardCardSchema = z.infer<typeof updateBoardCardSchema>;
+type MoveBoardCardSchema = z.infer<typeof moveBoardCardSchema>;
+
+/**
  * Validation constants for chat
  */
 declare const CHAT_LIMITS: {
@@ -811,7 +935,7 @@ declare const updateBusinessPartnerSchema: z.ZodObject<{
 type UpdateBusinessPartnerInput = z.infer<typeof updateBusinessPartnerSchema>;
 
 declare const ENTITY_LINK_TYPES: readonly ["image", "document", "invoice", "warranty", "agenda", "schedule", "deadline", "meeting", "resolved_by", "based_on", "discussed_in", "expense_for", "related_to"];
-declare const LINKABLE_ENTITY_TYPES: readonly ["failure_report", "maintenance_log", "notice", "event", "poll", "file", "expense_transaction"];
+declare const LINKABLE_ENTITY_TYPES: readonly ["failure_report", "maintenance_log", "notice", "event", "poll", "file", "expense_transaction", "board_card"];
 declare const entityLinkTypeSchema: z.ZodEnum<{
     image: "image";
     document: "document";
@@ -835,6 +959,7 @@ declare const linkableEntityTypeSchema: z.ZodEnum<{
     poll: "poll";
     file: "file";
     expense_transaction: "expense_transaction";
+    board_card: "board_card";
 }>;
 /** One end of an entity link. */
 declare const entityLinkEndpointSchema: z.ZodObject<{
@@ -847,6 +972,7 @@ declare const entityLinkEndpointSchema: z.ZodObject<{
         poll: "poll";
         file: "file";
         expense_transaction: "expense_transaction";
+        board_card: "board_card";
     }>;
 }, z.core.$strip>;
 /**
@@ -865,6 +991,7 @@ declare const createEntityLinkRequestSchema: z.ZodObject<{
             poll: "poll";
             file: "file";
             expense_transaction: "expense_transaction";
+            board_card: "board_card";
         }>;
     }, z.core.$strip>;
     target: z.ZodObject<{
@@ -877,6 +1004,7 @@ declare const createEntityLinkRequestSchema: z.ZodObject<{
             poll: "poll";
             file: "file";
             expense_transaction: "expense_transaction";
+            board_card: "board_card";
         }>;
     }, z.core.$strip>;
     linkType: z.ZodEnum<{
@@ -907,6 +1035,7 @@ declare const deleteEntityLinkRequestSchema: z.ZodObject<{
             poll: "poll";
             file: "file";
             expense_transaction: "expense_transaction";
+            board_card: "board_card";
         }>;
     }, z.core.$strip>;
     target: z.ZodObject<{
@@ -919,6 +1048,7 @@ declare const deleteEntityLinkRequestSchema: z.ZodObject<{
             poll: "poll";
             file: "file";
             expense_transaction: "expense_transaction";
+            board_card: "board_card";
         }>;
     }, z.core.$strip>;
     linkType: z.ZodEnum<{
@@ -951,6 +1081,7 @@ declare const deleteEntityLinkQuerySchema: z.ZodObject<{
         poll: "poll";
         file: "file";
         expense_transaction: "expense_transaction";
+        board_card: "board_card";
     }>;
     targetId: z.ZodString;
     targetType: z.ZodEnum<{
@@ -961,6 +1092,7 @@ declare const deleteEntityLinkQuerySchema: z.ZodObject<{
         poll: "poll";
         file: "file";
         expense_transaction: "expense_transaction";
+        board_card: "board_card";
     }>;
     linkType: z.ZodEnum<{
         image: "image";
@@ -989,6 +1121,7 @@ declare const getEntityLinksQuerySchema: z.ZodObject<{
         poll: "poll";
         file: "file";
         expense_transaction: "expense_transaction";
+        board_card: "board_card";
     }>;
 }, z.core.$strip>;
 /**
@@ -1005,6 +1138,7 @@ declare const getEntityLinkCountsQuerySchema: z.ZodObject<{
         poll: "poll";
         file: "file";
         expense_transaction: "expense_transaction";
+        board_card: "board_card";
     }>;
     ids: z.ZodPipe<z.ZodPipe<z.ZodString, z.ZodTransform<string[], string>>, z.ZodArray<z.ZodString>>;
 }, z.core.$strip>;
@@ -2885,6 +3019,7 @@ declare const entityLinkReferenceSchema: z.ZodObject<{
         poll: "poll";
         file: "file";
         expense_transaction: "expense_transaction";
+        board_card: "board_card";
     }>;
     linkType: z.ZodEnum<{
         image: "image";
@@ -2924,6 +3059,7 @@ declare const entityLinksResponseSchema: z.ZodObject<{
             poll: "poll";
             file: "file";
             expense_transaction: "expense_transaction";
+            board_card: "board_card";
         }>;
         linkType: z.ZodEnum<{
             image: "image";
@@ -4172,9 +4308,9 @@ declare const ApprovalStatusSchema: z.ZodEnum<{
 }>;
 declare const MaintenanceStatusSchema: z.ZodEnum<{
     pending: "pending";
+    in_progress: "in_progress";
     completed: "completed";
     cancelled: "cancelled";
-    in_progress: "in_progress";
 }>;
 declare const FailureStatusSchema: z.ZodEnum<{
     pending: "pending";
@@ -4191,4 +4327,4 @@ type MaintenanceStatusSchemaType = z.infer<typeof MaintenanceStatusSchema>;
 type FailureStatusSchemaType = z.infer<typeof FailureStatusSchema>;
 type PrioritySchemaType = z.infer<typeof PrioritySchema>;
 
-export { ARCHIVE_TYPES, type AddOrgMemberSchema, type AiChatMessagePayload, type AiChatRequestPayload, type AiUsageResponse, type Apartment, type ApartmentUser, type ApiError, type ApiErrorResponse, ApprovalStatusSchema, type ApprovalStatusSchemaType, type ApproveFailureReportSchema, type ApproveNoticeSchema, type ArchiveType, type ArchivedItem, type AssignOrgBuildingSchema, type AssignOrgMemberBuildingSchema, type AssignOwnerInput, BUILDING_LIMITS, BUILDING_TYPES, type BaseEntitySchema, type BuildingDetailResponse, type BuildingEntitySchema, type BuildingFundsLedgerResponse, type BuildingFundsLedgerRow, type BuildingQuotaConfig, type BuildingQuotaEntry, type BuildingQuotaList, type BuildingResponse, type BuildingSettingsResponse, type BuildingTypeOption, type BuildingUserEntitySchema, type BusinessPartnerResponse, CHAT_LIMITS, type CamtImportResponse, type CertiliaUserinfo, type ChatMessageResponse, type CommentResponse, CommonStatusSchema, type CommonStatusSchemaType, type ConversationLastMessage, type ConversationParticipant, type ConversationResponse, ConversationType, type ConversationsListResponse, type CopyFaqsSchema, type CopyTransactionCategoriesSchema, type CreateBuildingSchema, type CreateBusinessPartnerInput, type CreateConversationSchema, type CreateEmailThreadRequestPayload, type CreateEntityLinkRequest, type CreateEventSchema, type CreateFailureReportSchema, type CreateFaqSchema, type CreateIncomeSchema, type CreateMaintenanceLogSchema, type CreateNoticeSchema, type CreateOrganizationSchema, type CreateOwnerInput, type CreatePollSchema, type CreateTransactionCategorySchema, type CursorQuerySchema, type DateRangeParamsSchema, type DateRangeWithValidationSchema, type DateTimeSchema, type DeleteEntityLinkQuery, type DeleteEntityLinkRequest, type DocumentFile, type DocumentLinkedRecord, type DocumentResponse, ENTITY_LINK_TYPES, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, type EmailDirection, type EmailMessage, type EmailThread, type EmailThreadDetail, type EntityLinkCountsResponse, type EntityLinkEndpoint, type EntityLinkMetadata, type EntityLinkReference, type EntityLinksResponse, type EventColorOption, type EventResponse, type EventTypeOption, FAILURE_REPORT_LIMITS, FAQ_LIMITS, type FailureReportEventSchema, type FailureReportResponse, FailureStatusSchema, type FailureStatusSchemaType, type FaqResponse, type FinalizePollSchema, type ForgotPasswordSchema, type Garage, type GarageRole, type GarageUser, type GetEntityLinkCountsQuery, type GetEntityLinksQuery, type GetOrgBuildingsQuerySchema, type GetOrgMembersQuerySchema, type GetRepBuildingsParams, type GetRepUsersParams, type GetTransactionCategoriesQuerySchema, type InviteOrgMemberSchema, type JoinBuildingWithOtpSchema, LINKABLE_ENTITY_TYPES, type ListArchivedResponse, type LoginSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, type MaintenanceFinancedByOption, type MaintenanceLogEventSchema, type MaintenanceLogResponse, MaintenanceStatusSchema, type MaintenanceStatusSchemaType, type MessageResponse, type MessagesListResponse, NOTICE_LIMITS, type NoticeEventSchema, type NoticeResponse, type NotificationPreferenceCategory, type NotificationPreferenceItem, type NotificationResponse, ORGANIZATION_LIMITS, type OrgQuotaConfig, type OrgQuotaEntry, type OrgQuotaList, type OwnerResponse, POLL_LIMITS, POLL_TYPES, type PaginatedApartmentsResponse, type PaginatedBuildingsResponse, type PaginatedDocumentsResponse, type PaginatedEmailThreadsResponse, type PaginatedEventsResponse, type PaginatedFailureReportsResponse, type PaginatedMaintenanceLogsResponse, type PaginatedNoticesResponse, type PaginatedPollsResponse, type PaginatedRepBuildingsResponse, type PaginatedRepUsersResponse, type PaginatedResponseSchema, type PaginationParamsSchema, type PermissionFieldsSchema, type PermissionsResponseSchema, type PollResponse, type PollResults, type PollTypeOption, type PollVotersResponse, PrioritySchema, type PrioritySchemaType, RECURRENCE_TYPES, REP_RECENT_ACTIVITY_TYPES, type RecurrenceTypeOption, type RegisterSchema, type ReorderFaqsSchema, type RepBuildingActivity, type RepBuildingItem, type RepDashboardSummaryResponse, type RepRecentActivity, type RepRecentActivityType, type RepUserBuilding, type RepUserItem, type ReplyEmailThreadRequestPayload, type ResetPasswordSchema, type SearchUsersQuerySchema, type SendMessageSchema, type StorageUnit, type StorageUnitRole, type StorageUnitUser, TRANSACTION_CATEGORY_LIMITS, type TimeSchema, type UnreadCountResponse, type UpdateBuildingSchema, type UpdateBuildingSettingsSchema, type UpdateBusinessPartnerInput, type UpdateConversationSchema, type UpdateEventSchema, type UpdateFailureReportRequestPayload, type UpdateFailureReportSchema, type UpdateFaqSchema, type UpdateIncomeSchema, type UpdateMaintenanceLogRequestPayload, type UpdateMaintenanceLogSchema, type UpdateNoticeRequestPayload, type UpdateNoticeSchema, type UpdateOrgMemberRoleSchema, type UpdateOrganizationSchema, type UpdateOwnerInput, type UpdatePasswordSchema, type UpdatePollRequestPayload, type UpdatePollSchema, type UpdateTransactionCategorySchema, type UpdateUserBuildingRoleSchema, type UserEntitySchema, type UuidSchema, type VerifyOtpSchema, type VotePollSchema, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, baseEntitySchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createOwnerSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, messagesListResponseSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgQuotaConfigSchema, orgQuotaEntrySchema, orgQuotaListSchema, ownerResponseSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, recurrenceTypeSchema, registerSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, unreadCountResponseSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
+export { ARCHIVE_TYPES, type AddOrgMemberSchema, type AiChatMessagePayload, type AiChatRequestPayload, type AiUsageResponse, type Apartment, type ApartmentUser, type ApiError, type ApiErrorResponse, ApprovalStatusSchema, type ApprovalStatusSchemaType, type ApproveFailureReportSchema, type ApproveNoticeSchema, type ArchiveType, type ArchivedItem, type AssignOrgBuildingSchema, type AssignOrgMemberBuildingSchema, type AssignOwnerInput, BOARD_CARD_LIMITS, BOARD_LIMITS, BUILDING_LIMITS, BUILDING_TYPES, type BaseEntitySchema, type BoardCardChecklistItemSchema, type BuildingDetailResponse, type BuildingEntitySchema, type BuildingFundsLedgerResponse, type BuildingFundsLedgerRow, type BuildingQuotaConfig, type BuildingQuotaEntry, type BuildingQuotaList, type BuildingResponse, type BuildingSettingsResponse, type BuildingTypeOption, type BuildingUserEntitySchema, type BusinessPartnerResponse, CHAT_LIMITS, type CamtImportResponse, type CertiliaUserinfo, type ChatMessageResponse, type CommentResponse, CommonStatusSchema, type CommonStatusSchemaType, type ConversationLastMessage, type ConversationParticipant, type ConversationResponse, ConversationType, type ConversationsListResponse, type CopyFaqsSchema, type CopyTransactionCategoriesSchema, type CreateBoardCardSchema, type CreateBoardSchema, type CreateBuildingSchema, type CreateBusinessPartnerInput, type CreateConversationSchema, type CreateEmailThreadRequestPayload, type CreateEntityLinkRequest, type CreateEventSchema, type CreateFailureReportSchema, type CreateFaqSchema, type CreateIncomeSchema, type CreateMaintenanceLogSchema, type CreateNoticeSchema, type CreateOrganizationSchema, type CreateOwnerInput, type CreatePollSchema, type CreateTransactionCategorySchema, type CursorQuerySchema, type DateRangeParamsSchema, type DateRangeWithValidationSchema, type DateTimeSchema, type DeleteEntityLinkQuery, type DeleteEntityLinkRequest, type DocumentFile, type DocumentLinkedRecord, type DocumentResponse, ENTITY_LINK_TYPES, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, type EmailDirection, type EmailMessage, type EmailThread, type EmailThreadDetail, type EntityLinkCountsResponse, type EntityLinkEndpoint, type EntityLinkMetadata, type EntityLinkReference, type EntityLinksResponse, type EventColorOption, type EventResponse, type EventTypeOption, FAILURE_REPORT_LIMITS, FAQ_LIMITS, type FailureReportEventSchema, type FailureReportResponse, FailureStatusSchema, type FailureStatusSchemaType, type FaqResponse, type FinalizePollSchema, type ForgotPasswordSchema, type Garage, type GarageRole, type GarageUser, type GetEntityLinkCountsQuery, type GetEntityLinksQuery, type GetOrgBuildingsQuerySchema, type GetOrgMembersQuerySchema, type GetRepBuildingsParams, type GetRepUsersParams, type GetTransactionCategoriesQuerySchema, type InviteOrgMemberSchema, type JoinBuildingWithOtpSchema, LINKABLE_ENTITY_TYPES, type ListArchivedResponse, type LoginSchema, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, type MaintenanceFinancedByOption, type MaintenanceLogEventSchema, type MaintenanceLogResponse, MaintenanceStatusSchema, type MaintenanceStatusSchemaType, type MessageResponse, type MessagesListResponse, type MoveBoardCardSchema, NOTICE_LIMITS, type NoticeEventSchema, type NoticeResponse, type NotificationPreferenceCategory, type NotificationPreferenceItem, type NotificationResponse, ORGANIZATION_LIMITS, type OrgQuotaConfig, type OrgQuotaEntry, type OrgQuotaList, type OwnerResponse, POLL_LIMITS, POLL_TYPES, type PaginatedApartmentsResponse, type PaginatedBuildingsResponse, type PaginatedDocumentsResponse, type PaginatedEmailThreadsResponse, type PaginatedEventsResponse, type PaginatedFailureReportsResponse, type PaginatedMaintenanceLogsResponse, type PaginatedNoticesResponse, type PaginatedPollsResponse, type PaginatedRepBuildingsResponse, type PaginatedRepUsersResponse, type PaginatedResponseSchema, type PaginationParamsSchema, type PermissionFieldsSchema, type PermissionsResponseSchema, type PollResponse, type PollResults, type PollTypeOption, type PollVotersResponse, PrioritySchema, type PrioritySchemaType, RECURRENCE_TYPES, REP_RECENT_ACTIVITY_TYPES, type RecurrenceTypeOption, type RegisterSchema, type ReorderFaqsSchema, type RepBuildingActivity, type RepBuildingItem, type RepDashboardSummaryResponse, type RepRecentActivity, type RepRecentActivityType, type RepUserBuilding, type RepUserItem, type ReplyEmailThreadRequestPayload, type ResetPasswordSchema, type SearchUsersQuerySchema, type SendMessageSchema, type StorageUnit, type StorageUnitRole, type StorageUnitUser, TRANSACTION_CATEGORY_LIMITS, type TimeSchema, type UnreadCountResponse, type UpdateBoardCardSchema, type UpdateBoardSchema, type UpdateBuildingSchema, type UpdateBuildingSettingsSchema, type UpdateBusinessPartnerInput, type UpdateConversationSchema, type UpdateEventSchema, type UpdateFailureReportRequestPayload, type UpdateFailureReportSchema, type UpdateFaqSchema, type UpdateIncomeSchema, type UpdateMaintenanceLogRequestPayload, type UpdateMaintenanceLogSchema, type UpdateNoticeRequestPayload, type UpdateNoticeSchema, type UpdateOrgMemberRoleSchema, type UpdateOrganizationSchema, type UpdateOwnerInput, type UpdatePasswordSchema, type UpdatePollRequestPayload, type UpdatePollSchema, type UpdateTransactionCategorySchema, type UpdateUserBuildingRoleSchema, type UserEntitySchema, type UuidSchema, type VerifyOtpSchema, type VotePollSchema, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, baseEntitySchema, boardCardChecklistItemSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createOwnerSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, messagesListResponseSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgQuotaConfigSchema, orgQuotaEntrySchema, orgQuotaListSchema, ownerResponseSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, recurrenceTypeSchema, registerSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };

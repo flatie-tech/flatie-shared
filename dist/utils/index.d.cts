@@ -1,7 +1,7 @@
 import { P as PaginatedResponse } from '../pagination.types-BdLhL-Jg.cjs';
 import { z } from 'zod';
 import { BackendErrorCode } from '../errors/index.cjs';
-import { P as Permission, c as ScopedDomain, b as ScopedAction, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-CnSGOT1c.cjs';
+import { P as Permission, c as ScopedDomain, b as ScopedAction, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-MLM2GI6q.cjs';
 import { A as ApartmentRole } from '../apartment-role.enum-CNJsuYgq.cjs';
 import { F as FailureStatus, P as Priority } from '../status.enum-BYlt7_Fs.cjs';
 

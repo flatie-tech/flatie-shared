@@ -1,3 +1,5 @@
+'use strict';
+
 // src/urls/index.ts
 var API_VERSION = "v1";
 var API_ROUTES = {
@@ -132,6 +134,15 @@ var API_ROUTES = {
     DETAIL: (buildingId, failureReportId) => `/buildings/${buildingId}/failure-reports/${failureReportId}`,
     APPROVE: (buildingId, failureReportId) => `/buildings/${buildingId}/failure-reports/${failureReportId}/approve`,
     RESTORE: (buildingId, failureReportId) => `/buildings/${buildingId}/failure-reports/${failureReportId}/restore`
+  },
+  // ── Boards (Kanban) ──────────────────────────────────────────────────
+  BOARDS: {
+    LIST: (buildingId) => `/buildings/${buildingId}/boards`,
+    DETAIL: (buildingId, boardId) => `/buildings/${buildingId}/boards/${boardId}`,
+    CARDS: (buildingId, boardId) => `/buildings/${buildingId}/boards/${boardId}/cards`,
+    CARD_DETAIL: (buildingId, boardId, cardId) => `/buildings/${buildingId}/boards/${boardId}/cards/${cardId}`,
+    CARD_MOVE: (buildingId, boardId, cardId) => `/buildings/${buildingId}/boards/${boardId}/cards/${cardId}/move`,
+    CARD_RESTORE: (buildingId, boardId, cardId) => `/buildings/${buildingId}/boards/${boardId}/cards/${cardId}/restore`
   },
   // ── Maintenance Logs ─────────────────────────────────────────────────
   MAINTENANCE_LOGS: {
@@ -277,6 +288,7 @@ var API_ROUTES = {
   }
 };
 
-export { API_ROUTES, API_VERSION };
-//# sourceMappingURL=chunk-QNRPWKZU.js.map
-//# sourceMappingURL=chunk-QNRPWKZU.js.map
+exports.API_ROUTES = API_ROUTES;
+exports.API_VERSION = API_VERSION;
+//# sourceMappingURL=chunk-JZD73HUV.cjs.map
+//# sourceMappingURL=chunk-JZD73HUV.cjs.map

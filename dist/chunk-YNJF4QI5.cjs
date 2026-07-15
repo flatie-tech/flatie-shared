@@ -1,7 +1,20 @@
+'use strict';
+
 // src/enums/apartment-role.enum.ts
 var ApartmentRole = {
   OWNER: "owner",
   TENANT: "tenant"
+};
+
+// src/enums/board-card.enum.ts
+var BoardCardStatus = {
+  TODO: "todo",
+  IN_PROGRESS: "in_progress",
+  DONE: "done"
+};
+var BoardVisibility = {
+  BUILDING: "building",
+  REPRESENTATIVES: "representatives"
 };
 
 // src/enums/building-otp-expiry.enum.ts
@@ -54,7 +67,8 @@ var LinkableEntityType = {
   EVENT: "event",
   POLL: "poll",
   FILE: "file",
-  EXPENSE_TRANSACTION: "expense_transaction"
+  EXPENSE_TRANSACTION: "expense_transaction",
+  BOARD_CARD: "board_card"
 };
 
 // src/enums/failure-location.enum.ts
@@ -361,6 +375,11 @@ var Permission = {
   FAQ_READ: "faq:read",
   FAQ_MANAGE_REPRESENTATIVE: "faq:manage:representative",
   FAQ_MANAGE_MANAGER: "faq:manage:manager",
+  // Board (Kanban) — representative-managed, all members read.
+  // Read + manage split mirrors house_rules / building_email: reps edit the
+  // board, everyone else (co-owners, org staff) sees it read-only.
+  BOARD_CARD_READ: "board_card:read",
+  BOARD_CARD_MANAGE: "board_card:manage",
   // Building Settings
   BUILDING_SETTINGS_MANAGE: "building_settings:manage",
   // Building Email (per-building inbox, representative-managed)
@@ -625,6 +644,70 @@ var UnitType = {
   COMMERCIAL: "commercial"
 };
 
-export { APPROVE_PERMISSIONS, ApartmentRole, ApprovalStatus, BUILDING_ROLE_RANK, BuildingOtpExpiry, BuildingRole, BuildingStatus, BuildingType, CommonStatus, DevicePlatform, EntityLinkType, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, IdentityVerificationMethod, JoinRequestStatus, LinkableEntityType, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, ORG_ROLE_RANK, OrgQuotaResourceType, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, POLL_CANNOT_VOTE_REASON_KEY, Permission, PlatformRole, PollCannotVoteReason, PollStatus, PollType, PollVoteStatus, PricuvaRefMode, Priority, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions, methodToTier };
-//# sourceMappingURL=chunk-FU32KUV4.js.map
-//# sourceMappingURL=chunk-FU32KUV4.js.map
+exports.APPROVE_PERMISSIONS = APPROVE_PERMISSIONS;
+exports.ApartmentRole = ApartmentRole;
+exports.ApprovalStatus = ApprovalStatus;
+exports.BUILDING_ROLE_RANK = BUILDING_ROLE_RANK;
+exports.BoardCardStatus = BoardCardStatus;
+exports.BoardVisibility = BoardVisibility;
+exports.BuildingOtpExpiry = BuildingOtpExpiry;
+exports.BuildingRole = BuildingRole;
+exports.BuildingStatus = BuildingStatus;
+exports.BuildingType = BuildingType;
+exports.CommonStatus = CommonStatus;
+exports.DevicePlatform = DevicePlatform;
+exports.EntityLinkType = EntityLinkType;
+exports.FailureLocationType = FailureLocationType;
+exports.FailureStatus = FailureStatus;
+exports.FailureType = FailureType;
+exports.FailureUnitType = FailureUnitType;
+exports.FileCategory = FileCategory;
+exports.Frequency = Frequency;
+exports.FundsSource = FundsSource;
+exports.IdentityVerificationMethod = IdentityVerificationMethod;
+exports.JoinRequestStatus = JoinRequestStatus;
+exports.LinkableEntityType = LinkableEntityType;
+exports.MaintenanceLogFinancedBy = MaintenanceLogFinancedBy;
+exports.MaintenanceStatus = MaintenanceStatus;
+exports.MaintenanceType = MaintenanceType;
+exports.NOTIFICATION_TYPE_CATEGORY = NOTIFICATION_TYPE_CATEGORY;
+exports.NotificationCategory = NotificationCategory;
+exports.NotificationChannel = NotificationChannel;
+exports.NotificationDeliveryStatus = NotificationDeliveryStatus;
+exports.NotificationType = NotificationType;
+exports.ORG_QUOTA_DEFAULT_DAILY_LIMITS = ORG_QUOTA_DEFAULT_DAILY_LIMITS;
+exports.ORG_QUOTA_RESOURCE_TYPES = ORG_QUOTA_RESOURCE_TYPES;
+exports.ORG_ROLE_RANK = ORG_ROLE_RANK;
+exports.OrgQuotaResourceType = OrgQuotaResourceType;
+exports.OrgRole = OrgRole;
+exports.OrgStatus = OrgStatus;
+exports.OrgType = OrgType;
+exports.PLATFORM_ROLE_RANK = PLATFORM_ROLE_RANK;
+exports.POLL_CANNOT_VOTE_REASON_KEY = POLL_CANNOT_VOTE_REASON_KEY;
+exports.Permission = Permission;
+exports.PlatformRole = PlatformRole;
+exports.PollCannotVoteReason = PollCannotVoteReason;
+exports.PollStatus = PollStatus;
+exports.PollType = PollType;
+exports.PollVoteStatus = PollVoteStatus;
+exports.PricuvaRefMode = PricuvaRefMode;
+exports.Priority = Priority;
+exports.QUOTA_DEFAULT_DAILY_LIMITS = QUOTA_DEFAULT_DAILY_LIMITS;
+exports.QUOTA_RESOURCE_TYPES = QUOTA_RESOURCE_TYPES;
+exports.QuotaResourceType = QuotaResourceType;
+exports.SCOPED_DOMAINS = SCOPED_DOMAINS;
+exports.SCOPED_PERMISSIONS = SCOPED_PERMISSIONS;
+exports.TransactionCategory = TransactionCategory;
+exports.TransactionSource = TransactionSource;
+exports.TransactionType = TransactionType;
+exports.UNIMPLEMENTED_NOTIFICATION_TYPES = UNIMPLEMENTED_NOTIFICATION_TYPES;
+exports.UnitType = UnitType;
+exports.VerificationTier = VerificationTier;
+exports.WASTE_SUBTYPE_NOTIFICATION_MAP = WASTE_SUBTYPE_NOTIFICATION_MAP;
+exports.canAssignOrgRole = canAssignOrgRole;
+exports.canAssignPlatformRole = canAssignPlatformRole;
+exports.canAssignRole = canAssignRole;
+exports.domainPermissions = domainPermissions;
+exports.methodToTier = methodToTier;
+//# sourceMappingURL=chunk-YNJF4QI5.cjs.map
+//# sourceMappingURL=chunk-YNJF4QI5.cjs.map

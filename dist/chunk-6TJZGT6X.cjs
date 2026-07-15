@@ -1,3 +1,5 @@
+'use strict';
+
 // src/errors/index.ts
 var BACKEND_ERROR_CODES = {
   // Auth
@@ -30,6 +32,8 @@ var BACKEND_ERROR_CODES = {
   STORAGE_UNIT_NOT_FOUND: "STORAGE_UNIT_NOT_FOUND",
   NOTICE_NOT_FOUND: "NOTICE_NOT_FOUND",
   FAILURE_REPORT_NOT_FOUND: "FAILURE_REPORT_NOT_FOUND",
+  BOARD_NOT_FOUND: "BOARD_NOT_FOUND",
+  BOARD_CARD_NOT_FOUND: "BOARD_CARD_NOT_FOUND",
   MAINTENANCE_LOG_NOT_FOUND: "MAINTENANCE_LOG_NOT_FOUND",
   FAQ_NOT_FOUND: "FAQ_NOT_FOUND",
   COMMENT_NOT_FOUND: "COMMENT_NOT_FOUND",
@@ -122,6 +126,7 @@ function isBackendErrorCode(code) {
   return typeof code === "string" && Object.values(BACKEND_ERROR_CODES).includes(code);
 }
 
-export { BACKEND_ERROR_CODES, isBackendErrorCode };
-//# sourceMappingURL=chunk-Q2NQ6DCL.js.map
-//# sourceMappingURL=chunk-Q2NQ6DCL.js.map
+exports.BACKEND_ERROR_CODES = BACKEND_ERROR_CODES;
+exports.isBackendErrorCode = isBackendErrorCode;
+//# sourceMappingURL=chunk-6TJZGT6X.cjs.map
+//# sourceMappingURL=chunk-6TJZGT6X.cjs.map

@@ -1,5 +1,5 @@
-import { L as LinkableEntityType, E as EntityLinkType } from '../entity-link.enum-wTDJirUV.cjs';
-import { P as Permission, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-CnSGOT1c.cjs';
+import { L as LinkableEntityType, E as EntityLinkType } from '../entity-link.enum-BYEzMg8A.cjs';
+import { P as Permission, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-MLM2GI6q.cjs';
 
 declare const AI_CHAT_LIMITS: {
     /** Hard ceiling on the messages array per request. */
@@ -399,6 +399,16 @@ declare const aiUsageKeys: {
     all: readonly ["aiUsage"];
     detail: (buildingId: string) => readonly ["aiUsage", string];
 };
+declare const boardKeys: {
+    all: readonly ["board"];
+    /** The list of boards in a building. */
+    boards: (buildingId: string) => readonly ["board", "boards", string];
+    /** Cards of one board. */
+    cardLists: () => readonly ["board", "cards"];
+    cards: (buildingId: string, boardId: string) => readonly ["board", "cards", string, string];
+    details: () => readonly ["board", "detail"];
+    detail: (id: string) => readonly ["board", "detail", string];
+};
 /**
  * All query keys combined for easy access
  */
@@ -406,6 +416,16 @@ declare const queryKeys: {
     readonly aiUsage: {
         all: readonly ["aiUsage"];
         detail: (buildingId: string) => readonly ["aiUsage", string];
+    };
+    readonly board: {
+        all: readonly ["board"];
+        /** The list of boards in a building. */
+        boards: (buildingId: string) => readonly ["board", "boards", string];
+        /** Cards of one board. */
+        cardLists: () => readonly ["board", "cards"];
+        cards: (buildingId: string, boardId: string) => readonly ["board", "cards", string, string];
+        details: () => readonly ["board", "detail"];
+        detail: (id: string) => readonly ["board", "detail", string];
     };
     readonly user: {
         all: readonly ["user"];
@@ -698,4 +718,4 @@ declare const ADMIN_ORG_PERMISSIONS: Permission[];
 /** Admin platform-scope permissions — same as PLATFORM_ADMIN. */
 declare const ADMIN_PLATFORM_PERMISSIONS: Permission[];
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, AI_CHAT_LIMITS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, type EntityLinkRule, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, blogKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, incomeKeys, isEntityLinkAllowed, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, AI_CHAT_LIMITS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, type EntityLinkRule, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, blogKeys, boardKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, incomeKeys, isEntityLinkAllowed, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };

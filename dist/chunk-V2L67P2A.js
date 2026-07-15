@@ -1,4 +1,4 @@
-import { LinkableEntityType, EntityLinkType, domainPermissions, BuildingRole, OrgRole, PlatformRole, Permission } from './chunk-FU32KUV4.js';
+import { LinkableEntityType, EntityLinkType, domainPermissions, BuildingRole, OrgRole, PlatformRole, Permission } from './chunk-X7U7EFZP.js';
 
 // src/constants/defaults.ts
 var DEFAULT_PAGINATION_LIMIT = 10;
@@ -12,7 +12,8 @@ var RELATED_TO_LINKABLE_TYPES = [
   LinkableEntityType.POLL,
   LinkableEntityType.MAINTENANCE_LOG,
   LinkableEntityType.FAILURE_REPORT,
-  LinkableEntityType.FILE
+  LinkableEntityType.FILE,
+  LinkableEntityType.BOARD_CARD
 ];
 var ALLOWED_ENTITY_LINKS = [
   {
@@ -341,8 +342,19 @@ var aiUsageKeys = {
   all: ["aiUsage"],
   detail: (buildingId) => [...aiUsageKeys.all, buildingId]
 };
+var boardKeys = {
+  all: ["board"],
+  /** The list of boards in a building. */
+  boards: (buildingId) => [...boardKeys.all, "boards", buildingId],
+  /** Cards of one board. */
+  cardLists: () => [...boardKeys.all, "cards"],
+  cards: (buildingId, boardId) => [...boardKeys.cardLists(), buildingId, boardId],
+  details: () => [...boardKeys.all, "detail"],
+  detail: (id) => [...boardKeys.details(), id]
+};
 var queryKeys = {
   aiUsage: aiUsageKeys,
+  board: boardKeys,
   user: userKeys,
   building: buildingKeys,
   buildingEmail: buildingEmailKeys,
@@ -389,11 +401,13 @@ var ALL_READS = [
   ...domainPermissions("document", "read"),
   ...domainPermissions("apartment", "read"),
   "house_rules:read",
-  "faq:read"
+  "faq:read",
+  "board_card:read"
 ];
+var CO_OWNER_ONLY_READS = ["financial:read", "board_card:read"];
 var RESIDENT_PERMISSIONS = [
-  // ALL_READS minus financial:read — residents don't see fund balances.
-  ...ALL_READS.filter((p) => p !== "financial:read"),
+  // ALL_READS minus co-owner-only reads (fund balances, work board).
+  ...ALL_READS.filter((p) => !CO_OWNER_ONLY_READS.includes(p)),
   // File their own issue reports (plumbing, heating, common-area issues).
   "failure_report:create",
   "failure_report:update:own",
@@ -442,6 +456,7 @@ var REPRESENTATIVE_PERMISSIONS = [
   "house_rules:manage",
   "building_settings:manage",
   "building_email:manage",
+  "board_card:manage",
   "faq:manage:representative",
   "apartment:update"
 ];
@@ -544,6 +559,6 @@ var ALL_PERMISSIONS = unique(Object.values(Permission));
 var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[OrgRole.ORG_ADMIN];
 var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_ADMIN];
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, blogKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, incomeKeys, isEntityLinkAllowed, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };
-//# sourceMappingURL=chunk-MFVVE3JR.js.map
-//# sourceMappingURL=chunk-MFVVE3JR.js.map
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, blogKeys, boardKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, incomeKeys, isEntityLinkAllowed, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };
+//# sourceMappingURL=chunk-V2L67P2A.js.map
+//# sourceMappingURL=chunk-V2L67P2A.js.map

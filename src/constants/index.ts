@@ -20,6 +20,7 @@ export {
   aiUsageKeys,
   apartmentKeys,
   blogKeys,
+  boardKeys,
   buildingEmailKeys,
   buildingKeys,
   businessPartnerKeys,

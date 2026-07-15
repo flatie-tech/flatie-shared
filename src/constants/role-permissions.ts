@@ -25,7 +25,12 @@ const ALL_READS = [
   ...domainPermissions('apartment', 'read'),
   'house_rules:read',
   'faq:read',
+  'board_card:read',
 ];
+
+// Reads available to co-owners and above but not plain residents (tenants).
+// Residents see community content but not fund finances or the work board.
+const CO_OWNER_ONLY_READS = ['financial:read', 'board_card:read'];
 
 // ─── Building Role Permission Mappings ──────────────────────────────
 
@@ -39,8 +44,8 @@ const ALL_READS = [
  * voting are co-ownership rights.
  */
 const RESIDENT_PERMISSIONS = [
-  // ALL_READS minus financial:read — residents don't see fund balances.
-  ...ALL_READS.filter((p) => p !== 'financial:read'),
+  // ALL_READS minus co-owner-only reads (fund balances, work board).
+  ...ALL_READS.filter((p) => !CO_OWNER_ONLY_READS.includes(p)),
   // File their own issue reports (plumbing, heating, common-area issues).
   'failure_report:create',
   'failure_report:update:own',
@@ -99,6 +104,7 @@ const REPRESENTATIVE_PERMISSIONS = [
   'house_rules:manage',
   'building_settings:manage',
   'building_email:manage',
+  'board_card:manage',
   'faq:manage:representative',
   'apartment:update',
 ];

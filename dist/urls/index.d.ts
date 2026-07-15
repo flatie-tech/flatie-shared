@@ -124,6 +124,14 @@ declare const API_ROUTES: {
         readonly APPROVE: (buildingId: string, failureReportId: string) => string;
         readonly RESTORE: (buildingId: string, failureReportId: string) => string;
     };
+    readonly BOARDS: {
+        readonly LIST: (buildingId: string) => string;
+        readonly DETAIL: (buildingId: string, boardId: string) => string;
+        readonly CARDS: (buildingId: string, boardId: string) => string;
+        readonly CARD_DETAIL: (buildingId: string, boardId: string, cardId: string) => string;
+        readonly CARD_MOVE: (buildingId: string, boardId: string, cardId: string) => string;
+        readonly CARD_RESTORE: (buildingId: string, boardId: string, cardId: string) => string;
+    };
     readonly MAINTENANCE_LOGS: {
         readonly LIST: (buildingId: string) => string;
         readonly DETAIL: (buildingId: string, maintenanceLogId: string) => string;
