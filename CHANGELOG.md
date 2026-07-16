@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.60.0
+
+### Changes
+
+- Notification enum/schema sync: event reminders un-hidden from preferences, sms channel removed, CO_OWNER_VISIBLE_SYSTEM_TYPES promoted, real poll_vote_signature_* and event_reminder_* data schemas
+
 ## 0.59.0
 
 ### Changes
