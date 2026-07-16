@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.60.1
+
+### Changes
+
+- wasteTypeLabel optional on waste reminder data — backend sends raw subtype; clients derive the localized label
+
 ## 0.60.0
 
 ### Changes
