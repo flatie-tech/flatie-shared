@@ -2019,7 +2019,11 @@ var eventCancelledDataSchema = baseNotificationDataSchema.extend({
 });
 var wasteReminderDataSchema = baseNotificationDataSchema.extend({
   title: zod.z.string(),
-  wasteTypeLabel: zod.z.string(),
+  /**
+   * @deprecated The backend no longer sends a pre-rendered label — derive it
+   * from `subtype` in the client's locale. Present only on pre-2026-07 rows.
+   */
+  wasteTypeLabel: zod.z.string().optional(),
   subtype: zod.z.string(),
   startDate: zod.z.string().or(zod.z.date())
 });
@@ -2664,5 +2668,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-MKCXF3PR.cjs.map
-//# sourceMappingURL=chunk-MKCXF3PR.cjs.map
+//# sourceMappingURL=chunk-NCFIT4OI.cjs.map
+//# sourceMappingURL=chunk-NCFIT4OI.cjs.map
