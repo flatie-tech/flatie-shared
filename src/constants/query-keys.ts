@@ -385,6 +385,9 @@ export const boardKeys = {
   all: ['board'] as const,
   /** The list of boards in a building. */
   boards: (buildingId: string) => [...boardKeys.all, 'boards', buildingId] as const,
+  /** Columns of one board. */
+  columns: (buildingId: string, boardId: string) =>
+    [...boardKeys.all, 'columns', buildingId, boardId] as const,
   /** Cards of one board. */
   cardLists: () => [...boardKeys.all, 'cards'] as const,
   cards: (buildingId: string, boardId: string) =>

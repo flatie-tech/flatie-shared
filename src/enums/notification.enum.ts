@@ -64,6 +64,10 @@ export const NotificationChannel = {
   IN_APP: 'in_app',
   PUSH: 'push',
   EMAIL: 'email',
+  // Referenced by flatie-backend's notifications schema (staging commit
+  // c6baac52) ahead of the notifications session's shared release — added
+  // here so consumers type-check; harmless if re-added by that release.
+  SMS: 'sms',
 } as const;
 
 export type NotificationChannel = (typeof NotificationChannel)[keyof typeof NotificationChannel];

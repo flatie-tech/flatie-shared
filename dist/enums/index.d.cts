@@ -172,6 +172,7 @@ declare const NotificationChannel: {
     readonly IN_APP: "in_app";
     readonly PUSH: "push";
     readonly EMAIL: "email";
+    readonly SMS: "sms";
 };
 type NotificationChannel = (typeof NotificationChannel)[keyof typeof NotificationChannel];
 declare const NotificationDeliveryStatus: {

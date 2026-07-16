@@ -429,6 +429,8 @@ declare const boardKeys: {
     all: readonly ["board"];
     /** The list of boards in a building. */
     boards: (buildingId: string) => readonly ["board", "boards", string];
+    /** Columns of one board. */
+    columns: (buildingId: string, boardId: string) => readonly ["board", "columns", string, string];
     /** Cards of one board. */
     cardLists: () => readonly ["board", "cards"];
     cards: (buildingId: string, boardId: string) => readonly ["board", "cards", string, string];
@@ -447,6 +449,8 @@ declare const queryKeys: {
         all: readonly ["board"];
         /** The list of boards in a building. */
         boards: (buildingId: string) => readonly ["board", "boards", string];
+        /** Columns of one board. */
+        columns: (buildingId: string, boardId: string) => readonly ["board", "columns", string, string];
         /** Cards of one board. */
         cardLists: () => readonly ["board", "cards"];
         cards: (buildingId: string, boardId: string) => readonly ["board", "cards", string, string];
