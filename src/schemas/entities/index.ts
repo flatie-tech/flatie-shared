@@ -228,13 +228,6 @@ export {
   noticeEventSchema,
   updateNoticeSchema,
 } from './notice.schema';
-// Organization quota schemas
-export type { OrgQuotaConfig, OrgQuotaEntry, OrgQuotaList } from './org-quota.schema';
-export {
-  orgQuotaConfigSchema,
-  orgQuotaEntrySchema,
-  orgQuotaListSchema,
-} from './org-quota.schema';
 // Owner schemas
 export type {
   AssignOwnerInput,

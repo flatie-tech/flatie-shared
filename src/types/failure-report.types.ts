@@ -1,5 +1,5 @@
 import type { FailureStatus } from '../enums/status.enum';
-import type { BaseEntity, PermissionFields } from './base-entity.types';
+import type { BaseEntity } from './base-entity.types';
 
 /**
  * Failure report entity.
@@ -16,22 +16,6 @@ export interface FailureReport extends BaseEntity {
   description?: string | null;
   status: FailureStatus;
   approved: boolean;
-}
-
-/**
- * Failure report with creator info for API responses.
- *
- * @deprecated Zero consumers — clients parse responses via
- * `failureReportResponseSchema` / `FailureReportResponse` instead.
- * Will be removed in v0.60.0.
- */
-export interface FailureReportWithCreator extends FailureReport, PermissionFields {
-  submitter?: {
-    id: string;
-    name: string;
-    image?: string | null;
-  };
-  images?: string[];
 }
 
 /**

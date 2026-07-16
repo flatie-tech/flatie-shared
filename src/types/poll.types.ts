@@ -2,7 +2,7 @@ import type { z } from 'zod';
 import type { PollType } from '../enums/poll-type.enum';
 import type { CommonStatus } from '../enums/status.enum';
 import type { votePollSchema } from '../schemas/entities/poll.schema';
-import type { BuildingUserEntity, PermissionFields } from './base-entity.types';
+import type { BuildingUserEntity } from './base-entity.types';
 
 /**
  * Poll entity.
@@ -24,22 +24,6 @@ export interface Poll extends BuildingUserEntity {
   isResultsFinalized: boolean;
   finalizedAt?: Date | string | null;
   finalizedBy?: string | null;
-}
-
-/**
- * Poll with results for API responses.
- *
- * @deprecated Zero consumers — clients parse poll responses via
- * `pollResponseSchema` / `PollResponse` instead. Will be removed in v0.60.0.
- */
-export interface PollWithResults extends Poll, PermissionFields {
-  results?: PollOptionResult[];
-  userVote?: PollVote | null;
-  creator?: {
-    id: string;
-    name: string;
-    image?: string | null;
-  };
 }
 
 /**

@@ -1,6 +1,6 @@
 import type { z } from 'zod';
 import type { maintenanceFinancedBySchema } from '../schemas/entities/maintenance-log.schema';
-import type { BuildingUserEntity, PermissionFields } from './base-entity.types';
+import type { BuildingUserEntity } from './base-entity.types';
 
 /**
  * How maintenance was financed — derived from `maintenanceFinancedBySchema`
@@ -24,22 +24,6 @@ export interface MaintenanceLog extends BuildingUserEntity {
   cost: string;
   financedBy?: MaintenanceFinancedBy | null;
   warranty: boolean;
-}
-
-/**
- * Maintenance log with creator info for API responses.
- *
- * @deprecated Zero consumers — clients parse responses via
- * `maintenanceLogResponseSchema` / `MaintenanceLogResponse` instead.
- * Will be removed in v0.60.0.
- */
-export interface MaintenanceLogWithCreator extends MaintenanceLog, PermissionFields {
-  creator?: {
-    id: string;
-    name: string;
-    image?: string | null;
-  };
-  images?: string[];
 }
 
 /**

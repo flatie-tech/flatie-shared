@@ -978,19 +978,6 @@ var updateNoticeSchema = zod.z.object({
 var approveNoticeSchema = zod.z.object({
   approved: zod.z.boolean().describe("True to approve the notice for public visibility, false to reject.")
 });
-var orgQuotaEntrySchema = zod.z.object({
-  resourceType: zod.z.enum(
-    chunkR7EQCGXX_cjs.ORG_QUOTA_RESOURCE_TYPES
-  ),
-  dailyLimit: zod.z.number().int().min(0).max(1e4).nullable()
-});
-var orgQuotaConfigSchema = zod.z.object({
-  quotas: zod.z.array(orgQuotaEntrySchema).max(chunkR7EQCGXX_cjs.ORG_QUOTA_RESOURCE_TYPES.length)
-});
-var orgQuotaListSchema = zod.z.object({
-  orgId: zod.z.string().uuid(),
-  quotas: zod.z.array(orgQuotaEntrySchema)
-});
 var ownerResponseSchema = zod.z.object({
   id: zod.z.string().uuid(),
   buildingId: zod.z.string().uuid(),
@@ -2617,9 +2604,6 @@ exports.notificationPreferenceCategorySchema = notificationPreferenceCategorySch
 exports.notificationPreferenceItemSchema = notificationPreferenceItemSchema;
 exports.notificationResponseSchema = notificationResponseSchema;
 exports.optionalDateTimeSchema = optionalDateTimeSchema;
-exports.orgQuotaConfigSchema = orgQuotaConfigSchema;
-exports.orgQuotaEntrySchema = orgQuotaEntrySchema;
-exports.orgQuotaListSchema = orgQuotaListSchema;
 exports.ownerResponseSchema = ownerResponseSchema;
 exports.paginatedApartmentsResponseSchema = paginatedApartmentsResponseSchema;
 exports.paginatedBuildingsResponseSchema = paginatedBuildingsResponseSchema;
@@ -2692,5 +2676,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-QH2BITKV.cjs.map
-//# sourceMappingURL=chunk-QH2BITKV.cjs.map
+//# sourceMappingURL=chunk-IC2MMZHZ.cjs.map
+//# sourceMappingURL=chunk-IC2MMZHZ.cjs.map

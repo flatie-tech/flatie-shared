@@ -28,10 +28,6 @@ export const API_ROUTES = {
     EXPORT: '/users/me/export',
     LOCALE: '/users/me/locale',
     PERMISSIONS: '/users/me/permissions',
-    /** @deprecated Phantom route — no backend endpoint exists. Will be removed in v0.60.0. */
-    PHONE_SEND_VERIFICATION: '/users/me/phone/send-verification',
-    /** @deprecated Phantom route — no backend endpoint exists. Will be removed in v0.60.0. */
-    PHONE_VERIFY: '/users/me/phone/verify',
     BUILDING_CHAT_VISIBILITY: (buildingId: string) =>
       `/users/me/buildings/${buildingId}/chat-visibility`,
   },
@@ -58,8 +54,6 @@ export const API_ROUTES = {
     IMPORT_TEMPLATE: (id: string) => `/buildings/${id}/import/template`,
     IMPORT_PREVIEW: (id: string) => `/buildings/${id}/import/preview`,
     IMPORT_COMMIT: (id: string) => `/buildings/${id}/import/commit`,
-    /** @deprecated Phantom route — no backend endpoint exists. Will be removed in v0.60.0. */
-    QUOTAS: (id: string) => `/buildings/${id}/quotas`,
     AI_USAGE: (id: string) => `/buildings/${id}/ai-usage`,
   },
 
@@ -276,14 +270,6 @@ export const API_ROUTES = {
     BUILDING_FUNDS_LEDGER: (buildingId: string) =>
       `/buildings/${buildingId}/funds/building-funds-ledger`,
     INVOICES: (buildingId: string) => `/buildings/${buildingId}/funds/invoices`,
-    /** @deprecated Phantom route — no backend endpoint exists (the mobile recurring-templates feature 404s). Will be removed in v0.60.0. */
-    RECURRING_TEMPLATES: (buildingId: string) => `/buildings/${buildingId}/recurring-templates`,
-    /** @deprecated Phantom route — no backend endpoint exists. Will be removed in v0.60.0. */
-    RECURRING_TEMPLATE_DETAIL: (buildingId: string, templateId: string) =>
-      `/buildings/${buildingId}/recurring-templates/${templateId}`,
-    /** @deprecated Phantom route — no backend endpoint exists. Will be removed in v0.60.0. */
-    RECURRING_TEMPLATE_RESTORE: (buildingId: string, templateId: string) =>
-      `/buildings/${buildingId}/recurring-templates/${templateId}/restore`,
   },
 
   // ── Transaction Categories ───────────────────────────────────────────
@@ -347,8 +333,6 @@ export const API_ROUTES = {
     BUSINESS_PARTNERS: (orgId: string) => `/organizations/${orgId}/business-partners`,
     BUSINESS_PARTNER_DETAIL: (orgId: string, partnerId: string) =>
       `/organizations/${orgId}/business-partners/${partnerId}`,
-    /** @deprecated Phantom route — no backend endpoint exists (org quotas were never implemented; see org-quota.schema.ts). Will be removed in v0.60.0. */
-    QUOTAS: (orgId: string) => `/organizations/${orgId}/quotas`,
   },
 
   // ── Platform (admin) ─────────────────────────────────────────────────

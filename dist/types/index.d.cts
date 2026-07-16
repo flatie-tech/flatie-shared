@@ -134,19 +134,6 @@ interface Event extends BaseEntity {
     minuteTakerId?: string | null;
 }
 /**
- * Event with creator info for API responses.
- *
- * @deprecated Zero consumers — clients parse event responses via
- * `eventResponseSchema` / `EventResponse` instead. Will be removed in v0.60.0.
- */
-interface EventWithCreator extends Event, PermissionFields {
-    creator?: {
-        id: string;
-        name: string;
-        image?: string | null;
-    };
-}
-/**
  * Create event request.
  *
  * Kept hand-written: represents the JSON payload a client sends (dates as
@@ -186,21 +173,6 @@ interface FailureReport extends BaseEntity {
     description?: string | null;
     status: FailureStatus;
     approved: boolean;
-}
-/**
- * Failure report with creator info for API responses.
- *
- * @deprecated Zero consumers — clients parse responses via
- * `failureReportResponseSchema` / `FailureReportResponse` instead.
- * Will be removed in v0.60.0.
- */
-interface FailureReportWithCreator extends FailureReport, PermissionFields {
-    submitter?: {
-        id: string;
-        name: string;
-        image?: string | null;
-    };
-    images?: string[];
 }
 /**
  * Create failure report request.
@@ -272,43 +244,6 @@ interface CreateTransactionRequest {
     title?: string;
     frequency?: string;
 }
-/**
- * Recurring transaction template.
- *
- * @deprecated Zero consumers — the backend never implemented recurring
- * templates (the `FUNDS.RECURRING_TEMPLATE*` routes are phantoms) and
- * mobile's dead recurring-templates feature uses its own local type and is
- * slated for deletion. Will be removed in v0.60.0.
- */
-interface RecurringTemplate extends BaseEntity {
-    buildingId: string;
-    title: string;
-    description?: string;
-    amount: number;
-    type: TransactionType;
-    category: TransactionCategory;
-    frequency: string;
-    startDate: string | Date;
-    endDate?: string | Date | null;
-    isActive: boolean;
-    lastGeneratedAt?: string | Date | null;
-}
-/**
- * Create recurring template request.
- *
- * @deprecated Zero consumers — see {@link RecurringTemplate}. Will be removed in v0.60.0.
- */
-interface CreateRecurringTemplateRequest {
-    buildingId: string;
-    title: string;
-    description?: string;
-    amount: number;
-    type: TransactionType;
-    category: TransactionCategory;
-    frequency: string;
-    startDate: string;
-    endDate?: string;
-}
 
 /**
  * How maintenance was financed — derived from `maintenanceFinancedBySchema`
@@ -331,21 +266,6 @@ interface MaintenanceLog extends BuildingUserEntity {
     cost: string;
     financedBy?: MaintenanceFinancedBy | null;
     warranty: boolean;
-}
-/**
- * Maintenance log with creator info for API responses.
- *
- * @deprecated Zero consumers — clients parse responses via
- * `maintenanceLogResponseSchema` / `MaintenanceLogResponse` instead.
- * Will be removed in v0.60.0.
- */
-interface MaintenanceLogWithCreator extends MaintenanceLog, PermissionFields {
-    creator?: {
-        id: string;
-        name: string;
-        image?: string | null;
-    };
-    images?: string[];
 }
 /**
  * Create maintenance log request.
@@ -375,19 +295,6 @@ interface Notice extends BuildingUserEntity {
     title: string;
     content: string;
     approved: boolean;
-}
-/**
- * Notice with creator info for API responses.
- *
- * @deprecated Zero consumers — clients parse notice responses via
- * `noticeResponseSchema` / `NoticeResponse` instead. Will be removed in v0.60.0.
- */
-interface NoticeWithCreator extends Notice, PermissionFields {
-    creator?: {
-        id: string;
-        name: string;
-        image?: string | null;
-    };
 }
 /**
  * Create notice request.
@@ -520,21 +427,6 @@ interface Poll extends BuildingUserEntity {
     finalizedBy?: string | null;
 }
 /**
- * Poll with results for API responses.
- *
- * @deprecated Zero consumers — clients parse poll responses via
- * `pollResponseSchema` / `PollResponse` instead. Will be removed in v0.60.0.
- */
-interface PollWithResults extends Poll, PermissionFields {
-    results?: PollOptionResult[];
-    userVote?: PollVote | null;
-    creator?: {
-        id: string;
-        name: string;
-        image?: string | null;
-    };
-}
-/**
  * Poll option result
  */
 interface PollOptionResult {
@@ -615,4 +507,4 @@ interface UserBuildingRole {
     permissions: string[];
 }
 
-export type { BaseEntity, Building, BuildingContextFromOrg, BuildingContextFromPlatformAdmin, BuildingContextFromRole, BuildingEntity, BuildingFund, BuildingMember, BuildingMembership, BuildingOTPResponse, BuildingPermissionContext, BuildingUser, BuildingUserEntity, BuildingWithRole, CreateEventRequest, CreateFailureReportRequest, CreateMaintenanceLogRequest, CreateNoticeRequest, CreatePollRequest, CreateRecurringTemplateRequest, CreateTransactionRequest, Event, EventColor, EventType, EventWithCreator, FailureReport, FailureReportWithCreator, FinancialGraphData, FinancialSummary, MaintenanceFinancedBy, MaintenanceLog, MaintenanceLogWithCreator, Notice, NoticeWithCreator, PermissionContext, PermissionFields, PermissionScope, PermissionsResponse, Poll, PollOptionResult, PollVote, PollWithResults, RecurrenceType, RecurringTemplate, Session, Transaction, User, UserBuildingRole, UserCreatedEntity, UserWithBuildings, VoteRequest };
+export type { BaseEntity, Building, BuildingContextFromOrg, BuildingContextFromPlatformAdmin, BuildingContextFromRole, BuildingEntity, BuildingFund, BuildingMember, BuildingMembership, BuildingOTPResponse, BuildingPermissionContext, BuildingUser, BuildingUserEntity, BuildingWithRole, CreateEventRequest, CreateFailureReportRequest, CreateMaintenanceLogRequest, CreateNoticeRequest, CreatePollRequest, CreateTransactionRequest, Event, EventColor, EventType, FailureReport, FinancialGraphData, FinancialSummary, MaintenanceFinancedBy, MaintenanceLog, Notice, PermissionContext, PermissionFields, PermissionScope, PermissionsResponse, Poll, PollOptionResult, PollVote, RecurrenceType, Session, Transaction, User, UserBuildingRole, UserCreatedEntity, UserWithBuildings, VoteRequest };

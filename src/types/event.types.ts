@@ -4,7 +4,7 @@ import type {
   eventTypeSchema,
   recurrenceTypeSchema,
 } from '../schemas/entities/event.schema';
-import type { BaseEntity, PermissionFields } from './base-entity.types';
+import type { BaseEntity } from './base-entity.types';
 
 /**
  * Event type — derived from `eventTypeSchema` so the type union and the Zod
@@ -50,20 +50,6 @@ export interface Event extends BaseEntity {
   onlineMeetingUrl?: string | null;
   meetingMinutes?: string | null;
   minuteTakerId?: string | null;
-}
-
-/**
- * Event with creator info for API responses.
- *
- * @deprecated Zero consumers — clients parse event responses via
- * `eventResponseSchema` / `EventResponse` instead. Will be removed in v0.60.0.
- */
-export interface EventWithCreator extends Event, PermissionFields {
-  creator?: {
-    id: string;
-    name: string;
-    image?: string | null;
-  };
 }
 
 /**

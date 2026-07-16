@@ -23,10 +23,6 @@ var API_ROUTES = {
     EXPORT: "/users/me/export",
     LOCALE: "/users/me/locale",
     PERMISSIONS: "/users/me/permissions",
-    /** @deprecated Phantom route — no backend endpoint exists. Will be removed in v0.60.0. */
-    PHONE_SEND_VERIFICATION: "/users/me/phone/send-verification",
-    /** @deprecated Phantom route — no backend endpoint exists. Will be removed in v0.60.0. */
-    PHONE_VERIFY: "/users/me/phone/verify",
     BUILDING_CHAT_VISIBILITY: (buildingId) => `/users/me/buildings/${buildingId}/chat-visibility`
   },
   // ── Buildings ─────────────────────────────────────────────────────────
@@ -49,8 +45,6 @@ var API_ROUTES = {
     IMPORT_TEMPLATE: (id) => `/buildings/${id}/import/template`,
     IMPORT_PREVIEW: (id) => `/buildings/${id}/import/preview`,
     IMPORT_COMMIT: (id) => `/buildings/${id}/import/commit`,
-    /** @deprecated Phantom route — no backend endpoint exists. Will be removed in v0.60.0. */
-    QUOTAS: (id) => `/buildings/${id}/quotas`,
     AI_USAGE: (id) => `/buildings/${id}/ai-usage`
   },
   // ── Apartments ────────────────────────────────────────────────────────
@@ -196,13 +190,7 @@ var API_ROUTES = {
     EXPENSE_DETAIL: (buildingId, expenseId) => `/buildings/${buildingId}/expenses/${expenseId}`,
     IMPORT_CAMT: (buildingId) => `/buildings/${buildingId}/funds/import/camt`,
     BUILDING_FUNDS_LEDGER: (buildingId) => `/buildings/${buildingId}/funds/building-funds-ledger`,
-    INVOICES: (buildingId) => `/buildings/${buildingId}/funds/invoices`,
-    /** @deprecated Phantom route — no backend endpoint exists (the mobile recurring-templates feature 404s). Will be removed in v0.60.0. */
-    RECURRING_TEMPLATES: (buildingId) => `/buildings/${buildingId}/recurring-templates`,
-    /** @deprecated Phantom route — no backend endpoint exists. Will be removed in v0.60.0. */
-    RECURRING_TEMPLATE_DETAIL: (buildingId, templateId) => `/buildings/${buildingId}/recurring-templates/${templateId}`,
-    /** @deprecated Phantom route — no backend endpoint exists. Will be removed in v0.60.0. */
-    RECURRING_TEMPLATE_RESTORE: (buildingId, templateId) => `/buildings/${buildingId}/recurring-templates/${templateId}/restore`
+    INVOICES: (buildingId) => `/buildings/${buildingId}/funds/invoices`
   },
   // ── Transaction Categories ───────────────────────────────────────────
   TRANSACTION_CATEGORIES: {
@@ -249,9 +237,7 @@ var API_ROUTES = {
     INVITE: (orgId) => `/organizations/${orgId}/invite`,
     INVITATIONS: (orgId) => `/organizations/${orgId}/invitations`,
     BUSINESS_PARTNERS: (orgId) => `/organizations/${orgId}/business-partners`,
-    BUSINESS_PARTNER_DETAIL: (orgId, partnerId) => `/organizations/${orgId}/business-partners/${partnerId}`,
-    /** @deprecated Phantom route — no backend endpoint exists (org quotas were never implemented; see org-quota.schema.ts). Will be removed in v0.60.0. */
-    QUOTAS: (orgId) => `/organizations/${orgId}/quotas`
+    BUSINESS_PARTNER_DETAIL: (orgId, partnerId) => `/organizations/${orgId}/business-partners/${partnerId}`
   },
   // ── Platform (admin) ─────────────────────────────────────────────────
   PLATFORM: {
@@ -300,5 +286,5 @@ var API_ROUTES = {
 
 exports.API_ROUTES = API_ROUTES;
 exports.API_VERSION = API_VERSION;
-//# sourceMappingURL=chunk-POD6N5EV.cjs.map
-//# sourceMappingURL=chunk-POD6N5EV.cjs.map
+//# sourceMappingURL=chunk-D5R2N5DP.cjs.map
+//# sourceMappingURL=chunk-D5R2N5DP.cjs.map

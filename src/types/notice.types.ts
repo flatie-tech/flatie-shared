@@ -1,4 +1,4 @@
-import type { BuildingUserEntity, PermissionFields } from './base-entity.types';
+import type { BuildingUserEntity } from './base-entity.types';
 
 /**
  * Notice entity.
@@ -12,20 +12,6 @@ export interface Notice extends BuildingUserEntity {
   title: string;
   content: string;
   approved: boolean;
-}
-
-/**
- * Notice with creator info for API responses.
- *
- * @deprecated Zero consumers — clients parse notice responses via
- * `noticeResponseSchema` / `NoticeResponse` instead. Will be removed in v0.60.0.
- */
-export interface NoticeWithCreator extends Notice, PermissionFields {
-  creator?: {
-    id: string;
-    name: string;
-    image?: string | null;
-  };
 }
 
 /**
