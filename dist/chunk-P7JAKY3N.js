@@ -1,6 +1,6 @@
 import { optionalIbanSchema } from './chunk-WK7VOCOE.js';
 import { AI_CHAT_LIMITS } from './chunk-BYX5R6MR.js';
-import { ApartmentRole, BoardVisibility, BoardCardStatus, Priority, OrgRole, OrgType, BuildingType, BuildingRole, PricuvaRefMode, FundsSource, QUOTA_RESOURCE_TYPES, FailureUnitType, FailureLocationType, FailureStatus, ORG_QUOTA_RESOURCE_TYPES, PollType, TransactionType, PlatformRole, BuildingStatus, CommonStatus, ApprovalStatus, MaintenanceStatus, NotificationType, PollCannotVoteReason } from './chunk-X7U7EFZP.js';
+import { ApartmentRole, BoardVisibility, BoardCardStatus, Priority, OrgRole, OrgType, BuildingType, BuildingRole, PricuvaRefMode, FundsSource, QUOTA_RESOURCE_TYPES, FailureUnitType, FailureLocationType, FailureStatus, ORG_QUOTA_RESOURCE_TYPES, PollType, TransactionType, PlatformRole, BuildingStatus, CommonStatus, ApprovalStatus, MaintenanceStatus, NotificationType, PollCannotVoteReason } from './chunk-FNWTMS5T.js';
 import { BACKEND_ERROR_CODES } from './chunk-WBJGOCD6.js';
 import { z } from 'zod';
 
@@ -2066,6 +2066,19 @@ var chatMessageDataSchema = baseNotificationDataSchema.extend({
   messagePreview: z.string(),
   conversationId: z.string().uuid()
 });
+var eventReminderDataSchema = baseNotificationDataSchema.extend({
+  title: z.string(),
+  // Pre-formatted wall-clock time in Europe/Zagreb (e.g. "18:00") — template var.
+  startTime: z.string().optional(),
+  // Occurrence start (not the parent event's) — feeds the calendar deep-link `date` param.
+  startDate: z.string().or(z.date())
+});
+var pollVoteSignatureDataSchema = baseNotificationDataSchema.extend({
+  question: z.string()
+});
+var pollVoteSignatureRejectedDataSchema = pollVoteSignatureDataSchema.extend({
+  reason: z.string().nullable().optional()
+});
 var unimplementedDataSchema = baseNotificationDataSchema;
 ({
   [NotificationType.NOTICE_CREATED]: noticeCreatedDataSchema,
@@ -2078,8 +2091,8 @@ var unimplementedDataSchema = baseNotificationDataSchema;
   [NotificationType.EVENT_CREATED]: eventCreatedOrUpdatedDataSchema,
   [NotificationType.EVENT_UPDATED]: eventCreatedOrUpdatedDataSchema,
   [NotificationType.EVENT_CANCELLED]: eventCancelledDataSchema,
-  [NotificationType.EVENT_REMINDER_24H]: unimplementedDataSchema,
-  [NotificationType.EVENT_REMINDER_1H]: unimplementedDataSchema,
+  [NotificationType.EVENT_REMINDER_24H]: eventReminderDataSchema,
+  [NotificationType.EVENT_REMINDER_1H]: eventReminderDataSchema,
   [NotificationType.WASTE_REMINDER_MIXED]: wasteReminderDataSchema,
   [NotificationType.WASTE_REMINDER_BIO]: wasteReminderDataSchema,
   [NotificationType.WASTE_REMINDER_PLASTIC_METAL]: wasteReminderDataSchema,
@@ -2099,9 +2112,9 @@ var unimplementedDataSchema = baseNotificationDataSchema;
   [NotificationType.BUILDING_APPROVED]: buildingApprovedDataSchema,
   [NotificationType.BUILDING_REJECTED]: buildingRejectedDataSchema,
   [NotificationType.CHAT_MESSAGE]: chatMessageDataSchema,
-  [NotificationType.POLL_VOTE_SIGNATURE_PENDING]: unimplementedDataSchema,
-  [NotificationType.POLL_VOTE_SIGNATURE_APPROVED]: unimplementedDataSchema,
-  [NotificationType.POLL_VOTE_SIGNATURE_REJECTED]: unimplementedDataSchema,
+  [NotificationType.POLL_VOTE_SIGNATURE_PENDING]: pollVoteSignatureDataSchema,
+  [NotificationType.POLL_VOTE_SIGNATURE_APPROVED]: pollVoteSignatureDataSchema,
+  [NotificationType.POLL_VOTE_SIGNATURE_REJECTED]: pollVoteSignatureRejectedDataSchema,
   [NotificationType.SYSTEM_ANNOUNCEMENT]: unimplementedDataSchema
 });
 var notificationDataSchema = z.union([
@@ -2124,6 +2137,9 @@ var notificationDataSchema = z.union([
   buildingApprovedDataSchema,
   buildingRejectedDataSchema,
   chatMessageDataSchema,
+  eventReminderDataSchema,
+  pollVoteSignatureDataSchema,
+  pollVoteSignatureRejectedDataSchema,
   unimplementedDataSchema
 ]);
 var notificationTypeValues = Object.values(NotificationType);
@@ -2430,5 +2446,5 @@ var repDashboardSummaryResponseSchema = z.looseObject({
 }).describe("Payload of `GET /representatives/dashboard/summary`.");
 
 export { ARCHIVE_TYPES, ApprovalStatusSchema, BOARD_CARD_LIMITS, BOARD_LIMITS, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, ENTITY_LINK_TYPES, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, LINKABLE_ENTITY_TYPES, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, RECURRENCE_TYPES, REP_RECENT_ACTIVITY_TYPES, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, baseEntitySchema, boardCardChecklistItemSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createOwnerSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, messagesListResponseSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgQuotaConfigSchema, orgQuotaEntrySchema, orgQuotaListSchema, ownerResponseSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, recurrenceTypeSchema, registerSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-XS57VNCJ.js.map
-//# sourceMappingURL=chunk-XS57VNCJ.js.map
+//# sourceMappingURL=chunk-P7JAKY3N.js.map
+//# sourceMappingURL=chunk-P7JAKY3N.js.map

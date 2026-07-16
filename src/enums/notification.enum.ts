@@ -64,7 +64,6 @@ export const NotificationChannel = {
   IN_APP: 'in_app',
   PUSH: 'push',
   EMAIL: 'email',
-  SMS: 'sms',
 } as const;
 
 export type NotificationChannel = (typeof NotificationChannel)[keyof typeof NotificationChannel];
@@ -148,12 +147,18 @@ export const UNIMPLEMENTED_NOTIFICATION_TYPES: ReadonlySet<NotificationType> =
   new Set<NotificationType>([
     NotificationType.POLL_DEADLINE_24H,
     NotificationType.POLL_DEADLINE_1H,
-    NotificationType.EVENT_REMINDER_24H,
-    NotificationType.EVENT_REMINDER_1H,
     NotificationType.PAYMENT_DUE,
     NotificationType.PAYMENT_RECEIVED,
     NotificationType.SYSTEM_ANNOUNCEMENT,
   ]);
+
+/**
+ * System-category types visible to co-owners and tenants in notification
+ * preferences. The rest of the system category (join requests, building
+ * approval flow, role changes) is managerial and hidden for those roles.
+ */
+export const CO_OWNER_VISIBLE_SYSTEM_TYPES: ReadonlySet<NotificationType> =
+  new Set<NotificationType>([NotificationType.BUILDING_MEMBER_JOINED]);
 
 /**
  * Maps waste-collection subtype keys to the corresponding notification type.

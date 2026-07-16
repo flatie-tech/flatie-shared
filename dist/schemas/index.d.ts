@@ -3482,6 +3482,30 @@ declare const notificationResponseSchema: z.ZodObject<{
         actorId: z.ZodOptional<z.ZodString>;
         actorName: z.ZodOptional<z.ZodString>;
         actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        startTime: z.ZodOptional<z.ZodString>;
+        startDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        question: z.ZodString;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        question: z.ZodString;
+        reason: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
     }, z.core.$strip>]>>>;
     read: z.ZodBoolean;
     readAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
