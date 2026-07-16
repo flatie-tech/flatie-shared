@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.62.0
+
+### Changes
+
+- Remove exports deprecated in v0.59.0: phantom API routes (phone verification, quotas, recurring templates), org-quota schemas, and dead *WithCreator/PollWithResults/RecurringTemplate types. (Removals originally slated for v0.60.0 — that number was taken by the notification-sync release.)
+
 ## 0.61.1
 
 ### Changes
