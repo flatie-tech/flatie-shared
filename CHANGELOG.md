@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.59.0
+
+### Changes
+
+- v0.59.0 batches the Phase-3 cleanup: new resident-restriction util (applyResidentRestriction/applyResidentRestrictionToItem — owner-only edit/delete gating shared by web's resident view and mobile's non-management view), new BuildingContextFromPlatformAdmin permission-context variant (source 'platform_admin', no orgId/orgRole), new ENTITY_LINK_TYPE_META (entity type → section/icon/tint incl. board_card), native hex token artifacts (tokens.native.css + tokens.native subpath exports, oklch→sRGB hex) plus a build fix so script-emitted .d.ts files survive tsup's DTS phase, and types/↔schemas/ convergence (EventType/EventColor/RecurrenceType/MaintenanceFinancedBy/VoteRequest now z.infer-derived with type-level assertion tests). Merges the v0.58.0 board foundation into main. Deletes the long-deprecated raw permission helpers (hasPermission/hasAnyPermission/hasAllPermissions — zero importers). Deprecates for removal in v0.60.0: phantom API_ROUTES (USERS.PHONE_*, BUILDINGS.QUOTAS, FUNDS.RECURRING_TEMPLATE*, ORGANIZATIONS.QUOTAS), the org-quota schemas, the *WithCreator/PollWithResults response types, and financial RecurringTemplate/CreateRecurringTemplateRequest.
+
 ## 0.57.0
 
 ### Minor Changes
