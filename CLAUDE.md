@@ -26,13 +26,13 @@ Full product orientation: [`../flatie-docs/team-knowledge/15-what-is-flatie.md`]
 
 ## Library docs via context7
 
-When working with **Zod v4, tsup, Vitest, changesets** — pull current docs via `context7` before trusting training data. Zod 4 in particular has subtle differences from v3 (no more `.passthrough()` → `.looseObject()`).
+When working with **Zod v4, tsup, Vitest** — pull current docs via `context7` before trusting training data. Zod 4 in particular has subtle differences from v3 (no more `.passthrough()` → `.looseObject()`).
 
 ## Doc hygiene (read before committing)
 
 When you change X, check whether doc Y needs updating:
 
-- **Break a schema / enum / route constant** → bump the minor (or major) version, write a changeset, bump consumers in the same session
+- **Break a schema / enum / route constant** → bump the minor (or major) version via `pnpm release`, then `node scripts/bump-shared.mjs` to bump consumers in the same session
 - **Add a new subpath export** → update `package.json` `exports` map + `docs/conventions.md` if the export category changes
 - **Add a new design token** → rebuild + update `flatie-frontend/docs/design-system.md` + bump consumers
 - **Change the release flow** → `docs/versioning.md`
@@ -81,12 +81,13 @@ pnpm test             # vitest (CI-style, one run)
 pnpm test:watch       # vitest watch
 pnpm lint             # biome check
 pnpm type-check       # tsc --noEmit
-pnpm release          # (see docs/versioning.md for the full flow)
+pnpm release -- --minor   # cut a release: build+test+bump+CHANGELOG+tag+push (scripts/release.mjs)
+node scripts/bump-shared.mjs  # update all three consumer pins to the latest tag
 ```
 
 ## Key design decisions
 
 - **Const objects over TypeScript enums** — permissions, roles, etc. are `as const` objects. TypeScript enums create nominal types that break across package boundaries.
 - **Zod 4 as peer dependency** — all three consumers (backend, frontend, mobile) use Zod 4; schemas import directly.
-- **Permission mappings live in this package** — `Permission` enum, `canAssign*()` helpers, AND the role → permission mappings (`src/constants/role-permissions.ts`: `BUILDING_ROLE_PERMISSIONS`, `ORG_ROLE_PERMISSIONS`, `PLATFORM_ROLE_PERMISSIONS`). They moved here from the backend in v0.7.0 so clients can evaluate permissions without an API round-trip. `flatie-backend/src/shared/constants/permission-mappings.ts` is now just a re-export (plus a temporary local patch until the shared dep is bumped past it).
+- **Permission mappings live in this package** — `Permission` enum, `canAssign*()` helpers, AND the role → permission mappings (`src/constants/role-permissions.ts`: `BUILDING_ROLE_PERMISSIONS`, `ORG_ROLE_PERMISSIONS`, `PLATFORM_ROLE_PERMISSIONS`). They moved here from the backend in v0.7.0 so clients can evaluate permissions without an API round-trip. `flatie-backend/src/shared/constants/permission-mappings.ts` is now just a re-export.
 - **Unified permission checker** — `createPermissionChecker(subject)` (`src/utils/permission-checker.ts`) is the single isomorphic `can()` surface (Flatie's analogue of Clerk's `has()`); it backs both the backend guards and the client hooks over `PermissionSubject` (`{ userId, permissions }`). The raw `string[]` helpers in `src/utils/permissions.ts` are deprecated in its favour.

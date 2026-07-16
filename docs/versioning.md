@@ -6,8 +6,8 @@ make consumer bumps predictable: a patch bump should never require consumer code
 changes; a minor bump may unlock new features but never break existing ones; a
 major bump signals that some consumers must update.
 
-This doc is the tiebreaker when you're staring at a changeset and wondering
-which scope to pick.
+This doc is the tiebreaker when you're cutting a release (`pnpm release`,
+scripts/release.mjs) and wondering which scope to pick.
 
 ---
 
@@ -51,7 +51,7 @@ Use **minor** when:
 - Adding a new Zod schema, enum, or type that consumers are expected to adopt.
 - Tightening a response schema when the tightening rejects inputs that were
   never actually produced by the backend, but were technically accepted by the
-  old schema. Document the tightening in the changeset so consumers can audit.
+  old schema. Document the tightening in the CHANGELOG entry so consumers can audit.
 - Adding required fields to a schema the backend has always been sending but
   that were previously typed as optional in shared.
 - Deprecating an export (JSDoc `@deprecated`) while leaving it in place.
@@ -91,7 +91,7 @@ This is almost always the right choice over a one-shot major.
 When a major lands, or when multiple consumers need to upgrade at the same
 time:
 
-1. Publish the shared release to a tag.
+1. Cut the release from `main` with `pnpm release --minor` (builds, tests, bumps, writes the CHANGELOG, tags, pushes). Then run `node scripts/bump-shared.mjs v<X.Y.Z>` to update all three consumer pins + lockfiles.
 2. Open the bump PRs in parallel: `flatie-backend`, `flatie-frontend`,
    `flatie-mobile` — branch off each repo's staging/dev at the same time.
 3. Merge in this order: **backend first, then frontend, then mobile.** The
@@ -111,7 +111,7 @@ tags, deleting a tag breaks consumers. So **rollback is forward-only**:
 
 1. Identify the offending version (e.g. `v0.21.0`).
 2. Open a new PR that reverts the bad commits on `main`.
-3. Add a patch changeset explaining the revert.
+3. Note the revert in the CHANGELOG entry.
 4. Ship `v0.21.1` — the fixed version.
 5. Notify consumers to bump to `v0.21.1` (or skip back to `v0.20.x` if the
    minor needs more baking). Never retag `v0.21.0` to point at different SHAs.

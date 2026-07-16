@@ -6,6 +6,23 @@
 
 - Add `API_ROUTES.NOTIFICATIONS.UNREAD` (`PATCH /notifications/unread`) for marking notifications back to unread — the mirror of the existing `READ` route. Additive; no schema change (`notificationResponseSchema` already models unread via `read`/`readAt`).
 
+## 0.56.1
+
+### Patch Changes
+
+- Expose optional `createdAt` (ISO-8601) on `eventResponseSchema` — the only
+  entity response that omitted it. Optional because synthesized recurrence
+  instances may not carry one.
+
+## 0.56.0
+
+### Minor Changes
+
+- `getInitials` and `formatCurrencyEUR` utils — absorb helpers that were
+  copy-pasted across consumers (six `getInitials` copies between frontend and
+  mobile; the euro-normalize + cent-rounding currency wrapper duplicated in
+  frontend tables/PDF and mobile funds helpers).
+
 ## 0.55.1
 
 ### Patch Changes
@@ -69,6 +86,15 @@
     `buildingId: string | null` + optional `orgId` (exactly one set; building
     payloads are unchanged on the wire).
 
+## 0.52.0
+
+### Minor Changes
+
+- Entity-link primitives for the generic links API: `EntityLinkType` /
+  `LinkableEntityType` enums, `ALLOWED_ENTITY_LINKS` rules table +
+  `isEntityLinkAllowed`, create/delete/list request schemas,
+  `entityLinksResponseSchema`, `API_ROUTES.LINKS`, `entityLinkKeys`.
+
 ## 0.51.0
 
 ### Minor Changes
@@ -85,6 +111,15 @@
   prefilled calendar.google.com TEMPLATE link with UTC dates, details from
   description + meeting URL, optional location, and an RRULE for recurring
   events (suppressed for expanded recurrence instances).
+
+## 0.50.0
+
+### Minor Changes
+
+- AI chat request/usage schemas + `AI_CHAT_LIMITS`: lenient chat request
+  contract moved from flatie-backend with abuse-ceiling caps,
+  `aiUsageResponseSchema` with per-user fairness fields, and a single source
+  for request caps / client input cap / server history window.
 
 ## 0.49.0
 

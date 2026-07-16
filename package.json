@@ -144,15 +144,13 @@
     "clean": "rm -rf dist",
     "prepare": "test -d dist || tsup",
     "prepublishOnly": "pnpm run build",
-    "release": "changeset publish --help"
+    "release": "node scripts/release.mjs"
   },
   "peerDependencies": {
     "zod": "^4.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.16",
-    "@changesets/changelog-github": "^0.6.0",
-    "@changesets/cli": "^2.31.0",
     "lefthook": "^2.1.4",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
