@@ -14,6 +14,7 @@ export {
 export { JoinRequestStatus } from './join-request-status.enum';
 export { MaintenanceLogFinancedBy } from './maintenance-log.enum';
 export {
+  CO_OWNER_VISIBLE_SYSTEM_TYPES,
   DevicePlatform,
   NOTIFICATION_TYPE_CATEGORY,
   NotificationCategory,
