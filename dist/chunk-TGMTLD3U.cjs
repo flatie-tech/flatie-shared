@@ -1,68 +1,68 @@
 'use strict';
 
-var chunkSDKDYSKX_cjs = require('./chunk-SDKDYSKX.cjs');
-var chunk6TJZGT6X_cjs = require('./chunk-6TJZGT6X.cjs');
+var chunk77KESNP6_cjs = require('./chunk-77KESNP6.cjs');
+var chunkFROUNHYP_cjs = require('./chunk-FROUNHYP.cjs');
 var chunkOOJKTZT4_cjs = require('./chunk-OOJKTZT4.cjs');
 
 // src/utils/role-helpers.ts
 var MANAGERIAL_BUILDING_ROLES = [
-  chunkSDKDYSKX_cjs.BuildingRole.OWNER_REPRESENTATIVE,
-  chunkSDKDYSKX_cjs.BuildingRole.DEPUTY_REPRESENTATIVE
+  chunk77KESNP6_cjs.BuildingRole.OWNER_REPRESENTATIVE,
+  chunk77KESNP6_cjs.BuildingRole.DEPUTY_REPRESENTATIVE
 ];
 function isManagerialRole(role) {
   return MANAGERIAL_BUILDING_ROLES.includes(role);
 }
 var ROLE_TRANSLATION_KEYS = {
   // Building roles
-  [chunkSDKDYSKX_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
-  [chunkSDKDYSKX_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
-  [chunkSDKDYSKX_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER",
-  [chunkSDKDYSKX_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT",
+  [chunk77KESNP6_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
+  [chunk77KESNP6_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
+  [chunk77KESNP6_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER",
+  [chunk77KESNP6_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT",
   // Apartment role surfaced by the web role picker (UI-only; persists as CO_OWNER)
-  [chunkSDKDYSKX_cjs.ApartmentRole.TENANT]: "roles.TENANT",
+  [chunk77KESNP6_cjs.ApartmentRole.TENANT]: "roles.TENANT",
   // Org roles
-  [chunkSDKDYSKX_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
-  [chunkSDKDYSKX_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
-  [chunkSDKDYSKX_cjs.OrgRole.REFERENT]: "roles.REFERENT",
-  [chunkSDKDYSKX_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE",
+  [chunk77KESNP6_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
+  [chunk77KESNP6_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
+  [chunk77KESNP6_cjs.OrgRole.REFERENT]: "roles.REFERENT",
+  [chunk77KESNP6_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE",
   // Platform roles
-  [chunkSDKDYSKX_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
-  [chunkSDKDYSKX_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
-  [chunkSDKDYSKX_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
-  [chunkSDKDYSKX_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
+  [chunk77KESNP6_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
+  [chunk77KESNP6_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
+  [chunk77KESNP6_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
+  [chunk77KESNP6_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
 };
 var ROLE_DESCRIPTION_KEYS = {
-  [chunkSDKDYSKX_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
-  [chunkSDKDYSKX_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
-  [chunkSDKDYSKX_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
-  [chunkSDKDYSKX_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
-  [chunkSDKDYSKX_cjs.ApartmentRole.TENANT]: "roles.TENANT_DESC",
-  [chunkSDKDYSKX_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
-  [chunkSDKDYSKX_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
-  [chunkSDKDYSKX_cjs.OrgRole.REFERENT]: "roles.REFERENT_DESC",
-  [chunkSDKDYSKX_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
-  [chunkSDKDYSKX_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
-  [chunkSDKDYSKX_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
-  [chunkSDKDYSKX_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
-  [chunkSDKDYSKX_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
+  [chunk77KESNP6_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
+  [chunk77KESNP6_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
+  [chunk77KESNP6_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
+  [chunk77KESNP6_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
+  [chunk77KESNP6_cjs.ApartmentRole.TENANT]: "roles.TENANT_DESC",
+  [chunk77KESNP6_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
+  [chunk77KESNP6_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
+  [chunk77KESNP6_cjs.OrgRole.REFERENT]: "roles.REFERENT_DESC",
+  [chunk77KESNP6_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
+  [chunk77KESNP6_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
+  [chunk77KESNP6_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
+  [chunk77KESNP6_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
+  [chunk77KESNP6_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
 };
 var ROLE_BADGE_COLORS = {
   // Building roles
-  [chunkSDKDYSKX_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "info",
-  [chunkSDKDYSKX_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "success",
-  [chunkSDKDYSKX_cjs.BuildingRole.CO_OWNER]: "warning",
-  [chunkSDKDYSKX_cjs.BuildingRole.RESIDENT]: "neutral",
-  [chunkSDKDYSKX_cjs.ApartmentRole.TENANT]: "neutral",
+  [chunk77KESNP6_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "info",
+  [chunk77KESNP6_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "success",
+  [chunk77KESNP6_cjs.BuildingRole.CO_OWNER]: "warning",
+  [chunk77KESNP6_cjs.BuildingRole.RESIDENT]: "neutral",
+  [chunk77KESNP6_cjs.ApartmentRole.TENANT]: "neutral",
   // Org roles
-  [chunkSDKDYSKX_cjs.OrgRole.ORG_ADMIN]: "purple",
-  [chunkSDKDYSKX_cjs.OrgRole.SUPERVISOR]: "info",
-  [chunkSDKDYSKX_cjs.OrgRole.REFERENT]: "success",
-  [chunkSDKDYSKX_cjs.OrgRole.OPERATIVE]: "amber",
+  [chunk77KESNP6_cjs.OrgRole.ORG_ADMIN]: "purple",
+  [chunk77KESNP6_cjs.OrgRole.SUPERVISOR]: "info",
+  [chunk77KESNP6_cjs.OrgRole.REFERENT]: "success",
+  [chunk77KESNP6_cjs.OrgRole.OPERATIVE]: "amber",
   // Platform roles
-  [chunkSDKDYSKX_cjs.PlatformRole.PLATFORM_ADMIN]: "purple",
-  [chunkSDKDYSKX_cjs.PlatformRole.PLATFORM_MODERATOR]: "info",
-  [chunkSDKDYSKX_cjs.PlatformRole.PLATFORM_SUPPORT]: "success",
-  [chunkSDKDYSKX_cjs.PlatformRole.PLATFORM_OPERATIVE]: "amber"
+  [chunk77KESNP6_cjs.PlatformRole.PLATFORM_ADMIN]: "purple",
+  [chunk77KESNP6_cjs.PlatformRole.PLATFORM_MODERATOR]: "info",
+  [chunk77KESNP6_cjs.PlatformRole.PLATFORM_SUPPORT]: "success",
+  [chunk77KESNP6_cjs.PlatformRole.PLATFORM_OPERATIVE]: "amber"
 };
 function getRoleBadge(role) {
   const known = role;
@@ -78,7 +78,7 @@ function canMessageUser(callerIsManagerial, target) {
   const role = target.buildingRole?.roleType;
   if (!role) return false;
   if (isManagerialRole(role)) return true;
-  return role === chunkSDKDYSKX_cjs.BuildingRole.CO_OWNER && target.buildingRole?.chatVisibleToCoOwners === true;
+  return role === chunk77KESNP6_cjs.BuildingRole.CO_OWNER && target.buildingRole?.chatVisibleToCoOwners === true;
 }
 function getMessageableUsers(users, callerIsManagerial) {
   return users.filter((user) => canMessageUser(callerIsManagerial, user));
@@ -311,7 +311,7 @@ var parseApiError = (error) => {
   const response = readProp(error, "response");
   const data = readProp(response, "data");
   const rawCode = readProp(data, "code");
-  const code = chunk6TJZGT6X_cjs.isBackendErrorCode(rawCode) ? rawCode : null;
+  const code = chunkFROUNHYP_cjs.isBackendErrorCode(rawCode) ? rawCode : null;
   const dataMessage = readProp(data, "message");
   const errorMessage = readProp(error, "message");
   const message = typeof dataMessage === "string" && dataMessage.length > 0 && dataMessage || typeof errorMessage === "string" && errorMessage.length > 0 && errorMessage || "Unknown error";
@@ -325,13 +325,13 @@ function canDo(subject, permission) {
   return subject.permissions.includes(permission);
 }
 function canDoOnResource(subject, domain, action, resourceOwnerId) {
-  const scopedPerms = chunkSDKDYSKX_cjs.SCOPED_PERMISSIONS[domain]?.[action];
+  const scopedPerms = chunk77KESNP6_cjs.SCOPED_PERMISSIONS[domain]?.[action];
   if (!scopedPerms) return false;
   if (subject.permissions.includes(scopedPerms.any)) return true;
   return subject.permissions.includes(scopedPerms.own) && resourceOwnerId === subject.userId;
 }
 function computeActionFlags(subject, domain, resourceOwnerId) {
-  const approvePermission = chunkSDKDYSKX_cjs.APPROVE_PERMISSIONS[domain];
+  const approvePermission = chunk77KESNP6_cjs.APPROVE_PERMISSIONS[domain];
   return {
     canEdit: canDoOnResource(subject, domain, "update", resourceOwnerId),
     canDelete: canDoOnResource(subject, domain, "delete", resourceOwnerId),
@@ -379,11 +379,11 @@ function applyResidentRestriction(items, isRestrictedView) {
 // src/utils/status-variants.ts
 function failureStatusVariant(status) {
   switch (status) {
-    case chunkSDKDYSKX_cjs.FailureStatus.PENDING:
+    case chunk77KESNP6_cjs.FailureStatus.PENDING:
       return "info";
-    case chunkSDKDYSKX_cjs.FailureStatus.IN_PROGRESS:
+    case chunk77KESNP6_cjs.FailureStatus.IN_PROGRESS:
       return "warning";
-    case chunkSDKDYSKX_cjs.FailureStatus.RESOLVED:
+    case chunk77KESNP6_cjs.FailureStatus.RESOLVED:
       return "success";
     default:
       return "neutral";
@@ -391,9 +391,9 @@ function failureStatusVariant(status) {
 }
 function priorityVariant(priority) {
   switch (priority) {
-    case chunkSDKDYSKX_cjs.Priority.URGENT:
+    case chunk77KESNP6_cjs.Priority.URGENT:
       return "danger";
-    case chunkSDKDYSKX_cjs.Priority.NORMAL:
+    case chunk77KESNP6_cjs.Priority.NORMAL:
       return "neutral";
     default:
       return "neutral";
@@ -521,5 +521,5 @@ exports.parseHouseNumber = parseHouseNumber;
 exports.priorityVariant = priorityVariant;
 exports.resolveVotingMethods = resolveVotingMethods;
 exports.violatesVotingMethodLock = violatesVotingMethodLock;
-//# sourceMappingURL=chunk-SCFUK65V.cjs.map
-//# sourceMappingURL=chunk-SCFUK65V.cjs.map
+//# sourceMappingURL=chunk-TGMTLD3U.cjs.map
+//# sourceMappingURL=chunk-TGMTLD3U.cjs.map

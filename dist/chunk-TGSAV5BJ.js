@@ -1,5 +1,3 @@
-'use strict';
-
 // src/urls/index.ts
 var API_VERSION = "v1";
 var API_ROUTES = {
@@ -142,6 +140,9 @@ var API_ROUTES = {
   BOARDS: {
     LIST: (buildingId) => `/buildings/${buildingId}/boards`,
     DETAIL: (buildingId, boardId) => `/buildings/${buildingId}/boards/${boardId}`,
+    COLUMNS: (buildingId, boardId) => `/buildings/${buildingId}/boards/${boardId}/columns`,
+    COLUMN_DETAIL: (buildingId, boardId, columnId) => `/buildings/${buildingId}/boards/${boardId}/columns/${columnId}`,
+    COLUMNS_REORDER: (buildingId, boardId) => `/buildings/${buildingId}/boards/${boardId}/columns/reorder`,
     CARDS: (buildingId, boardId) => `/buildings/${buildingId}/boards/${boardId}/cards`,
     CARD_DETAIL: (buildingId, boardId, cardId) => `/buildings/${buildingId}/boards/${boardId}/cards/${cardId}`,
     CARD_MOVE: (buildingId, boardId, cardId) => `/buildings/${buildingId}/boards/${boardId}/cards/${cardId}/move`,
@@ -295,7 +296,6 @@ var API_ROUTES = {
   }
 };
 
-exports.API_ROUTES = API_ROUTES;
-exports.API_VERSION = API_VERSION;
-//# sourceMappingURL=chunk-PHQEWXL5.cjs.map
-//# sourceMappingURL=chunk-PHQEWXL5.cjs.map
+export { API_ROUTES, API_VERSION };
+//# sourceMappingURL=chunk-TGSAV5BJ.js.map
+//# sourceMappingURL=chunk-TGSAV5BJ.js.map

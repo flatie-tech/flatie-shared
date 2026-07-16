@@ -130,6 +130,9 @@ declare const API_ROUTES: {
     readonly BOARDS: {
         readonly LIST: (buildingId: string) => string;
         readonly DETAIL: (buildingId: string, boardId: string) => string;
+        readonly COLUMNS: (buildingId: string, boardId: string) => string;
+        readonly COLUMN_DETAIL: (buildingId: string, boardId: string, columnId: string) => string;
+        readonly COLUMNS_REORDER: (buildingId: string, boardId: string) => string;
         readonly CARDS: (buildingId: string, boardId: string) => string;
         readonly CARD_DETAIL: (buildingId: string, boardId: string, cardId: string) => string;
         readonly CARD_MOVE: (buildingId: string, boardId: string, cardId: string) => string;

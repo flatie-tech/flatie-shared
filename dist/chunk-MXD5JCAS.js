@@ -1,7 +1,7 @@
 import { optionalIbanSchema } from './chunk-WK7VOCOE.js';
 import { AI_CHAT_LIMITS } from './chunk-BYX5R6MR.js';
-import { ApartmentRole, BoardVisibility, BoardCardStatus, Priority, OrgRole, OrgType, BuildingType, BuildingRole, PricuvaRefMode, FundsSource, QUOTA_RESOURCE_TYPES, FailureUnitType, FailureLocationType, FailureStatus, ORG_QUOTA_RESOURCE_TYPES, PollType, TransactionType, PlatformRole, BuildingStatus, CommonStatus, ApprovalStatus, MaintenanceStatus, NotificationType, PollCannotVoteReason } from './chunk-FNWTMS5T.js';
-import { BACKEND_ERROR_CODES } from './chunk-WBJGOCD6.js';
+import { ApartmentRole, BoardVisibility, Priority, OrgRole, OrgType, BuildingType, BuildingRole, PricuvaRefMode, FundsSource, QUOTA_RESOURCE_TYPES, FailureUnitType, FailureLocationType, FailureStatus, ORG_QUOTA_RESOURCE_TYPES, PollType, TransactionType, PlatformRole, BuildingStatus, CommonStatus, ApprovalStatus, MaintenanceStatus, NotificationType, PollCannotVoteReason } from './chunk-LRWAE22L.js';
+import { BACKEND_ERROR_CODES } from './chunk-5MNLJ5SX.js';
 import { z } from 'zod';
 
 var apiErrorSchema = z.object({
@@ -175,10 +175,41 @@ var paginatedApartmentsResponseSchema = z.looseObject({
   hasNextPage: z.boolean().optional().describe("True when at least one more page follows the current one."),
   hasPreviousPage: z.boolean().optional().describe("True when at least one page precedes the current one.")
 });
+function multipartArray(itemSchema) {
+  return z.preprocess((value) => {
+    if (Array.isArray(value)) return value;
+    if (typeof value !== "string") return value;
+    const trimmed = value.trim();
+    if (trimmed === "") return [];
+    if (trimmed.startsWith("[")) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        return Array.isArray(parsed) ? parsed : [value];
+      } catch {
+        return [value];
+      }
+    }
+    return [value];
+  }, z.array(itemSchema));
+}
+function multipartBoolean() {
+  return z.preprocess((value) => {
+    if (typeof value === "boolean") return value;
+    if (value === "true") return true;
+    if (value === "false" || value === "" || value == null) return false;
+    return value;
+  }, z.boolean());
+}
+
+// src/schemas/entities/board-card.schema.ts
 var BOARD_LIMITS = {
   NAME_MIN: 1,
   NAME_MAX: 60,
   DESCRIPTION_MAX: 500
+};
+var BOARD_COLUMN_LIMITS = {
+  NAME_MIN: 1,
+  NAME_MAX: 40
 };
 var boardVisibilitySchema = z.enum([BoardVisibility.BUILDING, BoardVisibility.REPRESENTATIVES]);
 var createBoardSchema = z.object({
@@ -193,20 +224,32 @@ var updateBoardSchema = z.object({
   description: z.string().max(BOARD_LIMITS.DESCRIPTION_MAX).nullable().optional().describe("Revised description; null clears it."),
   visibility: boardVisibilitySchema.optional().describe("Revised visibility.")
 });
+var createBoardColumnSchema = z.object({
+  name: z.string().min(BOARD_COLUMN_LIMITS.NAME_MIN, "Name is required").max(
+    BOARD_COLUMN_LIMITS.NAME_MAX,
+    `Name must be at most ${BOARD_COLUMN_LIMITS.NAME_MAX} characters`
+  ).describe("Column name, 1\u201340 chars.")
+});
+var updateBoardColumnSchema = z.object({
+  name: z.string().min(BOARD_COLUMN_LIMITS.NAME_MIN).max(BOARD_COLUMN_LIMITS.NAME_MAX).describe("Revised column name, 1\u201340 chars.")
+});
+var reorderBoardColumnsSchema = z.object({
+  orderedIds: z.array(uuidSchema).min(1).describe("Every column id of the board in the desired display order.")
+});
 var BOARD_CARD_LIMITS = {
   TITLE_MIN: 1,
   TITLE_MAX: 100,
-  DESCRIPTION_MAX: 2e3,
+  DESCRIPTION_MAX: 5e3,
   CHECKLIST_MAX_ITEMS: 50,
   CHECKLIST_ITEM_MIN: 1,
   CHECKLIST_ITEM_MAX: 200
 };
-var boardCardStatusSchema = z.enum([
-  BoardCardStatus.TODO,
-  BoardCardStatus.IN_PROGRESS,
-  BoardCardStatus.DONE
-]);
 var prioritySchema = z.enum([Priority.NORMAL, Priority.URGENT]);
+var boardCardEventSchema = z.object({
+  startDate: z.coerce.date().describe("Event start \u2014 accepts an ISO-8601 string or Date."),
+  endDate: z.coerce.date().describe("Event end \u2014 accepts an ISO-8601 string or Date; must not precede `startDate`."),
+  title: z.string().max(100).optional().describe("Event title; defaults to the card title when omitted.")
+});
 var boardCardChecklistItemSchema = z.object({
   id: uuidSchema.optional().describe("Stable item id; the server assigns one when omitted."),
   text: z.string().min(BOARD_CARD_LIMITS.CHECKLIST_ITEM_MIN).max(BOARD_CARD_LIMITS.CHECKLIST_ITEM_MAX).describe("Checklist item label."),
@@ -217,26 +260,29 @@ var createBoardCardSchema = z.object({
     BOARD_CARD_LIMITS.TITLE_MAX,
     `Title must be at most ${BOARD_CARD_LIMITS.TITLE_MAX} characters`
   ).describe("Short summary of the card, 1\u2013100 chars."),
-  description: z.string().max(BOARD_CARD_LIMITS.DESCRIPTION_MAX).optional().describe("Optional details, up to 2000 chars."),
-  status: boardCardStatusSchema.optional().describe("Initial column; defaults to `todo` when omitted."),
+  description: z.string().max(BOARD_CARD_LIMITS.DESCRIPTION_MAX).optional().describe("Optional details as markdown, up to 5000 chars."),
+  columnId: uuidSchema.optional().describe("Target column; defaults to the board\u2019s first column when omitted."),
   priority: prioritySchema.optional().describe("`normal` for standard cards, `urgent` to flag immediate attention."),
-  dueDate: z.coerce.date().nullable().optional().describe("Optional due date \u2014 accepts an ISO-8601 string or Date."),
   assignedTo: uuidSchema.nullable().optional().describe("UUID of the representative responsible for the card."),
-  checklist: z.array(boardCardChecklistItemSchema).max(BOARD_CARD_LIMITS.CHECKLIST_MAX_ITEMS).optional().describe("Optional subtasks (e.g. documents to collect from co-owners)."),
-  allowComments: z.boolean().optional().describe("Whether members may comment on this card. Defaults to true.")
+  checklist: multipartArray(boardCardChecklistItemSchema).optional().describe("Optional subtasks (e.g. documents to collect from co-owners)."),
+  allowComments: z.boolean().optional().describe("Whether members may comment on this card. Defaults to true."),
+  fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-uploaded files to attach to this card."),
+  events: multipartArray(boardCardEventSchema).optional().describe("Calendar events to create alongside the card (deadlines, site visits).")
 });
 var updateBoardCardSchema = z.object({
   title: z.string().min(BOARD_CARD_LIMITS.TITLE_MIN).max(BOARD_CARD_LIMITS.TITLE_MAX).optional().describe("Revised card title, 1\u2013100 chars."),
-  description: z.string().max(BOARD_CARD_LIMITS.DESCRIPTION_MAX).nullable().optional().describe("Revised details, up to 2000 chars; null clears them."),
-  status: boardCardStatusSchema.optional().describe("Revised column."),
+  description: z.string().max(BOARD_CARD_LIMITS.DESCRIPTION_MAX).nullable().optional().describe("Revised markdown details; null clears them."),
+  columnId: uuidSchema.optional().describe("Revised column (card is appended to it)."),
   priority: prioritySchema.optional().describe("Revised priority: `normal` or `urgent`."),
-  dueDate: z.coerce.date().nullable().optional().describe("Revised due date; null clears it."),
   assignedTo: uuidSchema.nullable().optional().describe("Revised assignee; null unassigns."),
-  checklist: z.array(boardCardChecklistItemSchema).max(BOARD_CARD_LIMITS.CHECKLIST_MAX_ITEMS).optional().describe("Full replacement checklist \u2014 replaces the existing items."),
-  allowComments: z.boolean().optional().describe("Whether members may comment on this card.")
+  checklist: multipartArray(boardCardChecklistItemSchema).optional().describe("Full replacement checklist \u2014 replaces the existing items."),
+  allowComments: z.boolean().optional().describe("Whether members may comment on this card."),
+  fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of newly-uploaded files to add to the card."),
+  removeChildFileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-attached files to detach from the card."),
+  events: multipartArray(boardCardEventSchema).optional().describe("Full list of events for the card \u2014 replaces the existing event set.")
 });
 var moveBoardCardSchema = z.object({
-  status: boardCardStatusSchema.describe("Target column."),
+  columnId: uuidSchema.describe("Target column."),
   position: z.number().finite().nonnegative().describe("Fractional index within the target column (midpoint between neighbours).")
 });
 var CHAT_LIMITS = {
@@ -359,33 +405,6 @@ var getOrgMembersQuerySchema = z.object({
   sortBy: z.enum(["userName", "orgRole", "createdAt"]).optional().describe("Column to sort results by."),
   sortOrder: z.enum(["asc", "desc"]).optional().describe("Sort direction: `asc` for ascending, `desc` for descending.")
 });
-function multipartArray(itemSchema) {
-  return z.preprocess((value) => {
-    if (Array.isArray(value)) return value;
-    if (typeof value !== "string") return value;
-    const trimmed = value.trim();
-    if (trimmed === "") return [];
-    if (trimmed.startsWith("[")) {
-      try {
-        const parsed = JSON.parse(trimmed);
-        return Array.isArray(parsed) ? parsed : [value];
-      } catch {
-        return [value];
-      }
-    }
-    return [value];
-  }, z.array(itemSchema));
-}
-function multipartBoolean() {
-  return z.preprocess((value) => {
-    if (typeof value === "boolean") return value;
-    if (value === "true") return true;
-    if (value === "false" || value === "" || value == null) return false;
-    return value;
-  }, z.boolean());
-}
-
-// src/schemas/entities/building.schema.ts
 var BUILDING_TYPES = [
   BuildingType.RESIDENTIAL,
   BuildingType.COMMERCIAL,
@@ -2017,7 +2036,11 @@ var eventCancelledDataSchema = baseNotificationDataSchema.extend({
 });
 var wasteReminderDataSchema = baseNotificationDataSchema.extend({
   title: z.string(),
-  wasteTypeLabel: z.string(),
+  /**
+   * @deprecated The backend no longer sends a pre-rendered label — derive it
+   * from `subtype` in the client's locale. Present only on pre-2026-07 rows.
+   */
+  wasteTypeLabel: z.string().optional(),
   subtype: z.string(),
   startDate: z.string().or(z.date())
 });
@@ -2445,6 +2468,6 @@ var repDashboardSummaryResponseSchema = z.looseObject({
   pendingSignatureVotes: z.number().nullable().optional().describe("Printed-signature votes awaiting representative review (rep scope only).")
 }).describe("Payload of `GET /representatives/dashboard/summary`.");
 
-export { ARCHIVE_TYPES, ApprovalStatusSchema, BOARD_CARD_LIMITS, BOARD_LIMITS, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, ENTITY_LINK_TYPES, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, LINKABLE_ENTITY_TYPES, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, RECURRENCE_TYPES, REP_RECENT_ACTIVITY_TYPES, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, baseEntitySchema, boardCardChecklistItemSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createOwnerSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, messagesListResponseSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgQuotaConfigSchema, orgQuotaEntrySchema, orgQuotaListSchema, ownerResponseSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, recurrenceTypeSchema, registerSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-P7JAKY3N.js.map
-//# sourceMappingURL=chunk-P7JAKY3N.js.map
+export { ARCHIVE_TYPES, ApprovalStatusSchema, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, ENTITY_LINK_TYPES, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, LINKABLE_ENTITY_TYPES, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, RECURRENCE_TYPES, REP_RECENT_ACTIVITY_TYPES, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createEventSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createOwnerSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, messagesListResponseSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgQuotaConfigSchema, orgQuotaEntrySchema, orgQuotaListSchema, ownerResponseSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, recurrenceTypeSchema, registerSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateEventSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
+//# sourceMappingURL=chunk-MXD5JCAS.js.map
+//# sourceMappingURL=chunk-MXD5JCAS.js.map

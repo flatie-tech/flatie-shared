@@ -198,6 +198,12 @@ export const API_ROUTES = {
   BOARDS: {
     LIST: (buildingId: string) => `/buildings/${buildingId}/boards`,
     DETAIL: (buildingId: string, boardId: string) => `/buildings/${buildingId}/boards/${boardId}`,
+    COLUMNS: (buildingId: string, boardId: string) =>
+      `/buildings/${buildingId}/boards/${boardId}/columns`,
+    COLUMN_DETAIL: (buildingId: string, boardId: string, columnId: string) =>
+      `/buildings/${buildingId}/boards/${boardId}/columns/${columnId}`,
+    COLUMNS_REORDER: (buildingId: string, boardId: string) =>
+      `/buildings/${buildingId}/boards/${boardId}/columns/reorder`,
     CARDS: (buildingId: string, boardId: string) =>
       `/buildings/${buildingId}/boards/${boardId}/cards`,
     CARD_DETAIL: (buildingId: string, boardId: string, cardId: string) =>

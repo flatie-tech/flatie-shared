@@ -1,7 +1,8 @@
 import { z } from 'zod';
-import { BoardCardStatus, BoardVisibility } from '../../enums/board-card.enum';
+import { BoardVisibility } from '../../enums/board-card.enum';
 import { Priority } from '../../enums/status.enum';
 import { uuidSchema } from '../base.schema';
+import { multipartArray } from '../multipart.schema';
 
 /**
  * Validation constants for boards.
@@ -10,6 +11,14 @@ export const BOARD_LIMITS = {
   NAME_MIN: 1,
   NAME_MAX: 60,
   DESCRIPTION_MAX: 500,
+} as const;
+
+/**
+ * Validation constants for board columns.
+ */
+export const BOARD_COLUMN_LIMITS = {
+  NAME_MIN: 1,
+  NAME_MAX: 40,
 } as const;
 
 const boardVisibilitySchema = z.enum([BoardVisibility.BUILDING, BoardVisibility.REPRESENTATIVES]);
@@ -56,25 +65,77 @@ export const updateBoardSchema = z.object({
   visibility: boardVisibilitySchema.optional().describe('Revised visibility.'),
 });
 
+// ─── Board columns ──────────────────────────────────────────────────────
+
+/**
+ * Create board column request schema — matches
+ * `POST /buildings/:buildingId/boards/:boardId/columns`. New columns are
+ * appended to the end of the board.
+ */
+export const createBoardColumnSchema = z.object({
+  name: z
+    .string()
+    .min(BOARD_COLUMN_LIMITS.NAME_MIN, 'Name is required')
+    .max(
+      BOARD_COLUMN_LIMITS.NAME_MAX,
+      `Name must be at most ${BOARD_COLUMN_LIMITS.NAME_MAX} characters`,
+    )
+    .describe('Column name, 1–40 chars.'),
+});
+
+/**
+ * Update (rename) board column request schema.
+ */
+export const updateBoardColumnSchema = z.object({
+  name: z
+    .string()
+    .min(BOARD_COLUMN_LIMITS.NAME_MIN)
+    .max(BOARD_COLUMN_LIMITS.NAME_MAX)
+    .describe('Revised column name, 1–40 chars.'),
+});
+
+/**
+ * Reorder board columns request schema — the full ordered id list
+ * (same contract as FAQ reorder).
+ */
+export const reorderBoardColumnsSchema = z.object({
+  orderedIds: z
+    .array(uuidSchema)
+    .min(1)
+    .describe('Every column id of the board in the desired display order.'),
+});
+
+// ─── Cards ──────────────────────────────────────────────────────────────
+
 /**
  * Validation constants for board (Kanban) cards.
  */
 export const BOARD_CARD_LIMITS = {
   TITLE_MIN: 1,
   TITLE_MAX: 100,
-  DESCRIPTION_MAX: 2000,
+  DESCRIPTION_MAX: 5000,
   CHECKLIST_MAX_ITEMS: 50,
   CHECKLIST_ITEM_MIN: 1,
   CHECKLIST_ITEM_MAX: 200,
 } as const;
 
-const boardCardStatusSchema = z.enum([
-  BoardCardStatus.TODO,
-  BoardCardStatus.IN_PROGRESS,
-  BoardCardStatus.DONE,
-]);
-
 const prioritySchema = z.enum([Priority.NORMAL, Priority.URGENT]);
+
+/**
+ * A calendar event created inline with a card (schedule link). Same shape as
+ * the notice/failure-report inline events.
+ */
+export const boardCardEventSchema = z.object({
+  startDate: z.coerce.date().describe('Event start — accepts an ISO-8601 string or Date.'),
+  endDate: z.coerce
+    .date()
+    .describe('Event end — accepts an ISO-8601 string or Date; must not precede `startDate`.'),
+  title: z
+    .string()
+    .max(100)
+    .optional()
+    .describe('Event title; defaults to the card title when omitted.'),
+});
 
 /**
  * A single checklist item on a card. `id` is server-assigned when omitted so
@@ -92,8 +153,9 @@ export const boardCardChecklistItemSchema = z.object({
 
 /**
  * Create board card request schema — matches
- * `POST /buildings/:buildingId/board/cards` (JSON body).
- * buildingId comes from the URL, not the body.
+ * `POST /buildings/:buildingId/boards/:boardId/cards` (multipart/form-data —
+ * file parts ride alongside; array/boolean fields use the multipart helpers).
+ * buildingId/boardId come from the URL, not the body.
  */
 export const createBoardCardSchema = z.object({
   title: z
@@ -108,37 +170,37 @@ export const createBoardCardSchema = z.object({
     .string()
     .max(BOARD_CARD_LIMITS.DESCRIPTION_MAX)
     .optional()
-    .describe('Optional details, up to 2000 chars.'),
-  status: boardCardStatusSchema
+    .describe('Optional details as markdown, up to 5000 chars.'),
+  columnId: uuidSchema
     .optional()
-    .describe('Initial column; defaults to `todo` when omitted.'),
+    .describe('Target column; defaults to the board’s first column when omitted.'),
   priority: prioritySchema
     .optional()
     .describe('`normal` for standard cards, `urgent` to flag immediate attention.'),
-  dueDate: z.coerce
-    .date()
-    .nullable()
-    .optional()
-    .describe('Optional due date — accepts an ISO-8601 string or Date.'),
   assignedTo: uuidSchema
     .nullable()
     .optional()
     .describe('UUID of the representative responsible for the card.'),
-  checklist: z
-    .array(boardCardChecklistItemSchema)
-    .max(BOARD_CARD_LIMITS.CHECKLIST_MAX_ITEMS)
+  checklist: multipartArray(boardCardChecklistItemSchema)
     .optional()
     .describe('Optional subtasks (e.g. documents to collect from co-owners).'),
   allowComments: z
     .boolean()
     .optional()
     .describe('Whether members may comment on this card. Defaults to true.'),
+  fileIds: multipartArray(uuidSchema)
+    .optional()
+    .describe('UUIDs of previously-uploaded files to attach to this card.'),
+  events: multipartArray(boardCardEventSchema)
+    .optional()
+    .describe('Calendar events to create alongside the card (deadlines, site visits).'),
 });
 
 /**
- * Update board card request schema — all fields optional. Column moves go
- * through the dedicated move endpoint, not here, but `status` is still
- * accepted for non-drag edits (e.g. the card detail modal).
+ * Update board card request schema — all fields optional. Column moves that
+ * reorder within a column go through the dedicated move endpoint, but
+ * `columnId` is still accepted for non-drag edits (appends to the target
+ * column).
  */
 export const updateBoardCardSchema = z.object({
   title: z
@@ -152,27 +214,33 @@ export const updateBoardCardSchema = z.object({
     .max(BOARD_CARD_LIMITS.DESCRIPTION_MAX)
     .nullable()
     .optional()
-    .describe('Revised details, up to 2000 chars; null clears them.'),
-  status: boardCardStatusSchema.optional().describe('Revised column.'),
+    .describe('Revised markdown details; null clears them.'),
+  columnId: uuidSchema.optional().describe('Revised column (card is appended to it).'),
   priority: prioritySchema.optional().describe('Revised priority: `normal` or `urgent`.'),
-  dueDate: z.coerce.date().nullable().optional().describe('Revised due date; null clears it.'),
   assignedTo: uuidSchema.nullable().optional().describe('Revised assignee; null unassigns.'),
-  checklist: z
-    .array(boardCardChecklistItemSchema)
-    .max(BOARD_CARD_LIMITS.CHECKLIST_MAX_ITEMS)
+  checklist: multipartArray(boardCardChecklistItemSchema)
     .optional()
     .describe('Full replacement checklist — replaces the existing items.'),
   allowComments: z.boolean().optional().describe('Whether members may comment on this card.'),
+  fileIds: multipartArray(uuidSchema)
+    .optional()
+    .describe('UUIDs of newly-uploaded files to add to the card.'),
+  removeChildFileIds: multipartArray(uuidSchema)
+    .optional()
+    .describe('UUIDs of previously-attached files to detach from the card.'),
+  events: multipartArray(boardCardEventSchema)
+    .optional()
+    .describe('Full list of events for the card — replaces the existing event set.'),
 });
 
 /**
  * Move board card request schema — matches
- * `PATCH /buildings/:buildingId/board/cards/:id/move`. Drives drag-and-drop:
+ * `PATCH .../boards/:boardId/cards/:id/move`. Drives drag-and-drop:
  * the client computes a fractional `position` (midpoint between neighbours)
  * so a move never has to reindex the rest of the column.
  */
 export const moveBoardCardSchema = z.object({
-  status: boardCardStatusSchema.describe('Target column.'),
+  columnId: uuidSchema.describe('Target column.'),
   position: z
     .number()
     .finite()
@@ -183,6 +251,10 @@ export const moveBoardCardSchema = z.object({
 // Inferred types
 export type CreateBoardSchema = z.infer<typeof createBoardSchema>;
 export type UpdateBoardSchema = z.infer<typeof updateBoardSchema>;
+export type CreateBoardColumnSchema = z.infer<typeof createBoardColumnSchema>;
+export type UpdateBoardColumnSchema = z.infer<typeof updateBoardColumnSchema>;
+export type ReorderBoardColumnsSchema = z.infer<typeof reorderBoardColumnsSchema>;
+export type BoardCardEventSchema = z.infer<typeof boardCardEventSchema>;
 export type BoardCardChecklistItemSchema = z.infer<typeof boardCardChecklistItemSchema>;
 export type CreateBoardCardSchema = z.infer<typeof createBoardCardSchema>;
 export type UpdateBoardCardSchema = z.infer<typeof updateBoardCardSchema>;

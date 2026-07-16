@@ -1,3 +1,5 @@
+'use strict';
+
 // src/urls/index.ts
 var API_VERSION = "v1";
 var API_ROUTES = {
@@ -140,6 +142,9 @@ var API_ROUTES = {
   BOARDS: {
     LIST: (buildingId) => `/buildings/${buildingId}/boards`,
     DETAIL: (buildingId, boardId) => `/buildings/${buildingId}/boards/${boardId}`,
+    COLUMNS: (buildingId, boardId) => `/buildings/${buildingId}/boards/${boardId}/columns`,
+    COLUMN_DETAIL: (buildingId, boardId, columnId) => `/buildings/${buildingId}/boards/${boardId}/columns/${columnId}`,
+    COLUMNS_REORDER: (buildingId, boardId) => `/buildings/${buildingId}/boards/${boardId}/columns/reorder`,
     CARDS: (buildingId, boardId) => `/buildings/${buildingId}/boards/${boardId}/cards`,
     CARD_DETAIL: (buildingId, boardId, cardId) => `/buildings/${buildingId}/boards/${boardId}/cards/${cardId}`,
     CARD_MOVE: (buildingId, boardId, cardId) => `/buildings/${buildingId}/boards/${boardId}/cards/${cardId}/move`,
@@ -293,6 +298,7 @@ var API_ROUTES = {
   }
 };
 
-export { API_ROUTES, API_VERSION };
-//# sourceMappingURL=chunk-BMINBTAO.js.map
-//# sourceMappingURL=chunk-BMINBTAO.js.map
+exports.API_ROUTES = API_ROUTES;
+exports.API_VERSION = API_VERSION;
+//# sourceMappingURL=chunk-POD6N5EV.cjs.map
+//# sourceMappingURL=chunk-POD6N5EV.cjs.map

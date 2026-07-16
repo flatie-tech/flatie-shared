@@ -7,23 +7,32 @@ export {
   paginatedApartmentsResponseSchema,
 } from './apartment.schema';
 
-// Board (Kanban) + card schemas
+// Board (Kanban) + column + card schemas
 export type {
   BoardCardChecklistItemSchema,
+  BoardCardEventSchema,
   CreateBoardCardSchema,
+  CreateBoardColumnSchema,
   CreateBoardSchema,
   MoveBoardCardSchema,
+  ReorderBoardColumnsSchema,
   UpdateBoardCardSchema,
+  UpdateBoardColumnSchema,
   UpdateBoardSchema,
 } from './board-card.schema';
 export {
   BOARD_CARD_LIMITS,
+  BOARD_COLUMN_LIMITS,
   BOARD_LIMITS,
   boardCardChecklistItemSchema,
+  boardCardEventSchema,
   createBoardCardSchema,
+  createBoardColumnSchema,
   createBoardSchema,
   moveBoardCardSchema,
+  reorderBoardColumnsSchema,
   updateBoardCardSchema,
+  updateBoardColumnSchema,
   updateBoardSchema,
 } from './board-card.schema';
 
