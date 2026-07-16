@@ -183,11 +183,7 @@ var NotificationCategory = {
 var NotificationChannel = {
   IN_APP: "in_app",
   PUSH: "push",
-  EMAIL: "email",
-  // Referenced by flatie-backend's notifications schema (staging commit
-  // c6baac52) ahead of the notifications session's shared release — added
-  // here so consumers type-check; harmless if re-added by that release.
-  SMS: "sms"
+  EMAIL: "email"
 };
 var NotificationDeliveryStatus = {
   PENDING: "pending",
@@ -706,5 +702,5 @@ exports.canAssignPlatformRole = canAssignPlatformRole;
 exports.canAssignRole = canAssignRole;
 exports.domainPermissions = domainPermissions;
 exports.methodToTier = methodToTier;
-//# sourceMappingURL=chunk-4RUOR5YK.cjs.map
-//# sourceMappingURL=chunk-4RUOR5YK.cjs.map
+//# sourceMappingURL=chunk-R7EQCGXX.cjs.map
+//# sourceMappingURL=chunk-R7EQCGXX.cjs.map

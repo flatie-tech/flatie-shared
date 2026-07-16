@@ -181,11 +181,7 @@ var NotificationCategory = {
 var NotificationChannel = {
   IN_APP: "in_app",
   PUSH: "push",
-  EMAIL: "email",
-  // Referenced by flatie-backend's notifications schema (staging commit
-  // c6baac52) ahead of the notifications session's shared release — added
-  // here so consumers type-check; harmless if re-added by that release.
-  SMS: "sms"
+  EMAIL: "email"
 };
 var NotificationDeliveryStatus = {
   PENDING: "pending",
@@ -640,5 +636,5 @@ var UnitType = {
 };
 
 export { APPROVE_PERMISSIONS, ApartmentRole, ApprovalStatus, BUILDING_ROLE_RANK, BoardVisibility, BuildingOtpExpiry, BuildingRole, BuildingStatus, BuildingType, CO_OWNER_VISIBLE_SYSTEM_TYPES, CommonStatus, DevicePlatform, EntityLinkType, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, IdentityVerificationMethod, JoinRequestStatus, LinkableEntityType, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, ORG_ROLE_RANK, OrgQuotaResourceType, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, POLL_CANNOT_VOTE_REASON_KEY, Permission, PlatformRole, PollCannotVoteReason, PollStatus, PollType, PollVoteStatus, PricuvaRefMode, Priority, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions, methodToTier };
-//# sourceMappingURL=chunk-AWJEDC2O.js.map
-//# sourceMappingURL=chunk-AWJEDC2O.js.map
+//# sourceMappingURL=chunk-2NSIS4GL.js.map
+//# sourceMappingURL=chunk-2NSIS4GL.js.map

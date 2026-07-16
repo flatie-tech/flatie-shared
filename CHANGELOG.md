@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.61.1
+
+### Changes
+
+- remove the temporary SMS shim from NotificationChannel (backend no longer references it)
+
 ## 0.61.0
 
 ### Changes
