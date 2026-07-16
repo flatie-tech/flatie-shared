@@ -1,0 +1,170 @@
+/**
+ * Flatie design tokens (native / hex build) — generated from @flatie/shared.
+ * Do not edit directly. Source: src/tokens/ in flatie-shared.
+ */
+
+:root {
+  --radius: 0.75rem;
+
+  /* Base colors */
+  --background: #ffffff;
+  --foreground: #0c1019;
+  --card: #ffffff;
+  --card-foreground: #0c1019;
+  --popover: #ffffff;
+  --popover-foreground: #0c1019;
+  --secondary: #e7ebf3;
+  --secondary-foreground: #1c1f27;
+  --muted: #f0f2f5;
+  --muted-foreground: #5e646c;
+  --accent: #dfe7f4;
+  --accent-foreground: #161b24;
+  --destructive: #e7000b;
+  --success: #00a440;
+  --success-foreground: #fafafa;
+  --warning: #dfa11a;
+  --warning-foreground: #4a2200;
+  --info: #168dd9;
+  --info-foreground: #fafafa;
+  --brand-accent: #00b2b3;
+  --brand-accent-foreground: #fafafa;
+  --border: #dce0e6;
+  --input: #d5d9e1;
+  --ring: #4878ff;
+  --chart-1: #4878ff;
+  --chart-2: #00b2b3;
+  --chart-3: #dfa11a;
+  --chart-4: #e7566b;
+  --chart-5: #03a14a;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0c1019;
+  --sidebar-accent: #dfe7f4;
+  --sidebar-accent-foreground: #161b24;
+  --sidebar-border: #dce0e6;
+  --sidebar-ring: #4878ff;
+  --card-background: #f6f9fc;
+  --card-border: #e3e6ec;
+  --dashboard-background: #eff2f6;
+  --negative-action: #252930;
+
+  /* Default theme */
+  --primary: #4878ff;
+  --primary-foreground: #fafafa;
+  --button-primary: #161b24;
+  --sidebar-primary: #4878ff;
+  --sidebar-primary-foreground: #fafafa;
+}
+
+.dark {
+  /* Base colors */
+  --background: #06090f;
+  --foreground: #eceff2;
+  --card: #0f131b;
+  --card-foreground: #eceff2;
+  --popover: #0f131b;
+  --popover-foreground: #eceff2;
+  --secondary: #1b1f28;
+  --secondary-foreground: #e9ebef;
+  --muted: #1c1f27;
+  --muted-foreground: #767b82;
+  --accent: #1f242e;
+  --accent-foreground: #e9ebef;
+  --destructive: #ff6467;
+  --success: #1eab53;
+  --success-foreground: #fafafa;
+  --warning: #e3ad4b;
+  --warning-foreground: #361900;
+  --info: #3496de;
+  --info-foreground: #fafafa;
+  --brand-accent: #16bbbc;
+  --brand-accent-foreground: #fafafa;
+  --border: #fdffff1f;
+  --input: #fdffff29;
+  --ring: #5786ff;
+  --chart-1: #3967df;
+  --chart-2: #009c9c;
+  --chart-3: #cf9a35;
+  --chart-4: #c6495b;
+  --chart-5: #1b9247;
+  --sidebar: #11151d;
+  --sidebar-foreground: #eceff2;
+  --sidebar-accent: #1f242e;
+  --sidebar-accent-foreground: #e9ebef;
+  --sidebar-border: #fdffff1f;
+  --sidebar-ring: #466cc8;
+  --card-background: #0f131b;
+  --card-border: #22262f;
+  --dashboard-background: #090c13;
+  --negative-action: #c2c4c7;
+
+  /* Default theme */
+  --primary: #5786ff;
+  --primary-foreground: #0a0d14;
+  --button-primary: #e3e5e8;
+  --sidebar-primary: #3967df;
+  --sidebar-primary-foreground: #eceff2;
+}
+
+.theme-org {
+  --primary: #098926;
+  --primary-foreground: #fafafa;
+  --button-primary: #151d15;
+  --sidebar-primary: #098926;
+  --sidebar-primary-foreground: #fafafa;
+}
+
+.dark .theme-org {
+  --primary: #279936;
+  --primary-foreground: #090f09;
+  --button-primary: #e2e5e2;
+  --sidebar-primary: #007a11;
+  --sidebar-primary-foreground: #ecefec;
+}
+
+.theme-admin {
+  --primary: #904eba;
+  --primary-foreground: #fafafa;
+  --button-primary: #1d1822;
+  --sidebar-primary: #904eba;
+  --sidebar-primary-foreground: #fafafa;
+}
+
+.dark .theme-admin {
+  --primary: #9f5dcb;
+  --primary-foreground: #0f0b12;
+  --button-primary: #e5e4e7;
+  --sidebar-primary: #813faa;
+  --sidebar-primary-foreground: #efedf1;
+}
+
+.theme-platform {
+  --primary: #008a8d;
+  --primary-foreground: #fafafa;
+  --button-primary: #0f1e1d;
+  --sidebar-primary: #008a8d;
+  --sidebar-primary-foreground: #fafafa;
+}
+
+.dark .theme-platform {
+  --primary: #009a9c;
+  --primary-foreground: #060f0f;
+  --button-primary: #e1e6e5;
+  --sidebar-primary: #007b7e;
+  --sidebar-primary-foreground: #ebefef;
+}
+
+.theme-representatives {
+  --primary: #4878ff;
+  --primary-foreground: #fafafa;
+  --button-primary: #161b24;
+  --sidebar-primary: #4878ff;
+  --sidebar-primary-foreground: #fafafa;
+}
+
+.dark .theme-representatives {
+  --primary: #5786ff;
+  --primary-foreground: #0a0d14;
+  --button-primary: #e3e5e8;
+  --sidebar-primary: #3967df;
+  --sidebar-primary-foreground: #eceff2;
+}

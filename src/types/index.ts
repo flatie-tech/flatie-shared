@@ -63,6 +63,7 @@ export { createPaginatedResponse } from './pagination.types';
 // Permission context (used by the pure evaluator in utils)
 export type {
   BuildingContextFromOrg,
+  BuildingContextFromPlatformAdmin,
   BuildingContextFromRole,
   BuildingMembership,
   BuildingPermissionContext,

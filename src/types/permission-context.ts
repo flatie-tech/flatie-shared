@@ -46,14 +46,39 @@ export interface BuildingContextFromRole {
   membership?: BuildingMembership;
 }
 
-export type BuildingPermissionContext = BuildingContextFromOrg | BuildingContextFromRole;
+/**
+ * Building access granted purely by platform-admin privilege — the caller has
+ * no org membership over this building and no direct building role, so there
+ * is no `orgId`/`orgRole` to report. Introduced so the backend's
+ * access-resolution can stop fabricating an org-shaped context
+ * (`orgId: undefined as any`) for platform admins.
+ */
+export interface BuildingContextFromPlatformAdmin {
+  kind: 'building';
+  userId: string;
+  buildingId: string;
+  permissions: Permission[];
+  source: 'platform_admin';
+  orgId?: undefined;
+  orgRole?: undefined;
+  buildingRole?: undefined;
+  buildingSurfacePercentage?: undefined;
+  /** Set when the platform admin ALSO holds a direct building_roles row here. */
+  membership?: BuildingMembership;
+}
+
+export type BuildingPermissionContext =
+  | BuildingContextFromOrg
+  | BuildingContextFromRole
+  | BuildingContextFromPlatformAdmin;
 
 /**
  * Discriminated union representing the caller's permission context.
  *
  * - `platform` — platform-scoped role (e.g. PLATFORM_ADMIN)
  * - `organization` — org-scoped role
- * - `building` — building-scoped, either via org membership or direct role
+ * - `building` — building-scoped, via org membership, direct role, or
+ *   platform-admin privilege (see `source` on the building variants)
  */
 export type PermissionContext =
   | { kind: 'platform'; userId: string; platformRole: PlatformRole; permissions: Permission[] }

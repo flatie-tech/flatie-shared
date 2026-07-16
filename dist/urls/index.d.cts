@@ -23,7 +23,9 @@ declare const API_ROUTES: {
         readonly EXPORT: "/users/me/export";
         readonly LOCALE: "/users/me/locale";
         readonly PERMISSIONS: "/users/me/permissions";
+        /** @deprecated Phantom route — no backend endpoint exists. Will be removed in v0.60.0. */
         readonly PHONE_SEND_VERIFICATION: "/users/me/phone/send-verification";
+        /** @deprecated Phantom route — no backend endpoint exists. Will be removed in v0.60.0. */
         readonly PHONE_VERIFY: "/users/me/phone/verify";
         readonly BUILDING_CHAT_VISIBILITY: (buildingId: string) => string;
     };
@@ -46,6 +48,7 @@ declare const API_ROUTES: {
         readonly IMPORT_TEMPLATE: (id: string) => string;
         readonly IMPORT_PREVIEW: (id: string) => string;
         readonly IMPORT_COMMIT: (id: string) => string;
+        /** @deprecated Phantom route — no backend endpoint exists. Will be removed in v0.60.0. */
         readonly QUOTAS: (id: string) => string;
         readonly AI_USAGE: (id: string) => string;
     };
@@ -124,6 +127,14 @@ declare const API_ROUTES: {
         readonly APPROVE: (buildingId: string, failureReportId: string) => string;
         readonly RESTORE: (buildingId: string, failureReportId: string) => string;
     };
+    readonly BOARDS: {
+        readonly LIST: (buildingId: string) => string;
+        readonly DETAIL: (buildingId: string, boardId: string) => string;
+        readonly CARDS: (buildingId: string, boardId: string) => string;
+        readonly CARD_DETAIL: (buildingId: string, boardId: string, cardId: string) => string;
+        readonly CARD_MOVE: (buildingId: string, boardId: string, cardId: string) => string;
+        readonly CARD_RESTORE: (buildingId: string, boardId: string, cardId: string) => string;
+    };
     readonly MAINTENANCE_LOGS: {
         readonly LIST: (buildingId: string) => string;
         readonly DETAIL: (buildingId: string, maintenanceLogId: string) => string;
@@ -165,8 +176,11 @@ declare const API_ROUTES: {
         readonly IMPORT_CAMT: (buildingId: string) => string;
         readonly BUILDING_FUNDS_LEDGER: (buildingId: string) => string;
         readonly INVOICES: (buildingId: string) => string;
+        /** @deprecated Phantom route — no backend endpoint exists (the mobile recurring-templates feature 404s). Will be removed in v0.60.0. */
         readonly RECURRING_TEMPLATES: (buildingId: string) => string;
+        /** @deprecated Phantom route — no backend endpoint exists. Will be removed in v0.60.0. */
         readonly RECURRING_TEMPLATE_DETAIL: (buildingId: string, templateId: string) => string;
+        /** @deprecated Phantom route — no backend endpoint exists. Will be removed in v0.60.0. */
         readonly RECURRING_TEMPLATE_RESTORE: (buildingId: string, templateId: string) => string;
     };
     readonly TRANSACTION_CATEGORIES: {
@@ -210,6 +224,7 @@ declare const API_ROUTES: {
         readonly INVITATIONS: (orgId: string) => string;
         readonly BUSINESS_PARTNERS: (orgId: string) => string;
         readonly BUSINESS_PARTNER_DETAIL: (orgId: string, partnerId: string) => string;
+        /** @deprecated Phantom route — no backend endpoint exists (org quotas were never implemented; see org-quota.schema.ts). Will be removed in v0.60.0. */
         readonly QUOTAS: (orgId: string) => string;
     };
     readonly PLATFORM: {

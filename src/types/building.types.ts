@@ -3,7 +3,12 @@ import type { BuildingRole } from '../enums/role.enum';
 import type { BaseEntity, UserCreatedEntity } from './base-entity.types';
 
 /**
- * Building entity
+ * Building entity.
+ *
+ * Kept hand-written (as are the other types in this file): persisted-entity
+ * shape (`Date | string` timestamps) — deliberately diverges from
+ * `buildingResponseSchema` / `buildingDetailResponseSchema` (wire shapes:
+ * ISO strings, status/funds/representative envelopes, billing fields).
  */
 export interface Building extends UserCreatedEntity {
   name: string;

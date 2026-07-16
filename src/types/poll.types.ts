@@ -1,9 +1,15 @@
+import type { z } from 'zod';
 import type { PollType } from '../enums/poll-type.enum';
 import type { CommonStatus } from '../enums/status.enum';
+import type { votePollSchema } from '../schemas/entities/poll.schema';
 import type { BuildingUserEntity, PermissionFields } from './base-entity.types';
 
 /**
- * Poll entity
+ * Poll entity.
+ *
+ * Kept hand-written: persisted-entity shape (`Date | string` timestamps,
+ * decimal-string weights) — deliberately diverges from `pollResponseSchema`
+ * (wire shape: ISO strings, results/vote-status envelopes, permission flags).
  */
 export interface Poll extends BuildingUserEntity {
   question: string;
@@ -21,7 +27,10 @@ export interface Poll extends BuildingUserEntity {
 }
 
 /**
- * Poll with results for API responses
+ * Poll with results for API responses.
+ *
+ * @deprecated Zero consumers — clients parse poll responses via
+ * `pollResponseSchema` / `PollResponse` instead. Will be removed in v0.60.0.
  */
 export interface PollWithResults extends Poll, PermissionFields {
   results?: PollOptionResult[];
@@ -57,7 +66,11 @@ export interface PollVote {
 }
 
 /**
- * Create poll request
+ * Create poll request.
+ *
+ * Kept hand-written: the JSON payload a client sends (deadline as ISO
+ * string). Diverges from `createPollSchema` (multipart request), whose
+ * parsed output has a coerced `Date` deadline plus scoping/consensus fields.
  */
 export interface CreatePollRequest {
   question: string;
@@ -68,8 +81,8 @@ export interface CreatePollRequest {
 }
 
 /**
- * Vote request
+ * Vote request — derived from `votePollSchema` so the request type and the
+ * Zod validator can never drift apart. Same exported name and shape as the
+ * previously hand-written interface.
  */
-export interface VoteRequest {
-  selectedOptionIndex: number;
-}
+export type VoteRequest = z.infer<typeof votePollSchema>;

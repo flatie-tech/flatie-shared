@@ -1,5 +1,5 @@
-import { L as LinkableEntityType, E as EntityLinkType } from '../entity-link.enum-wTDJirUV.cjs';
-import { P as Permission, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-CnSGOT1c.cjs';
+import { L as LinkableEntityType, E as EntityLinkType } from '../entity-link.enum-BYEzMg8A.cjs';
+import { P as Permission, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-MLM2GI6q.cjs';
 
 declare const AI_CHAT_LIMITS: {
     /** Hard ceiling on the messages array per request. */
@@ -28,6 +28,32 @@ declare const MAX_PAGINATION_LIMIT = 100;
  * two clients can't drift (mobile shipped 10s against web's 15s once).
  */
 declare const CHAT_CONVERSATIONS_POLL_MS = 15000;
+
+/**
+ * Platform-neutral display metadata for a linkable entity type.
+ *
+ * - `section` — the in-building section (feature) the entity lives in. Both
+ *   clients name their routes/screens after these sections; each client maps
+ *   the section to a concrete path in its own route tree (web:
+ *   `lib/routes/linked-records.ts`; mobile:
+ *   `features/entity-links/link-routes.ts`).
+ * - `icon` — canonical lucide icon name (kebab-case string). Clients resolve
+ *   it through their own icon barrel (`@/components/icons` on both).
+ * - `tint` — semantic badge-color token name (web's `BADGE_COLORS` keys),
+ *   never a raw hex value. Each client maps the token to its own palette.
+ */
+interface EntityLinkTypeMeta {
+    readonly section: string;
+    readonly icon: string;
+    readonly tint: string;
+}
+/**
+ * Entity-type → section/icon/tint map for the linked-records UI (badges,
+ * connection rows, link pickers) — the single source both clients derive
+ * their local maps from, replacing the previously duplicated-and-drifting
+ * copies (mobile's copy was missing `board_card`).
+ */
+declare const ENTITY_LINK_TYPE_META: Record<LinkableEntityType, EntityLinkTypeMeta>;
 
 /**
  * A legal (source, target, linkType) triple for the generic links API.
@@ -399,6 +425,16 @@ declare const aiUsageKeys: {
     all: readonly ["aiUsage"];
     detail: (buildingId: string) => readonly ["aiUsage", string];
 };
+declare const boardKeys: {
+    all: readonly ["board"];
+    /** The list of boards in a building. */
+    boards: (buildingId: string) => readonly ["board", "boards", string];
+    /** Cards of one board. */
+    cardLists: () => readonly ["board", "cards"];
+    cards: (buildingId: string, boardId: string) => readonly ["board", "cards", string, string];
+    details: () => readonly ["board", "detail"];
+    detail: (id: string) => readonly ["board", "detail", string];
+};
 /**
  * All query keys combined for easy access
  */
@@ -406,6 +442,16 @@ declare const queryKeys: {
     readonly aiUsage: {
         all: readonly ["aiUsage"];
         detail: (buildingId: string) => readonly ["aiUsage", string];
+    };
+    readonly board: {
+        all: readonly ["board"];
+        /** The list of boards in a building. */
+        boards: (buildingId: string) => readonly ["board", "boards", string];
+        /** Cards of one board. */
+        cardLists: () => readonly ["board", "cards"];
+        cards: (buildingId: string, boardId: string) => readonly ["board", "cards", string, string];
+        details: () => readonly ["board", "detail"];
+        detail: (id: string) => readonly ["board", "detail", string];
     };
     readonly user: {
         all: readonly ["user"];
@@ -698,4 +744,4 @@ declare const ADMIN_ORG_PERMISSIONS: Permission[];
 /** Admin platform-scope permissions — same as PLATFORM_ADMIN. */
 declare const ADMIN_PLATFORM_PERMISSIONS: Permission[];
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, AI_CHAT_LIMITS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, type EntityLinkRule, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, blogKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, incomeKeys, isEntityLinkAllowed, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, AI_CHAT_LIMITS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, ENTITY_LINK_TYPE_META, type EntityLinkRule, type EntityLinkTypeMeta, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, blogKeys, boardKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, incomeKeys, isEntityLinkAllowed, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };

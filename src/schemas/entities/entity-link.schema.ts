@@ -25,6 +25,7 @@ export const LINKABLE_ENTITY_TYPES = [
   'poll',
   'file',
   'expense_transaction',
+  'board_card',
 ] as const;
 
 export const entityLinkTypeSchema = z

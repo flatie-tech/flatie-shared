@@ -65,7 +65,12 @@ export interface CreateTransactionRequest {
 }
 
 /**
- * Recurring transaction template
+ * Recurring transaction template.
+ *
+ * @deprecated Zero consumers — the backend never implemented recurring
+ * templates (the `FUNDS.RECURRING_TEMPLATE*` routes are phantoms) and
+ * mobile's dead recurring-templates feature uses its own local type and is
+ * slated for deletion. Will be removed in v0.60.0.
  */
 export interface RecurringTemplate extends BaseEntity {
   buildingId: string;
@@ -82,7 +87,9 @@ export interface RecurringTemplate extends BaseEntity {
 }
 
 /**
- * Create recurring template request
+ * Create recurring template request.
+ *
+ * @deprecated Zero consumers — see {@link RecurringTemplate}. Will be removed in v0.60.0.
  */
 export interface CreateRecurringTemplateRequest {
   buildingId: string;

@@ -62,13 +62,15 @@ tests/
 
 ## Design tokens
 
-Three consumer shapes, all built from `src/tokens/*.ts`:
+Five consumer shapes, all built from `src/tokens/*.ts`:
 
 1. **Programmatic TS/JS** — `@flatie/shared/tokens` → `{ colors, themes, radii }` for runtime access
 2. **CSS** — `@flatie/shared/tokens.css` → ready-to-import stylesheet; frontend imports in `globals.css` and Tailwind v4 `@theme inline` maps to utility classes
 3. **Tailwind preset** — `@flatie/shared/tailwind-preset` → v3-compatible preset (default light colors + raw `tokens` export with dark + per-theme data) for NativeWind on mobile
+4. **Native CSS** — `@flatie/shared/tokens.native.css` → same stylesheet with every oklch value pre-converted to sRGB hex (React Native / NativeWind can't parse oklch)
+5. **Native TS/JS** — `@flatie/shared/tokens.native` → `{ colors, themes, radii }` in hex, mirroring #1's shape for mobile's `colors.js` / `scheme-colors.ts`
 
-Outputs #2 and #3 are generated post-build by `scripts/emit-tokens-assets.mjs` (wired into `tsup.config.ts` `onSuccess`).
+Outputs #2–#5 are generated post-build by `scripts/emit-tokens-assets.mjs` (wired into `tsup.config.ts` `onSuccess`); the oklch→hex math lives in `scripts/oklch-to-hex.mjs` (dependency-free port of mobile's converter).
 
 Token-change workflow: edit `src/tokens/*.ts` → `pnpm build && pnpm test` → bump version → tag → push → bump consumers.
 

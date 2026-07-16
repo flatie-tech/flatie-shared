@@ -6,6 +6,8 @@ export {
   DEFAULT_PAGINATION_LIMIT,
   MAX_PAGINATION_LIMIT,
 } from './defaults';
+// Entity-link display metadata (entity type → section/icon/tint for linked-records UI)
+export { ENTITY_LINK_TYPE_META, type EntityLinkTypeMeta } from './entity-link-meta';
 // Entity-link rules (which (source, target, linkType) triples the links API accepts)
 export {
   ALLOWED_ENTITY_LINKS,
@@ -20,6 +22,7 @@ export {
   aiUsageKeys,
   apartmentKeys,
   blogKeys,
+  boardKeys,
   buildingEmailKeys,
   buildingKeys,
   businessPartnerKeys,
