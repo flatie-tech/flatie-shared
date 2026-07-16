@@ -3426,7 +3426,7 @@ declare const notificationResponseSchema: z.ZodObject<{
         actorName: z.ZodOptional<z.ZodString>;
         actionUrl: z.ZodOptional<z.ZodString>;
         title: z.ZodString;
-        wasteTypeLabel: z.ZodString;
+        wasteTypeLabel: z.ZodOptional<z.ZodString>;
         subtype: z.ZodString;
         startDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
     }, z.core.$strip>, z.ZodObject<{

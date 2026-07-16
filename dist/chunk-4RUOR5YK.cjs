@@ -244,7 +244,7 @@ var UNIMPLEMENTED_NOTIFICATION_TYPES = /* @__PURE__ */ new Set([
   NotificationType.PAYMENT_RECEIVED,
   NotificationType.SYSTEM_ANNOUNCEMENT
 ]);
-/* @__PURE__ */ new Set([NotificationType.BUILDING_MEMBER_JOINED]);
+var CO_OWNER_VISIBLE_SYSTEM_TYPES = /* @__PURE__ */ new Set([NotificationType.BUILDING_MEMBER_JOINED]);
 var WASTE_SUBTYPE_NOTIFICATION_MAP = {
   mixed: NotificationType.WASTE_REMINDER_MIXED,
   bio: NotificationType.WASTE_REMINDER_BIO,
@@ -650,6 +650,7 @@ exports.BuildingOtpExpiry = BuildingOtpExpiry;
 exports.BuildingRole = BuildingRole;
 exports.BuildingStatus = BuildingStatus;
 exports.BuildingType = BuildingType;
+exports.CO_OWNER_VISIBLE_SYSTEM_TYPES = CO_OWNER_VISIBLE_SYSTEM_TYPES;
 exports.CommonStatus = CommonStatus;
 exports.DevicePlatform = DevicePlatform;
 exports.EntityLinkType = EntityLinkType;
@@ -705,5 +706,5 @@ exports.canAssignPlatformRole = canAssignPlatformRole;
 exports.canAssignRole = canAssignRole;
 exports.domainPermissions = domainPermissions;
 exports.methodToTier = methodToTier;
-//# sourceMappingURL=chunk-WSDS5TL5.cjs.map
-//# sourceMappingURL=chunk-WSDS5TL5.cjs.map
+//# sourceMappingURL=chunk-4RUOR5YK.cjs.map
+//# sourceMappingURL=chunk-4RUOR5YK.cjs.map
