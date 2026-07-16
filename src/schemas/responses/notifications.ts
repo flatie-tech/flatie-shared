@@ -72,7 +72,11 @@ const eventCancelledDataSchema = baseNotificationDataSchema.extend({
 
 const wasteReminderDataSchema = baseNotificationDataSchema.extend({
   title: z.string(),
-  wasteTypeLabel: z.string(),
+  /**
+   * @deprecated The backend no longer sends a pre-rendered label — derive it
+   * from `subtype` in the client's locale. Present only on pre-2026-07 rows.
+   */
+  wasteTypeLabel: z.string().optional(),
   subtype: z.string(),
   startDate: z.string().or(z.date()),
 });
