@@ -21,5 +21,9 @@ export default defineConfig({
   treeshake: true,
   sourcemap: true,
   external: ['zod'],
+  // Also invoked again from the `build` script AFTER tsup fully exits: the
+  // DTS phase finishes after onSuccess fires and clobbers the script-emitted
+  // .d.ts/.d.cts files (tailwind-preset + tokens.native). onSuccess stays for
+  // watch-mode feedback; the post-build run is the one whose output survives.
   onSuccess: 'node scripts/emit-tokens-assets.mjs',
 });
