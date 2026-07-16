@@ -21,6 +21,7 @@ export const RELATED_TO_LINKABLE_TYPES: readonly LinkableEntityType[] = [
   LinkableEntityType.MAINTENANCE_LOG,
   LinkableEntityType.FAILURE_REPORT,
   LinkableEntityType.FILE,
+  LinkableEntityType.BOARD_CARD,
 ];
 
 /**

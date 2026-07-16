@@ -33,6 +33,7 @@ export const LinkableEntityType = {
   POLL: 'poll',
   FILE: 'file',
   EXPENSE_TRANSACTION: 'expense_transaction',
+  BOARD_CARD: 'board_card',
 } as const;
 
 export type LinkableEntityType = (typeof LinkableEntityType)[keyof typeof LinkableEntityType];

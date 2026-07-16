@@ -7,6 +7,26 @@ export {
   paginatedApartmentsResponseSchema,
 } from './apartment.schema';
 
+// Board (Kanban) + card schemas
+export type {
+  BoardCardChecklistItemSchema,
+  CreateBoardCardSchema,
+  CreateBoardSchema,
+  MoveBoardCardSchema,
+  UpdateBoardCardSchema,
+  UpdateBoardSchema,
+} from './board-card.schema';
+export {
+  BOARD_CARD_LIMITS,
+  BOARD_LIMITS,
+  boardCardChecklistItemSchema,
+  createBoardCardSchema,
+  createBoardSchema,
+  moveBoardCardSchema,
+  updateBoardCardSchema,
+  updateBoardSchema,
+} from './board-card.schema';
+
 // Chat schemas
 export type {
   ConversationType,

@@ -191,6 +191,20 @@ export const API_ROUTES = {
       `/buildings/${buildingId}/failure-reports/${failureReportId}/restore`,
   },
 
+  // ── Boards (Kanban) ──────────────────────────────────────────────────
+  BOARDS: {
+    LIST: (buildingId: string) => `/buildings/${buildingId}/boards`,
+    DETAIL: (buildingId: string, boardId: string) => `/buildings/${buildingId}/boards/${boardId}`,
+    CARDS: (buildingId: string, boardId: string) =>
+      `/buildings/${buildingId}/boards/${boardId}/cards`,
+    CARD_DETAIL: (buildingId: string, boardId: string, cardId: string) =>
+      `/buildings/${buildingId}/boards/${boardId}/cards/${cardId}`,
+    CARD_MOVE: (buildingId: string, boardId: string, cardId: string) =>
+      `/buildings/${buildingId}/boards/${boardId}/cards/${cardId}/move`,
+    CARD_RESTORE: (buildingId: string, boardId: string, cardId: string) =>
+      `/buildings/${buildingId}/boards/${boardId}/cards/${cardId}/restore`,
+  },
+
   // ── Maintenance Logs ─────────────────────────────────────────────────
   MAINTENANCE_LOGS: {
     LIST: (buildingId: string) => `/buildings/${buildingId}/maintenance-logs`,

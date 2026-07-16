@@ -381,11 +381,24 @@ export const aiUsageKeys = {
   detail: (buildingId: string) => [...aiUsageKeys.all, buildingId] as const,
 };
 
+export const boardKeys = {
+  all: ['board'] as const,
+  /** The list of boards in a building. */
+  boards: (buildingId: string) => [...boardKeys.all, 'boards', buildingId] as const,
+  /** Cards of one board. */
+  cardLists: () => [...boardKeys.all, 'cards'] as const,
+  cards: (buildingId: string, boardId: string) =>
+    [...boardKeys.cardLists(), buildingId, boardId] as const,
+  details: () => [...boardKeys.all, 'detail'] as const,
+  detail: (id: string) => [...boardKeys.details(), id] as const,
+};
+
 /**
  * All query keys combined for easy access
  */
 export const queryKeys = {
   aiUsage: aiUsageKeys,
+  board: boardKeys,
   user: userKeys,
   building: buildingKeys,
   buildingEmail: buildingEmailKeys,

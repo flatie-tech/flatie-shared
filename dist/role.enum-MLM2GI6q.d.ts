@@ -85,6 +85,8 @@ declare const Permission: {
     readonly FAQ_READ: "faq:read";
     readonly FAQ_MANAGE_REPRESENTATIVE: "faq:manage:representative";
     readonly FAQ_MANAGE_MANAGER: "faq:manage:manager";
+    readonly BOARD_CARD_READ: "board_card:read";
+    readonly BOARD_CARD_MANAGE: "board_card:manage";
     readonly BUILDING_SETTINGS_MANAGE: "building_settings:manage";
     readonly BUILDING_EMAIL_VIEW: "building_email:view";
     readonly BUILDING_EMAIL_MANAGE: "building_email:manage";

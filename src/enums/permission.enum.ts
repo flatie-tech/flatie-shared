@@ -142,6 +142,12 @@ export const Permission = {
   FAQ_MANAGE_REPRESENTATIVE: 'faq:manage:representative',
   FAQ_MANAGE_MANAGER: 'faq:manage:manager',
 
+  // Board (Kanban) — representative-managed, all members read.
+  // Read + manage split mirrors house_rules / building_email: reps edit the
+  // board, everyone else (co-owners, org staff) sees it read-only.
+  BOARD_CARD_READ: 'board_card:read',
+  BOARD_CARD_MANAGE: 'board_card:manage',
+
   // Building Settings
   BUILDING_SETTINGS_MANAGE: 'building_settings:manage',
 

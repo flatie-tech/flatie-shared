@@ -31,6 +31,7 @@ declare const LinkableEntityType: {
     readonly POLL: "poll";
     readonly FILE: "file";
     readonly EXPENSE_TRANSACTION: "expense_transaction";
+    readonly BOARD_CARD: "board_card";
 };
 type LinkableEntityType = (typeof LinkableEntityType)[keyof typeof LinkableEntityType];
 

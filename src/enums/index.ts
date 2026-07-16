@@ -1,4 +1,5 @@
 export { ApartmentRole } from './apartment-role.enum';
+export { BoardCardStatus, BoardVisibility } from './board-card.enum';
 export { BuildingOtpExpiry } from './building-otp-expiry.enum';
 export { BuildingStatus, OrgStatus } from './building-status.enum';
 export { BuildingType } from './building-type.enum';

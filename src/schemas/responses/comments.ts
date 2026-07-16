@@ -6,11 +6,13 @@ export const commentResponseSchema = z.looseObject({
   entityType: z
     .string()
     .describe(
-      'Type of entity this comment is attached to. One of `notice`, `failure_report`, `event`.',
+      'Type of entity this comment is attached to. One of `notice`, `failure_report`, `event`, `board_card`.',
     ),
   entityId: z
     .string()
-    .describe('UUID of the entity (notice, failure report, or event) this comment belongs to.'),
+    .describe(
+      'UUID of the entity (notice, failure report, event, or board card) this comment belongs to.',
+    ),
   userId: z.string().describe('UUID of the user who authored the comment.'),
   userName: z
     .string()
