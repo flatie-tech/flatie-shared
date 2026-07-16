@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.60.3
+
+### Changes
+
+- export CO_OWNER_VISIBLE_SYSTEM_TYPES from the enums barrel
+
 ## 0.60.2
 
 ### Changes
