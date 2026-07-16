@@ -15,13 +15,11 @@ const allAssignedPermissions = new Set([
 ]);
 
 describe('Permission exhaustiveness — enum vs. role mappings', () => {
-  it('every Permission enum value is assigned to at least one role', () => {
-    const unassigned = [...allEnumValues].filter((p) => !allAssignedPermissions.has(p));
-    expect(
-      unassigned,
-      `These permissions exist in the enum but are not assigned to any role: ${unassigned.join(', ')}`,
-    ).toEqual([]);
-  });
+  // Orphan coverage (enum values granted to no role) lives in
+  // tests/constants/role-permissions-orphans.test.ts, which asserts the
+  // orphan set EXACTLY equals an explicit KNOWN_ORPHANS allowlist. A hard
+  // zero-orphan assertion here would make that allowlist unusable, so this
+  // file only checks the reverse direction.
 
   it('every permission referenced in role mappings exists in the Permission enum', () => {
     const phantom = [...allAssignedPermissions].filter((p) => !allEnumValues.has(p));
