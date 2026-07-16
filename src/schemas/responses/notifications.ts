@@ -8,7 +8,8 @@ import type { Strict } from './_strict';
  * The backend always spreads these keys before the per-type payload:
  *   - entityType / entityId: populated from the emit call (absent for chat)
  *   - actorId: populated from the emit call when the action has an actor
- *   - actorName: resolved from DB, defaults to "Someone"
+ *   - actorName: resolved from DB; when absent the backend renders a
+ *     locale-appropriate fallback ("Netko"/"Someone"/"Jemand") into the text
  *
  * All fields are optional because individual emit sites may omit them
  * (e.g. schedulers have no actor, chat doesn't set an entity pair).
@@ -132,6 +133,22 @@ const chatMessageDataSchema = baseNotificationDataSchema.extend({
   conversationId: z.string().uuid(),
 });
 
+const eventReminderDataSchema = baseNotificationDataSchema.extend({
+  title: z.string(),
+  // Pre-formatted wall-clock time in Europe/Zagreb (e.g. "18:00") — template var.
+  startTime: z.string().optional(),
+  // Occurrence start (not the parent event's) — feeds the calendar deep-link `date` param.
+  startDate: z.string().or(z.date()),
+});
+
+const pollVoteSignatureDataSchema = baseNotificationDataSchema.extend({
+  question: z.string(),
+});
+
+const pollVoteSignatureRejectedDataSchema = pollVoteSignatureDataSchema.extend({
+  reason: z.string().nullable().optional(),
+});
+
 /**
  * Unimplemented notification types (no emit sites yet) — shape will be
  * locked down when the triggers ship. Until then we accept the base shape.
@@ -159,8 +176,8 @@ const notificationDataSchemaByType = {
   [NotificationType.EVENT_CREATED]: eventCreatedOrUpdatedDataSchema,
   [NotificationType.EVENT_UPDATED]: eventCreatedOrUpdatedDataSchema,
   [NotificationType.EVENT_CANCELLED]: eventCancelledDataSchema,
-  [NotificationType.EVENT_REMINDER_24H]: unimplementedDataSchema,
-  [NotificationType.EVENT_REMINDER_1H]: unimplementedDataSchema,
+  [NotificationType.EVENT_REMINDER_24H]: eventReminderDataSchema,
+  [NotificationType.EVENT_REMINDER_1H]: eventReminderDataSchema,
 
   [NotificationType.WASTE_REMINDER_MIXED]: wasteReminderDataSchema,
   [NotificationType.WASTE_REMINDER_BIO]: wasteReminderDataSchema,
@@ -186,9 +203,9 @@ const notificationDataSchemaByType = {
 
   [NotificationType.CHAT_MESSAGE]: chatMessageDataSchema,
 
-  [NotificationType.POLL_VOTE_SIGNATURE_PENDING]: unimplementedDataSchema,
-  [NotificationType.POLL_VOTE_SIGNATURE_APPROVED]: unimplementedDataSchema,
-  [NotificationType.POLL_VOTE_SIGNATURE_REJECTED]: unimplementedDataSchema,
+  [NotificationType.POLL_VOTE_SIGNATURE_PENDING]: pollVoteSignatureDataSchema,
+  [NotificationType.POLL_VOTE_SIGNATURE_APPROVED]: pollVoteSignatureDataSchema,
+  [NotificationType.POLL_VOTE_SIGNATURE_REJECTED]: pollVoteSignatureRejectedDataSchema,
 
   [NotificationType.SYSTEM_ANNOUNCEMENT]: unimplementedDataSchema,
 } as const satisfies Record<NotificationType, z.ZodType>;
@@ -221,6 +238,9 @@ export const notificationDataSchema = z.union([
   buildingApprovedDataSchema,
   buildingRejectedDataSchema,
   chatMessageDataSchema,
+  eventReminderDataSchema,
+  pollVoteSignatureDataSchema,
+  pollVoteSignatureRejectedDataSchema,
   unimplementedDataSchema,
 ]);
 
