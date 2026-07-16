@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.61.0
+
+### Changes
+
+- Board v3: user-defined columns (create/rename/reorder), card file attachments + inline calendar events, markdown descriptions; NotificationChannel.SMS
+
 ## 0.60.3
 
 ### Changes
