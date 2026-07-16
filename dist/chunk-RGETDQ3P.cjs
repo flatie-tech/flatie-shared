@@ -361,15 +361,19 @@ function createPermissionChecker(subject) {
   };
 }
 
-// src/utils/permissions.ts
-function hasPermission(userPermissions, permission) {
-  return userPermissions.includes(permission);
+// src/utils/resident-restriction.ts
+function applyResidentRestrictionToItem(item, isRestrictedView) {
+  if (!isRestrictedView) return item;
+  return {
+    ...item,
+    canEdit: item.canEdit && item.isOwner,
+    canDelete: item.canDelete && item.isOwner,
+    ...item.canApprove !== void 0 && { canApprove: false }
+  };
 }
-function hasAnyPermission(userPermissions, permissions) {
-  return permissions.some((p) => userPermissions.includes(p));
-}
-function hasAllPermissions(userPermissions, permissions) {
-  return permissions.every((p) => userPermissions.includes(p));
+function applyResidentRestriction(items, isRestrictedView) {
+  if (!isRestrictedView) return items;
+  return items.map((item) => applyResidentRestrictionToItem(item, true));
 }
 
 // src/utils/status-variants.ts
@@ -481,6 +485,8 @@ exports.ROLE_DESCRIPTION_KEYS = ROLE_DESCRIPTION_KEYS;
 exports.ROLE_TRANSLATION_KEYS = ROLE_TRANSLATION_KEYS;
 exports.TIME_FORMATS = TIME_FORMATS;
 exports.VOTING_METHOD_SETTINGS = VOTING_METHOD_SETTINGS;
+exports.applyResidentRestriction = applyResidentRestriction;
+exports.applyResidentRestrictionToItem = applyResidentRestrictionToItem;
 exports.buildGoogleCalendarUrl = buildGoogleCalendarUrl;
 exports.calculatePaginationMeta = calculatePaginationMeta;
 exports.canDo = canDo;
@@ -504,9 +510,6 @@ exports.getDateRange = getDateRange;
 exports.getInitials = getInitials;
 exports.getMessageableUsers = getMessageableUsers;
 exports.getRoleBadge = getRoleBadge;
-exports.hasAllPermissions = hasAllPermissions;
-exports.hasAnyPermission = hasAnyPermission;
-exports.hasPermission = hasPermission;
 exports.isLastEnabledVotingMethod = isLastEnabledVotingMethod;
 exports.isManagerialRole = isManagerialRole;
 exports.isValidHouseNumber = isValidHouseNumber;
@@ -518,5 +521,5 @@ exports.parseHouseNumber = parseHouseNumber;
 exports.priorityVariant = priorityVariant;
 exports.resolveVotingMethods = resolveVotingMethods;
 exports.violatesVotingMethodLock = violatesVotingMethodLock;
-//# sourceMappingURL=chunk-EKSLEP43.cjs.map
-//# sourceMappingURL=chunk-EKSLEP43.cjs.map
+//# sourceMappingURL=chunk-RGETDQ3P.cjs.map
+//# sourceMappingURL=chunk-RGETDQ3P.cjs.map

@@ -7,6 +7,18 @@ var DEFAULT_PAGINATION_LIMIT = 10;
 var MAX_PAGINATION_LIMIT = 100;
 var CHAT_CONVERSATIONS_POLL_MS = 15e3;
 
+// src/constants/entity-link-meta.ts
+var ENTITY_LINK_TYPE_META = {
+  notice: { section: "notices", icon: "bell", tint: "orange" },
+  event: { section: "calendar", icon: "calendar", tint: "success" },
+  poll: { section: "polls", icon: "chart-pie", tint: "info" },
+  maintenance_log: { section: "maintenance-logs", icon: "wrench", tint: "purple" },
+  failure_report: { section: "failure-reports", icon: "triangle-alert", tint: "danger" },
+  file: { section: "documents", icon: "file-text", tint: "neutral" },
+  expense_transaction: { section: "funds", icon: "receipt", tint: "amber" },
+  board_card: { section: "board", icon: "square-kanban", tint: "info" }
+};
+
 // src/constants/entity-link-rules.ts
 var RELATED_TO_LINKABLE_TYPES = [
   chunkYNJF4QI5_cjs.LinkableEntityType.NOTICE,
@@ -568,6 +580,7 @@ exports.ALL_PERMISSIONS = ALL_PERMISSIONS;
 exports.BUILDING_ROLE_PERMISSIONS = BUILDING_ROLE_PERMISSIONS;
 exports.CHAT_CONVERSATIONS_POLL_MS = CHAT_CONVERSATIONS_POLL_MS;
 exports.DEFAULT_PAGINATION_LIMIT = DEFAULT_PAGINATION_LIMIT;
+exports.ENTITY_LINK_TYPE_META = ENTITY_LINK_TYPE_META;
 exports.MAX_PAGINATION_LIMIT = MAX_PAGINATION_LIMIT;
 exports.ORG_ROLE_PERMISSIONS = ORG_ROLE_PERMISSIONS;
 exports.PLATFORM_ROLE_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS;
@@ -611,5 +624,5 @@ exports.unitReminderKeys = unitReminderKeys;
 exports.unitSearchKeys = unitSearchKeys;
 exports.userKeys = userKeys;
 exports.widgetKeys = widgetKeys;
-//# sourceMappingURL=chunk-OVUEM6NL.cjs.map
-//# sourceMappingURL=chunk-OVUEM6NL.cjs.map
+//# sourceMappingURL=chunk-GON7AI2G.cjs.map
+//# sourceMappingURL=chunk-GON7AI2G.cjs.map

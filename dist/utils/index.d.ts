@@ -380,22 +380,50 @@ interface PermissionChecker {
 declare function createPermissionChecker(subject: PermissionSubject | null): PermissionChecker;
 
 /**
- * @deprecated Use `createPermissionChecker(subject).can(permission)` from
- * `./permission-checker`. These raw `string[]` helpers predate the unified
- * `PermissionChecker` and are kept only so existing call-sites keep compiling
- * during migration; they will be removed in a future minor.
+ * Resident-view restriction over action-flagged items.
+ *
+ * Both clients render the same building sections in two modes: a management
+ * view (representatives / org members with full flags) and a restricted view
+ * — web's "resident view" toggle and mobile's non-management view. In the
+ * restricted mode a user may only act on records they created, regardless of
+ * what the server-computed flags would otherwise allow, and approval actions
+ * are hidden entirely.
+ *
+ * These helpers centralise that rule as a pure map over items carrying the
+ * shared permission flags ({@link PermissionFields} `canEdit`/`canDelete`,
+ * plus `isOwner` and optionally `canApprove` from {@link ActionFlags}):
+ *
+ * - `isRestrictedView === false` → passthrough, flags unchanged.
+ * - `isRestrictedView === true`  → `canEdit`/`canDelete` are additionally
+ *   gated on `isOwner`; `canApprove` (when present) is forced to `false`.
  */
-declare function hasPermission(userPermissions: string[], permission: Permission): boolean;
 /**
- * @deprecated Use `createPermissionChecker(subject).canAny(permissions)` from
- * `./permission-checker`.
+ * Minimal flag shape the restriction operates on. Server response schemas
+ * (`eventResponseSchema`, `noticeResponseSchema`, …) and the client-side
+ * {@link ActionFlags} both satisfy it; `canApprove` is optional so items
+ * without an approval concept pass through untouched.
  */
-declare function hasAnyPermission(userPermissions: string[], permissions: Permission[]): boolean;
+interface RestrictableActionFlags {
+    canEdit: boolean;
+    canDelete: boolean;
+    canApprove?: boolean;
+    isOwner: boolean;
+}
 /**
- * @deprecated Use `createPermissionChecker(subject).canAll(permissions)` from
- * `./permission-checker`.
+ * Apply the resident-view restriction to a single item.
+ *
+ * Returns the item unchanged (same reference) when `isRestrictedView` is
+ * false; otherwise returns a shallow copy with the flags narrowed.
  */
-declare function hasAllPermissions(userPermissions: string[], permissions: Permission[]): boolean;
+declare function applyResidentRestrictionToItem<T extends RestrictableActionFlags>(item: T, isRestrictedView: boolean): T;
+/**
+ * Apply the resident-view restriction to a list of items.
+ *
+ * Returns the array unchanged (same reference) when `isRestrictedView` is
+ * false; otherwise returns a new array of shallow-copied items with the
+ * flags narrowed.
+ */
+declare function applyResidentRestriction<T extends RestrictableActionFlags>(items: T[], isRestrictedView: boolean): T[];
 
 /**
  * Every role value that UIs render as a label/badge. `ApartmentRole.TENANT`
@@ -549,4 +577,4 @@ declare function getDateRange(filter: 'today' | 'yesterday' | 'week' | 'month'):
  */
 declare function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(func: T, delay: number): (...args: Parameters<T>) => void;
 
-export { type ActionFlags, type AddressParts, DATETIME_FORMATS, DATE_FORMATS, type DisplayableRole, type GoogleCalendarEventInput, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, type MessageableUserShape, ParseError, type ParsedApiError, type ParsedHouseNumber, type PermissionChecker, type PermissionSubject, ROLE_BADGE_COLORS, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type RoleBadgeColor, type StatusVariant, TIME_FORMATS, VOTING_METHOD_SETTINGS, type VotingMethodSetting, type VotingMethodState, buildGoogleCalendarUrl, calculatePaginationMeta, canDo, canDoOnResource, canMessageUser, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatAddress, formatCurrency, formatCurrencyByLocale, formatCurrencyEUR, formatDate as formatDateByLocale, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, getInitials, getMessageableUsers, getRoleBadge, hasAllPermissions, hasAnyPermission, hasPermission, isLastEnabledVotingMethod, isManagerialRole, isValidHouseNumber, normalizeHouseNumber, normalizePaginatedResponse, parseApiError, parseData, parseHouseNumber, priorityVariant, resolveVotingMethods, violatesVotingMethodLock };
+export { type ActionFlags, type AddressParts, DATETIME_FORMATS, DATE_FORMATS, type DisplayableRole, type GoogleCalendarEventInput, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, type MessageableUserShape, ParseError, type ParsedApiError, type ParsedHouseNumber, type PermissionChecker, type PermissionSubject, ROLE_BADGE_COLORS, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type RestrictableActionFlags, type RoleBadgeColor, type StatusVariant, TIME_FORMATS, VOTING_METHOD_SETTINGS, type VotingMethodSetting, type VotingMethodState, applyResidentRestriction, applyResidentRestrictionToItem, buildGoogleCalendarUrl, calculatePaginationMeta, canDo, canDoOnResource, canMessageUser, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatAddress, formatCurrency, formatCurrencyByLocale, formatCurrencyEUR, formatDate as formatDateByLocale, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, getInitials, getMessageableUsers, getRoleBadge, isLastEnabledVotingMethod, isManagerialRole, isValidHouseNumber, normalizeHouseNumber, normalizePaginatedResponse, parseApiError, parseData, parseHouseNumber, priorityVariant, resolveVotingMethods, violatesVotingMethodLock };

@@ -5,6 +5,18 @@ var DEFAULT_PAGINATION_LIMIT = 10;
 var MAX_PAGINATION_LIMIT = 100;
 var CHAT_CONVERSATIONS_POLL_MS = 15e3;
 
+// src/constants/entity-link-meta.ts
+var ENTITY_LINK_TYPE_META = {
+  notice: { section: "notices", icon: "bell", tint: "orange" },
+  event: { section: "calendar", icon: "calendar", tint: "success" },
+  poll: { section: "polls", icon: "chart-pie", tint: "info" },
+  maintenance_log: { section: "maintenance-logs", icon: "wrench", tint: "purple" },
+  failure_report: { section: "failure-reports", icon: "triangle-alert", tint: "danger" },
+  file: { section: "documents", icon: "file-text", tint: "neutral" },
+  expense_transaction: { section: "funds", icon: "receipt", tint: "amber" },
+  board_card: { section: "board", icon: "square-kanban", tint: "info" }
+};
+
 // src/constants/entity-link-rules.ts
 var RELATED_TO_LINKABLE_TYPES = [
   LinkableEntityType.NOTICE,
@@ -559,6 +571,6 @@ var ALL_PERMISSIONS = unique(Object.values(Permission));
 var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[OrgRole.ORG_ADMIN];
 var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_ADMIN];
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, blogKeys, boardKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, incomeKeys, isEntityLinkAllowed, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };
-//# sourceMappingURL=chunk-V2L67P2A.js.map
-//# sourceMappingURL=chunk-V2L67P2A.js.map
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, ENTITY_LINK_TYPE_META, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, blogKeys, boardKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, incomeKeys, isEntityLinkAllowed, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitReminderKeys, unitSearchKeys, userKeys, widgetKeys };
+//# sourceMappingURL=chunk-T2P2DAWQ.js.map
+//# sourceMappingURL=chunk-T2P2DAWQ.js.map

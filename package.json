@@ -68,6 +68,17 @@
       }
     },
     "./tokens.css": "./dist/tokens.css",
+    "./tokens.native.css": "./dist/tokens.native.css",
+    "./tokens.native": {
+      "import": {
+        "types": "./dist/tokens.native.d.ts",
+        "default": "./dist/tokens.native.js"
+      },
+      "require": {
+        "types": "./dist/tokens.native.d.cts",
+        "default": "./dist/tokens.native.cjs"
+      }
+    },
     "./tailwind-preset": {
       "import": {
         "types": "./dist/tailwind-preset.d.ts",

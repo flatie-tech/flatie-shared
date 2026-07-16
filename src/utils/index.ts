@@ -54,8 +54,12 @@ export {
   computeActionFlags,
   getContextUserId,
 } from './permission-evaluator';
-// Permission utilities (deprecated — prefer createPermissionChecker)
-export { hasAllPermissions, hasAnyPermission, hasPermission } from './permissions';
+// Resident-view restriction (owner-only edit/delete when the viewer is a plain resident)
+export type { RestrictableActionFlags } from './resident-restriction';
+export {
+  applyResidentRestriction,
+  applyResidentRestrictionToItem,
+} from './resident-restriction';
 // Role helpers
 export type { DisplayableRole, RoleBadgeColor } from './role-helpers';
 export {

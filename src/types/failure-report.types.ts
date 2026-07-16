@@ -2,7 +2,12 @@ import type { FailureStatus } from '../enums/status.enum';
 import type { BaseEntity, PermissionFields } from './base-entity.types';
 
 /**
- * Failure report entity
+ * Failure report entity.
+ *
+ * Kept hand-written: persisted-entity shape (`Date | string` timestamps,
+ * `submittedBy` user id) — deliberately diverges from
+ * `failureReportResponseSchema` (wire shape: ISO strings, nested submitter,
+ * location fields, permission flags).
  */
 export interface FailureReport extends BaseEntity {
   buildingId: string;
@@ -14,7 +19,11 @@ export interface FailureReport extends BaseEntity {
 }
 
 /**
- * Failure report with creator info for API responses
+ * Failure report with creator info for API responses.
+ *
+ * @deprecated Zero consumers — clients parse responses via
+ * `failureReportResponseSchema` / `FailureReportResponse` instead.
+ * Will be removed in v0.60.0.
  */
 export interface FailureReportWithCreator extends FailureReport, PermissionFields {
   submitter?: {
@@ -26,7 +35,11 @@ export interface FailureReportWithCreator extends FailureReport, PermissionField
 }
 
 /**
- * Create failure report request
+ * Create failure report request.
+ *
+ * Kept hand-written: minimal JSON payload. Diverges from
+ * `createFailureReportSchema` (multipart request), which requires
+ * `description` and models priority/location/attachment fields.
  */
 export interface CreateFailureReportRequest {
   title: string;

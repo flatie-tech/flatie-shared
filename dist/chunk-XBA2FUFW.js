@@ -359,15 +359,19 @@ function createPermissionChecker(subject) {
   };
 }
 
-// src/utils/permissions.ts
-function hasPermission(userPermissions, permission) {
-  return userPermissions.includes(permission);
+// src/utils/resident-restriction.ts
+function applyResidentRestrictionToItem(item, isRestrictedView) {
+  if (!isRestrictedView) return item;
+  return {
+    ...item,
+    canEdit: item.canEdit && item.isOwner,
+    canDelete: item.canDelete && item.isOwner,
+    ...item.canApprove !== void 0 && { canApprove: false }
+  };
 }
-function hasAnyPermission(userPermissions, permissions) {
-  return permissions.some((p) => userPermissions.includes(p));
-}
-function hasAllPermissions(userPermissions, permissions) {
-  return permissions.every((p) => userPermissions.includes(p));
+function applyResidentRestriction(items, isRestrictedView) {
+  if (!isRestrictedView) return items;
+  return items.map((item) => applyResidentRestrictionToItem(item, true));
 }
 
 // src/utils/status-variants.ts
@@ -469,6 +473,6 @@ function debounce(func, delay) {
   };
 }
 
-export { DATETIME_FORMATS, DATE_FORMATS, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, ROLE_BADGE_COLORS, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, TIME_FORMATS, VOTING_METHOD_SETTINGS, buildGoogleCalendarUrl, calculatePaginationMeta, canDo, canDoOnResource, canMessageUser, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatAddress, formatCurrency, formatCurrencyByLocale, formatCurrencyEUR, formatDate, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, getInitials, getMessageableUsers, getRoleBadge, hasAllPermissions, hasAnyPermission, hasPermission, isLastEnabledVotingMethod, isManagerialRole, isValidHouseNumber, normalizeHouseNumber, normalizePaginatedResponse, parseApiError, parseData, parseHouseNumber, priorityVariant, resolveVotingMethods, violatesVotingMethodLock };
-//# sourceMappingURL=chunk-6HG22SEI.js.map
-//# sourceMappingURL=chunk-6HG22SEI.js.map
+export { DATETIME_FORMATS, DATE_FORMATS, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, ROLE_BADGE_COLORS, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, TIME_FORMATS, VOTING_METHOD_SETTINGS, applyResidentRestriction, applyResidentRestrictionToItem, buildGoogleCalendarUrl, calculatePaginationMeta, canDo, canDoOnResource, canMessageUser, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatAddress, formatCurrency, formatCurrencyByLocale, formatCurrencyEUR, formatDate, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, getInitials, getMessageableUsers, getRoleBadge, isLastEnabledVotingMethod, isManagerialRole, isValidHouseNumber, normalizeHouseNumber, normalizePaginatedResponse, parseApiError, parseData, parseHouseNumber, priorityVariant, resolveVotingMethods, violatesVotingMethodLock };
+//# sourceMappingURL=chunk-XBA2FUFW.js.map
+//# sourceMappingURL=chunk-XBA2FUFW.js.map
