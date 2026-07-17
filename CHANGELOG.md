@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.64.0
+
+### Changes
+
+- Failure reports: allowComments in create/update schemas (the field backend persists but Zod previously stripped — the comment toggle never worked), endDate>=startDate refinement on report events, and expanded FailureReportsTestIds for e2e/Maestro coverage.
+
 ## 0.63.0
 
 ### Changes
