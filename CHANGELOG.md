@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.63.0
+
+### Changes
+
+- Notices: allowComments in create/update schemas (the field backend persists but Zod previously stripped — the toggle never worked), endDate>=startDate refinement on notice events, and expanded NoticeBoardTestIds for e2e/Maestro coverage.
+
 ## 0.62.0
 
 ### Changes
