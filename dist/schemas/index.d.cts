@@ -1385,6 +1385,7 @@ declare const createNoticeSchema: z.ZodObject<{
     content: z.ZodString;
     isAnonymous: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
     pinned: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
+    allowComments: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
     events: z.ZodDefault<z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodObject<{
         id: z.ZodOptional<z.ZodString>;
         startDate: z.ZodCoercedDate<unknown>;
@@ -1404,6 +1405,7 @@ declare const updateNoticeSchema: z.ZodObject<{
     title: z.ZodOptional<z.ZodString>;
     content: z.ZodOptional<z.ZodString>;
     pinned: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
+    allowComments: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
     events: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodObject<{
         id: z.ZodOptional<z.ZodString>;
         startDate: z.ZodCoercedDate<unknown>;
@@ -1841,6 +1843,7 @@ declare const updateNoticeRequestSchema: z.ZodObject<{
     title: z.ZodOptional<z.ZodString>;
     content: z.ZodOptional<z.ZodString>;
     pinned: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
+    allowComments: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
     events: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodObject<{
         id: z.ZodOptional<z.ZodString>;
         startDate: z.ZodCoercedDate<unknown>;

@@ -42,6 +42,16 @@ export const noticeEventSchema = z.object({
 });
 
 /**
+ * Event date-order refinement, applied wherever noticeEventSchema is used
+ * inside arrays (refining the base schema directly would break
+ * multipartArray's element parsing expectations — validate per element).
+ */
+export const noticeEventWithDateOrderSchema = noticeEventSchema.refine(
+  (event) => event.endDate >= event.startDate,
+  { message: 'Event end must not precede its start', path: ['endDate'] },
+);
+
+/**
  * Create notice request schema — matches flatie-backend's
  * `POST /buildings/:buildingId/notices` multipart/form-data payload.
  * buildingId comes from the URL, not the body.
@@ -67,7 +77,12 @@ export const createNoticeSchema = z
     pinned: multipartBoolean()
       .optional()
       .describe('When true, pins the notice to the top of the building feed.'),
-    events: multipartArray(noticeEventSchema)
+    allowComments: multipartBoolean()
+      .optional()
+      .describe(
+        'When false, disables the comment thread on this notice. Defaults to true; also subject to the building-level comments setting.',
+      ),
+    events: multipartArray(noticeEventWithDateOrderSchema)
       .optional()
       .default([])
       .describe('Calendar events to create alongside the notice (e.g. meeting on a given date).'),
@@ -111,7 +126,10 @@ export const updateNoticeSchema = z.object({
   pinned: multipartBoolean()
     .optional()
     .describe('Toggles whether the notice is pinned to the top of the feed.'),
-  events: multipartArray(noticeEventSchema)
+  allowComments: multipartBoolean()
+    .optional()
+    .describe('Toggles the comment thread on this notice.'),
+  events: multipartArray(noticeEventWithDateOrderSchema)
     .optional()
     .describe(
       'Replacement event set: events with an `id` are updated, new events are inserted, and existing events omitted from the list are deleted.',

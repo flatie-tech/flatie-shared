@@ -94,6 +94,17 @@ declare const NoticeBoardTestIds: {
     readonly screen: "notices-screen";
     readonly searchInput: "notices-search-input";
     readonly addButton: "notices-add-button";
+    readonly card: "notice-card";
+    readonly viewModal: "notice-view-modal";
+    readonly createModal: "notice-create-modal";
+    readonly editButton: "notice-edit-button";
+    readonly deleteButton: "notice-delete-button";
+    readonly deleteConfirm: "notice-delete-confirm";
+    readonly pinButton: "notice-pin-button";
+    readonly pendingToggle: "notices-pending-toggle";
+    /** Suffix with the notice id at call sites: `${approveButton}-${id}` */
+    readonly approveButton: "approve-notice";
+    readonly declineButton: "decline-notice";
 };
 
 declare const OnboardingTestIds: {

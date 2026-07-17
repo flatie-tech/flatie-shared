@@ -943,6 +943,10 @@ var noticeEventSchema = zod.z.object({
   title: zod.z.string().max(NOTICE_LIMITS.EVENT_TITLE_MAX, "Event title must be at most 100 characters").optional().describe("Event title, max 100 chars; defaults to the notice title when omitted."),
   description: zod.z.string().optional().describe("Event description; defaults to the notice content when omitted.")
 });
+var noticeEventWithDateOrderSchema = noticeEventSchema.refine(
+  (event) => event.endDate >= event.startDate,
+  { message: "Event end must not precede its start", path: ["endDate"] }
+);
 var createNoticeSchema = zod.z.object({
   title: zod.z.string().min(NOTICE_LIMITS.TITLE_MIN, "Title is required").max(NOTICE_LIMITS.TITLE_MAX, `Title must be at most ${NOTICE_LIMITS.TITLE_MAX} characters`).describe("Notice headline shown in listings, 1\u2013100 chars."),
   content: zod.z.string().min(NOTICE_LIMITS.CONTENT_MIN, "Content is required").max(
@@ -951,7 +955,10 @@ var createNoticeSchema = zod.z.object({
   ).describe("Rich-text or plain-text body of the notice, up to 2000 chars."),
   isAnonymous: multipartBoolean().optional().describe("When true, hides the author\u2019s identity from other residents. Defaults to false."),
   pinned: multipartBoolean().optional().describe("When true, pins the notice to the top of the building feed."),
-  events: multipartArray(noticeEventSchema).optional().default([]).describe("Calendar events to create alongside the notice (e.g. meeting on a given date)."),
+  allowComments: multipartBoolean().optional().describe(
+    "When false, disables the comment thread on this notice. Defaults to true; also subject to the building-level comments setting."
+  ),
+  events: multipartArray(noticeEventWithDateOrderSchema).optional().default([]).describe("Calendar events to create alongside the notice (e.g. meeting on a given date)."),
   fileIds: multipartArray(uuidSchema).optional().default([]).describe("UUIDs of previously-uploaded files to attach to the notice.")
 }).refine(
   (data) => {
@@ -969,7 +976,8 @@ var updateNoticeSchema = zod.z.object({
   title: zod.z.string().min(NOTICE_LIMITS.TITLE_MIN).max(NOTICE_LIMITS.TITLE_MAX).optional().describe("Revised notice headline, 1\u2013100 chars."),
   content: zod.z.string().min(NOTICE_LIMITS.CONTENT_MIN).max(NOTICE_LIMITS.CONTENT_MAX).optional().describe("Revised notice body, up to 2000 chars."),
   pinned: multipartBoolean().optional().describe("Toggles whether the notice is pinned to the top of the feed."),
-  events: multipartArray(noticeEventSchema).optional().describe(
+  allowComments: multipartBoolean().optional().describe("Toggles the comment thread on this notice."),
+  events: multipartArray(noticeEventWithDateOrderSchema).optional().describe(
     "Replacement event set: events with an `id` are updated, new events are inserted, and existing events omitted from the list are deleted."
   ),
   fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of newly-uploaded files to attach."),
@@ -2676,5 +2684,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-IC2MMZHZ.cjs.map
-//# sourceMappingURL=chunk-IC2MMZHZ.cjs.map
+//# sourceMappingURL=chunk-OW45A54V.cjs.map
+//# sourceMappingURL=chunk-OW45A54V.cjs.map
