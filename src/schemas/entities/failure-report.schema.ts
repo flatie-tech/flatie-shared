@@ -34,6 +34,16 @@ export const failureReportEventSchema = z.object({
 });
 
 /**
+ * Date-order-enforced variant used inside create/update arrays (refining the
+ * base directly would break multipartArray element parsing — validate per
+ * element).
+ */
+export const failureReportEventWithDateOrderSchema = failureReportEventSchema.refine(
+  (event) => event.endDate >= event.startDate,
+  { message: 'Event end must not precede its start', path: ['endDate'] },
+);
+
+/**
  * Cross-field rule used by both create and update schemas:
  * when locationType is common_area, commonAreaDescription is required;
  * when locationType is own_unit, unitType AND unitId are required.
@@ -96,6 +106,11 @@ export const createFailureReportSchema = refineLocation(
       .describe(
         'When true, hides the reporter’s identity from other residents. Defaults to false.',
       ),
+    allowComments: multipartBoolean()
+      .optional()
+      .describe(
+        'When false, disables the comment thread on this report. Defaults to true; also subject to the building-level comments setting.',
+      ),
     priority: z
       .enum([Priority.NORMAL, Priority.URGENT])
       .optional()
@@ -126,7 +141,7 @@ export const createFailureReportSchema = refineLocation(
       .describe(
         'UUIDs of maintenance logs to associate with this report (e.g. related past work).',
       ),
-    events: multipartArray(failureReportEventSchema)
+    events: multipartArray(failureReportEventWithDateOrderSchema)
       .optional()
       .describe('Calendar events to create alongside the report (inspections, scheduled fixes).'),
   }),
@@ -157,6 +172,9 @@ export const updateFailureReportSchema = refineLocation(
       .describe(
         'Lifecycle status: `pending` (newly filed), `in_progress` (assigned work), `resolved` (closed out).',
       ),
+    allowComments: multipartBoolean()
+      .optional()
+      .describe('Toggles the comment thread on this report.'),
     priority: z
       .enum([Priority.NORMAL, Priority.URGENT])
       .optional()
@@ -188,7 +206,7 @@ export const updateFailureReportSchema = refineLocation(
       .describe(
         'Full list of maintenance-log UUIDs to associate with the report (replaces existing links).',
       ),
-    events: multipartArray(failureReportEventSchema)
+    events: multipartArray(failureReportEventWithDateOrderSchema)
       .optional()
       .describe('Full list of events for the report — replaces the existing event set.'),
   }),

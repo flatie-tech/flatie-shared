@@ -78,6 +78,18 @@ declare const FailureReportsTestIds: {
     readonly screen: "failure-reports-screen";
     readonly searchInput: "failure-reports-search-input";
     readonly addButton: "failure-reports-add-button";
+    readonly card: "failure-report-card";
+    readonly viewModal: "failure-report-view-modal";
+    readonly createModal: "failure-report-create-modal";
+    readonly editButton: "failure-report-edit-button";
+    readonly deleteButton: "failure-report-delete-button";
+    readonly deleteConfirm: "failure-report-delete-confirm";
+    readonly statusFilter: "failure-reports-status-filter";
+    readonly viewToggle: "failure-reports-view-toggle";
+    /** Suffix with the report id at call sites: `${approveButton}-${id}`.
+     * Values match the literals mobile already uses in FailureReportCard. */
+    readonly approveButton: "approve-failure-report";
+    readonly declineButton: "decline-failure-report";
 };
 
 declare const FundsTestIds: {

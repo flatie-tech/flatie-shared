@@ -1220,6 +1220,7 @@ declare const createFailureReportSchema: z.ZodObject<{
     title: z.ZodString;
     description: z.ZodString;
     isAnonymous: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
+    allowComments: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
     priority: z.ZodOptional<z.ZodEnum<{
         normal: "normal";
         urgent: "urgent";
@@ -1257,6 +1258,7 @@ declare const updateFailureReportSchema: z.ZodObject<{
         in_progress: "in_progress";
         resolved: "resolved";
     }>>;
+    allowComments: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
     priority: z.ZodOptional<z.ZodEnum<{
         normal: "normal";
         urgent: "urgent";
@@ -1767,6 +1769,7 @@ declare const updateFailureReportRequestSchema: z.ZodObject<{
         in_progress: "in_progress";
         resolved: "resolved";
     }>>;
+    allowComments: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
     priority: z.ZodOptional<z.ZodEnum<{
         normal: "normal";
         urgent: "urgent";
