@@ -733,6 +733,10 @@ var failureReportEventSchema = zod.z.object({
   title: zod.z.string().optional().describe("Event title; defaults to the failure report title when omitted."),
   description: zod.z.string().optional().describe("Event description; defaults to the failure report description when omitted.")
 });
+var failureReportEventWithDateOrderSchema = failureReportEventSchema.refine(
+  (event) => event.endDate >= event.startDate,
+  { message: "Event end must not precede its start", path: ["endDate"] }
+);
 function refineLocation(schema) {
   return schema.superRefine((data, ctx) => {
     if (data.locationType === chunkR7EQCGXX_cjs.FailureLocationType.COMMON_AREA) {
@@ -775,6 +779,9 @@ var createFailureReportSchema = refineLocation(
     isAnonymous: multipartBoolean().optional().describe(
       "When true, hides the reporter\u2019s identity from other residents. Defaults to false."
     ),
+    allowComments: multipartBoolean().optional().describe(
+      "When false, disables the comment thread on this report. Defaults to true; also subject to the building-level comments setting."
+    ),
     priority: zod.z.enum([chunkR7EQCGXX_cjs.Priority.NORMAL, chunkR7EQCGXX_cjs.Priority.URGENT]).optional().describe("`normal` for standard reports, `urgent` to flag immediate attention."),
     locationType: zod.z.enum([chunkR7EQCGXX_cjs.FailureLocationType.COMMON_AREA, chunkR7EQCGXX_cjs.FailureLocationType.OWN_UNIT]).optional().describe(
       "`common_area` for shared spaces (hallway, roof, etc.) or `own_unit` for a specific apartment/garage/storage unit."
@@ -786,7 +793,7 @@ var createFailureReportSchema = refineLocation(
     maintenanceLogIds: multipartArray(uuidSchema).optional().describe(
       "UUIDs of maintenance logs to associate with this report (e.g. related past work)."
     ),
-    events: multipartArray(failureReportEventSchema).optional().describe("Calendar events to create alongside the report (inspections, scheduled fixes).")
+    events: multipartArray(failureReportEventWithDateOrderSchema).optional().describe("Calendar events to create alongside the report (inspections, scheduled fixes).")
   })
 );
 var updateFailureReportSchema = refineLocation(
@@ -796,6 +803,7 @@ var updateFailureReportSchema = refineLocation(
     status: zod.z.enum([chunkR7EQCGXX_cjs.FailureStatus.PENDING, chunkR7EQCGXX_cjs.FailureStatus.IN_PROGRESS, chunkR7EQCGXX_cjs.FailureStatus.RESOLVED]).optional().describe(
       "Lifecycle status: `pending` (newly filed), `in_progress` (assigned work), `resolved` (closed out)."
     ),
+    allowComments: multipartBoolean().optional().describe("Toggles the comment thread on this report."),
     priority: zod.z.enum([chunkR7EQCGXX_cjs.Priority.NORMAL, chunkR7EQCGXX_cjs.Priority.URGENT]).optional().describe("Revised priority: `normal` or `urgent`."),
     locationType: zod.z.enum([chunkR7EQCGXX_cjs.FailureLocationType.COMMON_AREA, chunkR7EQCGXX_cjs.FailureLocationType.OWN_UNIT]).optional().describe("Revised location classification: `common_area` or `own_unit`."),
     commonAreaDescription: zod.z.string().max(FAILURE_REPORT_LIMITS.COMMON_AREA_DESCRIPTION_MAX).optional().describe("Revised common-area description. Required when `locationType` is `common_area`."),
@@ -806,7 +814,7 @@ var updateFailureReportSchema = refineLocation(
     maintenanceLogIds: multipartArray(uuidSchema).optional().describe(
       "Full list of maintenance-log UUIDs to associate with the report (replaces existing links)."
     ),
-    events: multipartArray(failureReportEventSchema).optional().describe("Full list of events for the report \u2014 replaces the existing event set.")
+    events: multipartArray(failureReportEventWithDateOrderSchema).optional().describe("Full list of events for the report \u2014 replaces the existing event set.")
   })
 );
 var approveFailureReportSchema = zod.z.object({
@@ -2684,5 +2692,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-OW45A54V.cjs.map
-//# sourceMappingURL=chunk-OW45A54V.cjs.map
+//# sourceMappingURL=chunk-PCACYC7N.cjs.map
+//# sourceMappingURL=chunk-PCACYC7N.cjs.map
