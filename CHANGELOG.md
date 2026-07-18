@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.66.0
+
+### Changes
+
+- feat(maintenance-log): event endDate>=startDate refine + expand test-ids
+
 ## 0.65.0
 
 ### Changes
