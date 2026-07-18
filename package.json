@@ -17,6 +17,16 @@
         "default": "./dist/index.cjs"
       }
     },
+    "./address": {
+      "import": {
+        "types": "./dist/address/index.d.ts",
+        "default": "./dist/address/index.js"
+      },
+      "require": {
+        "types": "./dist/address/index.d.cts",
+        "default": "./dist/address/index.cjs"
+      }
+    },
     "./constants": {
       "import": {
         "types": "./dist/constants/index.d.ts",

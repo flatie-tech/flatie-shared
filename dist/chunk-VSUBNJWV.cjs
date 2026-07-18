@@ -1007,6 +1007,8 @@ var ownerResponseSchema = zod.z.object({
   phone: zod.z.string().nullable().optional(),
   oib: zod.z.string().nullable().optional(),
   address: zod.z.string().nullable().optional(),
+  /** FK into the DGU-backed `addresses` table; null for legacy free-text rows. */
+  addressId: zod.z.string().uuid().nullable().optional(),
   paymentRefCode: zod.z.string().nullable().optional(),
   createdAt: zod.z.union([zod.z.string(), zod.z.date()]),
   updatedAt: zod.z.union([zod.z.string(), zod.z.date()]).nullable().optional()
@@ -1017,6 +1019,13 @@ var createOwnerSchema = zod.z.object({
   phone: zod.z.string().trim().max(50).optional().nullable(),
   oib: zod.z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").optional().nullable(),
   address: zod.z.string().trim().max(500).optional().nullable(),
+  // Structured address (DGU reference model). Either send `addressId`
+  // directly, or `streetId` + `houseNumber` for the backend to resolve
+  // (mirrors the building create/update contract). Free-text `address`
+  // alone remains valid as the unstructured fallback.
+  addressId: zod.z.string().uuid().optional().nullable(),
+  streetId: zod.z.string().uuid().optional().nullable(),
+  houseNumber: zod.z.string().trim().min(1).max(20).optional().nullable(),
   paymentRefCode: zod.z.string().trim().max(22).optional().nullable(),
   userId: zod.z.string().uuid().optional().nullable()
 }).meta({ id: "CreateOwner" });
@@ -2708,5 +2717,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-OFEBTQGH.cjs.map
-//# sourceMappingURL=chunk-OFEBTQGH.cjs.map
+//# sourceMappingURL=chunk-VSUBNJWV.cjs.map
+//# sourceMappingURL=chunk-VSUBNJWV.cjs.map

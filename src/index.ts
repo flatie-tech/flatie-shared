@@ -1,5 +1,21 @@
 // Main entry point for @flatie/shared package
 
+// Address value-object. Named exports only — the house-number helpers it
+// re-exports for subpath cohesion already flow through './utils'; a star
+// export here would make those names ambiguous in the root barrel.
+export type {
+  AddressDisplayProps,
+  AddressSearchResult,
+  AddressValue,
+  MapUrlInput,
+  StructuredAddressInput,
+} from './address';
+export {
+  addressSearchResultSchema,
+  buildMapUrl,
+  compareHouseNumbers,
+  structuredAddressInputSchema,
+} from './address';
 // Constants (Query keys, etc.)
 export * from './constants';
 
