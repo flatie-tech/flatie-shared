@@ -206,31 +206,6 @@ function buildGoogleCalendarUrl(event) {
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
 
-// src/utils/house-number.ts
-var HOUSE_NUMBER_PATTERN = /^\d{1,4}[A-Z]?(?:\/\d{1,3})?$|^BB$/;
-function normalizeHouseNumber(raw) {
-  if (!raw || !raw.trim()) return null;
-  const normalized = raw.trim().toUpperCase().replace(/\s+/g, "").replace(/\s*\/\s*/g, "/");
-  if (!HOUSE_NUMBER_PATTERN.test(normalized)) return null;
-  return normalized;
-}
-function isValidHouseNumber(raw) {
-  return normalizeHouseNumber(raw) !== null;
-}
-function parseHouseNumber(normalized) {
-  if (normalized === "BB") return null;
-  const match = normalized.match(/^(\d{1,4})([A-Z])?(?:\/(\d{1,3}))?$/);
-  if (!match) return null;
-  const result = { number: Number.parseInt(match[1], 10) };
-  if (match[2]) result.letter = match[2];
-  if (match[3]) result.subNumber = Number.parseInt(match[3], 10);
-  return result;
-}
-function formatAddress(parts) {
-  const streetPart = [parts.street, parts.houseNumber].filter(Boolean).join(" ");
-  return `${streetPart}, ${parts.postalCode} ${parts.city}`;
-}
-
 // src/utils/initials.ts
 function getInitials(name) {
   return name.split(" ").map((part) => part[0]).join("").toUpperCase().slice(0, 2);
@@ -497,7 +472,6 @@ exports.createPermissionChecker = createPermissionChecker;
 exports.debounce = debounce;
 exports.extractPaginatedItems = extractPaginatedItems;
 exports.failureStatusVariant = failureStatusVariant;
-exports.formatAddress = formatAddress;
 exports.formatCurrency = formatCurrency;
 exports.formatCurrencyByLocale = formatCurrencyByLocale;
 exports.formatCurrencyEUR = formatCurrencyEUR;
@@ -512,14 +486,11 @@ exports.getMessageableUsers = getMessageableUsers;
 exports.getRoleBadge = getRoleBadge;
 exports.isLastEnabledVotingMethod = isLastEnabledVotingMethod;
 exports.isManagerialRole = isManagerialRole;
-exports.isValidHouseNumber = isValidHouseNumber;
-exports.normalizeHouseNumber = normalizeHouseNumber;
 exports.normalizePaginatedResponse = normalizePaginatedResponse;
 exports.parseApiError = parseApiError;
 exports.parseData = parseData;
-exports.parseHouseNumber = parseHouseNumber;
 exports.priorityVariant = priorityVariant;
 exports.resolveVotingMethods = resolveVotingMethods;
 exports.violatesVotingMethodLock = violatesVotingMethodLock;
-//# sourceMappingURL=chunk-4FHWBJBR.cjs.map
-//# sourceMappingURL=chunk-4FHWBJBR.cjs.map
+//# sourceMappingURL=chunk-72GHW2K4.cjs.map
+//# sourceMappingURL=chunk-72GHW2K4.cjs.map

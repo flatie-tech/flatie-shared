@@ -15,6 +15,8 @@ export const ownerResponseSchema = z
     phone: z.string().nullable().optional(),
     oib: z.string().nullable().optional(),
     address: z.string().nullable().optional(),
+    /** FK into the DGU-backed `addresses` table; null for legacy free-text rows. */
+    addressId: z.string().uuid().nullable().optional(),
     paymentRefCode: z.string().nullable().optional(),
     createdAt: z.union([z.string(), z.date()]),
     updatedAt: z.union([z.string(), z.date()]).nullable().optional(),
@@ -40,6 +42,13 @@ export const createOwnerSchema = z
       .optional()
       .nullable(),
     address: z.string().trim().max(500).optional().nullable(),
+    // Structured address (DGU reference model). Either send `addressId`
+    // directly, or `streetId` + `houseNumber` for the backend to resolve
+    // (mirrors the building create/update contract). Free-text `address`
+    // alone remains valid as the unstructured fallback.
+    addressId: z.string().uuid().optional().nullable(),
+    streetId: z.string().uuid().optional().nullable(),
+    houseNumber: z.string().trim().min(1).max(20).optional().nullable(),
     paymentRefCode: z.string().trim().max(22).optional().nullable(),
     userId: z.string().uuid().optional().nullable(),
   })

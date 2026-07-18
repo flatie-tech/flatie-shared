@@ -1443,6 +1443,7 @@ declare const ownerResponseSchema: z.ZodObject<{
     phone: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     oib: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     address: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    addressId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     paymentRefCode: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     createdAt: z.ZodUnion<readonly [z.ZodString, z.ZodDate]>;
     updatedAt: z.ZodOptional<z.ZodNullable<z.ZodUnion<readonly [z.ZodString, z.ZodDate]>>>;
@@ -1460,6 +1461,9 @@ declare const createOwnerSchema: z.ZodObject<{
     phone: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     oib: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     address: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    addressId: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    streetId: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    houseNumber: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     paymentRefCode: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     userId: z.ZodNullable<z.ZodOptional<z.ZodString>>;
 }, z.core.$strip>;
@@ -1470,6 +1474,9 @@ declare const updateOwnerSchema: z.ZodObject<{
     phone: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
     oib: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
     address: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    addressId: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    streetId: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    houseNumber: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
     paymentRefCode: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
     userId: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
 }, z.core.$strip>;
