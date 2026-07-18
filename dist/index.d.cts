@@ -100,6 +100,16 @@ declare const MaintenanceLogsTestIds: {
     readonly screen: "maintenance-logs-screen";
     readonly searchInput: "maintenance-logs-search-input";
     readonly addButton: "maintenance-logs-add-button";
+    readonly card: "maintenance-log-card";
+    readonly viewModal: "maintenance-log-view-modal";
+    readonly createModal: "maintenance-log-create-modal";
+    readonly editButton: "maintenance-log-edit-button";
+    readonly deleteButton: "maintenance-log-delete-button";
+    readonly deleteConfirm: "maintenance-log-delete-confirm";
+    /** Financed-by filter chip group (building_funds / insurance / co_owner). */
+    readonly financedByFilter: "maintenance-logs-financed-by-filter";
+    /** Card/table view toggle on the management board. */
+    readonly viewToggle: "maintenance-logs-view-toggle";
 };
 
 declare const NoticeBoardTestIds: {

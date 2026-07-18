@@ -3,7 +3,7 @@
 var chunk4FHWBJBR_cjs = require('./chunk-4FHWBJBR.cjs');
 var chunkIHUEEK2O_cjs = require('./chunk-IHUEEK2O.cjs');
 var chunkR7EHHRBY_cjs = require('./chunk-R7EHHRBY.cjs');
-var chunk5IHZZ6XU_cjs = require('./chunk-5IHZZ6XU.cjs');
+var chunkBAQSRNKD_cjs = require('./chunk-BAQSRNKD.cjs');
 var chunkXXNOAOHF_cjs = require('./chunk-XXNOAOHF.cjs');
 var chunkNQLL5CZO_cjs = require('./chunk-NQLL5CZO.cjs');
 var chunkRODDS55T_cjs = require('./chunk-RODDS55T.cjs');
@@ -109,7 +109,17 @@ var FundsTestIds = {
 var MaintenanceLogsTestIds = {
   screen: "maintenance-logs-screen",
   searchInput: "maintenance-logs-search-input",
-  addButton: "maintenance-logs-add-button"
+  addButton: "maintenance-logs-add-button",
+  card: "maintenance-log-card",
+  viewModal: "maintenance-log-view-modal",
+  createModal: "maintenance-log-create-modal",
+  editButton: "maintenance-log-edit-button",
+  deleteButton: "maintenance-log-delete-button",
+  deleteConfirm: "maintenance-log-delete-confirm",
+  /** Financed-by filter chip group (building_funds / insurance / co_owner). */
+  financedByFilter: "maintenance-logs-financed-by-filter",
+  /** Card/table view toggle on the management board. */
+  viewToggle: "maintenance-logs-view-toggle"
 };
 
 // src/test-ids/notice-board.ts
@@ -575,879 +585,879 @@ Object.defineProperty(exports, "widgetKeys", {
 });
 Object.defineProperty(exports, "ARCHIVE_TYPES", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.ARCHIVE_TYPES; }
+  get: function () { return chunkBAQSRNKD_cjs.ARCHIVE_TYPES; }
 });
 Object.defineProperty(exports, "ApprovalStatusSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.ApprovalStatusSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.ApprovalStatusSchema; }
 });
 Object.defineProperty(exports, "BOARD_CARD_LIMITS", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.BOARD_CARD_LIMITS; }
+  get: function () { return chunkBAQSRNKD_cjs.BOARD_CARD_LIMITS; }
 });
 Object.defineProperty(exports, "BOARD_COLUMN_LIMITS", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.BOARD_COLUMN_LIMITS; }
+  get: function () { return chunkBAQSRNKD_cjs.BOARD_COLUMN_LIMITS; }
 });
 Object.defineProperty(exports, "BOARD_LIMITS", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.BOARD_LIMITS; }
+  get: function () { return chunkBAQSRNKD_cjs.BOARD_LIMITS; }
 });
 Object.defineProperty(exports, "BUILDING_LIMITS", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.BUILDING_LIMITS; }
+  get: function () { return chunkBAQSRNKD_cjs.BUILDING_LIMITS; }
 });
 Object.defineProperty(exports, "BUILDING_TYPES", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.BUILDING_TYPES; }
+  get: function () { return chunkBAQSRNKD_cjs.BUILDING_TYPES; }
 });
 Object.defineProperty(exports, "CHAT_LIMITS", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.CHAT_LIMITS; }
+  get: function () { return chunkBAQSRNKD_cjs.CHAT_LIMITS; }
 });
 Object.defineProperty(exports, "CommonStatusSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.CommonStatusSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.CommonStatusSchema; }
 });
 Object.defineProperty(exports, "ENTITY_LINK_TYPES", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.ENTITY_LINK_TYPES; }
+  get: function () { return chunkBAQSRNKD_cjs.ENTITY_LINK_TYPES; }
 });
 Object.defineProperty(exports, "EVENT_COLORS", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.EVENT_COLORS; }
+  get: function () { return chunkBAQSRNKD_cjs.EVENT_COLORS; }
 });
 Object.defineProperty(exports, "EVENT_TYPES", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.EVENT_TYPES; }
+  get: function () { return chunkBAQSRNKD_cjs.EVENT_TYPES; }
 });
 Object.defineProperty(exports, "EVENT_TYPE_COLOR_MAP", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.EVENT_TYPE_COLOR_MAP; }
+  get: function () { return chunkBAQSRNKD_cjs.EVENT_TYPE_COLOR_MAP; }
 });
 Object.defineProperty(exports, "FAILURE_REPORT_LIMITS", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.FAILURE_REPORT_LIMITS; }
+  get: function () { return chunkBAQSRNKD_cjs.FAILURE_REPORT_LIMITS; }
 });
 Object.defineProperty(exports, "FAQ_LIMITS", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.FAQ_LIMITS; }
+  get: function () { return chunkBAQSRNKD_cjs.FAQ_LIMITS; }
 });
 Object.defineProperty(exports, "FailureStatusSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.FailureStatusSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.FailureStatusSchema; }
 });
 Object.defineProperty(exports, "LINKABLE_ENTITY_TYPES", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.LINKABLE_ENTITY_TYPES; }
+  get: function () { return chunkBAQSRNKD_cjs.LINKABLE_ENTITY_TYPES; }
 });
 Object.defineProperty(exports, "MAINTENANCE_FINANCED_BY", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.MAINTENANCE_FINANCED_BY; }
+  get: function () { return chunkBAQSRNKD_cjs.MAINTENANCE_FINANCED_BY; }
 });
 Object.defineProperty(exports, "MAINTENANCE_LOG_LIMITS", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.MAINTENANCE_LOG_LIMITS; }
+  get: function () { return chunkBAQSRNKD_cjs.MAINTENANCE_LOG_LIMITS; }
 });
 Object.defineProperty(exports, "MaintenanceStatusSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.MaintenanceStatusSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.MaintenanceStatusSchema; }
 });
 Object.defineProperty(exports, "NOTICE_LIMITS", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.NOTICE_LIMITS; }
+  get: function () { return chunkBAQSRNKD_cjs.NOTICE_LIMITS; }
 });
 Object.defineProperty(exports, "ORGANIZATION_LIMITS", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.ORGANIZATION_LIMITS; }
+  get: function () { return chunkBAQSRNKD_cjs.ORGANIZATION_LIMITS; }
 });
 Object.defineProperty(exports, "POLL_LIMITS", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.POLL_LIMITS; }
+  get: function () { return chunkBAQSRNKD_cjs.POLL_LIMITS; }
 });
 Object.defineProperty(exports, "POLL_TYPES", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.POLL_TYPES; }
+  get: function () { return chunkBAQSRNKD_cjs.POLL_TYPES; }
 });
 Object.defineProperty(exports, "PrioritySchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.PrioritySchema; }
+  get: function () { return chunkBAQSRNKD_cjs.PrioritySchema; }
 });
 Object.defineProperty(exports, "RECURRENCE_TYPES", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.RECURRENCE_TYPES; }
+  get: function () { return chunkBAQSRNKD_cjs.RECURRENCE_TYPES; }
 });
 Object.defineProperty(exports, "REP_RECENT_ACTIVITY_TYPES", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.REP_RECENT_ACTIVITY_TYPES; }
+  get: function () { return chunkBAQSRNKD_cjs.REP_RECENT_ACTIVITY_TYPES; }
 });
 Object.defineProperty(exports, "TRANSACTION_CATEGORY_LIMITS", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.TRANSACTION_CATEGORY_LIMITS; }
+  get: function () { return chunkBAQSRNKD_cjs.TRANSACTION_CATEGORY_LIMITS; }
 });
 Object.defineProperty(exports, "addOrgMemberSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.addOrgMemberSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.addOrgMemberSchema; }
 });
 Object.defineProperty(exports, "aiChatMessageSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.aiChatMessageSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.aiChatMessageSchema; }
 });
 Object.defineProperty(exports, "aiChatRequestSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.aiChatRequestSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.aiChatRequestSchema; }
 });
 Object.defineProperty(exports, "aiUsageResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.aiUsageResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.aiUsageResponseSchema; }
 });
 Object.defineProperty(exports, "apartmentRoleSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.apartmentRoleSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.apartmentRoleSchema; }
 });
 Object.defineProperty(exports, "apartmentSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.apartmentSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.apartmentSchema; }
 });
 Object.defineProperty(exports, "apartmentUserSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.apartmentUserSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.apartmentUserSchema; }
 });
 Object.defineProperty(exports, "apiErrorResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.apiErrorResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.apiErrorResponseSchema; }
 });
 Object.defineProperty(exports, "apiErrorSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.apiErrorSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.apiErrorSchema; }
 });
 Object.defineProperty(exports, "approvalStatusOptions", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.approvalStatusOptions; }
+  get: function () { return chunkBAQSRNKD_cjs.approvalStatusOptions; }
 });
 Object.defineProperty(exports, "approveFailureReportSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.approveFailureReportSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.approveFailureReportSchema; }
 });
 Object.defineProperty(exports, "approveNoticeSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.approveNoticeSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.approveNoticeSchema; }
 });
 Object.defineProperty(exports, "archiveTypeSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.archiveTypeSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.archiveTypeSchema; }
 });
 Object.defineProperty(exports, "archivedItemSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.archivedItemSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.archivedItemSchema; }
 });
 Object.defineProperty(exports, "assignOrgBuildingSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.assignOrgBuildingSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.assignOrgBuildingSchema; }
 });
 Object.defineProperty(exports, "assignOrgMemberBuildingSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.assignOrgMemberBuildingSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.assignOrgMemberBuildingSchema; }
 });
 Object.defineProperty(exports, "assignOwnerSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.assignOwnerSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.assignOwnerSchema; }
 });
 Object.defineProperty(exports, "baseEntitySchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.baseEntitySchema; }
+  get: function () { return chunkBAQSRNKD_cjs.baseEntitySchema; }
 });
 Object.defineProperty(exports, "boardCardChecklistItemSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.boardCardChecklistItemSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.boardCardChecklistItemSchema; }
 });
 Object.defineProperty(exports, "boardCardEventSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.boardCardEventSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.boardCardEventSchema; }
 });
 Object.defineProperty(exports, "buildingDetailResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.buildingDetailResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.buildingDetailResponseSchema; }
 });
 Object.defineProperty(exports, "buildingEntitySchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.buildingEntitySchema; }
+  get: function () { return chunkBAQSRNKD_cjs.buildingEntitySchema; }
 });
 Object.defineProperty(exports, "buildingFundsLedgerResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.buildingFundsLedgerResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.buildingFundsLedgerResponseSchema; }
 });
 Object.defineProperty(exports, "buildingFundsLedgerRowSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.buildingFundsLedgerRowSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.buildingFundsLedgerRowSchema; }
 });
 Object.defineProperty(exports, "buildingQuotaConfigSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.buildingQuotaConfigSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.buildingQuotaConfigSchema; }
 });
 Object.defineProperty(exports, "buildingQuotaEntrySchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.buildingQuotaEntrySchema; }
+  get: function () { return chunkBAQSRNKD_cjs.buildingQuotaEntrySchema; }
 });
 Object.defineProperty(exports, "buildingQuotaListSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.buildingQuotaListSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.buildingQuotaListSchema; }
 });
 Object.defineProperty(exports, "buildingResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.buildingResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.buildingResponseSchema; }
 });
 Object.defineProperty(exports, "buildingSettingsResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.buildingSettingsResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.buildingSettingsResponseSchema; }
 });
 Object.defineProperty(exports, "buildingTypeSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.buildingTypeSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.buildingTypeSchema; }
 });
 Object.defineProperty(exports, "buildingUserEntitySchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.buildingUserEntitySchema; }
+  get: function () { return chunkBAQSRNKD_cjs.buildingUserEntitySchema; }
 });
 Object.defineProperty(exports, "businessPartnerResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.businessPartnerResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.businessPartnerResponseSchema; }
 });
 Object.defineProperty(exports, "camtImportResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.camtImportResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.camtImportResponseSchema; }
 });
 Object.defineProperty(exports, "certiliaUserinfoSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.certiliaUserinfoSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.certiliaUserinfoSchema; }
 });
 Object.defineProperty(exports, "chatMessageResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.chatMessageResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.chatMessageResponseSchema; }
 });
 Object.defineProperty(exports, "commentResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.commentResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.commentResponseSchema; }
 });
 Object.defineProperty(exports, "commonStatusOptions", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.commonStatusOptions; }
+  get: function () { return chunkBAQSRNKD_cjs.commonStatusOptions; }
 });
 Object.defineProperty(exports, "conversationLastMessageSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.conversationLastMessageSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.conversationLastMessageSchema; }
 });
 Object.defineProperty(exports, "conversationParticipantSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.conversationParticipantSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.conversationParticipantSchema; }
 });
 Object.defineProperty(exports, "conversationResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.conversationResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.conversationResponseSchema; }
 });
 Object.defineProperty(exports, "conversationsListResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.conversationsListResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.conversationsListResponseSchema; }
 });
 Object.defineProperty(exports, "copyFaqsSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.copyFaqsSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.copyFaqsSchema; }
 });
 Object.defineProperty(exports, "copyTransactionCategoriesSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.copyTransactionCategoriesSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.copyTransactionCategoriesSchema; }
 });
 Object.defineProperty(exports, "createBoardCardSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.createBoardCardSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.createBoardCardSchema; }
 });
 Object.defineProperty(exports, "createBoardColumnSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.createBoardColumnSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.createBoardColumnSchema; }
 });
 Object.defineProperty(exports, "createBoardSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.createBoardSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.createBoardSchema; }
 });
 Object.defineProperty(exports, "createBuildingSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.createBuildingSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.createBuildingSchema; }
 });
 Object.defineProperty(exports, "createBusinessPartnerSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.createBusinessPartnerSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.createBusinessPartnerSchema; }
 });
 Object.defineProperty(exports, "createConversationSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.createConversationSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.createConversationSchema; }
 });
 Object.defineProperty(exports, "createEmailThreadRequestSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.createEmailThreadRequestSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.createEmailThreadRequestSchema; }
 });
 Object.defineProperty(exports, "createEntityLinkRequestSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.createEntityLinkRequestSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.createEntityLinkRequestSchema; }
 });
 Object.defineProperty(exports, "createEventSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.createEventSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.createEventSchema; }
 });
 Object.defineProperty(exports, "createFailureReportSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.createFailureReportSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.createFailureReportSchema; }
 });
 Object.defineProperty(exports, "createFaqSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.createFaqSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.createFaqSchema; }
 });
 Object.defineProperty(exports, "createIncomeSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.createIncomeSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.createIncomeSchema; }
 });
 Object.defineProperty(exports, "createMaintenanceLogSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.createMaintenanceLogSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.createMaintenanceLogSchema; }
 });
 Object.defineProperty(exports, "createNoticeSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.createNoticeSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.createNoticeSchema; }
 });
 Object.defineProperty(exports, "createOrganizationSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.createOrganizationSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.createOrganizationSchema; }
 });
 Object.defineProperty(exports, "createOwnerSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.createOwnerSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.createOwnerSchema; }
 });
 Object.defineProperty(exports, "createPollSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.createPollSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.createPollSchema; }
 });
 Object.defineProperty(exports, "createTransactionCategorySchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.createTransactionCategorySchema; }
+  get: function () { return chunkBAQSRNKD_cjs.createTransactionCategorySchema; }
 });
 Object.defineProperty(exports, "cursorQuerySchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.cursorQuerySchema; }
+  get: function () { return chunkBAQSRNKD_cjs.cursorQuerySchema; }
 });
 Object.defineProperty(exports, "dateRangeParamsSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.dateRangeParamsSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.dateRangeParamsSchema; }
 });
 Object.defineProperty(exports, "dateRangeWithValidationSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.dateRangeWithValidationSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.dateRangeWithValidationSchema; }
 });
 Object.defineProperty(exports, "dateTimeSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.dateTimeSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.dateTimeSchema; }
 });
 Object.defineProperty(exports, "deleteEntityLinkQuerySchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.deleteEntityLinkQuerySchema; }
+  get: function () { return chunkBAQSRNKD_cjs.deleteEntityLinkQuerySchema; }
 });
 Object.defineProperty(exports, "deleteEntityLinkRequestSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.deleteEntityLinkRequestSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.deleteEntityLinkRequestSchema; }
 });
 Object.defineProperty(exports, "documentFileSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.documentFileSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.documentFileSchema; }
 });
 Object.defineProperty(exports, "documentLinkedRecordSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.documentLinkedRecordSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.documentLinkedRecordSchema; }
 });
 Object.defineProperty(exports, "documentResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.documentResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.documentResponseSchema; }
 });
 Object.defineProperty(exports, "emailMessageSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.emailMessageSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.emailMessageSchema; }
 });
 Object.defineProperty(exports, "emailSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.emailSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.emailSchema; }
 });
 Object.defineProperty(exports, "emailThreadDetailSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.emailThreadDetailSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.emailThreadDetailSchema; }
 });
 Object.defineProperty(exports, "emailThreadSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.emailThreadSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.emailThreadSchema; }
 });
 Object.defineProperty(exports, "entityLinkCountsResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.entityLinkCountsResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.entityLinkCountsResponseSchema; }
 });
 Object.defineProperty(exports, "entityLinkEndpointSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.entityLinkEndpointSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.entityLinkEndpointSchema; }
 });
 Object.defineProperty(exports, "entityLinkMetadataSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.entityLinkMetadataSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.entityLinkMetadataSchema; }
 });
 Object.defineProperty(exports, "entityLinkReferenceSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.entityLinkReferenceSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.entityLinkReferenceSchema; }
 });
 Object.defineProperty(exports, "entityLinkTypeSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.entityLinkTypeSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.entityLinkTypeSchema; }
 });
 Object.defineProperty(exports, "entityLinksResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.entityLinksResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.entityLinksResponseSchema; }
 });
 Object.defineProperty(exports, "eventColorSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.eventColorSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.eventColorSchema; }
 });
 Object.defineProperty(exports, "eventResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.eventResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.eventResponseSchema; }
 });
 Object.defineProperty(exports, "eventTypeSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.eventTypeSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.eventTypeSchema; }
 });
 Object.defineProperty(exports, "failureReportEventSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.failureReportEventSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.failureReportEventSchema; }
 });
 Object.defineProperty(exports, "failureReportResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.failureReportResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.failureReportResponseSchema; }
 });
 Object.defineProperty(exports, "failureStatusOptions", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.failureStatusOptions; }
+  get: function () { return chunkBAQSRNKD_cjs.failureStatusOptions; }
 });
 Object.defineProperty(exports, "faqResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.faqResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.faqResponseSchema; }
 });
 Object.defineProperty(exports, "finalizePollSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.finalizePollSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.finalizePollSchema; }
 });
 Object.defineProperty(exports, "forgotPasswordSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.forgotPasswordSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.forgotPasswordSchema; }
 });
 Object.defineProperty(exports, "garageRoleSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.garageRoleSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.garageRoleSchema; }
 });
 Object.defineProperty(exports, "garageSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.garageSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.garageSchema; }
 });
 Object.defineProperty(exports, "garageUserSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.garageUserSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.garageUserSchema; }
 });
 Object.defineProperty(exports, "getEntityLinkCountsQuerySchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.getEntityLinkCountsQuerySchema; }
+  get: function () { return chunkBAQSRNKD_cjs.getEntityLinkCountsQuerySchema; }
 });
 Object.defineProperty(exports, "getEntityLinksQuerySchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.getEntityLinksQuerySchema; }
+  get: function () { return chunkBAQSRNKD_cjs.getEntityLinksQuerySchema; }
 });
 Object.defineProperty(exports, "getOrgBuildingsQuerySchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.getOrgBuildingsQuerySchema; }
+  get: function () { return chunkBAQSRNKD_cjs.getOrgBuildingsQuerySchema; }
 });
 Object.defineProperty(exports, "getOrgMembersQuerySchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.getOrgMembersQuerySchema; }
+  get: function () { return chunkBAQSRNKD_cjs.getOrgMembersQuerySchema; }
 });
 Object.defineProperty(exports, "getRepBuildingsParamsSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.getRepBuildingsParamsSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.getRepBuildingsParamsSchema; }
 });
 Object.defineProperty(exports, "getRepUsersParamsSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.getRepUsersParamsSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.getRepUsersParamsSchema; }
 });
 Object.defineProperty(exports, "getTransactionCategoriesQuerySchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.getTransactionCategoriesQuerySchema; }
+  get: function () { return chunkBAQSRNKD_cjs.getTransactionCategoriesQuerySchema; }
 });
 Object.defineProperty(exports, "inviteOrgMemberSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.inviteOrgMemberSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.inviteOrgMemberSchema; }
 });
 Object.defineProperty(exports, "joinBuildingWithOtpSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.joinBuildingWithOtpSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.joinBuildingWithOtpSchema; }
 });
 Object.defineProperty(exports, "linkableEntityTypeSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.linkableEntityTypeSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.linkableEntityTypeSchema; }
 });
 Object.defineProperty(exports, "listArchivedResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.listArchivedResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.listArchivedResponseSchema; }
 });
 Object.defineProperty(exports, "loginSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.loginSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.loginSchema; }
 });
 Object.defineProperty(exports, "maintenanceFinancedBySchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.maintenanceFinancedBySchema; }
+  get: function () { return chunkBAQSRNKD_cjs.maintenanceFinancedBySchema; }
 });
 Object.defineProperty(exports, "maintenanceLogEventSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.maintenanceLogEventSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.maintenanceLogEventSchema; }
 });
 Object.defineProperty(exports, "maintenanceLogResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.maintenanceLogResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.maintenanceLogResponseSchema; }
 });
 Object.defineProperty(exports, "maintenanceStatusOptions", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.maintenanceStatusOptions; }
+  get: function () { return chunkBAQSRNKD_cjs.maintenanceStatusOptions; }
 });
 Object.defineProperty(exports, "messageResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.messageResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.messageResponseSchema; }
 });
 Object.defineProperty(exports, "messagesListResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.messagesListResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.messagesListResponseSchema; }
 });
 Object.defineProperty(exports, "moveBoardCardSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.moveBoardCardSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.moveBoardCardSchema; }
 });
 Object.defineProperty(exports, "multipartArray", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.multipartArray; }
+  get: function () { return chunkBAQSRNKD_cjs.multipartArray; }
 });
 Object.defineProperty(exports, "multipartBoolean", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.multipartBoolean; }
+  get: function () { return chunkBAQSRNKD_cjs.multipartBoolean; }
 });
 Object.defineProperty(exports, "noticeEventSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.noticeEventSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.noticeEventSchema; }
 });
 Object.defineProperty(exports, "noticeResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.noticeResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.noticeResponseSchema; }
 });
 Object.defineProperty(exports, "notificationPreferenceCategorySchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.notificationPreferenceCategorySchema; }
+  get: function () { return chunkBAQSRNKD_cjs.notificationPreferenceCategorySchema; }
 });
 Object.defineProperty(exports, "notificationPreferenceItemSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.notificationPreferenceItemSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.notificationPreferenceItemSchema; }
 });
 Object.defineProperty(exports, "notificationResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.notificationResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.notificationResponseSchema; }
 });
 Object.defineProperty(exports, "optionalDateTimeSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.optionalDateTimeSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.optionalDateTimeSchema; }
 });
 Object.defineProperty(exports, "ownerResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.ownerResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.ownerResponseSchema; }
 });
 Object.defineProperty(exports, "paginatedApartmentsResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.paginatedApartmentsResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.paginatedApartmentsResponseSchema; }
 });
 Object.defineProperty(exports, "paginatedBuildingsResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.paginatedBuildingsResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.paginatedBuildingsResponseSchema; }
 });
 Object.defineProperty(exports, "paginatedDocumentsResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.paginatedDocumentsResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.paginatedDocumentsResponseSchema; }
 });
 Object.defineProperty(exports, "paginatedEmailThreadsResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.paginatedEmailThreadsResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.paginatedEmailThreadsResponseSchema; }
 });
 Object.defineProperty(exports, "paginatedEventsResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.paginatedEventsResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.paginatedEventsResponseSchema; }
 });
 Object.defineProperty(exports, "paginatedFailureReportsResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.paginatedFailureReportsResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.paginatedFailureReportsResponseSchema; }
 });
 Object.defineProperty(exports, "paginatedMaintenanceLogsResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.paginatedMaintenanceLogsResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.paginatedMaintenanceLogsResponseSchema; }
 });
 Object.defineProperty(exports, "paginatedNoticesResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.paginatedNoticesResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.paginatedNoticesResponseSchema; }
 });
 Object.defineProperty(exports, "paginatedPollsResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.paginatedPollsResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.paginatedPollsResponseSchema; }
 });
 Object.defineProperty(exports, "paginatedRepBuildingsResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.paginatedRepBuildingsResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.paginatedRepBuildingsResponseSchema; }
 });
 Object.defineProperty(exports, "paginatedRepUsersResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.paginatedRepUsersResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.paginatedRepUsersResponseSchema; }
 });
 Object.defineProperty(exports, "paginatedResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.paginatedResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.paginatedResponseSchema; }
 });
 Object.defineProperty(exports, "paginationParamsSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.paginationParamsSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.paginationParamsSchema; }
 });
 Object.defineProperty(exports, "passwordSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.passwordSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.passwordSchema; }
 });
 Object.defineProperty(exports, "permissionFieldsSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.permissionFieldsSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.permissionFieldsSchema; }
 });
 Object.defineProperty(exports, "permissionsResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.permissionsResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.permissionsResponseSchema; }
 });
 Object.defineProperty(exports, "pollResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.pollResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.pollResponseSchema; }
 });
 Object.defineProperty(exports, "pollResultsSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.pollResultsSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.pollResultsSchema; }
 });
 Object.defineProperty(exports, "pollTypeSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.pollTypeSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.pollTypeSchema; }
 });
 Object.defineProperty(exports, "pollVotersResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.pollVotersResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.pollVotersResponseSchema; }
 });
 Object.defineProperty(exports, "priorityOptions", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.priorityOptions; }
+  get: function () { return chunkBAQSRNKD_cjs.priorityOptions; }
 });
 Object.defineProperty(exports, "recurrenceTypeSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.recurrenceTypeSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.recurrenceTypeSchema; }
 });
 Object.defineProperty(exports, "registerSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.registerSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.registerSchema; }
 });
 Object.defineProperty(exports, "reorderBoardColumnsSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.reorderBoardColumnsSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.reorderBoardColumnsSchema; }
 });
 Object.defineProperty(exports, "reorderFaqsSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.reorderFaqsSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.reorderFaqsSchema; }
 });
 Object.defineProperty(exports, "repBuildingActivitySchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.repBuildingActivitySchema; }
+  get: function () { return chunkBAQSRNKD_cjs.repBuildingActivitySchema; }
 });
 Object.defineProperty(exports, "repBuildingItemSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.repBuildingItemSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.repBuildingItemSchema; }
 });
 Object.defineProperty(exports, "repDashboardSummaryResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.repDashboardSummaryResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.repDashboardSummaryResponseSchema; }
 });
 Object.defineProperty(exports, "repRecentActivitySchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.repRecentActivitySchema; }
+  get: function () { return chunkBAQSRNKD_cjs.repRecentActivitySchema; }
 });
 Object.defineProperty(exports, "repRecentActivityTypeSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.repRecentActivityTypeSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.repRecentActivityTypeSchema; }
 });
 Object.defineProperty(exports, "repUserBuildingSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.repUserBuildingSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.repUserBuildingSchema; }
 });
 Object.defineProperty(exports, "repUserItemSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.repUserItemSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.repUserItemSchema; }
 });
 Object.defineProperty(exports, "replyEmailThreadRequestSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.replyEmailThreadRequestSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.replyEmailThreadRequestSchema; }
 });
 Object.defineProperty(exports, "resetPasswordSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.resetPasswordSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.resetPasswordSchema; }
 });
 Object.defineProperty(exports, "roleTypeSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.roleTypeSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.roleTypeSchema; }
 });
 Object.defineProperty(exports, "searchUsersQuerySchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.searchUsersQuerySchema; }
+  get: function () { return chunkBAQSRNKD_cjs.searchUsersQuerySchema; }
 });
 Object.defineProperty(exports, "sendMessageSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.sendMessageSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.sendMessageSchema; }
 });
 Object.defineProperty(exports, "storageUnitRoleSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.storageUnitRoleSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.storageUnitRoleSchema; }
 });
 Object.defineProperty(exports, "storageUnitSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.storageUnitSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.storageUnitSchema; }
 });
 Object.defineProperty(exports, "storageUnitUserSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.storageUnitUserSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.storageUnitUserSchema; }
 });
 Object.defineProperty(exports, "strongPasswordSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.strongPasswordSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.strongPasswordSchema; }
 });
 Object.defineProperty(exports, "timeSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.timeSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.timeSchema; }
 });
 Object.defineProperty(exports, "unreadCountResponseSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.unreadCountResponseSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.unreadCountResponseSchema; }
 });
 Object.defineProperty(exports, "updateBoardCardSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateBoardCardSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateBoardCardSchema; }
 });
 Object.defineProperty(exports, "updateBoardColumnSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateBoardColumnSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateBoardColumnSchema; }
 });
 Object.defineProperty(exports, "updateBoardSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateBoardSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateBoardSchema; }
 });
 Object.defineProperty(exports, "updateBuildingSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateBuildingSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateBuildingSchema; }
 });
 Object.defineProperty(exports, "updateBuildingSettingsSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateBuildingSettingsSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateBuildingSettingsSchema; }
 });
 Object.defineProperty(exports, "updateBusinessPartnerSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateBusinessPartnerSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateBusinessPartnerSchema; }
 });
 Object.defineProperty(exports, "updateConversationSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateConversationSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateConversationSchema; }
 });
 Object.defineProperty(exports, "updateEventSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateEventSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateEventSchema; }
 });
 Object.defineProperty(exports, "updateFailureReportRequestSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateFailureReportRequestSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateFailureReportRequestSchema; }
 });
 Object.defineProperty(exports, "updateFailureReportSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateFailureReportSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateFailureReportSchema; }
 });
 Object.defineProperty(exports, "updateFaqSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateFaqSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateFaqSchema; }
 });
 Object.defineProperty(exports, "updateIncomeSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateIncomeSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateIncomeSchema; }
 });
 Object.defineProperty(exports, "updateMaintenanceLogRequestSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateMaintenanceLogRequestSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateMaintenanceLogRequestSchema; }
 });
 Object.defineProperty(exports, "updateMaintenanceLogSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateMaintenanceLogSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateMaintenanceLogSchema; }
 });
 Object.defineProperty(exports, "updateNoticeRequestSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateNoticeRequestSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateNoticeRequestSchema; }
 });
 Object.defineProperty(exports, "updateNoticeSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateNoticeSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateNoticeSchema; }
 });
 Object.defineProperty(exports, "updateOrgMemberRoleSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateOrgMemberRoleSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateOrgMemberRoleSchema; }
 });
 Object.defineProperty(exports, "updateOrganizationSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateOrganizationSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateOrganizationSchema; }
 });
 Object.defineProperty(exports, "updateOwnerSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateOwnerSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateOwnerSchema; }
 });
 Object.defineProperty(exports, "updatePasswordSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updatePasswordSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updatePasswordSchema; }
 });
 Object.defineProperty(exports, "updatePollRequestSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updatePollRequestSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updatePollRequestSchema; }
 });
 Object.defineProperty(exports, "updatePollSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updatePollSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updatePollSchema; }
 });
 Object.defineProperty(exports, "updateTransactionCategorySchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateTransactionCategorySchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateTransactionCategorySchema; }
 });
 Object.defineProperty(exports, "updateUserBuildingRoleSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.updateUserBuildingRoleSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.updateUserBuildingRoleSchema; }
 });
 Object.defineProperty(exports, "userEntitySchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.userEntitySchema; }
+  get: function () { return chunkBAQSRNKD_cjs.userEntitySchema; }
 });
 Object.defineProperty(exports, "uuidSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.uuidSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.uuidSchema; }
 });
 Object.defineProperty(exports, "verifyOtpSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.verifyOtpSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.verifyOtpSchema; }
 });
 Object.defineProperty(exports, "votePollSchema", {
   enumerable: true,
-  get: function () { return chunk5IHZZ6XU_cjs.votePollSchema; }
+  get: function () { return chunkBAQSRNKD_cjs.votePollSchema; }
 });
 Object.defineProperty(exports, "ibanSchema", {
   enumerable: true,

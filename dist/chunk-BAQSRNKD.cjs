@@ -889,6 +889,10 @@ var maintenanceLogEventSchema = zod.z.object({
   title: zod.z.string().optional().describe("Event title; defaults to the maintenance-log title when omitted."),
   description: zod.z.string().optional().describe("Event description; defaults to the maintenance-log description when omitted.")
 });
+var maintenanceLogEventWithDateOrderSchema = maintenanceLogEventSchema.refine(
+  (event) => event.endDate >= event.startDate,
+  { message: "Event end must not precede its start", path: ["endDate"] }
+);
 var createMaintenanceLogSchema = zod.z.object({
   title: zod.z.string().min(MAINTENANCE_LOG_LIMITS.TITLE_MIN, "Title is required").max(
     MAINTENANCE_LOG_LIMITS.TITLE_MAX,
@@ -902,7 +906,7 @@ var createMaintenanceLogSchema = zod.z.object({
   ),
   financedBy: maintenanceFinancedBySchema.optional().describe("Funding source; omit when unknown at the time of logging."),
   warranty: multipartBoolean().optional().describe("True when the work is covered by an active warranty."),
-  events: multipartArray(maintenanceLogEventSchema).refine((events) => events.length >= MAINTENANCE_LOG_LIMITS.EVENTS_MIN, {
+  events: multipartArray(maintenanceLogEventWithDateOrderSchema).refine((events) => events.length >= MAINTENANCE_LOG_LIMITS.EVENTS_MIN, {
     message: "At least one event is required"
   }).describe("Calendar events associated with the work; at least one is required on create."),
   fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-uploaded files (invoices, photos) to attach."),
@@ -924,7 +928,7 @@ var updateMaintenanceLogSchema = zod.z.object({
   ),
   financedBy: maintenanceFinancedBySchema.optional().describe("Revised funding source."),
   warranty: multipartBoolean().optional().describe("Toggles whether the work is under warranty."),
-  events: multipartArray(maintenanceLogEventSchema).optional().describe(
+  events: multipartArray(maintenanceLogEventWithDateOrderSchema).optional().describe(
     "Replacement event set: events with an `id` are updated, new events are inserted, and existing events omitted from the list are deleted."
   ),
   fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of newly-uploaded files to attach."),
@@ -2702,5 +2706,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-5IHZZ6XU.cjs.map
-//# sourceMappingURL=chunk-5IHZZ6XU.cjs.map
+//# sourceMappingURL=chunk-BAQSRNKD.cjs.map
+//# sourceMappingURL=chunk-BAQSRNKD.cjs.map

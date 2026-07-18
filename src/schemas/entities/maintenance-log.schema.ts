@@ -68,6 +68,18 @@ export const maintenanceLogEventSchema = z.object({
 });
 
 /**
+ * Event schema with the cross-field `endDate >= startDate` guard applied.
+ * Used inside the create/update request arrays; kept separate from the base
+ * object so `maintenanceLogEventSchema` stays `.extend`/`.pick`-able (a Zod
+ * `ZodEffects` from `.refine` can't be extended). Mirrors
+ * `failureReportEventWithDateOrderSchema` / `noticeEventWithDateOrderSchema`.
+ */
+export const maintenanceLogEventWithDateOrderSchema = maintenanceLogEventSchema.refine(
+  (event) => event.endDate >= event.startDate,
+  { message: 'Event end must not precede its start', path: ['endDate'] },
+);
+
+/**
  * Create maintenance log request schema — matches
  * `POST /buildings/:buildingId/maintenance-logs` multipart/form-data.
  * buildingId comes from the URL, not the body.
@@ -102,7 +114,7 @@ export const createMaintenanceLogSchema = z.object({
   warranty: multipartBoolean()
     .optional()
     .describe('True when the work is covered by an active warranty.'),
-  events: multipartArray(maintenanceLogEventSchema)
+  events: multipartArray(maintenanceLogEventWithDateOrderSchema)
     .refine((events) => events.length >= MAINTENANCE_LOG_LIMITS.EVENTS_MIN, {
       message: 'At least one event is required',
     })
@@ -156,7 +168,7 @@ export const updateMaintenanceLogSchema = z.object({
     ),
   financedBy: maintenanceFinancedBySchema.optional().describe('Revised funding source.'),
   warranty: multipartBoolean().optional().describe('Toggles whether the work is under warranty.'),
-  events: multipartArray(maintenanceLogEventSchema)
+  events: multipartArray(maintenanceLogEventWithDateOrderSchema)
     .optional()
     .describe(
       'Replacement event set: events with an `id` are updated, new events are inserted, and existing events omitted from the list are deleted.',
