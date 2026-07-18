@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.68.0
+
+### Changes
+
+- feat(address): canonical address value-object subpath
+
 ## 0.67.0
 
 ### Changes
