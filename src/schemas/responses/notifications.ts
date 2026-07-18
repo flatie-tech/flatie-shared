@@ -93,6 +93,14 @@ const failureReportStatusDataSchema = baseNotificationDataSchema.extend({
   description: z.string().nullable().optional(),
 });
 
+const failureReportApprovedDataSchema = baseNotificationDataSchema.extend({
+  title: z.string(),
+});
+
+const failureReportDeclinedDataSchema = baseNotificationDataSchema.extend({
+  title: z.string(),
+});
+
 const maintenanceLogCreatedDataSchema = baseNotificationDataSchema.extend({
   title: z.string(),
   description: z.string().nullable().optional(),
@@ -191,6 +199,8 @@ const notificationDataSchemaByType = {
   [NotificationType.FAILURE_REPORT_CREATED]: failureReportCreatedDataSchema,
   [NotificationType.FAILURE_REPORT_STATUS_CHANGED]: failureReportStatusDataSchema,
   [NotificationType.FAILURE_REPORT_RESOLVED]: failureReportStatusDataSchema,
+  [NotificationType.FAILURE_REPORT_APPROVED]: failureReportApprovedDataSchema,
+  [NotificationType.FAILURE_REPORT_DECLINED]: failureReportDeclinedDataSchema,
   [NotificationType.MAINTENANCE_LOG_CREATED]: maintenanceLogCreatedDataSchema,
 
   [NotificationType.PAYMENT_DUE]: unimplementedDataSchema,
@@ -233,6 +243,8 @@ export const notificationDataSchema = z.union([
   wasteReminderDataSchema,
   failureReportCreatedDataSchema,
   failureReportStatusDataSchema,
+  failureReportApprovedDataSchema,
+  failureReportDeclinedDataSchema,
   maintenanceLogCreatedDataSchema,
   buildingJoinRequestReceivedDataSchema,
   buildingJoinRequestDecidedDataSchema,

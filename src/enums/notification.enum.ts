@@ -22,6 +22,8 @@ export const NotificationType = {
   FAILURE_REPORT_CREATED: 'failure_report_created',
   FAILURE_REPORT_STATUS_CHANGED: 'failure_report_status_changed',
   FAILURE_REPORT_RESOLVED: 'failure_report_resolved',
+  FAILURE_REPORT_APPROVED: 'failure_report_approved',
+  FAILURE_REPORT_DECLINED: 'failure_report_declined',
   MAINTENANCE_LOG_CREATED: 'maintenance_log_created',
 
   PAYMENT_DUE: 'payment_due',
@@ -116,6 +118,8 @@ export const NOTIFICATION_TYPE_CATEGORY: Record<NotificationType, NotificationCa
   [NotificationType.FAILURE_REPORT_CREATED]: NotificationCategory.MAINTENANCE,
   [NotificationType.FAILURE_REPORT_STATUS_CHANGED]: NotificationCategory.MAINTENANCE,
   [NotificationType.FAILURE_REPORT_RESOLVED]: NotificationCategory.MAINTENANCE,
+  [NotificationType.FAILURE_REPORT_APPROVED]: NotificationCategory.MAINTENANCE,
+  [NotificationType.FAILURE_REPORT_DECLINED]: NotificationCategory.MAINTENANCE,
   [NotificationType.MAINTENANCE_LOG_CREATED]: NotificationCategory.MAINTENANCE,
 
   [NotificationType.PAYMENT_DUE]: NotificationCategory.FINANCIAL,

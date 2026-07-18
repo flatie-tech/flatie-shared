@@ -151,6 +151,8 @@ var NotificationType = {
   FAILURE_REPORT_CREATED: "failure_report_created",
   FAILURE_REPORT_STATUS_CHANGED: "failure_report_status_changed",
   FAILURE_REPORT_RESOLVED: "failure_report_resolved",
+  FAILURE_REPORT_APPROVED: "failure_report_approved",
+  FAILURE_REPORT_DECLINED: "failure_report_declined",
   MAINTENANCE_LOG_CREATED: "maintenance_log_created",
   PAYMENT_DUE: "payment_due",
   PAYMENT_RECEIVED: "payment_received",
@@ -214,6 +216,8 @@ var NOTIFICATION_TYPE_CATEGORY = {
   [NotificationType.FAILURE_REPORT_CREATED]: NotificationCategory.MAINTENANCE,
   [NotificationType.FAILURE_REPORT_STATUS_CHANGED]: NotificationCategory.MAINTENANCE,
   [NotificationType.FAILURE_REPORT_RESOLVED]: NotificationCategory.MAINTENANCE,
+  [NotificationType.FAILURE_REPORT_APPROVED]: NotificationCategory.MAINTENANCE,
+  [NotificationType.FAILURE_REPORT_DECLINED]: NotificationCategory.MAINTENANCE,
   [NotificationType.MAINTENANCE_LOG_CREATED]: NotificationCategory.MAINTENANCE,
   [NotificationType.PAYMENT_DUE]: NotificationCategory.FINANCIAL,
   [NotificationType.PAYMENT_RECEIVED]: NotificationCategory.FINANCIAL,
@@ -636,5 +640,5 @@ var UnitType = {
 };
 
 export { APPROVE_PERMISSIONS, ApartmentRole, ApprovalStatus, BUILDING_ROLE_RANK, BoardVisibility, BuildingOtpExpiry, BuildingRole, BuildingStatus, BuildingType, CO_OWNER_VISIBLE_SYSTEM_TYPES, CommonStatus, DevicePlatform, EntityLinkType, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, IdentityVerificationMethod, JoinRequestStatus, LinkableEntityType, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, ORG_ROLE_RANK, OrgQuotaResourceType, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, POLL_CANNOT_VOTE_REASON_KEY, Permission, PlatformRole, PollCannotVoteReason, PollStatus, PollType, PollVoteStatus, PricuvaRefMode, Priority, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions, methodToTier };
-//# sourceMappingURL=chunk-2NSIS4GL.js.map
-//# sourceMappingURL=chunk-2NSIS4GL.js.map
+//# sourceMappingURL=chunk-7DG6YM27.js.map
+//# sourceMappingURL=chunk-7DG6YM27.js.map

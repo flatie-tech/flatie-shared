@@ -139,6 +139,8 @@ declare const NotificationType: {
     readonly FAILURE_REPORT_CREATED: "failure_report_created";
     readonly FAILURE_REPORT_STATUS_CHANGED: "failure_report_status_changed";
     readonly FAILURE_REPORT_RESOLVED: "failure_report_resolved";
+    readonly FAILURE_REPORT_APPROVED: "failure_report_approved";
+    readonly FAILURE_REPORT_DECLINED: "failure_report_declined";
     readonly MAINTENANCE_LOG_CREATED: "maintenance_log_created";
     readonly PAYMENT_DUE: "payment_due";
     readonly PAYMENT_RECEIVED: "payment_received";

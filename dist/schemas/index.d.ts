@@ -3282,6 +3282,8 @@ declare const notificationResponseSchema: z.ZodObject<{
         failure_report_created: "failure_report_created";
         failure_report_status_changed: "failure_report_status_changed";
         failure_report_resolved: "failure_report_resolved";
+        failure_report_approved: "failure_report_approved";
+        failure_report_declined: "failure_report_declined";
         maintenance_log_created: "maintenance_log_created";
         payment_due: "payment_due";
         payment_received: "payment_received";
@@ -3396,6 +3398,20 @@ declare const notificationResponseSchema: z.ZodObject<{
         title: z.ZodString;
         status: z.ZodString;
         description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
     }, z.core.$strip>, z.ZodObject<{
         entityType: z.ZodOptional<z.ZodString>;
         entityId: z.ZodOptional<z.ZodString>;
