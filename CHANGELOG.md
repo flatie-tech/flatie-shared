@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.67.0
+
+### Changes
+
+- feat(polls): update-schema consensus fields, expanded test-ids, deadline types implemented
+
 ## 0.66.0
 
 ### Changes

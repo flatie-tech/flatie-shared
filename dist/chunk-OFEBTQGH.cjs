@@ -1097,9 +1097,7 @@ var updatePollSchema = zod.z.object({
   pollType: pollTypeSchema.optional(),
   deadline: zod.z.coerce.date().optional().describe("Revised deadline. Accepts an ISO-8601 string or Date."),
   requiredConsensusPercentage: zod.z.coerce.number().min(POLL_LIMITS.CONSENSUS_PERCENTAGE_MIN).max(POLL_LIMITS.CONSENSUS_PERCENTAGE_MAX).optional().describe("Revised ownership-weighted approval threshold (10\u2013100) for consensus polls."),
-  consensusCategory: zod.z.string().max(100).optional().describe(
-    'Revised classification of the consensus decision (e.g. "fundUsage", "houseRules").'
-  ),
+  consensusCategory: zod.z.string().max(100).optional().describe('Revised classification of the consensus decision (e.g. "fundUsage", "houseRules").'),
   legalBasis: zod.z.string().max(100).optional().describe("Revised reference to the legal article or statute that authorises the vote."),
   status: zod.z.enum(["active", "inactive", "ended"]).optional().describe(
     "Lifecycle override: `active` accepts votes, `inactive` pauses the poll, `ended` seals it."
@@ -2710,5 +2708,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-OJ7BBC2S.cjs.map
-//# sourceMappingURL=chunk-OJ7BBC2S.cjs.map
+//# sourceMappingURL=chunk-OFEBTQGH.cjs.map
+//# sourceMappingURL=chunk-OFEBTQGH.cjs.map
