@@ -149,8 +149,8 @@ export const NOTIFICATION_TYPE_CATEGORY: Record<NotificationType, NotificationCa
  */
 export const UNIMPLEMENTED_NOTIFICATION_TYPES: ReadonlySet<NotificationType> =
   new Set<NotificationType>([
-    NotificationType.POLL_DEADLINE_24H,
-    NotificationType.POLL_DEADLINE_1H,
+    // POLL_DEADLINE_24H/1H became real in the poll-deadline scheduler (backend
+    // poll wave, 2026-07) — they now appear in notification preferences.
     NotificationType.PAYMENT_DUE,
     NotificationType.PAYMENT_RECEIVED,
     NotificationType.SYSTEM_ANNOUNCEMENT,

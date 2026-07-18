@@ -155,6 +155,16 @@ export const updatePollSchema = z.object({
     .max(POLL_LIMITS.CONSENSUS_PERCENTAGE_MAX)
     .optional()
     .describe('Revised ownership-weighted approval threshold (10–100) for consensus polls.'),
+  consensusCategory: z
+    .string()
+    .max(100)
+    .optional()
+    .describe('Revised classification of the consensus decision (e.g. "fundUsage", "houseRules").'),
+  legalBasis: z
+    .string()
+    .max(100)
+    .optional()
+    .describe('Revised reference to the legal article or statute that authorises the vote.'),
   status: z
     .enum(['active', 'inactive', 'ended'])
     .optional()

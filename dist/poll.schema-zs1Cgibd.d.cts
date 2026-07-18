@@ -311,6 +311,8 @@ declare const updatePollSchema: z.ZodObject<{
     }>>;
     deadline: z.ZodOptional<z.ZodCoercedDate<unknown>>;
     requiredConsensusPercentage: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    consensusCategory: z.ZodOptional<z.ZodString>;
+    legalBasis: z.ZodOptional<z.ZodString>;
     status: z.ZodOptional<z.ZodEnum<{
         active: "active";
         inactive: "inactive";

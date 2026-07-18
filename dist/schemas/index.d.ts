@@ -1,5 +1,5 @@
 import { z } from 'zod';
-export { C as CreateEventSchema, i as CreateMaintenanceLogSchema, s as CreatePollSchema, b as EVENT_COLORS, e as EVENT_TYPES, d as EVENT_TYPE_COLOR_MAP, E as EventColorOption, a as EventTypeOption, F as FinalizePollSchema, m as MAINTENANCE_FINANCED_BY, n as MAINTENANCE_LOG_LIMITS, M as MaintenanceFinancedByOption, j as MaintenanceLogEventSchema, y as POLL_LIMITS, z as POLL_TYPES, P as PollTypeOption, h as RECURRENCE_TYPES, R as RecurrenceTypeOption, T as TimeSchema, U as UpdateEventSchema, k as UpdateMaintenanceLogSchema, v as UpdatePollSchema, V as VotePollSchema, c as createEventSchema, l as createMaintenanceLogSchema, w as createPollSchema, f as eventColorSchema, g as eventTypeSchema, x as finalizePollSchema, o as maintenanceFinancedBySchema, p as maintenanceLogEventSchema, A as pollTypeSchema, r as recurrenceTypeSchema, t as timeSchema, u as updateEventSchema, q as updateMaintenanceLogSchema, B as updatePollSchema, D as votePollSchema } from '../poll.schema-BAh4dUAo.js';
+export { C as CreateEventSchema, i as CreateMaintenanceLogSchema, s as CreatePollSchema, b as EVENT_COLORS, e as EVENT_TYPES, d as EVENT_TYPE_COLOR_MAP, E as EventColorOption, a as EventTypeOption, F as FinalizePollSchema, m as MAINTENANCE_FINANCED_BY, n as MAINTENANCE_LOG_LIMITS, M as MaintenanceFinancedByOption, j as MaintenanceLogEventSchema, y as POLL_LIMITS, z as POLL_TYPES, P as PollTypeOption, h as RECURRENCE_TYPES, R as RecurrenceTypeOption, T as TimeSchema, U as UpdateEventSchema, k as UpdateMaintenanceLogSchema, v as UpdatePollSchema, V as VotePollSchema, c as createEventSchema, l as createMaintenanceLogSchema, w as createPollSchema, f as eventColorSchema, g as eventTypeSchema, x as finalizePollSchema, o as maintenanceFinancedBySchema, p as maintenanceLogEventSchema, A as pollTypeSchema, r as recurrenceTypeSchema, t as timeSchema, u as updateEventSchema, q as updateMaintenanceLogSchema, B as updatePollSchema, D as votePollSchema } from '../poll.schema-zs1Cgibd.js';
 
 /**
  * API error response envelope.
@@ -1874,6 +1874,8 @@ declare const updatePollRequestSchema: z.ZodObject<{
     }>>;
     deadline: z.ZodOptional<z.ZodCoercedDate<unknown>>;
     requiredConsensusPercentage: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    consensusCategory: z.ZodOptional<z.ZodString>;
+    legalBasis: z.ZodOptional<z.ZodString>;
     status: z.ZodOptional<z.ZodEnum<{
         active: "active";
         inactive: "inactive";
