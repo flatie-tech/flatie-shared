@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.65.0
+
+### Changes
+
+- feat(notifications): add FAILURE_REPORT_APPROVED/DECLINED types
+
 ## 0.64.0
 
 ### Changes
