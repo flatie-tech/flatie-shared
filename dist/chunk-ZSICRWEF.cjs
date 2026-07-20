@@ -598,6 +598,29 @@ var createBusinessPartnerSchema = zod.z.object({
   isActive: zod.z.boolean().optional()
 }).meta({ id: "CreateBusinessPartner" });
 var updateBusinessPartnerSchema = createBusinessPartnerSchema.partial().meta({ id: "UpdateBusinessPartner" });
+var DOCUMENT_LIMITS = {
+  TITLE_MIN: 1,
+  TITLE_MAX: 100,
+  DESCRIPTION_MAX: 500,
+  FILE_NAME_MAX: 255
+};
+var createDocumentSchema = zod.z.object({
+  title: zod.z.string().min(DOCUMENT_LIMITS.TITLE_MIN, "title must not be empty").max(DOCUMENT_LIMITS.TITLE_MAX).describe("Document title, 1\u2013100 chars."),
+  description: zod.z.string().max(DOCUMENT_LIMITS.DESCRIPTION_MAX).optional().describe("Optional markdown description, up to 500 chars."),
+  isPrivate: multipartBoolean().optional().describe("When true, visible only to the uploader and holders of DOCUMENT_READ_PRIVATE.")
+}).meta({ id: "CreateDocument" });
+var updateDocumentSchema = zod.z.object({
+  title: zod.z.string().max(DOCUMENT_LIMITS.TITLE_MAX).optional().describe("Revised title."),
+  description: zod.z.string().max(DOCUMENT_LIMITS.DESCRIPTION_MAX).optional().describe("Revised description."),
+  isPrivate: multipartBoolean().optional().describe("Toggle private visibility."),
+  removeFileIds: multipartArray(uuidSchema).optional().describe("UUIDs of child files to detach from the document."),
+  renameFiles: multipartArray(
+    zod.z.object({
+      id: uuidSchema,
+      fileName: zod.z.string().min(1).max(DOCUMENT_LIMITS.FILE_NAME_MAX)
+    })
+  ).optional().describe("Rename individual child files by id (metadata only; R2 key + extension preserved).")
+}).meta({ id: "UpdateDocument" });
 var ENTITY_LINK_TYPES = [
   "image",
   "document",
@@ -2507,6 +2530,7 @@ exports.BUILDING_LIMITS = BUILDING_LIMITS;
 exports.BUILDING_TYPES = BUILDING_TYPES;
 exports.CHAT_LIMITS = CHAT_LIMITS;
 exports.CommonStatusSchema = CommonStatusSchema;
+exports.DOCUMENT_LIMITS = DOCUMENT_LIMITS;
 exports.ENTITY_LINK_TYPES = ENTITY_LINK_TYPES;
 exports.EVENT_COLORS = EVENT_COLORS;
 exports.EVENT_TYPES = EVENT_TYPES;
@@ -2575,6 +2599,7 @@ exports.createBoardSchema = createBoardSchema;
 exports.createBuildingSchema = createBuildingSchema;
 exports.createBusinessPartnerSchema = createBusinessPartnerSchema;
 exports.createConversationSchema = createConversationSchema;
+exports.createDocumentSchema = createDocumentSchema;
 exports.createEmailThreadRequestSchema = createEmailThreadRequestSchema;
 exports.createEntityLinkRequestSchema = createEntityLinkRequestSchema;
 exports.createEventSchema = createEventSchema;
@@ -2696,6 +2721,7 @@ exports.updateBuildingSchema = updateBuildingSchema;
 exports.updateBuildingSettingsSchema = updateBuildingSettingsSchema;
 exports.updateBusinessPartnerSchema = updateBusinessPartnerSchema;
 exports.updateConversationSchema = updateConversationSchema;
+exports.updateDocumentSchema = updateDocumentSchema;
 exports.updateEventSchema = updateEventSchema;
 exports.updateFailureReportRequestSchema = updateFailureReportRequestSchema;
 exports.updateFailureReportSchema = updateFailureReportSchema;
@@ -2717,5 +2743,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-VSUBNJWV.cjs.map
-//# sourceMappingURL=chunk-VSUBNJWV.cjs.map
+//# sourceMappingURL=chunk-ZSICRWEF.cjs.map
+//# sourceMappingURL=chunk-ZSICRWEF.cjs.map

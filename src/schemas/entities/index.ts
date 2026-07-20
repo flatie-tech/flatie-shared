@@ -137,6 +137,13 @@ export {
   createBusinessPartnerSchema,
   updateBusinessPartnerSchema,
 } from './business-partner.schema';
+// Document (building file library) request schemas
+export type { CreateDocumentSchema, UpdateDocumentSchema } from './document.schema';
+export {
+  createDocumentSchema,
+  DOCUMENT_LIMITS,
+  updateDocumentSchema,
+} from './document.schema';
 // Entity-link schemas (generic links API)
 export type {
   CreateEntityLinkRequest,
