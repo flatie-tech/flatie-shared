@@ -1,25 +1,29 @@
 'use strict';
 
-var chunk3AZTJ34D_cjs = require('../chunk-3AZTJ34D.cjs');
+var chunkBQDXLZYG_cjs = require('../chunk-BQDXLZYG.cjs');
 var chunk4CZ7F75B_cjs = require('../chunk-4CZ7F75B.cjs');
 
 
 
 Object.defineProperty(exports, "addressSearchResultSchema", {
   enumerable: true,
-  get: function () { return chunk3AZTJ34D_cjs.addressSearchResultSchema; }
+  get: function () { return chunkBQDXLZYG_cjs.addressSearchResultSchema; }
 });
 Object.defineProperty(exports, "buildMapUrl", {
   enumerable: true,
-  get: function () { return chunk3AZTJ34D_cjs.buildMapUrl; }
+  get: function () { return chunkBQDXLZYG_cjs.buildMapUrl; }
 });
 Object.defineProperty(exports, "compareHouseNumbers", {
   enumerable: true,
-  get: function () { return chunk3AZTJ34D_cjs.compareHouseNumbers; }
+  get: function () { return chunkBQDXLZYG_cjs.compareHouseNumbers; }
+});
+Object.defineProperty(exports, "existingBuildingRefSchema", {
+  enumerable: true,
+  get: function () { return chunkBQDXLZYG_cjs.existingBuildingRefSchema; }
 });
 Object.defineProperty(exports, "structuredAddressInputSchema", {
   enumerable: true,
-  get: function () { return chunk3AZTJ34D_cjs.structuredAddressInputSchema; }
+  get: function () { return chunkBQDXLZYG_cjs.structuredAddressInputSchema; }
 });
 Object.defineProperty(exports, "formatAddress", {
   enumerable: true,

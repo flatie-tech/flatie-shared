@@ -7,6 +7,7 @@ export type {
   AddressDisplayProps,
   AddressSearchResult,
   AddressValue,
+  ExistingBuildingRef,
   MapUrlInput,
   StructuredAddressInput,
 } from './address';
@@ -14,6 +15,7 @@ export {
   addressSearchResultSchema,
   buildMapUrl,
   compareHouseNumbers,
+  existingBuildingRefSchema,
   structuredAddressInputSchema,
 } from './address';
 // Constants (Query keys, etc.)

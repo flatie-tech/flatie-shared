@@ -1,6 +1,11 @@
 import { parseHouseNumber } from './chunk-FOL57YM3.js';
 import { z } from 'zod';
 
+var existingBuildingRefSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  slug: z.string().nullable()
+});
 var addressSearchResultSchema = z.object({
   id: z.string().uuid(),
   streetId: z.string().uuid(),
@@ -10,7 +15,10 @@ var addressSearchResultSchema = z.object({
   city: z.string().nullable(),
   postcode: z.string().nullable(),
   latitude: z.number().nullable(),
-  longitude: z.number().nullable()
+  longitude: z.number().nullable(),
+  // Only populated for building-context searches (see above). Optional so
+  // existing consumers and non-building searches are unaffected.
+  existingBuilding: existingBuildingRefSchema.nullable().optional()
 }).meta({ id: "AddressSearchResult" });
 var structuredAddressInputSchema = z.object({
   addressId: z.string().uuid().optional().nullable(),
@@ -36,6 +44,6 @@ function compareHouseNumbers(a, b) {
   return (pa.subNumber ?? 0) - (pb.subNumber ?? 0);
 }
 
-export { addressSearchResultSchema, buildMapUrl, compareHouseNumbers, structuredAddressInputSchema };
-//# sourceMappingURL=chunk-HMIFR5DO.js.map
-//# sourceMappingURL=chunk-HMIFR5DO.js.map
+export { addressSearchResultSchema, buildMapUrl, compareHouseNumbers, existingBuildingRefSchema, structuredAddressInputSchema };
+//# sourceMappingURL=chunk-IDRPSHWU.js.map
+//# sourceMappingURL=chunk-IDRPSHWU.js.map

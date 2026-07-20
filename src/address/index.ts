@@ -29,6 +29,21 @@ export {
 } from '../utils/house-number';
 
 /**
+ * A building already registered at an address — attached to a search result
+ * so the create/edit picker can warn "already registered here" and offer the
+ * join flow instead of letting the user hit a 409. Present only when the
+ * search was requested with the building flag AND an active/pending building
+ * exists at that exact address; null otherwise.
+ */
+export const existingBuildingRefSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  slug: z.string().nullable(),
+});
+
+export type ExistingBuildingRef = z.infer<typeof existingBuildingRefSchema>;
+
+/**
  * One suggestion row served by the address search endpoints.
  * Street-level rows (no house number yet) have `houseNumber: null`,
  * `id === streetId`, and null coordinates.
@@ -44,6 +59,9 @@ export const addressSearchResultSchema = z
     postcode: z.string().nullable(),
     latitude: z.number().nullable(),
     longitude: z.number().nullable(),
+    // Only populated for building-context searches (see above). Optional so
+    // existing consumers and non-building searches are unaffected.
+    existingBuilding: existingBuildingRefSchema.nullable().optional(),
   })
   .meta({ id: 'AddressSearchResult' });
 

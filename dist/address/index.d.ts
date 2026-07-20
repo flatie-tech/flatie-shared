@@ -21,6 +21,19 @@ export { A as AddressParts, P as ParsedHouseNumber, f as formatAddress, i as isV
  */
 
 /**
+ * A building already registered at an address — attached to a search result
+ * so the create/edit picker can warn "already registered here" and offer the
+ * join flow instead of letting the user hit a 409. Present only when the
+ * search was requested with the building flag AND an active/pending building
+ * exists at that exact address; null otherwise.
+ */
+declare const existingBuildingRefSchema: z.ZodObject<{
+    id: z.ZodString;
+    name: z.ZodString;
+    slug: z.ZodNullable<z.ZodString>;
+}, z.core.$strip>;
+type ExistingBuildingRef = z.infer<typeof existingBuildingRefSchema>;
+/**
  * One suggestion row served by the address search endpoints.
  * Street-level rows (no house number yet) have `houseNumber: null`,
  * `id === streetId`, and null coordinates.
@@ -35,6 +48,11 @@ declare const addressSearchResultSchema: z.ZodObject<{
     postcode: z.ZodNullable<z.ZodString>;
     latitude: z.ZodNullable<z.ZodNumber>;
     longitude: z.ZodNullable<z.ZodNumber>;
+    existingBuilding: z.ZodOptional<z.ZodNullable<z.ZodObject<{
+        id: z.ZodString;
+        name: z.ZodString;
+        slug: z.ZodNullable<z.ZodString>;
+    }, z.core.$strip>>>;
 }, z.core.$strip>;
 type AddressSearchResult = z.infer<typeof addressSearchResultSchema>;
 /**
@@ -106,4 +124,4 @@ declare function buildMapUrl(input: MapUrlInput): string;
  */
 declare function compareHouseNumbers(a: string, b: string): number;
 
-export { type AddressDisplayProps, type AddressSearchResult, type AddressValue, type MapUrlInput, type StructuredAddressInput, addressSearchResultSchema, buildMapUrl, compareHouseNumbers, structuredAddressInputSchema };
+export { type AddressDisplayProps, type AddressSearchResult, type AddressValue, type ExistingBuildingRef, type MapUrlInput, type StructuredAddressInput, addressSearchResultSchema, buildMapUrl, compareHouseNumbers, existingBuildingRefSchema, structuredAddressInputSchema };

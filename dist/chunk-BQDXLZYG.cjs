@@ -3,6 +3,11 @@
 var chunk4CZ7F75B_cjs = require('./chunk-4CZ7F75B.cjs');
 var zod = require('zod');
 
+var existingBuildingRefSchema = zod.z.object({
+  id: zod.z.string().uuid(),
+  name: zod.z.string(),
+  slug: zod.z.string().nullable()
+});
 var addressSearchResultSchema = zod.z.object({
   id: zod.z.string().uuid(),
   streetId: zod.z.string().uuid(),
@@ -12,7 +17,10 @@ var addressSearchResultSchema = zod.z.object({
   city: zod.z.string().nullable(),
   postcode: zod.z.string().nullable(),
   latitude: zod.z.number().nullable(),
-  longitude: zod.z.number().nullable()
+  longitude: zod.z.number().nullable(),
+  // Only populated for building-context searches (see above). Optional so
+  // existing consumers and non-building searches are unaffected.
+  existingBuilding: existingBuildingRefSchema.nullable().optional()
 }).meta({ id: "AddressSearchResult" });
 var structuredAddressInputSchema = zod.z.object({
   addressId: zod.z.string().uuid().optional().nullable(),
@@ -41,6 +49,7 @@ function compareHouseNumbers(a, b) {
 exports.addressSearchResultSchema = addressSearchResultSchema;
 exports.buildMapUrl = buildMapUrl;
 exports.compareHouseNumbers = compareHouseNumbers;
+exports.existingBuildingRefSchema = existingBuildingRefSchema;
 exports.structuredAddressInputSchema = structuredAddressInputSchema;
-//# sourceMappingURL=chunk-3AZTJ34D.cjs.map
-//# sourceMappingURL=chunk-3AZTJ34D.cjs.map
+//# sourceMappingURL=chunk-BQDXLZYG.cjs.map
+//# sourceMappingURL=chunk-BQDXLZYG.cjs.map
