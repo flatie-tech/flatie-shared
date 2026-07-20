@@ -1,21 +1,19 @@
 import { z } from 'zod';
+import { moneyStringSchema } from '../money.schema';
 
 /**
  * Income-transaction request contracts — the manual income ledger
  * representatives maintain when the building is in `manual` funds
  * mode (`POST/PUT /buildings/:buildingId/income`).
  *
- * The two-decimal refine mirrors the backend `decimal(10,2)` column,
- * so both clients reject amounts the API would reject.
+ * `amount` is the canonical money string (accepts string or number in, always
+ * outputs `"N.NN"`); the ≤2-decimal + range rules mirror the `decimal(10,2)`
+ * column so both clients reject amounts the API would reject.
  */
 
-const incomeAmountSchema = z.coerce
-  .number()
-  .min(0, 'amount must be >= 0')
-  .refine((v) => /^-?\d+(\.\d{1,2})?$/.test(v.toString()), {
-    message: 'amount must have at most 2 decimal places',
-  })
-  .describe('Income amount in EUR, at most two decimal places.');
+const incomeAmountSchema = moneyStringSchema.describe(
+  'Income amount in EUR as a two-decimal string (e.g. "250.50").',
+);
 
 /** Body of `POST /buildings/:buildingId/income`. */
 export const createIncomeSchema = z

@@ -55,6 +55,9 @@ export { dateRangeParamsSchema, dateRangeWithValidationSchema } from './date-ran
 
 // Entity schemas
 export * from './entities';
+// Canonical monetary field schemas (money is a two-decimal string)
+export type { MoneyString } from './money.schema';
+export { moneyStringSchema, signedMoneyStringSchema } from './money.schema';
 // Multipart/form-data helpers (Zod preprocessors)
 export { multipartArray, multipartBoolean } from './multipart.schema';
 // Pagination schemas

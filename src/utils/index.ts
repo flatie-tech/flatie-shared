@@ -33,6 +33,17 @@ export {
   LOCALE_MAP,
   TIME_FORMATS,
 } from './locale';
+// Decimal-string money primitives (integer-cents internally — never floats)
+export {
+  addMoney,
+  formatMoney,
+  fromCents,
+  moneyEquals,
+  normalizeMoney,
+  subtractMoney,
+  sumMoney,
+  toCents,
+} from './money';
 // Pagination utilities
 export {
   calculatePaginationMeta,

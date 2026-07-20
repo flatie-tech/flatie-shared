@@ -1,5 +1,6 @@
 'use strict';
 
+var chunkX3TW7GWG_cjs = require('./chunk-X3TW7GWG.cjs');
 var chunkXXNOAOHF_cjs = require('./chunk-XXNOAOHF.cjs');
 var chunkNQLL5CZO_cjs = require('./chunk-NQLL5CZO.cjs');
 var chunkZASNDKJM_cjs = require('./chunk-ZASNDKJM.cjs');
@@ -871,9 +872,32 @@ var garageSchema = zod.z.looseObject({
   updatedAt: zod.z.string(),
   users: zod.z.array(garageUserSchema).describe("Owners and tenants currently attached to the garage.")
 });
-var incomeAmountSchema = zod.z.coerce.number().min(0, "amount must be >= 0").refine((v) => /^-?\d+(\.\d{1,2})?$/.test(v.toString()), {
-  message: "amount must have at most 2 decimal places"
-}).describe("Income amount in EUR, at most two decimal places.");
+var moneyStringSchema = zod.z.union([zod.z.string(), zod.z.number()]).transform((v) => typeof v === "number" ? v.toString() : v.trim()).pipe(
+  zod.z.string().regex(/^\d+(\.\d{1,2})?$/, "must be a non-negative amount with at most 2 decimals").refine((s) => Number(s) <= 9999999999e-2, "amount exceeds the maximum of 99,999,999.99").transform((s) => chunkX3TW7GWG_cjs.normalizeMoney(s))
+);
+var signedMoneyStringSchema = zod.z.union([zod.z.string(), zod.z.number()]).transform((v) => typeof v === "number" ? v.toString() : v.trim()).pipe(
+  zod.z.string().regex(/^-?\d+(\.\d{1,2})?$/, "must be an amount with at most 2 decimals").refine((s) => Math.abs(Number(s)) <= 999999999999e-2, "balance exceeds the maximum").transform((s) => chunkX3TW7GWG_cjs.normalizeMoney(s))
+);
+
+// src/schemas/entities/expense-transaction.schema.ts
+var expenseAmountSchema = moneyStringSchema.describe(
+  'Expense amount in EUR as a two-decimal string (e.g. "120.00").'
+);
+var createExpenseSchema = zod.z.object({
+  categoryId: zod.z.string().uuid().describe("Expense transaction-category to file this entry under."),
+  amount: expenseAmountSchema,
+  description: zod.z.string().trim().max(500).optional(),
+  period: zod.z.string().max(50).optional().describe('Free-form billing period label (e.g. "2026-06").')
+}).strict();
+var updateExpenseSchema = zod.z.object({
+  categoryId: zod.z.string().uuid().optional(),
+  amount: expenseAmountSchema.optional(),
+  description: zod.z.string().max(500).optional(),
+  period: zod.z.string().max(50).optional()
+}).strict();
+var incomeAmountSchema = moneyStringSchema.describe(
+  'Income amount in EUR as a two-decimal string (e.g. "250.50").'
+);
 var createIncomeSchema = zod.z.object({
   categoryId: zod.z.string().uuid().optional().describe("Income transaction-category to file this entry under."),
   amount: incomeAmountSchema,
@@ -2605,6 +2629,7 @@ exports.createDocumentSchema = createDocumentSchema;
 exports.createEmailThreadRequestSchema = createEmailThreadRequestSchema;
 exports.createEntityLinkRequestSchema = createEntityLinkRequestSchema;
 exports.createEventSchema = createEventSchema;
+exports.createExpenseSchema = createExpenseSchema;
 exports.createFailureReportSchema = createFailureReportSchema;
 exports.createFaqSchema = createFaqSchema;
 exports.createIncomeSchema = createIncomeSchema;
@@ -2663,6 +2688,7 @@ exports.maintenanceLogResponseSchema = maintenanceLogResponseSchema;
 exports.maintenanceStatusOptions = maintenanceStatusOptions;
 exports.messageResponseSchema = messageResponseSchema;
 exports.messagesListResponseSchema = messagesListResponseSchema;
+exports.moneyStringSchema = moneyStringSchema;
 exports.moveBoardCardSchema = moveBoardCardSchema;
 exports.multipartArray = multipartArray;
 exports.multipartBoolean = multipartBoolean;
@@ -2710,6 +2736,7 @@ exports.resetPasswordSchema = resetPasswordSchema;
 exports.roleTypeSchema = roleTypeSchema;
 exports.searchUsersQuerySchema = searchUsersQuerySchema;
 exports.sendMessageSchema = sendMessageSchema;
+exports.signedMoneyStringSchema = signedMoneyStringSchema;
 exports.storageUnitRoleSchema = storageUnitRoleSchema;
 exports.storageUnitSchema = storageUnitSchema;
 exports.storageUnitUserSchema = storageUnitUserSchema;
@@ -2725,6 +2752,7 @@ exports.updateBusinessPartnerSchema = updateBusinessPartnerSchema;
 exports.updateConversationSchema = updateConversationSchema;
 exports.updateDocumentSchema = updateDocumentSchema;
 exports.updateEventSchema = updateEventSchema;
+exports.updateExpenseSchema = updateExpenseSchema;
 exports.updateFailureReportRequestSchema = updateFailureReportRequestSchema;
 exports.updateFailureReportSchema = updateFailureReportSchema;
 exports.updateFaqSchema = updateFaqSchema;
@@ -2745,5 +2773,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-DUF76AIK.cjs.map
-//# sourceMappingURL=chunk-DUF76AIK.cjs.map
+//# sourceMappingURL=chunk-SVFIUSQI.cjs.map
+//# sourceMappingURL=chunk-SVFIUSQI.cjs.map

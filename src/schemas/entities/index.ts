@@ -186,6 +186,9 @@ export {
   timeSchema,
   updateEventSchema,
 } from './event.schema';
+// Income-transaction schemas (manual funds mode income ledger)
+export type { CreateExpenseSchema, UpdateExpenseSchema } from './expense-transaction.schema';
+export { createExpenseSchema, updateExpenseSchema } from './expense-transaction.schema';
 export type {
   ApproveFailureReportSchema,
   CreateFailureReportSchema,
@@ -203,7 +206,6 @@ export {
 // Garage schemas
 export type { Garage, GarageRole, GarageUser } from './garage.schema';
 export { garageRoleSchema, garageSchema, garageUserSchema } from './garage.schema';
-// Income-transaction schemas (manual funds mode income ledger)
 export type { CreateIncomeSchema, UpdateIncomeSchema } from './income-transaction.schema';
 export { createIncomeSchema, updateIncomeSchema } from './income-transaction.schema';
 export type {
