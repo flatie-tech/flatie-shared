@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.70.0
+
+### Changes
+
+- feat(address): existingBuilding on AddressSearchResult
+
 ## 0.69.0
 
 ### Changes
