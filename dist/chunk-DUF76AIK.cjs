@@ -619,7 +619,9 @@ var updateDocumentSchema = zod.z.object({
       id: uuidSchema,
       fileName: zod.z.string().min(1).max(DOCUMENT_LIMITS.FILE_NAME_MAX)
     })
-  ).optional().describe("Rename individual child files by id (metadata only; R2 key + extension preserved).")
+  ).optional().describe(
+    "Rename individual child files by id (metadata only; R2 key + extension preserved)."
+  )
 }).meta({ id: "UpdateDocument" });
 var ENTITY_LINK_TYPES = [
   "image",
@@ -2743,5 +2745,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-ZSICRWEF.cjs.map
-//# sourceMappingURL=chunk-ZSICRWEF.cjs.map
+//# sourceMappingURL=chunk-DUF76AIK.cjs.map
+//# sourceMappingURL=chunk-DUF76AIK.cjs.map

@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.69.0
+
+### Changes
+
+- feat(documents): shared create/update request schemas + DOCUMENT_LIMITS + test-ids
+
 ## 0.68.0
 
 ### Changes
