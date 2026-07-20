@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.71.0
+
+### Changes
+
+- feat(money): decimal-string money primitives + schemas + expense/funds contracts
+
 ## 0.70.0
 
 ### Changes

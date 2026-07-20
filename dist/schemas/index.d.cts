@@ -1230,6 +1230,23 @@ type DeleteEntityLinkQuery = z.infer<typeof deleteEntityLinkQuerySchema>;
 type GetEntityLinksQuery = z.infer<typeof getEntityLinksQuerySchema>;
 type GetEntityLinkCountsQuery = z.infer<typeof getEntityLinkCountsQuerySchema>;
 
+/** Body of `POST /buildings/:buildingId/expenses`. */
+declare const createExpenseSchema: z.ZodObject<{
+    categoryId: z.ZodString;
+    amount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+    description: z.ZodOptional<z.ZodString>;
+    period: z.ZodOptional<z.ZodString>;
+}, z.core.$strict>;
+/** Body of `PUT /buildings/:buildingId/expenses/:id` — partial patch. */
+declare const updateExpenseSchema: z.ZodObject<{
+    categoryId: z.ZodOptional<z.ZodString>;
+    amount: z.ZodOptional<z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>>;
+    description: z.ZodOptional<z.ZodString>;
+    period: z.ZodOptional<z.ZodString>;
+}, z.core.$strict>;
+type CreateExpenseSchema = z.infer<typeof createExpenseSchema>;
+type UpdateExpenseSchema = z.infer<typeof updateExpenseSchema>;
+
 /**
  * Validation constants for failure reports
  */
@@ -1373,23 +1390,6 @@ declare const garageSchema: z.ZodObject<{
     }, z.core.$loose>>;
 }, z.core.$loose>;
 type Garage = z.infer<typeof garageSchema>;
-
-/** Body of `POST /buildings/:buildingId/expenses`. */
-declare const createExpenseSchema: z.ZodObject<{
-    categoryId: z.ZodString;
-    amount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
-    description: z.ZodOptional<z.ZodString>;
-    period: z.ZodOptional<z.ZodString>;
-}, z.core.$strict>;
-/** Body of `PUT /buildings/:buildingId/expenses/:id` — partial patch. */
-declare const updateExpenseSchema: z.ZodObject<{
-    categoryId: z.ZodOptional<z.ZodString>;
-    amount: z.ZodOptional<z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>>;
-    description: z.ZodOptional<z.ZodString>;
-    period: z.ZodOptional<z.ZodString>;
-}, z.core.$strict>;
-type CreateExpenseSchema = z.infer<typeof createExpenseSchema>;
-type UpdateExpenseSchema = z.infer<typeof updateExpenseSchema>;
 
 /** Body of `POST /buildings/:buildingId/income`. */
 declare const createIncomeSchema: z.ZodObject<{

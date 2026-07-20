@@ -745,6 +745,29 @@ var updateEventSchema = z.object({
   minuteTakerId: uuidSchema.optional(),
   fileIds: z.array(uuidSchema).optional()
 });
+var moneyStringSchema = z.union([z.string(), z.number()]).transform((v) => typeof v === "number" ? v.toString() : v.trim()).pipe(
+  z.string().regex(/^\d+(\.\d{1,2})?$/, "must be a non-negative amount with at most 2 decimals").refine((s) => Number(s) <= 9999999999e-2, "amount exceeds the maximum of 99,999,999.99").transform((s) => normalizeMoney(s))
+);
+var signedMoneyStringSchema = z.union([z.string(), z.number()]).transform((v) => typeof v === "number" ? v.toString() : v.trim()).pipe(
+  z.string().regex(/^-?\d+(\.\d{1,2})?$/, "must be an amount with at most 2 decimals").refine((s) => Math.abs(Number(s)) <= 999999999999e-2, "balance exceeds the maximum").transform((s) => normalizeMoney(s))
+);
+
+// src/schemas/entities/expense-transaction.schema.ts
+var expenseAmountSchema = moneyStringSchema.describe(
+  'Expense amount in EUR as a two-decimal string (e.g. "120.00").'
+);
+var createExpenseSchema = z.object({
+  categoryId: z.string().uuid().describe("Expense transaction-category to file this entry under."),
+  amount: expenseAmountSchema,
+  description: z.string().trim().max(500).optional(),
+  period: z.string().max(50).optional().describe('Free-form billing period label (e.g. "2026-06").')
+}).strict();
+var updateExpenseSchema = z.object({
+  categoryId: z.string().uuid().optional(),
+  amount: expenseAmountSchema.optional(),
+  description: z.string().max(500).optional(),
+  period: z.string().max(50).optional()
+}).strict();
 var FAILURE_REPORT_LIMITS = {
   TITLE_MIN: 1,
   TITLE_MAX: 100,
@@ -870,29 +893,6 @@ var garageSchema = z.looseObject({
   updatedAt: z.string(),
   users: z.array(garageUserSchema).describe("Owners and tenants currently attached to the garage.")
 });
-var moneyStringSchema = z.union([z.string(), z.number()]).transform((v) => typeof v === "number" ? v.toString() : v.trim()).pipe(
-  z.string().regex(/^\d+(\.\d{1,2})?$/, "must be a non-negative amount with at most 2 decimals").refine((s) => Number(s) <= 9999999999e-2, "amount exceeds the maximum of 99,999,999.99").transform((s) => normalizeMoney(s))
-);
-var signedMoneyStringSchema = z.union([z.string(), z.number()]).transform((v) => typeof v === "number" ? v.toString() : v.trim()).pipe(
-  z.string().regex(/^-?\d+(\.\d{1,2})?$/, "must be an amount with at most 2 decimals").refine((s) => Math.abs(Number(s)) <= 999999999999e-2, "balance exceeds the maximum").transform((s) => normalizeMoney(s))
-);
-
-// src/schemas/entities/expense-transaction.schema.ts
-var expenseAmountSchema = moneyStringSchema.describe(
-  'Expense amount in EUR as a two-decimal string (e.g. "120.00").'
-);
-var createExpenseSchema = z.object({
-  categoryId: z.string().uuid().describe("Expense transaction-category to file this entry under."),
-  amount: expenseAmountSchema,
-  description: z.string().trim().max(500).optional(),
-  period: z.string().max(50).optional().describe('Free-form billing period label (e.g. "2026-06").')
-}).strict();
-var updateExpenseSchema = z.object({
-  categoryId: z.string().uuid().optional(),
-  amount: expenseAmountSchema.optional(),
-  description: z.string().max(500).optional(),
-  period: z.string().max(50).optional()
-}).strict();
 var incomeAmountSchema = moneyStringSchema.describe(
   'Income amount in EUR as a two-decimal string (e.g. "250.50").'
 );
@@ -2546,5 +2546,5 @@ var repDashboardSummaryResponseSchema = z.looseObject({
 }).describe("Payload of `GET /representatives/dashboard/summary`.");
 
 export { ARCHIVE_TYPES, ApprovalStatusSchema, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, DOCUMENT_LIMITS, ENTITY_LINK_TYPES, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, LINKABLE_ENTITY_TYPES, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, RECURRENCE_TYPES, REP_RECENT_ACTIVITY_TYPES, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createEventSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createOwnerSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, ownerResponseSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, recurrenceTypeSchema, registerSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, signedMoneyStringSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateEventSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-PXHDOCDJ.js.map
-//# sourceMappingURL=chunk-PXHDOCDJ.js.map
+//# sourceMappingURL=chunk-65A43E36.js.map
+//# sourceMappingURL=chunk-65A43E36.js.map

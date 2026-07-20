@@ -747,6 +747,29 @@ var updateEventSchema = zod.z.object({
   minuteTakerId: uuidSchema.optional(),
   fileIds: zod.z.array(uuidSchema).optional()
 });
+var moneyStringSchema = zod.z.union([zod.z.string(), zod.z.number()]).transform((v) => typeof v === "number" ? v.toString() : v.trim()).pipe(
+  zod.z.string().regex(/^\d+(\.\d{1,2})?$/, "must be a non-negative amount with at most 2 decimals").refine((s) => Number(s) <= 9999999999e-2, "amount exceeds the maximum of 99,999,999.99").transform((s) => chunkX3TW7GWG_cjs.normalizeMoney(s))
+);
+var signedMoneyStringSchema = zod.z.union([zod.z.string(), zod.z.number()]).transform((v) => typeof v === "number" ? v.toString() : v.trim()).pipe(
+  zod.z.string().regex(/^-?\d+(\.\d{1,2})?$/, "must be an amount with at most 2 decimals").refine((s) => Math.abs(Number(s)) <= 999999999999e-2, "balance exceeds the maximum").transform((s) => chunkX3TW7GWG_cjs.normalizeMoney(s))
+);
+
+// src/schemas/entities/expense-transaction.schema.ts
+var expenseAmountSchema = moneyStringSchema.describe(
+  'Expense amount in EUR as a two-decimal string (e.g. "120.00").'
+);
+var createExpenseSchema = zod.z.object({
+  categoryId: zod.z.string().uuid().describe("Expense transaction-category to file this entry under."),
+  amount: expenseAmountSchema,
+  description: zod.z.string().trim().max(500).optional(),
+  period: zod.z.string().max(50).optional().describe('Free-form billing period label (e.g. "2026-06").')
+}).strict();
+var updateExpenseSchema = zod.z.object({
+  categoryId: zod.z.string().uuid().optional(),
+  amount: expenseAmountSchema.optional(),
+  description: zod.z.string().max(500).optional(),
+  period: zod.z.string().max(50).optional()
+}).strict();
 var FAILURE_REPORT_LIMITS = {
   TITLE_MIN: 1,
   TITLE_MAX: 100,
@@ -872,29 +895,6 @@ var garageSchema = zod.z.looseObject({
   updatedAt: zod.z.string(),
   users: zod.z.array(garageUserSchema).describe("Owners and tenants currently attached to the garage.")
 });
-var moneyStringSchema = zod.z.union([zod.z.string(), zod.z.number()]).transform((v) => typeof v === "number" ? v.toString() : v.trim()).pipe(
-  zod.z.string().regex(/^\d+(\.\d{1,2})?$/, "must be a non-negative amount with at most 2 decimals").refine((s) => Number(s) <= 9999999999e-2, "amount exceeds the maximum of 99,999,999.99").transform((s) => chunkX3TW7GWG_cjs.normalizeMoney(s))
-);
-var signedMoneyStringSchema = zod.z.union([zod.z.string(), zod.z.number()]).transform((v) => typeof v === "number" ? v.toString() : v.trim()).pipe(
-  zod.z.string().regex(/^-?\d+(\.\d{1,2})?$/, "must be an amount with at most 2 decimals").refine((s) => Math.abs(Number(s)) <= 999999999999e-2, "balance exceeds the maximum").transform((s) => chunkX3TW7GWG_cjs.normalizeMoney(s))
-);
-
-// src/schemas/entities/expense-transaction.schema.ts
-var expenseAmountSchema = moneyStringSchema.describe(
-  'Expense amount in EUR as a two-decimal string (e.g. "120.00").'
-);
-var createExpenseSchema = zod.z.object({
-  categoryId: zod.z.string().uuid().describe("Expense transaction-category to file this entry under."),
-  amount: expenseAmountSchema,
-  description: zod.z.string().trim().max(500).optional(),
-  period: zod.z.string().max(50).optional().describe('Free-form billing period label (e.g. "2026-06").')
-}).strict();
-var updateExpenseSchema = zod.z.object({
-  categoryId: zod.z.string().uuid().optional(),
-  amount: expenseAmountSchema.optional(),
-  description: zod.z.string().max(500).optional(),
-  period: zod.z.string().max(50).optional()
-}).strict();
 var incomeAmountSchema = moneyStringSchema.describe(
   'Income amount in EUR as a two-decimal string (e.g. "250.50").'
 );
@@ -2773,5 +2773,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-SVFIUSQI.cjs.map
-//# sourceMappingURL=chunk-SVFIUSQI.cjs.map
+//# sourceMappingURL=chunk-HVWTZNQZ.cjs.map
+//# sourceMappingURL=chunk-HVWTZNQZ.cjs.map

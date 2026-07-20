@@ -98,41 +98,6 @@ declare function buildGoogleCalendarUrl(event: GoogleCalendarEventInput): string
 declare function getInitials(name: string): string;
 
 /**
- * Decimal-string money primitives.
- *
- * Money is represented as a canonical two-decimal string (`"250.50"`) end to
- * end — DB `decimal` columns, API payloads, and client state — and NEVER as a
- * JavaScript `number`. All arithmetic goes through integer cents so no IEEE-754
- * float error can ever touch a monetary value.
- *
- * Why: summing floats (`0.1 + 0.2 = 0.30000000000000004`) silently corrupts
- * totals as a ledger grows. Parsing each value to cents, doing integer math,
- * and formatting back is exact for the whole supported range.
- */
-/** Parse a decimal-string / number money value to an integer number of cents. */
-declare function toCents(money: string | number): number;
-/** Format an integer number of cents back to a canonical `"N.NN"` string. */
-declare function fromCents(cents: number): string;
-/** Normalize any money input to the canonical `"N.NN"` string. */
-declare function normalizeMoney(money: string | number): string;
-/** Exact sum of money values → canonical string. Empty list → `"0.00"`. */
-declare function sumMoney(values: Array<string | number>): string;
-/** Exact `a + b` → canonical string. */
-declare function addMoney(a: string | number, b: string | number): string;
-/** Exact `a - b` → canonical string. */
-declare function subtractMoney(a: string | number, b: string | number): string;
-/** True when the two money values are numerically equal. */
-declare function moneyEquals(a: string | number, b: string | number): boolean;
-/**
- * Locale-aware display of a money value. Accepts the canonical string (or a
- * number / null / undefined for tolerance during the migration). `null` /
- * `undefined` render as `'-'` (the table-cell convention). Delegates the actual
- * Intl formatting to the caller-provided formatter so this module stays free of
- * locale dependencies.
- */
-declare function formatMoney(money: string | number | null | undefined, format: (amount: number, currency: string) => string, currency?: string): string;
-
-/**
  * Locale utilities — shared across web, mobile, and backend so app-locale
  * codes (e.g. `'hr'`, `'en'`, `'de'` from i18n libraries) consistently map
  * to BCP-47 strings consumed by `Intl.*`.
@@ -190,6 +155,41 @@ declare function formatDateTime(date: Date | string | number, locale: string, op
  * primary market is Croatia (€).
  */
 declare function formatCurrencyByLocale(amount: number, locale: string, currency?: string): string;
+
+/**
+ * Decimal-string money primitives.
+ *
+ * Money is represented as a canonical two-decimal string (`"250.50"`) end to
+ * end — DB `decimal` columns, API payloads, and client state — and NEVER as a
+ * JavaScript `number`. All arithmetic goes through integer cents so no IEEE-754
+ * float error can ever touch a monetary value.
+ *
+ * Why: summing floats (`0.1 + 0.2 = 0.30000000000000004`) silently corrupts
+ * totals as a ledger grows. Parsing each value to cents, doing integer math,
+ * and formatting back is exact for the whole supported range.
+ */
+/** Parse a decimal-string / number money value to an integer number of cents. */
+declare function toCents(money: string | number): number;
+/** Format an integer number of cents back to a canonical `"N.NN"` string. */
+declare function fromCents(cents: number): string;
+/** Normalize any money input to the canonical `"N.NN"` string. */
+declare function normalizeMoney(money: string | number): string;
+/** Exact sum of money values → canonical string. Empty list → `"0.00"`. */
+declare function sumMoney(values: Array<string | number>): string;
+/** Exact `a + b` → canonical string. */
+declare function addMoney(a: string | number, b: string | number): string;
+/** Exact `a - b` → canonical string. */
+declare function subtractMoney(a: string | number, b: string | number): string;
+/** True when the two money values are numerically equal. */
+declare function moneyEquals(a: string | number, b: string | number): boolean;
+/**
+ * Locale-aware display of a money value. Accepts the canonical string (or a
+ * number / null / undefined for tolerance during the migration). `null` /
+ * `undefined` render as `'-'` (the table-cell convention). Delegates the actual
+ * Intl formatting to the caller-provided formatter so this module stays free of
+ * locale dependencies.
+ */
+declare function formatMoney(money: string | number | null | undefined, format: (amount: number, currency: string) => string, currency?: string): string;
 
 /**
  * Normalize various paginated response formats to a consistent structure
