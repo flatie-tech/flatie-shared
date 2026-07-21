@@ -1311,18 +1311,23 @@ var aiChatRequestSchema = zod.z.object({
   ),
   messages: zod.z.array(aiChatMessageSchema).min(1).max(chunkNQLL5CZO_cjs.AI_CHAT_LIMITS.MAX_MESSAGES).describe("Full client-held conversation history, newest last; the server windows it.")
 });
+var EMAIL_LIMITS = {
+  SUBJECT_MAX: 200,
+  BODY_MAX: 5e4,
+  RECIPIENT_NAME_MAX: 100,
+  CC_MAX: 10};
 var createEmailThreadRequestSchema = zod.z.object({
   recipientEmail: zod.z.string().email().describe("Primary To address of the first outbound message."),
-  recipientName: zod.z.string().optional().describe(
+  recipientName: zod.z.string().max(EMAIL_LIMITS.RECIPIENT_NAME_MAX).optional().describe(
     'Display name to include in the To header (renders as "Name <email>" on the manager side).'
   ),
-  ccEmails: zod.z.array(zod.z.string().email()).optional().describe("Optional list of Cc addresses for the first message."),
-  subject: zod.z.string().min(1).max(200).describe("Subject line; used for both the first message and the thread summary."),
-  body: zod.z.string().min(1).describe("Plain-text body of the first outbound message.")
+  ccEmails: zod.z.array(zod.z.string().email()).max(EMAIL_LIMITS.CC_MAX).optional().describe("Optional list of Cc addresses for the first message (max 10)."),
+  subject: zod.z.string().min(1).max(EMAIL_LIMITS.SUBJECT_MAX).describe("Subject line; used for both the first message and the thread summary."),
+  body: zod.z.string().min(1).max(EMAIL_LIMITS.BODY_MAX).describe("Plain-text body of the first outbound message, up to 50k chars.")
 }).strict();
 var replyEmailThreadRequestSchema = zod.z.object({
-  body: zod.z.string().min(1).describe("Plain-text body of the reply."),
-  ccEmails: zod.z.array(zod.z.string().email()).optional().describe("Optional Cc addresses for this reply; do not persist beyond this message.")
+  body: zod.z.string().min(1).max(EMAIL_LIMITS.BODY_MAX).describe("Plain-text body of the reply, up to 50k chars."),
+  ccEmails: zod.z.array(zod.z.string().email()).max(EMAIL_LIMITS.CC_MAX).optional().describe("Optional Cc addresses for this reply; do not persist beyond this message.")
 }).strict();
 
 // src/schemas/requests/update-failure-report.ts
@@ -1521,6 +1526,13 @@ var paginatedBuildingsResponseSchema = paginatedResponseSchema(buildingResponseS
 var emailDirectionSchema = zod.z.enum(["outbound", "inbound"]).describe(
   "`outbound` when a representative sent the message through the app; `inbound` when Flatie received the message from an external party via the inbound-mail webhook."
 );
+var emailAttachmentSchema = zod.z.looseObject({
+  id: zod.z.string().uuid().describe("UUID of the stored attachment file."),
+  fileName: zod.z.string().describe("Original file name as sent/received."),
+  mimeType: zod.z.string().nullable().optional().describe("MIME type when known."),
+  fileSize: zod.z.coerce.number().nullable().optional().describe("Size in bytes when known."),
+  url: zod.z.string().describe("Time-limited download URL for the attachment (presigned/HMAC-signed).")
+}).describe("A file attached to an email message (inbound or outbound).");
 var emailMessageSchema = zod.z.looseObject({
   id: zod.z.string().uuid().describe("UUID of the stored email message."),
   threadId: zod.z.string().uuid().describe("UUID of the thread this message belongs to."),
@@ -1537,7 +1549,8 @@ var emailMessageSchema = zod.z.looseObject({
   ),
   sentByUserId: zod.z.string().uuid().nullable().optional().describe("UUID of the representative who triggered the outbound send; null for inbound."),
   sentByUserName: zod.z.string().nullable().optional().describe("Display name of the sending representative; null for inbound."),
-  createdAt: zod.z.string().describe("ISO-8601 timestamp when the message was persisted server-side.")
+  createdAt: zod.z.string().describe("ISO-8601 timestamp when the message was persisted server-side."),
+  attachments: zod.z.array(emailAttachmentSchema).default([]).describe("Files attached to this message; empty when none.")
 }).describe("A single email message within a building thread.");
 var emailThreadSchema = zod.z.looseObject({
   id: zod.z.string().uuid().describe("UUID of the thread."),
@@ -2781,5 +2794,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-ACFC5ENV.cjs.map
-//# sourceMappingURL=chunk-ACFC5ENV.cjs.map
+//# sourceMappingURL=chunk-RJRSBSS3.cjs.map
+//# sourceMappingURL=chunk-RJRSBSS3.cjs.map

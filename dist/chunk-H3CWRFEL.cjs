@@ -438,7 +438,9 @@ var CO_OWNER_PERMISSIONS = [
   "poll:vote",
   ...chunkZASNDKJM_cjs.domainPermissions("failure_report", "own"),
   ...chunkZASNDKJM_cjs.domainPermissions("document", "own"),
-  "building_email:view",
+  // NOTE: building_email:view deliberately NOT granted — the building mailbox
+  // (manager correspondence) is management-only (decision 2026-07-21); the
+  // grant moved to REPRESENTATIVE_PERMISSIONS.
   "vote:cast",
   "vote:weight_based",
   "user:delete:own"
@@ -471,6 +473,9 @@ var REPRESENTATIVE_PERMISSIONS = [
   "building_role:remove",
   "house_rules:manage",
   "building_settings:manage",
+  // Mailbox is management-only: reps get BOTH the read gate (view) and the
+  // mutate gate (manage). view moved here from CO_OWNER_PERMISSIONS 2026-07-21.
+  "building_email:view",
   "building_email:manage",
   "board_card:manage",
   "faq:manage:representative",
@@ -626,5 +631,5 @@ exports.unitReminderKeys = unitReminderKeys;
 exports.unitSearchKeys = unitSearchKeys;
 exports.userKeys = userKeys;
 exports.widgetKeys = widgetKeys;
-//# sourceMappingURL=chunk-IKETVF7U.cjs.map
-//# sourceMappingURL=chunk-IKETVF7U.cjs.map
+//# sourceMappingURL=chunk-H3CWRFEL.cjs.map
+//# sourceMappingURL=chunk-H3CWRFEL.cjs.map

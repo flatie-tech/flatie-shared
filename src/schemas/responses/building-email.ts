@@ -8,6 +8,18 @@ const emailDirectionSchema = z
     '`outbound` when a representative sent the message through the app; `inbound` when Flatie received the message from an external party via the inbound-mail webhook.',
   );
 
+export const emailAttachmentSchema = z
+  .looseObject({
+    id: z.string().uuid().describe('UUID of the stored attachment file.'),
+    fileName: z.string().describe('Original file name as sent/received.'),
+    mimeType: z.string().nullable().optional().describe('MIME type when known.'),
+    fileSize: z.coerce.number().nullable().optional().describe('Size in bytes when known.'),
+    url: z
+      .string()
+      .describe('Time-limited download URL for the attachment (presigned/HMAC-signed).'),
+  })
+  .describe('A file attached to an email message (inbound or outbound).');
+
 export const emailMessageSchema = z
   .looseObject({
     id: z.string().uuid().describe('UUID of the stored email message.'),
@@ -59,6 +71,10 @@ export const emailMessageSchema = z
     createdAt: z
       .string()
       .describe('ISO-8601 timestamp when the message was persisted server-side.'),
+    attachments: z
+      .array(emailAttachmentSchema)
+      .default([])
+      .describe('Files attached to this message; empty when none.'),
   })
   .describe('A single email message within a building thread.');
 
@@ -107,6 +123,7 @@ export const emailThreadDetailSchema = emailThreadSchema
 export const paginatedEmailThreadsResponseSchema = paginatedResponseSchema(emailThreadSchema);
 
 export type EmailDirection = Strict<z.infer<typeof emailDirectionSchema>>;
+export type EmailAttachment = Strict<z.infer<typeof emailAttachmentSchema>>;
 export type EmailMessage = Strict<z.infer<typeof emailMessageSchema>>;
 export type EmailThread = Strict<z.infer<typeof emailThreadSchema>>;
 export type EmailThreadDetail = Strict<z.infer<typeof emailThreadDetailSchema>>;

@@ -16,7 +16,7 @@
 export type { AiChatMessagePayload, AiChatRequestPayload } from './ai-chat';
 export { aiChatMessageSchema, aiChatRequestSchema } from './ai-chat';
 export type { CreateEmailThreadRequestPayload } from './create-email-thread';
-export { createEmailThreadRequestSchema } from './create-email-thread';
+export { createEmailThreadRequestSchema, EMAIL_LIMITS } from './create-email-thread';
 export type { ReplyEmailThreadRequestPayload } from './reply-email-thread';
 export { replyEmailThreadRequestSchema } from './reply-email-thread';
 export type { UpdateFailureReportRequestPayload } from './update-failure-report';

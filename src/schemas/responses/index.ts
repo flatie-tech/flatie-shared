@@ -20,6 +20,7 @@ export {
   paginatedBuildingsResponseSchema,
 } from './building';
 export type {
+  EmailAttachment,
   EmailDirection,
   EmailMessage,
   EmailThread,
@@ -27,6 +28,7 @@ export type {
   PaginatedEmailThreadsResponse,
 } from './building-email';
 export {
+  emailAttachmentSchema,
   emailMessageSchema,
   emailThreadDetailSchema,
   emailThreadSchema,

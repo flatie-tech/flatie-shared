@@ -49,6 +49,21 @@ declare const BoardTestIds: {
     readonly card: "board-card";
 };
 
+declare const BuildingEmailTestIds: {
+    readonly screen: "building-email-screen";
+    readonly composeButton: "building-email-compose-button";
+    /** Suffix with the thread id at call sites: `${threadItem}-${id}`. */
+    readonly threadItem: "building-email-thread-item";
+    readonly replyInput: "building-email-reply-input";
+    readonly sendButton: "building-email-send-button";
+    readonly archiveButton: "building-email-archive-button";
+    /** Suffix with the attachment id: `${attachment}-${id}`. */
+    readonly attachment: "building-email-attachment";
+    readonly searchInput: "building-email-search-input";
+    readonly tabActive: "building-email-tab-active";
+    readonly tabArchived: "building-email-tab-archived";
+};
+
 declare const BuildingInfoTestIds: {
     readonly screen: "building-info-screen";
 };
@@ -190,4 +205,4 @@ declare const SettingsTestIds: {
     readonly logoutButton: "settings-logout-button";
 };
 
-export { ApartmentsTestIds, AppShellTestIds, BoardTestIds, BuildingInfoTestIds, BuildingOverviewTestIds, CalendarTestIds, DocumentsTestIds, FailureReportsTestIds, FundsTestIds, LoginTestIds, MaintenanceLogsTestIds, NoticeBoardTestIds, OnboardingTestIds, PollsTestIds, SettingsTestIds };
+export { ApartmentsTestIds, AppShellTestIds, BoardTestIds, BuildingEmailTestIds, BuildingInfoTestIds, BuildingOverviewTestIds, CalendarTestIds, DocumentsTestIds, FailureReportsTestIds, FundsTestIds, LoginTestIds, MaintenanceLogsTestIds, NoticeBoardTestIds, OnboardingTestIds, PollsTestIds, SettingsTestIds };

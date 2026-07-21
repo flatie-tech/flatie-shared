@@ -2,6 +2,7 @@ export * from './apartments';
 export * from './app-shell';
 export * from './auth';
 export * from './board';
+export * from './building-email';
 export * from './building-info';
 export * from './building-overview';
 export * from './calendar';

@@ -1810,6 +1810,10 @@ type AiChatRequestPayload = z.infer<typeof aiChatRequestSchema>;
  * Body of `POST /buildings/:buildingId/email/threads` — representative
  * opens a new outbound thread to an external party (typically the
  * building's manager / upravitelj).
+ *
+ * Attachments ride along as multipart file parts (extracted server-side by
+ * MultipartFilesInterceptor, same convention as notices/documents), so they
+ * are not part of this schema.
  */
 declare const createEmailThreadRequestSchema: z.ZodObject<{
     recipientEmail: z.ZodString;
@@ -1822,7 +1826,8 @@ type CreateEmailThreadRequestPayload = z.infer<typeof createEmailThreadRequestSc
 
 /**
  * Body of `POST /buildings/:buildingId/email/threads/:threadId/reply` —
- * representative sends a reply message on an existing thread.
+ * representative sends a reply message on an existing thread. Attachments
+ * ride along as multipart file parts (see create-email-thread).
  */
 declare const replyEmailThreadRequestSchema: z.ZodObject<{
     body: z.ZodString;
@@ -2254,6 +2259,13 @@ declare const emailMessageSchema: z.ZodObject<{
     sentByUserId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     sentByUserName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     createdAt: z.ZodString;
+    attachments: z.ZodDefault<z.ZodArray<z.ZodObject<{
+        id: z.ZodString;
+        fileName: z.ZodString;
+        mimeType: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        fileSize: z.ZodOptional<z.ZodNullable<z.ZodCoercedNumber<unknown>>>;
+        url: z.ZodString;
+    }, z.core.$loose>>>;
 }, z.core.$loose>;
 declare const emailThreadSchema: z.ZodObject<{
     id: z.ZodString;
@@ -2304,6 +2316,13 @@ declare const emailThreadDetailSchema: z.ZodObject<{
         sentByUserId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         sentByUserName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         createdAt: z.ZodString;
+        attachments: z.ZodDefault<z.ZodArray<z.ZodObject<{
+            id: z.ZodString;
+            fileName: z.ZodString;
+            mimeType: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+            fileSize: z.ZodOptional<z.ZodNullable<z.ZodCoercedNumber<unknown>>>;
+            url: z.ZodString;
+        }, z.core.$loose>>>;
     }, z.core.$loose>>>;
 }, z.core.$loose>;
 declare const paginatedEmailThreadsResponseSchema: z.ZodObject<{

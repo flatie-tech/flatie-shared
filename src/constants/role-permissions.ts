@@ -62,7 +62,9 @@ const CO_OWNER_PERMISSIONS = [
   'poll:vote',
   ...domainPermissions('failure_report', 'own'),
   ...domainPermissions('document', 'own'),
-  'building_email:view',
+  // NOTE: building_email:view deliberately NOT granted — the building mailbox
+  // (manager correspondence) is management-only (decision 2026-07-21); the
+  // grant moved to REPRESENTATIVE_PERMISSIONS.
   'vote:cast',
   'vote:weight_based',
   'user:delete:own',
@@ -103,6 +105,9 @@ const REPRESENTATIVE_PERMISSIONS = [
   'building_role:remove',
   'house_rules:manage',
   'building_settings:manage',
+  // Mailbox is management-only: reps get BOTH the read gate (view) and the
+  // mutate gate (manage). view moved here from CO_OWNER_PERMISSIONS 2026-07-21.
+  'building_email:view',
   'building_email:manage',
   'board_card:manage',
   'faq:manage:representative',

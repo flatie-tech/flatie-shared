@@ -1,14 +1,21 @@
 import { z } from 'zod';
+import { EMAIL_LIMITS } from './create-email-thread';
 
 /**
  * Body of `POST /buildings/:buildingId/email/threads/:threadId/reply` —
- * representative sends a reply message on an existing thread.
+ * representative sends a reply message on an existing thread. Attachments
+ * ride along as multipart file parts (see create-email-thread).
  */
 export const replyEmailThreadRequestSchema = z
   .object({
-    body: z.string().min(1).describe('Plain-text body of the reply.'),
+    body: z
+      .string()
+      .min(1)
+      .max(EMAIL_LIMITS.BODY_MAX)
+      .describe('Plain-text body of the reply, up to 50k chars.'),
     ccEmails: z
       .array(z.string().email())
+      .max(EMAIL_LIMITS.CC_MAX)
       .optional()
       .describe('Optional Cc addresses for this reply; do not persist beyond this message.'),
   })
