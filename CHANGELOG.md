@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.73.1
+
+### Changes
+
+- fix(building-email): reach EMAIL_LIMITS/emailAttachmentSchema from the top barrel + multipart ccEmails
+
 ## 0.73.0
 
 ### Changes
