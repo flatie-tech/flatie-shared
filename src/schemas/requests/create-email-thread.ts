@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { multipartArray } from '../multipart.schema';
 
 /**
  * Validation constants for the building mailbox. Clients derive their form
@@ -35,9 +36,10 @@ export const createEmailThreadRequestSchema = z
       .describe(
         'Display name to include in the To header (renders as "Name <email>" on the manager side).',
       ),
-    ccEmails: z
-      .array(z.string().email())
-      .max(EMAIL_LIMITS.CC_MAX)
+    // multipartArray: with attachments the endpoints are multipart — accepts a
+    // real array, repeated form fields, or a JSON-encoded array string.
+    ccEmails: multipartArray(z.string().email())
+      .pipe(z.array(z.string().email()).max(EMAIL_LIMITS.CC_MAX))
       .optional()
       .describe('Optional list of Cc addresses for the first message (max 10).'),
     subject: z

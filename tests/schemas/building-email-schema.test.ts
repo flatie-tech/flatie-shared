@@ -79,4 +79,16 @@ describe('building-email schemas (v0.73.0)', () => {
     expect(rep).toContain(Permission.BUILDING_EMAIL_VIEW);
     expect(rep).toContain(Permission.BUILDING_EMAIL_MANAGE);
   });
+
+  it('v0.73.1: exports reachable from the top barrel + ccEmails multipart coercion', async () => {
+    const top = await import('../../src');
+    expect(top.EMAIL_LIMITS.CC_MAX).toBe(10);
+    expect(top.emailAttachmentSchema).toBeDefined();
+    // JSON-encoded array string (multipart transport) coerces to a real array.
+    const parsed = createEmailThreadRequestSchema.parse({
+      ...base,
+      ccEmails: '["a@b.com","c@d.com"]',
+    });
+    expect(parsed.ccEmails).toEqual(['a@b.com', 'c@d.com']);
+  });
 });

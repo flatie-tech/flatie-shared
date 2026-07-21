@@ -1315,19 +1315,26 @@ var EMAIL_LIMITS = {
   SUBJECT_MAX: 200,
   BODY_MAX: 5e4,
   RECIPIENT_NAME_MAX: 100,
-  CC_MAX: 10};
+  CC_MAX: 10,
+  /** Per-message attachment cap; individual files obey the shared 10MB/type rules. */
+  ATTACHMENTS_MAX: 10
+};
 var createEmailThreadRequestSchema = zod.z.object({
   recipientEmail: zod.z.string().email().describe("Primary To address of the first outbound message."),
   recipientName: zod.z.string().max(EMAIL_LIMITS.RECIPIENT_NAME_MAX).optional().describe(
     'Display name to include in the To header (renders as "Name <email>" on the manager side).'
   ),
-  ccEmails: zod.z.array(zod.z.string().email()).max(EMAIL_LIMITS.CC_MAX).optional().describe("Optional list of Cc addresses for the first message (max 10)."),
+  // multipartArray: with attachments the endpoints are multipart — accepts a
+  // real array, repeated form fields, or a JSON-encoded array string.
+  ccEmails: multipartArray(zod.z.string().email()).pipe(zod.z.array(zod.z.string().email()).max(EMAIL_LIMITS.CC_MAX)).optional().describe("Optional list of Cc addresses for the first message (max 10)."),
   subject: zod.z.string().min(1).max(EMAIL_LIMITS.SUBJECT_MAX).describe("Subject line; used for both the first message and the thread summary."),
   body: zod.z.string().min(1).max(EMAIL_LIMITS.BODY_MAX).describe("Plain-text body of the first outbound message, up to 50k chars.")
 }).strict();
 var replyEmailThreadRequestSchema = zod.z.object({
   body: zod.z.string().min(1).max(EMAIL_LIMITS.BODY_MAX).describe("Plain-text body of the reply, up to 50k chars."),
-  ccEmails: zod.z.array(zod.z.string().email()).max(EMAIL_LIMITS.CC_MAX).optional().describe("Optional Cc addresses for this reply; do not persist beyond this message.")
+  // multipartArray: with attachments the endpoints are multipart — accepts a
+  // real array, repeated form fields, or a JSON-encoded array string.
+  ccEmails: multipartArray(zod.z.string().email()).pipe(zod.z.array(zod.z.string().email()).max(EMAIL_LIMITS.CC_MAX)).optional().describe("Optional Cc addresses for this reply; do not persist beyond this message.")
 }).strict();
 
 // src/schemas/requests/update-failure-report.ts
@@ -2578,6 +2585,7 @@ exports.BUILDING_TYPES = BUILDING_TYPES;
 exports.CHAT_LIMITS = CHAT_LIMITS;
 exports.CommonStatusSchema = CommonStatusSchema;
 exports.DOCUMENT_LIMITS = DOCUMENT_LIMITS;
+exports.EMAIL_LIMITS = EMAIL_LIMITS;
 exports.ENTITY_LINK_TYPES = ENTITY_LINK_TYPES;
 exports.EVENT_COLORS = EVENT_COLORS;
 exports.EVENT_TYPES = EVENT_TYPES;
@@ -2669,6 +2677,7 @@ exports.deleteEntityLinkRequestSchema = deleteEntityLinkRequestSchema;
 exports.documentFileSchema = documentFileSchema;
 exports.documentLinkedRecordSchema = documentLinkedRecordSchema;
 exports.documentResponseSchema = documentResponseSchema;
+exports.emailAttachmentSchema = emailAttachmentSchema;
 exports.emailMessageSchema = emailMessageSchema;
 exports.emailSchema = emailSchema;
 exports.emailThreadDetailSchema = emailThreadDetailSchema;
@@ -2794,5 +2803,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-RJRSBSS3.cjs.map
-//# sourceMappingURL=chunk-RJRSBSS3.cjs.map
+//# sourceMappingURL=chunk-Q27P4KJU.cjs.map
+//# sourceMappingURL=chunk-Q27P4KJU.cjs.map

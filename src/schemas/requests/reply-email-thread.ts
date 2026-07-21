@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { multipartArray } from '../multipart.schema';
 import { EMAIL_LIMITS } from './create-email-thread';
 
 /**
@@ -13,9 +14,10 @@ export const replyEmailThreadRequestSchema = z
       .min(1)
       .max(EMAIL_LIMITS.BODY_MAX)
       .describe('Plain-text body of the reply, up to 50k chars.'),
-    ccEmails: z
-      .array(z.string().email())
-      .max(EMAIL_LIMITS.CC_MAX)
+    // multipartArray: with attachments the endpoints are multipart — accepts a
+    // real array, repeated form fields, or a JSON-encoded array string.
+    ccEmails: multipartArray(z.string().email())
+      .pipe(z.array(z.string().email()).max(EMAIL_LIMITS.CC_MAX))
       .optional()
       .describe('Optional Cc addresses for this reply; do not persist beyond this message.'),
   })
