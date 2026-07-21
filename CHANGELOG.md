@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.72.0
+
+### Changes
+
+- feat(permissions): expose memberRoleType in permissions response
+
 ## 0.71.0
 
 ### Changes

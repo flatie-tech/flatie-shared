@@ -1724,6 +1724,9 @@ declare const permissionsResponseSchema: z.ZodObject<{
     roleType: z.ZodOptional<z.ZodEnum<{
         [x: string]: string;
     }>>;
+    memberRoleType: z.ZodOptional<z.ZodEnum<{
+        [x: string]: string;
+    }>>;
     buildingId: z.ZodOptional<z.ZodString>;
     orgId: z.ZodOptional<z.ZodString>;
     chatVisibleToCoOwners: z.ZodOptional<z.ZodBoolean>;

@@ -1249,6 +1249,14 @@ var permissionsResponseSchema = zod.z.object({
   scope: zod.z.enum(["building", "organization", "platform"]),
   permissions: zod.z.array(zod.z.string()),
   roleType: roleTypeSchema.optional(),
+  /**
+   * Building scope only: the user's actual building_roles membership, when one
+   * exists. `roleType` reports the PERMISSION source, which for dual-role users
+   * (a co-owner who is also org staff / platform admin) is the broader admin
+   * context — this field preserves their member identity so clients can route
+   * them to the tree where they vote.
+   */
+  memberRoleType: zod.z.enum(Object.values(chunkZASNDKJM_cjs.BuildingRole)).optional(),
   buildingId: zod.z.string().uuid().optional(),
   orgId: zod.z.string().uuid().optional(),
   chatVisibleToCoOwners: zod.z.boolean().optional()
@@ -2773,5 +2781,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-HVWTZNQZ.cjs.map
-//# sourceMappingURL=chunk-HVWTZNQZ.cjs.map
+//# sourceMappingURL=chunk-ACFC5ENV.cjs.map
+//# sourceMappingURL=chunk-ACFC5ENV.cjs.map
