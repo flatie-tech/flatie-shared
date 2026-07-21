@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.73.0
+
+### Changes
+
+- feat(building-email): management-only mailbox, EMAIL_LIMITS, attachments, test-ids
+
 ## 0.72.0
 
 ### Changes
