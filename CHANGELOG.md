@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.75.0
+
+### Changes
+
+- feat(units)!: unified unit schema — single units entity with kind discriminant
+
 ## 0.74.0
 
 ### Changes
