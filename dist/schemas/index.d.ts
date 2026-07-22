@@ -417,7 +417,7 @@ declare const createBoardCardSchema: z.ZodObject<{
         text: z.ZodString;
         done: z.ZodDefault<z.ZodBoolean>;
     }, z.core.$strip>>>>;
-    allowComments: z.ZodOptional<z.ZodBoolean>;
+    allowComments: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
     fileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
     events: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodObject<{
         startDate: z.ZodCoercedDate<unknown>;
@@ -445,7 +445,7 @@ declare const updateBoardCardSchema: z.ZodObject<{
         text: z.ZodString;
         done: z.ZodDefault<z.ZodBoolean>;
     }, z.core.$strip>>>>;
-    allowComments: z.ZodOptional<z.ZodBoolean>;
+    allowComments: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
     fileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
     removeChildFileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
     events: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodObject<{

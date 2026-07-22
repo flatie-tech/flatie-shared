@@ -268,7 +268,10 @@ var createBoardCardSchema = zod.z.object({
   priority: prioritySchema.optional().describe("`normal` for standard cards, `urgent` to flag immediate attention."),
   assignedTo: uuidSchema.nullable().optional().describe("UUID of the representative responsible for the card."),
   checklist: multipartArray(boardCardChecklistItemSchema).optional().describe("Optional subtasks (e.g. documents to collect from co-owners)."),
-  allowComments: zod.z.boolean().optional().describe("Whether members may comment on this card. Defaults to true."),
+  // multipartBoolean, NOT z.boolean(): card create/update is multipart/form-data,
+  // so this arrives as the string "true"/"false" — bare z.boolean() rejected every
+  // UI create/edit (same bug notices had and fixed).
+  allowComments: multipartBoolean().optional().describe("Whether members may comment on this card. Defaults to true."),
   fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-uploaded files to attach to this card."),
   events: multipartArray(boardCardEventSchema).optional().describe("Calendar events to create alongside the card (deadlines, site visits).")
 });
@@ -279,7 +282,8 @@ var updateBoardCardSchema = zod.z.object({
   priority: prioritySchema.optional().describe("Revised priority: `normal` or `urgent`."),
   assignedTo: uuidSchema.nullable().optional().describe("Revised assignee; null unassigns."),
   checklist: multipartArray(boardCardChecklistItemSchema).optional().describe("Full replacement checklist \u2014 replaces the existing items."),
-  allowComments: zod.z.boolean().optional().describe("Whether members may comment on this card."),
+  // multipart string-boolean — see createBoardCardSchema note.
+  allowComments: multipartBoolean().optional().describe("Whether members may comment on this card."),
   fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of newly-uploaded files to add to the card."),
   removeChildFileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-attached files to detach from the card."),
   events: multipartArray(boardCardEventSchema).optional().describe("Full list of events for the card \u2014 replaces the existing event set.")
@@ -2803,5 +2807,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-Q27P4KJU.cjs.map
-//# sourceMappingURL=chunk-Q27P4KJU.cjs.map
+//# sourceMappingURL=chunk-XML3XEQD.cjs.map
+//# sourceMappingURL=chunk-XML3XEQD.cjs.map

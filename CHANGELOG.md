@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.73.2
+
+### Changes
+
+- fix(board): allowComments must survive multipart — multipartBoolean, not z.boolean
+
 ## 0.73.1
 
 ### Changes
