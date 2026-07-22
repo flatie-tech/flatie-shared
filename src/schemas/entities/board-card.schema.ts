@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { BoardVisibility } from '../../enums/board-card.enum';
 import { Priority } from '../../enums/status.enum';
 import { uuidSchema } from '../base.schema';
-import { multipartArray } from '../multipart.schema';
+import { multipartArray, multipartBoolean } from '../multipart.schema';
 
 /**
  * Validation constants for boards.
@@ -184,8 +184,10 @@ export const createBoardCardSchema = z.object({
   checklist: multipartArray(boardCardChecklistItemSchema)
     .optional()
     .describe('Optional subtasks (e.g. documents to collect from co-owners).'),
-  allowComments: z
-    .boolean()
+  // multipartBoolean, NOT z.boolean(): card create/update is multipart/form-data,
+  // so this arrives as the string "true"/"false" — bare z.boolean() rejected every
+  // UI create/edit (same bug notices had and fixed).
+  allowComments: multipartBoolean()
     .optional()
     .describe('Whether members may comment on this card. Defaults to true.'),
   fileIds: multipartArray(uuidSchema)
@@ -221,7 +223,10 @@ export const updateBoardCardSchema = z.object({
   checklist: multipartArray(boardCardChecklistItemSchema)
     .optional()
     .describe('Full replacement checklist — replaces the existing items.'),
-  allowComments: z.boolean().optional().describe('Whether members may comment on this card.'),
+  // multipart string-boolean — see createBoardCardSchema note.
+  allowComments: multipartBoolean()
+    .optional()
+    .describe('Whether members may comment on this card.'),
   fileIds: multipartArray(uuidSchema)
     .optional()
     .describe('UUIDs of newly-uploaded files to add to the card.'),
