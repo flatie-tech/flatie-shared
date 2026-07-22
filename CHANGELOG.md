@@ -1,5 +1,13 @@
 # @flatie/shared
 
+## 0.75.1
+
+### Changes
+
+- feat(units): userCount/canEdit/canDelete on unitSchema (list wire fields)
+- feat(auth)!: NIST-style password policy + resend-cooldown/weak-password error codes
+- docs(claude): search the web in parallel with local reasoning
+
 ## 0.75.0
 
 ### Changes
