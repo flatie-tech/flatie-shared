@@ -28,6 +28,10 @@ Full product orientation: [`../flatie-docs/team-knowledge/15-what-is-flatie.md`]
 
 When working with **Zod v4, tsup, Vitest** — pull current docs via `context7` before trusting training data. Zod 4 in particular has subtle differences from v3 (no more `.passthrough()` → `.looseObject()`).
 
+## Search the web alongside your reasoning
+
+For non-obvious behaviour — library/framework interactions, version incompatibilities, cryptic errors, "why doesn't X work with Y" — run a web search **in parallel** with your own investigation, not as a last resort. Treat training data and local reasoning as a hypothesis; the ecosystem has usually already hit and documented the same issue (GitHub issues, changelogs, release notes, Stack Overflow). It's cheap and routinely collapses a multi-hour bisect into a known-issue lookup. Pair it with `context7` for library docs.
+
 ## Doc hygiene (read before committing)
 
 When you change X, check whether doc Y needs updating:
