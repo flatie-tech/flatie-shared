@@ -48,6 +48,13 @@ type ApiErrorResponse = z.infer<typeof apiErrorResponseSchema>;
  */
 declare const emailSchema: z.ZodString;
 declare const passwordSchema: z.ZodString;
+/**
+ * NIST SP 800-63B-4 style policy: length is the only client-checkable rule
+ * (8-128, long passphrases welcome). Composition classes (forced upper/
+ * lower/digit) were dropped 2026-07 — they push users toward predictable
+ * patterns. Breached-password screening happens server-side (HIBP k-anonymity
+ * in flatie-backend's auth hooks) and surfaces as a WEAK_PASSWORD error.
+ */
 declare const strongPasswordSchema: z.ZodString;
 /**
  * Login form schema
@@ -679,6 +686,9 @@ declare const unitSchema: z.ZodObject<{
         joinedAt: z.ZodString;
         ownershipPercentage: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
     }, z.core.$loose>>>;
+    userCount: z.ZodOptional<z.ZodNumber>;
+    canEdit: z.ZodOptional<z.ZodBoolean>;
+    canDelete: z.ZodOptional<z.ZodBoolean>;
     createdAt: z.ZodOptional<z.ZodString>;
     updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
 }, z.core.$loose>;
@@ -714,6 +724,9 @@ declare const paginatedUnitsResponseSchema: z.ZodObject<{
             joinedAt: z.ZodString;
             ownershipPercentage: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
         }, z.core.$loose>>>;
+        userCount: z.ZodOptional<z.ZodNumber>;
+        canEdit: z.ZodOptional<z.ZodBoolean>;
+        canDelete: z.ZodOptional<z.ZodBoolean>;
         createdAt: z.ZodOptional<z.ZodString>;
         updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     }, z.core.$loose>>;

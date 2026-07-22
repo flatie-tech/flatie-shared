@@ -1,5 +1,5 @@
 import { BuildingRole, PlatformRole, OrgRole, ApartmentRole, SCOPED_PERMISSIONS, APPROVE_PERMISSIONS, FailureStatus, Priority } from './chunk-WEQKJ6CP.js';
-import { isBackendErrorCode } from './chunk-5MNLJ5SX.js';
+import { isBackendErrorCode } from './chunk-6KZX2TOR.js';
 import { createPaginatedResponse } from './chunk-E4FOXN63.js';
 
 // src/utils/role-helpers.ts
@@ -449,5 +449,5 @@ function debounce(func, delay) {
 }
 
 export { DATETIME_FORMATS, DATE_FORMATS, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, ROLE_BADGE_COLORS, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, TIME_FORMATS, VOTING_METHOD_SETTINGS, applyResidentRestriction, applyResidentRestrictionToItem, buildGoogleCalendarUrl, calculatePaginationMeta, canDo, canDoOnResource, canMessageUser, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatCurrencyByLocale, formatCurrencyEUR, formatDate, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, getInitials, getMessageableUsers, getRoleBadge, isLastEnabledVotingMethod, isManagerialRole, normalizePaginatedResponse, parseApiError, parseData, priorityVariant, resolveVotingMethods, violatesVotingMethodLock };
-//# sourceMappingURL=chunk-PBFGOD4V.js.map
-//# sourceMappingURL=chunk-PBFGOD4V.js.map
+//# sourceMappingURL=chunk-47DT3YUX.js.map
+//# sourceMappingURL=chunk-47DT3YUX.js.map

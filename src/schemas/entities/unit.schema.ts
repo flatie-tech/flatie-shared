@@ -85,6 +85,18 @@ export const unitSchema = z.looseObject({
     .array(unitUserSchema)
     .optional()
     .describe('Users attached to the unit (residency view); present on detail/list endpoints.'),
+  userCount: z
+    .number()
+    .optional()
+    .describe('Number of users attached to the unit; present on list endpoints.'),
+  canEdit: z
+    .boolean()
+    .optional()
+    .describe('True when the calling user may edit this unit (management gate).'),
+  canDelete: z
+    .boolean()
+    .optional()
+    .describe('True when the calling user may archive this unit (management gate).'),
   createdAt: z.string().optional(),
   updatedAt: z.string().nullable().optional(),
 });

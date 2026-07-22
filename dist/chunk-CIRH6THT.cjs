@@ -4,7 +4,7 @@ var chunkX3TW7GWG_cjs = require('./chunk-X3TW7GWG.cjs');
 var chunkXXNOAOHF_cjs = require('./chunk-XXNOAOHF.cjs');
 var chunkNQLL5CZO_cjs = require('./chunk-NQLL5CZO.cjs');
 var chunkZASNDKJM_cjs = require('./chunk-ZASNDKJM.cjs');
-var chunkFROUNHYP_cjs = require('./chunk-FROUNHYP.cjs');
+var chunkAKVKGQ3H_cjs = require('./chunk-AKVKGQ3H.cjs');
 var zod = require('zod');
 
 var apiErrorSchema = zod.z.object({
@@ -14,13 +14,13 @@ var apiErrorSchema = zod.z.object({
   path: zod.z.string()
 });
 var apiErrorResponseSchema = apiErrorSchema.extend({
-  code: zod.z.enum(Object.values(chunkFROUNHYP_cjs.BACKEND_ERROR_CODES)).optional().describe(
+  code: zod.z.enum(Object.values(chunkAKVKGQ3H_cjs.BACKEND_ERROR_CODES)).optional().describe(
     "Canonical error code from `@flatie/shared/errors` (`BACKEND_ERROR_CODES`). Present when the backend raised a `DomainException`; absent for generic HTTP errors (network failures, unhandled exceptions, validation-pipe rejections)."
   )
 }).describe("Standard error envelope returned by the Flatie backend on 4xx and 5xx responses.");
 var emailSchema = zod.z.string().email();
-var passwordSchema = zod.z.string().min(8).max(100);
-var strongPasswordSchema = passwordSchema.regex(/[A-Z]/, "Password must contain at least one uppercase letter").regex(/[a-z]/, "Password must contain at least one lowercase letter").regex(/[0-9]/, "Password must contain at least one number");
+var passwordSchema = zod.z.string().min(8).max(128);
+var strongPasswordSchema = passwordSchema;
 var loginSchema = zod.z.object({
   email: emailSchema,
   password: passwordSchema,
@@ -412,6 +412,9 @@ var unitSchema = zod.z.looseObject({
   surnameOnDoor: zod.z.string().nullable().optional().describe("Surname shown on the door plate; apartments only, null otherwise."),
   surnameOnIntercom: zod.z.string().nullable().optional().describe("Surname shown on the intercom; apartments only, null otherwise."),
   users: zod.z.array(unitUserSchema).optional().describe("Users attached to the unit (residency view); present on detail/list endpoints."),
+  userCount: zod.z.number().optional().describe("Number of users attached to the unit; present on list endpoints."),
+  canEdit: zod.z.boolean().optional().describe("True when the calling user may edit this unit (management gate)."),
+  canDelete: zod.z.boolean().optional().describe("True when the calling user may archive this unit (management gate)."),
   createdAt: zod.z.string().optional(),
   updatedAt: zod.z.string().nullable().optional()
 });
@@ -2806,5 +2809,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-5N2FP2BO.cjs.map
-//# sourceMappingURL=chunk-5N2FP2BO.cjs.map
+//# sourceMappingURL=chunk-CIRH6THT.cjs.map
+//# sourceMappingURL=chunk-CIRH6THT.cjs.map
