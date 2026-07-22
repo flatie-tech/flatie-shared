@@ -5,12 +5,16 @@ import { z } from 'zod';
  */
 export const emailSchema = z.string().email();
 
-export const passwordSchema = z.string().min(8).max(100);
+export const passwordSchema = z.string().min(8).max(128);
 
-export const strongPasswordSchema = passwordSchema
-  .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
-  .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
-  .regex(/[0-9]/, 'Password must contain at least one number');
+/**
+ * NIST SP 800-63B-4 style policy: length is the only client-checkable rule
+ * (8-128, long passphrases welcome). Composition classes (forced upper/
+ * lower/digit) were dropped 2026-07 — they push users toward predictable
+ * patterns. Breached-password screening happens server-side (HIBP k-anonymity
+ * in flatie-backend's auth hooks) and surfaces as a WEAK_PASSWORD error.
+ */
+export const strongPasswordSchema = passwordSchema;
 
 /**
  * Login form schema

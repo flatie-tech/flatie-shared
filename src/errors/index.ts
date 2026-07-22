@@ -15,6 +15,11 @@ export const BACKEND_ERROR_CODES = {
   FORBIDDEN: 'FORBIDDEN',
   TOO_MANY_REQUESTS: 'TOO_MANY_REQUESTS',
   ACCOUNT_LOCKED: 'ACCOUNT_LOCKED',
+  // Escalating per-address cooldown on verification/reset email sends;
+  // error details carry retryAfterSeconds for client countdown timers.
+  RESEND_COOLDOWN: 'RESEND_COOLDOWN',
+  // Server-side password policy rejection (length bounds or HIBP breach hit).
+  WEAK_PASSWORD: 'WEAK_PASSWORD',
   SOCIAL_ACCOUNT_ALREADY_LINKED: 'SOCIAL_ACCOUNT_ALREADY_LINKED',
   SOCIAL_ACCOUNT_NOT_LINKED: 'SOCIAL_ACCOUNT_NOT_LINKED',
   FAILED_TO_CREATE_USER: 'FAILED_TO_CREATE_USER',
