@@ -122,6 +122,8 @@ export const API_ROUTES = {
       `/buildings/${buildingId}/storage-units/${storageUnitId}/owners`,
     STORAGE_ASSIGNMENT_DETAIL: (buildingId: string, storageUnitId: string, ownerId: string) =>
       `/buildings/${buildingId}/storage-units/${storageUnitId}/owners/${ownerId}`,
+    INVITE: (buildingId: string, ownerId: string) =>
+      `/buildings/${buildingId}/owners/${ownerId}/invite`,
   },
 
   // ── Units (generic) ──────────────────────────────────────────────────
@@ -155,6 +157,10 @@ export const API_ROUTES = {
     RESULTS: (buildingId: string) => `/buildings/${buildingId}/polls/results`,
     OFFLINE_VOTES: (buildingId: string, pollId: string) =>
       `/buildings/${buildingId}/polls/${pollId}/offline-votes`,
+    ELIGIBLE_VOTERS: (buildingId: string, pollId: string) =>
+      `/buildings/${buildingId}/polls/${pollId}/eligible-voters`,
+    SIGNATURE_SHEET_PDF: (buildingId: string, pollId: string) =>
+      `/buildings/${buildingId}/polls/${pollId}/signature-sheet.pdf`,
     SIGNATURE_BALLOT_PDF: (buildingId: string, pollId: string) =>
       `/buildings/${buildingId}/polls/${pollId}/signature-ballot.pdf`,
     SIGNATURE_VOTE: (buildingId: string, pollId: string) =>

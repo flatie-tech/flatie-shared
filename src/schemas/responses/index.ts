@@ -124,12 +124,16 @@ export {
 } from './notifications';
 export type {
   PaginatedPollsResponse,
+  PollEligibleVoter,
+  PollEligibleVotersResponse,
   PollResponse,
   PollResults,
   PollVotersResponse,
 } from './polls';
 export {
   paginatedPollsResponseSchema,
+  pollEligibleVoterSchema,
+  pollEligibleVotersResponseSchema,
   pollResponseSchema,
   pollResultsSchema,
   pollVotersResponseSchema,

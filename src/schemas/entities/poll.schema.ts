@@ -86,9 +86,11 @@ export const createPollSchema = z
       .describe(
         'UUIDs of units whose owners/tenants are eligible to vote. Omit for building-wide polls.',
       ),
-    scopedUserIds: multipartArray(uuidSchema)
+    scopedOwnerIds: multipartArray(uuidSchema)
       .optional()
-      .describe('UUIDs of users explicitly added to the eligible-voter list. Omit when not used.'),
+      .describe(
+        'UUIDs of owner records explicitly added to the eligible-voter list. Owners need no user account. Omit when not used.',
+      ),
     fileIds: multipartArray(uuidSchema)
       .optional()
       .default([])
@@ -174,9 +176,9 @@ export const updatePollSchema = z.object({
   scopedUnitIds: multipartArray(uuidSchema)
     .optional()
     .describe('Replacement list of scoped unit UUIDs. Empty array clears scoping.'),
-  scopedUserIds: multipartArray(uuidSchema)
+  scopedOwnerIds: multipartArray(uuidSchema)
     .optional()
-    .describe('Replacement list of scoped user UUIDs. Empty array clears explicit-user scoping.'),
+    .describe('Replacement list of scoped owner UUIDs. Empty array clears explicit-owner scoping.'),
   fileIds: multipartArray(uuidSchema)
     .optional()
     .describe('UUIDs of newly-uploaded supporting documents to attach.'),
@@ -201,6 +203,23 @@ export const votePollSchema = z.object({
 });
 
 /**
+ * Record-offline-votes request schema
+ *
+ * A representative records approval votes collected on a printed
+ * signature sheet (potpisna lista). Votes are attributed to owner
+ * records — owners need no user account.
+ */
+export const recordOfflineVotesSchema = z.object({
+  ownerIds: z
+    .array(uuidSchema)
+    .min(1)
+    .describe('UUIDs of owner records whose signed approvals are being recorded.'),
+  proofFileId: uuidSchema
+    .optional()
+    .describe('UUID of an uploaded scan of the signed sheet, stored as evidence.'),
+});
+
+/**
  * Finalize poll request schema
  *
  * A boolean toggle — `true` seals the poll, `false` is a no-op the
@@ -219,3 +238,4 @@ export type CreatePollSchema = z.infer<typeof createPollSchema>;
 export type UpdatePollSchema = z.infer<typeof updatePollSchema>;
 export type VotePollSchema = z.infer<typeof votePollSchema>;
 export type FinalizePollSchema = z.infer<typeof finalizePollSchema>;
+export type RecordOfflineVotesSchema = z.infer<typeof recordOfflineVotesSchema>;

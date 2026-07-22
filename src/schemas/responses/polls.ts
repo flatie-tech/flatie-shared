@@ -59,12 +59,17 @@ const pollScopedUnitSchema = z
   })
   .describe('Unit whose owners/tenants are eligible to participate in a scoped poll.');
 
-const pollScopedUserSchema = z
+const pollScopedOwnerSchema = z
   .looseObject({
-    userId: z.string().describe('UUID of the explicitly-eligible user.'),
-    name: z.string().describe('Display name of the scoped user.'),
+    ownerId: z.string().describe('UUID of the explicitly-eligible owner record.'),
+    fullName: z.string().describe('Display name of the scoped owner.'),
+    userId: z
+      .string()
+      .nullable()
+      .optional()
+      .describe('UUID of the linked user account; null for placeholder owners without an account.'),
   })
-  .describe('User explicitly added to the poll’s eligible-voter list.');
+  .describe('Owner record explicitly added to the poll’s eligible-voter list.');
 
 /**
  * Per-user poll response — shape returned from poll list / detail
@@ -253,10 +258,10 @@ export const pollResultsSchema = z.looseObject({
     .describe(
       'Cached sum of eligible voters’ ownership percentages captured at poll creation. Used to normalise `totalWeight` against the full eligible weight.',
     ),
-  scopedUsers: z
-    .array(pollScopedUserSchema)
+  scopedOwners: z
+    .array(pollScopedOwnerSchema)
     .optional()
-    .describe('Users scoped into eligibility by explicit selection; absent when not used.'),
+    .describe('Owners scoped into eligibility by explicit selection; absent when not used.'),
   maintenanceLogs: z
     .array(pollMaintenanceLogReferenceSchema)
     .optional()
@@ -269,19 +274,105 @@ export const pollResultsSchema = z.looseObject({
 
 const pollVoterSchema = z
   .looseObject({
-    userId: z.string().describe('UUID of the voter.'),
-    name: z.string().describe('Voter display name.'),
-    email: z.string().describe('Voter contact email.'),
+    userId: z
+      .string()
+      .nullable()
+      .describe(
+        'UUID of the voting user; null for paper votes recorded for owners without accounts.',
+      ),
+    ownerId: z
+      .string()
+      .nullable()
+      .optional()
+      .describe('UUID of the owner record the vote is attributed to; null for non-owner voters.'),
+    name: z.string().describe('Voter display name (owner full name for owner-attributed votes).'),
+    email: z.string().nullable().optional().describe('Voter contact email; null when unknown.'),
     selectedOptionIndex: z.number().describe('Zero-based index of the option the voter chose.'),
     selectedOptionText: z.string().describe('Text of the chosen option (denormalised).'),
     voteWeight: z
       .number()
       .describe(
-        'Weight contributed by this vote. 1.00 for community polls; the voter’s ownership percentage for consensus polls.',
+        'Weight contributed by this vote. 1.00 for community polls; the voter’s derived building ownership share (5-decimal precision) for consensus polls.',
       ),
     votedAt: z.string().describe('ISO-8601 timestamp when the vote was recorded.'),
+    isOffline: z
+      .boolean()
+      .optional()
+      .describe('True when the vote was recorded by a representative from a paper signature.'),
+    hasAccount: z
+      .boolean()
+      .optional()
+      .describe('True when the voter has a registered user account.'),
   })
   .describe('Individual voter entry returned by the poll voters endpoint.');
+
+/**
+ * Eligible-voter roster entry — one row per owner in the poll's
+ * electorate, with the derived ownership weight and unit holdings.
+ * Powers the offline-votes modal and signature-sheet preview.
+ */
+export const pollEligibleVoterSchema = z
+  .looseObject({
+    ownerId: z.string().uuid().describe('UUID of the owner record.'),
+    userId: z
+      .string()
+      .nullable()
+      .describe('UUID of the linked user account; null for placeholder owners.'),
+    fullName: z.string().describe('Owner full name (person, joint couple, or legal entity).'),
+    email: z.string().nullable().describe('Owner contact email; null when not recorded.'),
+    oib: z.string().nullable().describe('Croatian OIB of the owner; null when not recorded.'),
+    weightPct: z
+      .string()
+      .describe(
+        'Derived ownership weight in percent as an exact decimal string (5-decimal precision), e.g. "12.20000".',
+      ),
+    holdings: z
+      .array(
+        z.looseObject({
+          unitType: z
+            .string()
+            .describe('Kind of unit held (`apartment`, `garage`, `storage_unit`).'),
+          unitId: z.string().describe('UUID of the unit.'),
+          label: z.string().describe('Human-readable unit label (e.g. "ST 3448").'),
+          floor: z.string().nullable().optional().describe('Floor label; null when not recorded.'),
+          areaM2: z
+            .string()
+            .nullable()
+            .describe('Unit area in m² as a decimal string; null when not recorded.'),
+          unitSharePct: z
+            .string()
+            .describe('Owner’s share of this unit in percent as a decimal string.'),
+        }),
+      )
+      .describe('Units this owner currently holds, with per-unit shares.'),
+    voteStatus: z
+      .enum(['not_voted', 'accepted', 'pending_signature_review', 'rejected'])
+      .optional()
+      .describe('The owner’s vote state on the poll in question, when requested per-poll.'),
+  })
+  .describe('Aggregated per-owner roster row for a poll’s electorate.');
+
+/**
+ * Eligible-voters response — the poll's electorate with derived
+ * weights, plus data-quality warnings from the roster derivation.
+ */
+export const pollEligibleVotersResponseSchema = z.looseObject({
+  pollId: z.string().uuid().describe('UUID of the poll this electorate belongs to.'),
+  voters: z.array(pollEligibleVoterSchema).describe('One entry per eligible owner.'),
+  totalWeightPct: z
+    .string()
+    .describe('Sum of eligible owners’ derived weights as an exact decimal string.'),
+  warnings: z
+    .looseObject({
+      unitsWithoutArea: z
+        .array(z.string())
+        .describe('Labels of units with no recorded area (excluded from weight math).'),
+      unitsWithoutOwners: z
+        .array(z.string())
+        .describe('Labels of units with no active owner (weight unassigned).'),
+    })
+    .describe('Data-quality warnings surfaced by the roster derivation.'),
+});
 
 /**
  * Poll voters response — voter list returned from the voters endpoint.
@@ -300,3 +391,5 @@ export type PollResponse = Strict<z.infer<typeof pollResponseSchema>>;
 export type PollResults = Strict<z.infer<typeof pollResultsSchema>>;
 export type PollVotersResponse = Strict<z.infer<typeof pollVotersResponseSchema>>;
 export type PaginatedPollsResponse = Strict<z.infer<typeof paginatedPollsResponseSchema>>;
+export type PollEligibleVoter = Strict<z.infer<typeof pollEligibleVoterSchema>>;
+export type PollEligibleVotersResponse = Strict<z.infer<typeof pollEligibleVotersResponseSchema>>;

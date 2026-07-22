@@ -18,6 +18,8 @@ export const ownerResponseSchema = z
     /** FK into the DGU-backed `addresses` table; null for legacy free-text rows. */
     addressId: z.string().uuid().nullable().optional(),
     paymentRefCode: z.string().nullable().optional(),
+    /** When a representative last sent this owner a building invite; null when never invited. */
+    lastInvitedAt: z.union([z.string(), z.date()]).nullable().optional(),
     createdAt: z.union([z.string(), z.date()]),
     updatedAt: z.union([z.string(), z.date()]).nullable().optional(),
   })
@@ -72,3 +74,21 @@ export const assignOwnerSchema = z
   .meta({ id: 'AssignOwner' });
 
 export type AssignOwnerInput = z.infer<typeof assignOwnerSchema>;
+
+/**
+ * Invite an owner to register. Valid only for owner rows that have an
+ * email and no linked user; the backend sends the standard building
+ * OTP invite to `owner.email` and stamps `lastInvitedAt`.
+ */
+export const inviteOwnerSchema = z
+  .object({
+    message: z
+      .string()
+      .trim()
+      .max(500)
+      .optional()
+      .describe('Optional personal message included in the invite email.'),
+  })
+  .meta({ id: 'InviteOwner' });
+
+export type InviteOwnerInput = z.infer<typeof inviteOwnerSchema>;

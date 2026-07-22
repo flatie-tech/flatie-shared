@@ -241,12 +241,14 @@ export {
 export type {
   AssignOwnerInput,
   CreateOwnerInput,
+  InviteOwnerInput,
   OwnerResponse,
   UpdateOwnerInput,
 } from './owner.schema';
 export {
   assignOwnerSchema,
   createOwnerSchema,
+  inviteOwnerSchema,
   ownerResponseSchema,
   updateOwnerSchema,
 } from './owner.schema';
@@ -254,6 +256,7 @@ export type {
   CreatePollSchema,
   FinalizePollSchema,
   PollTypeOption,
+  RecordOfflineVotesSchema,
   UpdatePollSchema,
   VotePollSchema,
 } from './poll.schema';
@@ -264,6 +267,7 @@ export {
   POLL_LIMITS,
   POLL_TYPES,
   pollTypeSchema,
+  recordOfflineVotesSchema,
   updatePollSchema,
   votePollSchema,
 } from './poll.schema';
