@@ -57,49 +57,20 @@ export const API_ROUTES = {
     AI_USAGE: (id: string) => `/buildings/${id}/ai-usage`,
   },
 
-  // ── Apartments ────────────────────────────────────────────────────────
-  APARTMENTS: {
-    LIST: (buildingId: string) => `/buildings/${buildingId}/apartments`,
-    DETAIL: (buildingId: string, apartmentId: string) =>
-      `/buildings/${buildingId}/apartments/${apartmentId}`,
-    RESTORE: (buildingId: string, apartmentId: string) =>
-      `/buildings/${buildingId}/apartments/${apartmentId}/restore`,
-    USERS: (buildingId: string, apartmentId: string) =>
-      `/buildings/${buildingId}/apartments/${apartmentId}/users`,
-    USER_DETAIL: (buildingId: string, apartmentId: string, userId: string) =>
-      `/buildings/${buildingId}/apartments/${apartmentId}/users/${userId}`,
-    FLOORS: (buildingId: string) => `/buildings/${buildingId}/apartments/floors`,
+  // ── Units (unified: apartment | garage | storage_unit) ──────────────
+  UNITS: {
+    LIST: (buildingId: string) => `/buildings/${buildingId}/units`,
+    DETAIL: (buildingId: string, unitId: string) => `/buildings/${buildingId}/units/${unitId}`,
+    RESTORE: (buildingId: string, unitId: string) =>
+      `/buildings/${buildingId}/units/${unitId}/restore`,
+    USERS: (buildingId: string, unitId: string) => `/buildings/${buildingId}/units/${unitId}/users`,
+    USER_DETAIL: (buildingId: string, unitId: string, userId: string) =>
+      `/buildings/${buildingId}/units/${unitId}/users/${userId}`,
+    FLOORS: (buildingId: string) => `/buildings/${buildingId}/units/floors`,
+    USER_UNITS: (buildingId: string) => `/users/me/buildings/${buildingId}/units`,
   },
 
-  // ── Garages ───────────────────────────────────────────────────────────
-  GARAGES: {
-    LIST: (buildingId: string) => `/buildings/${buildingId}/garages`,
-    DETAIL: (buildingId: string, garageId: string) =>
-      `/buildings/${buildingId}/garages/${garageId}`,
-    RESTORE: (buildingId: string, garageId: string) =>
-      `/buildings/${buildingId}/garages/${garageId}/restore`,
-    USERS: (buildingId: string, garageId: string) =>
-      `/buildings/${buildingId}/garages/${garageId}/users`,
-    USER_DETAIL: (buildingId: string, garageId: string, userId: string) =>
-      `/buildings/${buildingId}/garages/${garageId}/users/${userId}`,
-    FLOORS: (buildingId: string) => `/buildings/${buildingId}/garages/floors`,
-  },
-
-  // ── Storage Units ─────────────────────────────────────────────────────
-  STORAGE_UNITS: {
-    LIST: (buildingId: string) => `/buildings/${buildingId}/storage-units`,
-    DETAIL: (buildingId: string, storageUnitId: string) =>
-      `/buildings/${buildingId}/storage-units/${storageUnitId}`,
-    RESTORE: (buildingId: string, storageUnitId: string) =>
-      `/buildings/${buildingId}/storage-units/${storageUnitId}/restore`,
-    USERS: (buildingId: string, storageUnitId: string) =>
-      `/buildings/${buildingId}/storage-units/${storageUnitId}/users`,
-    USER_DETAIL: (buildingId: string, storageUnitId: string, userId: string) =>
-      `/buildings/${buildingId}/storage-units/${storageUnitId}/users/${userId}`,
-    FLOORS: (buildingId: string) => `/buildings/${buildingId}/storage-units/floors`,
-  },
-
-  // ── Unit Reminders (polymorphic — apartment/garage/storage) ─────────
+  // ── Unit Reminders ────────────────────────────────────────────────────
   UNIT_REMINDERS: {
     LIST: (buildingId: string) => `/buildings/${buildingId}/unit-reminders`,
     DETAIL: (buildingId: string, reminderId: string) =>
@@ -110,26 +81,12 @@ export const API_ROUTES = {
   OWNERS: {
     LIST: (buildingId: string) => `/buildings/${buildingId}/owners`,
     DETAIL: (buildingId: string, ownerId: string) => `/buildings/${buildingId}/owners/${ownerId}`,
-    APARTMENT_ASSIGNMENTS: (buildingId: string, apartmentId: string) =>
-      `/buildings/${buildingId}/apartments/${apartmentId}/owners`,
-    APARTMENT_ASSIGNMENT_DETAIL: (buildingId: string, apartmentId: string, ownerId: string) =>
-      `/buildings/${buildingId}/apartments/${apartmentId}/owners/${ownerId}`,
-    GARAGE_ASSIGNMENTS: (buildingId: string, garageId: string) =>
-      `/buildings/${buildingId}/garages/${garageId}/owners`,
-    GARAGE_ASSIGNMENT_DETAIL: (buildingId: string, garageId: string, ownerId: string) =>
-      `/buildings/${buildingId}/garages/${garageId}/owners/${ownerId}`,
-    STORAGE_ASSIGNMENTS: (buildingId: string, storageUnitId: string) =>
-      `/buildings/${buildingId}/storage-units/${storageUnitId}/owners`,
-    STORAGE_ASSIGNMENT_DETAIL: (buildingId: string, storageUnitId: string, ownerId: string) =>
-      `/buildings/${buildingId}/storage-units/${storageUnitId}/owners/${ownerId}`,
+    UNIT_ASSIGNMENTS: (buildingId: string, unitId: string) =>
+      `/buildings/${buildingId}/units/${unitId}/owners`,
+    UNIT_ASSIGNMENT_DETAIL: (buildingId: string, unitId: string, ownerId: string) =>
+      `/buildings/${buildingId}/units/${unitId}/owners/${ownerId}`,
     INVITE: (buildingId: string, ownerId: string) =>
       `/buildings/${buildingId}/owners/${ownerId}/invite`,
-  },
-
-  // ── Units (generic) ──────────────────────────────────────────────────
-  UNITS: {
-    LIST: (buildingId: string) => `/buildings/${buildingId}/units`,
-    USER_UNITS: (buildingId: string) => `/users/me/buildings/${buildingId}/units`,
   },
 
   // ── Notices ───────────────────────────────────────────────────────────

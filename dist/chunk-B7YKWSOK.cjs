@@ -47,34 +47,17 @@ var API_ROUTES = {
     IMPORT_COMMIT: (id) => `/buildings/${id}/import/commit`,
     AI_USAGE: (id) => `/buildings/${id}/ai-usage`
   },
-  // ── Apartments ────────────────────────────────────────────────────────
-  APARTMENTS: {
-    LIST: (buildingId) => `/buildings/${buildingId}/apartments`,
-    DETAIL: (buildingId, apartmentId) => `/buildings/${buildingId}/apartments/${apartmentId}`,
-    RESTORE: (buildingId, apartmentId) => `/buildings/${buildingId}/apartments/${apartmentId}/restore`,
-    USERS: (buildingId, apartmentId) => `/buildings/${buildingId}/apartments/${apartmentId}/users`,
-    USER_DETAIL: (buildingId, apartmentId, userId) => `/buildings/${buildingId}/apartments/${apartmentId}/users/${userId}`,
-    FLOORS: (buildingId) => `/buildings/${buildingId}/apartments/floors`
+  // ── Units (unified: apartment | garage | storage_unit) ──────────────
+  UNITS: {
+    LIST: (buildingId) => `/buildings/${buildingId}/units`,
+    DETAIL: (buildingId, unitId) => `/buildings/${buildingId}/units/${unitId}`,
+    RESTORE: (buildingId, unitId) => `/buildings/${buildingId}/units/${unitId}/restore`,
+    USERS: (buildingId, unitId) => `/buildings/${buildingId}/units/${unitId}/users`,
+    USER_DETAIL: (buildingId, unitId, userId) => `/buildings/${buildingId}/units/${unitId}/users/${userId}`,
+    FLOORS: (buildingId) => `/buildings/${buildingId}/units/floors`,
+    USER_UNITS: (buildingId) => `/users/me/buildings/${buildingId}/units`
   },
-  // ── Garages ───────────────────────────────────────────────────────────
-  GARAGES: {
-    LIST: (buildingId) => `/buildings/${buildingId}/garages`,
-    DETAIL: (buildingId, garageId) => `/buildings/${buildingId}/garages/${garageId}`,
-    RESTORE: (buildingId, garageId) => `/buildings/${buildingId}/garages/${garageId}/restore`,
-    USERS: (buildingId, garageId) => `/buildings/${buildingId}/garages/${garageId}/users`,
-    USER_DETAIL: (buildingId, garageId, userId) => `/buildings/${buildingId}/garages/${garageId}/users/${userId}`,
-    FLOORS: (buildingId) => `/buildings/${buildingId}/garages/floors`
-  },
-  // ── Storage Units ─────────────────────────────────────────────────────
-  STORAGE_UNITS: {
-    LIST: (buildingId) => `/buildings/${buildingId}/storage-units`,
-    DETAIL: (buildingId, storageUnitId) => `/buildings/${buildingId}/storage-units/${storageUnitId}`,
-    RESTORE: (buildingId, storageUnitId) => `/buildings/${buildingId}/storage-units/${storageUnitId}/restore`,
-    USERS: (buildingId, storageUnitId) => `/buildings/${buildingId}/storage-units/${storageUnitId}/users`,
-    USER_DETAIL: (buildingId, storageUnitId, userId) => `/buildings/${buildingId}/storage-units/${storageUnitId}/users/${userId}`,
-    FLOORS: (buildingId) => `/buildings/${buildingId}/storage-units/floors`
-  },
-  // ── Unit Reminders (polymorphic — apartment/garage/storage) ─────────
+  // ── Unit Reminders ────────────────────────────────────────────────────
   UNIT_REMINDERS: {
     LIST: (buildingId) => `/buildings/${buildingId}/unit-reminders`,
     DETAIL: (buildingId, reminderId) => `/buildings/${buildingId}/unit-reminders/${reminderId}`
@@ -83,18 +66,9 @@ var API_ROUTES = {
   OWNERS: {
     LIST: (buildingId) => `/buildings/${buildingId}/owners`,
     DETAIL: (buildingId, ownerId) => `/buildings/${buildingId}/owners/${ownerId}`,
-    APARTMENT_ASSIGNMENTS: (buildingId, apartmentId) => `/buildings/${buildingId}/apartments/${apartmentId}/owners`,
-    APARTMENT_ASSIGNMENT_DETAIL: (buildingId, apartmentId, ownerId) => `/buildings/${buildingId}/apartments/${apartmentId}/owners/${ownerId}`,
-    GARAGE_ASSIGNMENTS: (buildingId, garageId) => `/buildings/${buildingId}/garages/${garageId}/owners`,
-    GARAGE_ASSIGNMENT_DETAIL: (buildingId, garageId, ownerId) => `/buildings/${buildingId}/garages/${garageId}/owners/${ownerId}`,
-    STORAGE_ASSIGNMENTS: (buildingId, storageUnitId) => `/buildings/${buildingId}/storage-units/${storageUnitId}/owners`,
-    STORAGE_ASSIGNMENT_DETAIL: (buildingId, storageUnitId, ownerId) => `/buildings/${buildingId}/storage-units/${storageUnitId}/owners/${ownerId}`,
+    UNIT_ASSIGNMENTS: (buildingId, unitId) => `/buildings/${buildingId}/units/${unitId}/owners`,
+    UNIT_ASSIGNMENT_DETAIL: (buildingId, unitId, ownerId) => `/buildings/${buildingId}/units/${unitId}/owners/${ownerId}`,
     INVITE: (buildingId, ownerId) => `/buildings/${buildingId}/owners/${ownerId}/invite`
-  },
-  // ── Units (generic) ──────────────────────────────────────────────────
-  UNITS: {
-    LIST: (buildingId) => `/buildings/${buildingId}/units`,
-    USER_UNITS: (buildingId) => `/users/me/buildings/${buildingId}/units`
   },
   // ── Notices ───────────────────────────────────────────────────────────
   NOTICES: {
@@ -289,5 +263,5 @@ var API_ROUTES = {
 
 exports.API_ROUTES = API_ROUTES;
 exports.API_VERSION = API_VERSION;
-//# sourceMappingURL=chunk-4AOKTTEQ.cjs.map
-//# sourceMappingURL=chunk-4AOKTTEQ.cjs.map
+//# sourceMappingURL=chunk-B7YKWSOK.cjs.map
+//# sourceMappingURL=chunk-B7YKWSOK.cjs.map

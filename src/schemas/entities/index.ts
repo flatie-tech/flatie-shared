@@ -1,11 +1,4 @@
-// Apartment schemas
-export type { Apartment, ApartmentUser, PaginatedApartmentsResponse } from './apartment.schema';
-export {
-  apartmentRoleSchema,
-  apartmentSchema,
-  apartmentUserSchema,
-  paginatedApartmentsResponseSchema,
-} from './apartment.schema';
+// Unit schemas (unified apartment/garage/storage_unit)
 
 // Board (Kanban) + column + card schemas
 export type {
@@ -35,7 +28,6 @@ export {
   updateBoardColumnSchema,
   updateBoardSchema,
 } from './board-card.schema';
-
 // Chat schemas
 export type {
   ConversationType,
@@ -51,7 +43,6 @@ export {
   sendMessageSchema,
   updateConversationSchema,
 } from './chat.schema';
-
 // FAQ schemas
 export type {
   CopyFaqsSchema,
@@ -66,7 +57,6 @@ export {
   reorderFaqsSchema,
   updateFaqSchema,
 } from './faq.schema';
-
 // Organization schemas
 export type {
   AddOrgMemberSchema,
@@ -93,6 +83,24 @@ export {
   updateOrganizationSchema,
   updateOrgMemberRoleSchema,
 } from './organization.schema';
+export type {
+  CreateUnitInput,
+  PaginatedUnitsResponse,
+  Unit,
+  UnitKind,
+  UnitUser,
+  UpdateUnitInput,
+} from './unit.schema';
+export {
+  createUnitSchema,
+  paginatedUnitsResponseSchema,
+  UNIT_KINDS,
+  unitKindSchema,
+  unitRoleSchema,
+  unitSchema,
+  unitUserSchema,
+  updateUnitSchema,
+} from './unit.schema';
 
 // Building schemas
 
@@ -203,9 +211,6 @@ export {
   failureReportEventSchema,
   updateFailureReportSchema,
 } from './failure-report.schema';
-// Garage schemas
-export type { Garage, GarageRole, GarageUser } from './garage.schema';
-export { garageRoleSchema, garageSchema, garageUserSchema } from './garage.schema';
 export type { CreateIncomeSchema, UpdateIncomeSchema } from './income-transaction.schema';
 export { createIncomeSchema, updateIncomeSchema } from './income-transaction.schema';
 export type {
@@ -271,13 +276,6 @@ export {
   updatePollSchema,
   votePollSchema,
 } from './poll.schema';
-// Storage unit schemas
-export type { StorageUnit, StorageUnitRole, StorageUnitUser } from './storage-unit.schema';
-export {
-  storageUnitRoleSchema,
-  storageUnitSchema,
-  storageUnitUserSchema,
-} from './storage-unit.schema';
 
 // Transaction category schemas
 export type {

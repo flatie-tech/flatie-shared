@@ -133,51 +133,6 @@ var dateRangeWithValidationSchema = zod.z.object({
     path: ["fromDate"]
   }
 );
-var apartmentRoleSchema = zod.z.enum([chunkZASNDKJM_cjs.ApartmentRole.OWNER, chunkZASNDKJM_cjs.ApartmentRole.TENANT]).describe("`OWNER` for the title-deed holder, `TENANT` for a resident renting from the owner.");
-var apartmentUserSchema = zod.z.looseObject({
-  id: zod.z.string(),
-  name: zod.z.string().describe("Display name of the apartment member."),
-  email: zod.z.string().describe("Contact email of the apartment member."),
-  image: zod.z.string().nullable().optional().describe("Absolute URL to the member\u2019s profile image; null when none is set."),
-  roleType: apartmentRoleSchema.describe(
-    "Relationship of this user to the apartment (`OWNER` or `TENANT`)."
-  ),
-  joinedAt: zod.z.string().describe("ISO-8601 timestamp when the user was attached to the apartment."),
-  ownershipPercentage: zod.z.number().nullable().optional().describe(
-    "Share of the apartment held by this user, 0\u2013100. Null for tenants and for owners whose share has not been recorded."
-  )
-});
-var apartmentSchema = zod.z.looseObject({
-  id: zod.z.string(),
-  buildingId: zod.z.string(),
-  number: zod.z.string().describe('Apartment identifier as used by residents and mail (e.g. "12A", "3.5").'),
-  paymentRefCode: zod.z.string().nullable().optional().describe(
-    "Apartment code used as the middle segment of the HR01 poziv-na-broj in `apartment` ref mode. Auto-assigned on create (sequential per building, zero-padded e.g. `001`); editable. Null is allowed on legacy rows that pre-date the column."
-  ),
-  floor: zod.z.string().nullable().optional().describe(
-    'Floor label where the apartment is located (e.g. "1", "Ground", "Basement"); null when not recorded.'
-  ),
-  area: zod.z.number().nullable().optional().describe("Floor area in square metres; null when not recorded."),
-  surnameOnDoor: zod.z.string().nullable().optional().describe(
-    "Surname displayed on the apartment door, used for deliveries; null when not provided."
-  ),
-  surnameOnIntercom: zod.z.string().nullable().optional().describe("Surname listed on the building intercom; null when not provided."),
-  createdAt: zod.z.string(),
-  updatedAt: zod.z.string(),
-  users: zod.z.array(apartmentUserSchema).describe("Owners and tenants currently attached to the apartment."),
-  userCount: zod.z.number().describe("Total number of users linked to this apartment."),
-  canEdit: zod.z.boolean().describe("True when the calling user may edit this apartment\u2019s metadata."),
-  canDelete: zod.z.boolean().describe("True when the calling user may delete this apartment.")
-});
-var paginatedApartmentsResponseSchema = zod.z.looseObject({
-  data: zod.z.array(apartmentSchema).describe("Apartments on the current page, ordered as requested."),
-  count: zod.z.number().optional().describe("Total number of apartments matching the query across all pages."),
-  page: zod.z.number().optional().describe("Current page number, 1-indexed."),
-  totalPages: zod.z.number().describe("Total number of pages available for this query."),
-  limit: zod.z.number().describe("Maximum number of items returned per page."),
-  hasNextPage: zod.z.boolean().optional().describe("True when at least one more page follows the current one."),
-  hasPreviousPage: zod.z.boolean().optional().describe("True when at least one page precedes the current one.")
-});
 function multipartArray(itemSchema) {
   return zod.z.preprocess((value) => {
     if (Array.isArray(value)) return value;
@@ -412,6 +367,66 @@ var getOrgMembersQuerySchema = zod.z.object({
   sortBy: zod.z.enum(["userName", "orgRole", "createdAt"]).optional().describe("Column to sort results by."),
   sortOrder: zod.z.enum(["asc", "desc"]).optional().describe("Sort direction: `asc` for ascending, `desc` for descending.")
 });
+var paginationParamsSchema = zod.z.object({
+  offset: zod.z.coerce.number().min(0).optional().default(0),
+  limit: zod.z.coerce.number().min(1).max(100).optional().default(10)
+});
+var paginatedResponseSchema = (itemSchema) => zod.z.object({
+  data: zod.z.array(itemSchema).describe("Items for the current page."),
+  count: zod.z.number().describe("Total number of matching items across all pages."),
+  page: zod.z.number().describe("1-based current page index."),
+  limit: zod.z.number().describe("Page size (items per page, max 100)."),
+  totalPages: zod.z.number().describe("Total number of pages available for this query."),
+  hasNextPage: zod.z.boolean().describe("True when another page follows the current one."),
+  hasPreviousPage: zod.z.boolean().describe("True when a previous page exists.")
+});
+
+// src/schemas/entities/unit.schema.ts
+var UNIT_KINDS = ["apartment", "garage", "storage_unit"];
+var unitKindSchema = zod.z.enum(UNIT_KINDS).describe("What the unit physically is: `apartment`, `garage`, or `storage_unit`.");
+var unitRoleSchema = zod.z.enum([chunkZASNDKJM_cjs.ApartmentRole.OWNER, chunkZASNDKJM_cjs.ApartmentRole.TENANT]).describe("`OWNER` for the title-deed holder, `TENANT` for a resident renting from the owner.");
+var unitUserSchema = zod.z.looseObject({
+  id: zod.z.string(),
+  name: zod.z.string().describe("Display name of the unit member."),
+  email: zod.z.string().describe("Contact email of the unit member."),
+  image: zod.z.string().nullable().optional().describe("Absolute URL to the member\u2019s profile image; null when none is set."),
+  roleType: unitRoleSchema.describe("Relationship of this user to the unit (`OWNER` or `TENANT`)."),
+  joinedAt: zod.z.string().describe("ISO-8601 timestamp when the user was attached to the unit."),
+  ownershipPercentage: zod.z.number().nullable().optional().describe(
+    "Share of the unit held by this user, 0\u2013100. Null for tenants and for owners whose share has not been recorded."
+  )
+});
+var unitSchema = zod.z.looseObject({
+  id: zod.z.string(),
+  buildingId: zod.z.string(),
+  kind: unitKindSchema,
+  label: zod.z.string().describe(
+    'Unit identifier as used by residents and the land registry (e.g. "ST 3448", "GR 364", "12A").'
+  ),
+  floor: zod.z.string().nullable().optional().describe('Floor label (e.g. "1", "PR", "POD", "POT"); null when not recorded.'),
+  area: zod.z.number().nullable().optional().describe("Floor area in square metres; null when not recorded."),
+  type: zod.z.enum(["residential", "commercial"]).optional().describe("Usage classification \u2014 drives the pri\u010Duva rate coefficient."),
+  paymentRefCode: zod.z.string().nullable().optional().describe(
+    "Code used as the middle segment of the HR01 poziv-na-broj in unit ref mode. Auto-assigned on create for apartments; null elsewhere."
+  ),
+  surnameOnDoor: zod.z.string().nullable().optional().describe("Surname shown on the door plate; apartments only, null otherwise."),
+  surnameOnIntercom: zod.z.string().nullable().optional().describe("Surname shown on the intercom; apartments only, null otherwise."),
+  users: zod.z.array(unitUserSchema).optional().describe("Users attached to the unit (residency view); present on detail/list endpoints."),
+  createdAt: zod.z.string().optional(),
+  updatedAt: zod.z.string().nullable().optional()
+});
+var paginatedUnitsResponseSchema = paginatedResponseSchema(unitSchema);
+var createUnitSchema = zod.z.object({
+  kind: unitKindSchema,
+  label: zod.z.string().trim().min(1).max(50),
+  floor: zod.z.string().trim().max(50).optional().nullable(),
+  area: zod.z.coerce.number().positive().max(1e5).optional().nullable(),
+  type: zod.z.enum(["residential", "commercial"]).optional(),
+  paymentRefCode: zod.z.string().trim().max(22).optional().nullable(),
+  surnameOnDoor: zod.z.string().trim().max(100).optional().nullable(),
+  surnameOnIntercom: zod.z.string().trim().max(100).optional().nullable()
+});
+var updateUnitSchema = createUnitSchema.omit({ kind: true }).partial();
 var BUILDING_TYPES = [
   chunkZASNDKJM_cjs.BuildingType.RESIDENTIAL,
   chunkZASNDKJM_cjs.BuildingType.COMMERCIAL,
@@ -873,32 +888,6 @@ var updateFailureReportSchema = refineLocation(
 var approveFailureReportSchema = zod.z.object({
   approved: zod.z.boolean().describe("True to approve the report for public visibility, false to reject.")
 });
-var garageRoleSchema = zod.z.enum([chunkZASNDKJM_cjs.ApartmentRole.OWNER, chunkZASNDKJM_cjs.ApartmentRole.TENANT]).describe("`owner` for the title-deed holder, `tenant` for a resident renting from the owner.");
-var garageUserSchema = zod.z.looseObject({
-  id: zod.z.string(),
-  name: zod.z.string().describe("Display name of the garage member."),
-  email: zod.z.string().describe("Contact email of the garage member."),
-  image: zod.z.string().nullable().optional().describe("Absolute URL to the member\u2019s profile image; null when none is set."),
-  roleType: garageRoleSchema.describe(
-    "Relationship of this user to the garage (`owner` or `tenant`)."
-  ),
-  joinedAt: zod.z.string().describe("ISO-8601 timestamp when the user was attached to the garage."),
-  ownershipPercentage: zod.z.number().nullable().optional().describe(
-    "Share of the garage held by this user, 0\u2013100. Null for tenants and owners whose share was not recorded."
-  )
-});
-var garageSchema = zod.z.looseObject({
-  id: zod.z.string(),
-  buildingId: zod.z.string(),
-  title: zod.z.string().describe('Garage identifier or name as shown to residents (e.g. "G-12").'),
-  floor: zod.z.string().nullable().optional().describe(
-    'Floor label where the garage is located (e.g. "Basement", "-1"); null when not recorded.'
-  ),
-  area: zod.z.number().nullable().optional().describe("Floor area in square metres; null when not recorded."),
-  createdAt: zod.z.string(),
-  updatedAt: zod.z.string(),
-  users: zod.z.array(garageUserSchema).describe("Owners and tenants currently attached to the garage.")
-});
 var incomeAmountSchema = moneyStringSchema.describe(
   'Income amount in EUR as a two-decimal string (e.g. "250.50").'
 );
@@ -1188,32 +1177,6 @@ var finalizePollSchema = zod.z.object({
     "True to seal the poll and freeze its results; false is accepted as a no-op for legacy compatibility."
   )
 });
-var storageUnitRoleSchema = zod.z.enum([chunkZASNDKJM_cjs.ApartmentRole.OWNER, chunkZASNDKJM_cjs.ApartmentRole.TENANT]).describe("`owner` for the title-deed holder, `tenant` for a resident renting from the owner.");
-var storageUnitUserSchema = zod.z.looseObject({
-  id: zod.z.string(),
-  name: zod.z.string().describe("Display name of the storage-unit member."),
-  email: zod.z.string().describe("Contact email of the storage-unit member."),
-  image: zod.z.string().nullable().optional().describe("Absolute URL to the member\u2019s profile image; null when none is set."),
-  roleType: storageUnitRoleSchema.describe(
-    "Relationship of this user to the storage unit (`owner` or `tenant`)."
-  ),
-  joinedAt: zod.z.string().describe("ISO-8601 timestamp when the user was attached to the storage unit."),
-  ownershipPercentage: zod.z.number().nullable().optional().describe(
-    "Share of the storage unit held by this user, 0\u2013100. Null for tenants and owners whose share was not recorded."
-  )
-});
-var storageUnitSchema = zod.z.looseObject({
-  id: zod.z.string(),
-  buildingId: zod.z.string(),
-  title: zod.z.string().describe('Storage-unit identifier or name as shown to residents (e.g. "S-04").'),
-  floor: zod.z.string().nullable().optional().describe(
-    'Floor label where the storage unit is located (e.g. "Basement", "-1"); null when not recorded.'
-  ),
-  area: zod.z.number().nullable().optional().describe("Floor area in square metres; null when not recorded."),
-  createdAt: zod.z.string(),
-  updatedAt: zod.z.string(),
-  users: zod.z.array(storageUnitUserSchema).describe("Owners and tenants currently attached to the storage unit.")
-});
 var TRANSACTION_CATEGORY_LIMITS = {
   NAME_MIN: 1,
   NAME_MAX: 100,
@@ -1241,19 +1204,6 @@ var copyTransactionCategoriesSchema = zod.z.object({
   sourceBuildingId: uuidSchema.describe(
     "UUID of the building whose categories should be copied into the target building."
   )
-});
-var paginationParamsSchema = zod.z.object({
-  offset: zod.z.coerce.number().min(0).optional().default(0),
-  limit: zod.z.coerce.number().min(1).max(100).optional().default(10)
-});
-var paginatedResponseSchema = (itemSchema) => zod.z.object({
-  data: zod.z.array(itemSchema).describe("Items for the current page."),
-  count: zod.z.number().describe("Total number of matching items across all pages."),
-  page: zod.z.number().describe("1-based current page index."),
-  limit: zod.z.number().describe("Page size (items per page, max 100)."),
-  totalPages: zod.z.number().describe("Total number of pages available for this query."),
-  hasNextPage: zod.z.boolean().describe("True when another page follows the current one."),
-  hasPreviousPage: zod.z.boolean().describe("True when a previous page exists.")
 });
 var roleTypeSchema = zod.z.enum([
   ...Object.values(chunkZASNDKJM_cjs.BuildingRole),
@@ -2656,13 +2606,11 @@ exports.PrioritySchema = PrioritySchema;
 exports.RECURRENCE_TYPES = RECURRENCE_TYPES;
 exports.REP_RECENT_ACTIVITY_TYPES = REP_RECENT_ACTIVITY_TYPES;
 exports.TRANSACTION_CATEGORY_LIMITS = TRANSACTION_CATEGORY_LIMITS;
+exports.UNIT_KINDS = UNIT_KINDS;
 exports.addOrgMemberSchema = addOrgMemberSchema;
 exports.aiChatMessageSchema = aiChatMessageSchema;
 exports.aiChatRequestSchema = aiChatRequestSchema;
 exports.aiUsageResponseSchema = aiUsageResponseSchema;
-exports.apartmentRoleSchema = apartmentRoleSchema;
-exports.apartmentSchema = apartmentSchema;
-exports.apartmentUserSchema = apartmentUserSchema;
 exports.apiErrorResponseSchema = apiErrorResponseSchema;
 exports.apiErrorSchema = apiErrorSchema;
 exports.approvalStatusOptions = approvalStatusOptions;
@@ -2719,6 +2667,7 @@ exports.createOrganizationSchema = createOrganizationSchema;
 exports.createOwnerSchema = createOwnerSchema;
 exports.createPollSchema = createPollSchema;
 exports.createTransactionCategorySchema = createTransactionCategorySchema;
+exports.createUnitSchema = createUnitSchema;
 exports.cursorQuerySchema = cursorQuerySchema;
 exports.dateRangeParamsSchema = dateRangeParamsSchema;
 exports.dateRangeWithValidationSchema = dateRangeWithValidationSchema;
@@ -2748,9 +2697,6 @@ exports.failureStatusOptions = failureStatusOptions;
 exports.faqResponseSchema = faqResponseSchema;
 exports.finalizePollSchema = finalizePollSchema;
 exports.forgotPasswordSchema = forgotPasswordSchema;
-exports.garageRoleSchema = garageRoleSchema;
-exports.garageSchema = garageSchema;
-exports.garageUserSchema = garageUserSchema;
 exports.getEntityLinkCountsQuerySchema = getEntityLinkCountsQuerySchema;
 exports.getEntityLinksQuerySchema = getEntityLinksQuerySchema;
 exports.getOrgBuildingsQuerySchema = getOrgBuildingsQuerySchema;
@@ -2781,7 +2727,6 @@ exports.notificationPreferenceItemSchema = notificationPreferenceItemSchema;
 exports.notificationResponseSchema = notificationResponseSchema;
 exports.optionalDateTimeSchema = optionalDateTimeSchema;
 exports.ownerResponseSchema = ownerResponseSchema;
-exports.paginatedApartmentsResponseSchema = paginatedApartmentsResponseSchema;
 exports.paginatedBuildingsResponseSchema = paginatedBuildingsResponseSchema;
 exports.paginatedDocumentsResponseSchema = paginatedDocumentsResponseSchema;
 exports.paginatedEmailThreadsResponseSchema = paginatedEmailThreadsResponseSchema;
@@ -2793,6 +2738,7 @@ exports.paginatedPollsResponseSchema = paginatedPollsResponseSchema;
 exports.paginatedRepBuildingsResponseSchema = paginatedRepBuildingsResponseSchema;
 exports.paginatedRepUsersResponseSchema = paginatedRepUsersResponseSchema;
 exports.paginatedResponseSchema = paginatedResponseSchema;
+exports.paginatedUnitsResponseSchema = paginatedUnitsResponseSchema;
 exports.paginationParamsSchema = paginationParamsSchema;
 exports.passwordSchema = passwordSchema;
 exports.permissionFieldsSchema = permissionFieldsSchema;
@@ -2822,11 +2768,12 @@ exports.roleTypeSchema = roleTypeSchema;
 exports.searchUsersQuerySchema = searchUsersQuerySchema;
 exports.sendMessageSchema = sendMessageSchema;
 exports.signedMoneyStringSchema = signedMoneyStringSchema;
-exports.storageUnitRoleSchema = storageUnitRoleSchema;
-exports.storageUnitSchema = storageUnitSchema;
-exports.storageUnitUserSchema = storageUnitUserSchema;
 exports.strongPasswordSchema = strongPasswordSchema;
 exports.timeSchema = timeSchema;
+exports.unitKindSchema = unitKindSchema;
+exports.unitRoleSchema = unitRoleSchema;
+exports.unitSchema = unitSchema;
+exports.unitUserSchema = unitUserSchema;
 exports.unreadCountResponseSchema = unreadCountResponseSchema;
 exports.updateBoardCardSchema = updateBoardCardSchema;
 exports.updateBoardColumnSchema = updateBoardColumnSchema;
@@ -2853,10 +2800,11 @@ exports.updatePasswordSchema = updatePasswordSchema;
 exports.updatePollRequestSchema = updatePollRequestSchema;
 exports.updatePollSchema = updatePollSchema;
 exports.updateTransactionCategorySchema = updateTransactionCategorySchema;
+exports.updateUnitSchema = updateUnitSchema;
 exports.updateUserBuildingRoleSchema = updateUserBuildingRoleSchema;
 exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-YJKJTJXZ.cjs.map
-//# sourceMappingURL=chunk-YJKJTJXZ.cjs.map
+//# sourceMappingURL=chunk-5N2FP2BO.cjs.map
+//# sourceMappingURL=chunk-5N2FP2BO.cjs.map

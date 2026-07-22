@@ -46,29 +46,14 @@ declare const API_ROUTES: {
         readonly IMPORT_COMMIT: (id: string) => string;
         readonly AI_USAGE: (id: string) => string;
     };
-    readonly APARTMENTS: {
+    readonly UNITS: {
         readonly LIST: (buildingId: string) => string;
-        readonly DETAIL: (buildingId: string, apartmentId: string) => string;
-        readonly RESTORE: (buildingId: string, apartmentId: string) => string;
-        readonly USERS: (buildingId: string, apartmentId: string) => string;
-        readonly USER_DETAIL: (buildingId: string, apartmentId: string, userId: string) => string;
+        readonly DETAIL: (buildingId: string, unitId: string) => string;
+        readonly RESTORE: (buildingId: string, unitId: string) => string;
+        readonly USERS: (buildingId: string, unitId: string) => string;
+        readonly USER_DETAIL: (buildingId: string, unitId: string, userId: string) => string;
         readonly FLOORS: (buildingId: string) => string;
-    };
-    readonly GARAGES: {
-        readonly LIST: (buildingId: string) => string;
-        readonly DETAIL: (buildingId: string, garageId: string) => string;
-        readonly RESTORE: (buildingId: string, garageId: string) => string;
-        readonly USERS: (buildingId: string, garageId: string) => string;
-        readonly USER_DETAIL: (buildingId: string, garageId: string, userId: string) => string;
-        readonly FLOORS: (buildingId: string) => string;
-    };
-    readonly STORAGE_UNITS: {
-        readonly LIST: (buildingId: string) => string;
-        readonly DETAIL: (buildingId: string, storageUnitId: string) => string;
-        readonly RESTORE: (buildingId: string, storageUnitId: string) => string;
-        readonly USERS: (buildingId: string, storageUnitId: string) => string;
-        readonly USER_DETAIL: (buildingId: string, storageUnitId: string, userId: string) => string;
-        readonly FLOORS: (buildingId: string) => string;
+        readonly USER_UNITS: (buildingId: string) => string;
     };
     readonly UNIT_REMINDERS: {
         readonly LIST: (buildingId: string) => string;
@@ -77,17 +62,9 @@ declare const API_ROUTES: {
     readonly OWNERS: {
         readonly LIST: (buildingId: string) => string;
         readonly DETAIL: (buildingId: string, ownerId: string) => string;
-        readonly APARTMENT_ASSIGNMENTS: (buildingId: string, apartmentId: string) => string;
-        readonly APARTMENT_ASSIGNMENT_DETAIL: (buildingId: string, apartmentId: string, ownerId: string) => string;
-        readonly GARAGE_ASSIGNMENTS: (buildingId: string, garageId: string) => string;
-        readonly GARAGE_ASSIGNMENT_DETAIL: (buildingId: string, garageId: string, ownerId: string) => string;
-        readonly STORAGE_ASSIGNMENTS: (buildingId: string, storageUnitId: string) => string;
-        readonly STORAGE_ASSIGNMENT_DETAIL: (buildingId: string, storageUnitId: string, ownerId: string) => string;
+        readonly UNIT_ASSIGNMENTS: (buildingId: string, unitId: string) => string;
+        readonly UNIT_ASSIGNMENT_DETAIL: (buildingId: string, unitId: string, ownerId: string) => string;
         readonly INVITE: (buildingId: string, ownerId: string) => string;
-    };
-    readonly UNITS: {
-        readonly LIST: (buildingId: string) => string;
-        readonly USER_UNITS: (buildingId: string) => string;
     };
     readonly NOTICES: {
         readonly LIST: (buildingId: string) => string;
