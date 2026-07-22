@@ -1061,6 +1061,8 @@ var ownerResponseSchema = z.object({
   /** FK into the DGU-backed `addresses` table; null for legacy free-text rows. */
   addressId: z.string().uuid().nullable().optional(),
   paymentRefCode: z.string().nullable().optional(),
+  /** When a representative last sent this owner a building invite; null when never invited. */
+  lastInvitedAt: z.union([z.string(), z.date()]).nullable().optional(),
   createdAt: z.union([z.string(), z.date()]),
   updatedAt: z.union([z.string(), z.date()]).nullable().optional()
 }).meta({ id: "OwnerResponse" });
@@ -1085,6 +1087,9 @@ var assignOwnerSchema = z.object({
   ownerId: z.string().uuid(),
   ownershipPercentage: z.number().min(0).max(100).nullable().optional()
 }).meta({ id: "AssignOwner" });
+var inviteOwnerSchema = z.object({
+  message: z.string().trim().max(500).optional().describe("Optional personal message included in the invite email.")
+}).meta({ id: "InviteOwner" });
 var POLL_TYPES = [PollType.CONSENSUS, PollType.COMMUNITY];
 var pollTypeSchema = z.enum(POLL_TYPES).describe(
   "`community` polls pass by simple majority of votes cast; `consensus` polls require an ownership-weighted approval threshold."
@@ -1123,7 +1128,9 @@ var createPollSchema = z.object({
   scopedUnitIds: multipartArray(uuidSchema).optional().describe(
     "UUIDs of units whose owners/tenants are eligible to vote. Omit for building-wide polls."
   ),
-  scopedUserIds: multipartArray(uuidSchema).optional().describe("UUIDs of users explicitly added to the eligible-voter list. Omit when not used."),
+  scopedOwnerIds: multipartArray(uuidSchema).optional().describe(
+    "UUIDs of owner records explicitly added to the eligible-voter list. Owners need no user account. Omit when not used."
+  ),
   fileIds: multipartArray(uuidSchema).optional().default([]).describe("UUIDs of previously-uploaded supporting documents (proposals, receipts, specs).")
 }).refine(
   (data) => {
@@ -1163,12 +1170,16 @@ var updatePollSchema = z.object({
     "Lifecycle override: `active` accepts votes, `inactive` pauses the poll, `ended` seals it."
   ),
   scopedUnitIds: multipartArray(uuidSchema).optional().describe("Replacement list of scoped unit UUIDs. Empty array clears scoping."),
-  scopedUserIds: multipartArray(uuidSchema).optional().describe("Replacement list of scoped user UUIDs. Empty array clears explicit-user scoping."),
+  scopedOwnerIds: multipartArray(uuidSchema).optional().describe("Replacement list of scoped owner UUIDs. Empty array clears explicit-owner scoping."),
   fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of newly-uploaded supporting documents to attach."),
   removeChildFileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-attached files to detach from the poll.")
 });
 var votePollSchema = z.object({
   selectedOptionIndex: z.number().int().min(0).describe("Zero-based index into the poll\u2019s `options` array identifying the chosen option.")
+});
+var recordOfflineVotesSchema = z.object({
+  ownerIds: z.array(uuidSchema).min(1).describe("UUIDs of owner records whose signed approvals are being recorded."),
+  proofFileId: uuidSchema.optional().describe("UUID of an uploaded scan of the signed sheet, stored as evidence.")
 });
 var finalizePollSchema = z.object({
   finalize: z.boolean().describe(
@@ -2333,10 +2344,11 @@ var pollScopedUnitSchema = z.looseObject({
   label: z.string().describe('Human-readable unit label (e.g. "Apartment 4B").'),
   floor: z.string().optional().describe("Floor label where the unit is located; absent when not recorded.")
 }).describe("Unit whose owners/tenants are eligible to participate in a scoped poll.");
-var pollScopedUserSchema = z.looseObject({
-  userId: z.string().describe("UUID of the explicitly-eligible user."),
-  name: z.string().describe("Display name of the scoped user.")
-}).describe("User explicitly added to the poll\u2019s eligible-voter list.");
+var pollScopedOwnerSchema = z.looseObject({
+  ownerId: z.string().describe("UUID of the explicitly-eligible owner record."),
+  fullName: z.string().describe("Display name of the scoped owner."),
+  userId: z.string().nullable().optional().describe("UUID of the linked user account; null for placeholder owners without an account.")
+}).describe("Owner record explicitly added to the poll\u2019s eligible-voter list.");
 var pollResponseSchema = z.looseObject({
   id: z.string().uuid(),
   buildingId: z.string().uuid().describe("UUID of the building this poll belongs to."),
@@ -2423,21 +2435,56 @@ var pollResultsSchema = z.looseObject({
   eligibleTotalWeight: z.number().optional().describe(
     "Cached sum of eligible voters\u2019 ownership percentages captured at poll creation. Used to normalise `totalWeight` against the full eligible weight."
   ),
-  scopedUsers: z.array(pollScopedUserSchema).optional().describe("Users scoped into eligibility by explicit selection; absent when not used."),
+  scopedOwners: z.array(pollScopedOwnerSchema).optional().describe("Owners scoped into eligibility by explicit selection; absent when not used."),
   maintenanceLogs: z.array(pollMaintenanceLogReferenceSchema).optional().describe("Maintenance logs linked to the poll (for context); absent when none."),
   files: z.array(pollDocumentReferenceSchema).optional().describe("Supporting documents uploaded with the poll; absent when none.")
 });
 var pollVoterSchema = z.looseObject({
-  userId: z.string().describe("UUID of the voter."),
-  name: z.string().describe("Voter display name."),
-  email: z.string().describe("Voter contact email."),
+  userId: z.string().nullable().describe(
+    "UUID of the voting user; null for paper votes recorded for owners without accounts."
+  ),
+  ownerId: z.string().nullable().optional().describe("UUID of the owner record the vote is attributed to; null for non-owner voters."),
+  name: z.string().describe("Voter display name (owner full name for owner-attributed votes)."),
+  email: z.string().nullable().optional().describe("Voter contact email; null when unknown."),
   selectedOptionIndex: z.number().describe("Zero-based index of the option the voter chose."),
   selectedOptionText: z.string().describe("Text of the chosen option (denormalised)."),
   voteWeight: z.number().describe(
-    "Weight contributed by this vote. 1.00 for community polls; the voter\u2019s ownership percentage for consensus polls."
+    "Weight contributed by this vote. 1.00 for community polls; the voter\u2019s derived building ownership share (5-decimal precision) for consensus polls."
   ),
-  votedAt: z.string().describe("ISO-8601 timestamp when the vote was recorded.")
+  votedAt: z.string().describe("ISO-8601 timestamp when the vote was recorded."),
+  isOffline: z.boolean().optional().describe("True when the vote was recorded by a representative from a paper signature."),
+  hasAccount: z.boolean().optional().describe("True when the voter has a registered user account.")
 }).describe("Individual voter entry returned by the poll voters endpoint.");
+var pollEligibleVoterSchema = z.looseObject({
+  ownerId: z.string().uuid().describe("UUID of the owner record."),
+  userId: z.string().nullable().describe("UUID of the linked user account; null for placeholder owners."),
+  fullName: z.string().describe("Owner full name (person, joint couple, or legal entity)."),
+  email: z.string().nullable().describe("Owner contact email; null when not recorded."),
+  oib: z.string().nullable().describe("Croatian OIB of the owner; null when not recorded."),
+  weightPct: z.string().describe(
+    'Derived ownership weight in percent as an exact decimal string (5-decimal precision), e.g. "12.20000".'
+  ),
+  holdings: z.array(
+    z.looseObject({
+      unitType: z.string().describe("Kind of unit held (`apartment`, `garage`, `storage_unit`)."),
+      unitId: z.string().describe("UUID of the unit."),
+      label: z.string().describe('Human-readable unit label (e.g. "ST 3448").'),
+      floor: z.string().nullable().optional().describe("Floor label; null when not recorded."),
+      areaM2: z.string().nullable().describe("Unit area in m\xB2 as a decimal string; null when not recorded."),
+      unitSharePct: z.string().describe("Owner\u2019s share of this unit in percent as a decimal string.")
+    })
+  ).describe("Units this owner currently holds, with per-unit shares."),
+  voteStatus: z.enum(["not_voted", "accepted", "pending_signature_review", "rejected"]).optional().describe("The owner\u2019s vote state on the poll in question, when requested per-poll.")
+}).describe("Aggregated per-owner roster row for a poll\u2019s electorate.");
+var pollEligibleVotersResponseSchema = z.looseObject({
+  pollId: z.string().uuid().describe("UUID of the poll this electorate belongs to."),
+  voters: z.array(pollEligibleVoterSchema).describe("One entry per eligible owner."),
+  totalWeightPct: z.string().describe("Sum of eligible owners\u2019 derived weights as an exact decimal string."),
+  warnings: z.looseObject({
+    unitsWithoutArea: z.array(z.string()).describe("Labels of units with no recorded area (excluded from weight math)."),
+    unitsWithoutOwners: z.array(z.string()).describe("Labels of units with no active owner (weight unassigned).")
+  }).describe("Data-quality warnings surfaced by the roster derivation.")
+});
 var pollVotersResponseSchema = z.looseObject({
   pollId: z.string().uuid().describe("UUID of the poll these voters belong to."),
   question: z.string().describe("Poll question, repeated for convenience."),
@@ -2577,6 +2624,6 @@ var repDashboardSummaryResponseSchema = z.looseObject({
   pendingSignatureVotes: z.number().nullable().optional().describe("Printed-signature votes awaiting representative review (rep scope only).")
 }).describe("Payload of `GET /representatives/dashboard/summary`.");
 
-export { ARCHIVE_TYPES, ApprovalStatusSchema, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, DOCUMENT_LIMITS, EMAIL_LIMITS, ENTITY_LINK_TYPES, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, LINKABLE_ENTITY_TYPES, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, RECURRENCE_TYPES, REP_RECENT_ACTIVITY_TYPES, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createEventSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createOwnerSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, ownerResponseSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, recurrenceTypeSchema, registerSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, signedMoneyStringSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateEventSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-UG7BANF3.js.map
-//# sourceMappingURL=chunk-UG7BANF3.js.map
+export { ARCHIVE_TYPES, ApprovalStatusSchema, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, DOCUMENT_LIMITS, EMAIL_LIMITS, ENTITY_LINK_TYPES, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, LINKABLE_ENTITY_TYPES, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, RECURRENCE_TYPES, REP_RECENT_ACTIVITY_TYPES, TRANSACTION_CATEGORY_LIMITS, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apartmentRoleSchema, apartmentSchema, apartmentUserSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createEventSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createOwnerSchema, createPollSchema, createTransactionCategorySchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, garageRoleSchema, garageSchema, garageUserSchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, inviteOwnerSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, ownerResponseSchema, paginatedApartmentsResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, recordOfflineVotesSchema, recurrenceTypeSchema, registerSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, signedMoneyStringSchema, storageUnitRoleSchema, storageUnitSchema, storageUnitUserSchema, strongPasswordSchema, timeSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateEventSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
+//# sourceMappingURL=chunk-QKEPPOTV.js.map
+//# sourceMappingURL=chunk-QKEPPOTV.js.map

@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.74.0
+
+### Changes
+
+- feat(polls): owners-model schemas — scopedOwnerIds, offline votes by owner, eligible-voter roster, owner invite
+
 ## 0.73.2
 
 ### Changes

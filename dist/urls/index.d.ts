@@ -83,6 +83,7 @@ declare const API_ROUTES: {
         readonly GARAGE_ASSIGNMENT_DETAIL: (buildingId: string, garageId: string, ownerId: string) => string;
         readonly STORAGE_ASSIGNMENTS: (buildingId: string, storageUnitId: string) => string;
         readonly STORAGE_ASSIGNMENT_DETAIL: (buildingId: string, storageUnitId: string, ownerId: string) => string;
+        readonly INVITE: (buildingId: string, ownerId: string) => string;
     };
     readonly UNITS: {
         readonly LIST: (buildingId: string) => string;
@@ -103,6 +104,8 @@ declare const API_ROUTES: {
         readonly VOTERS: (buildingId: string, pollId: string) => string;
         readonly RESULTS: (buildingId: string) => string;
         readonly OFFLINE_VOTES: (buildingId: string, pollId: string) => string;
+        readonly ELIGIBLE_VOTERS: (buildingId: string, pollId: string) => string;
+        readonly SIGNATURE_SHEET_PDF: (buildingId: string, pollId: string) => string;
         readonly SIGNATURE_BALLOT_PDF: (buildingId: string, pollId: string) => string;
         readonly SIGNATURE_VOTE: (buildingId: string, pollId: string) => string;
         readonly PENDING_SIGNATURES: (buildingId: string) => string;

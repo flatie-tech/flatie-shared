@@ -1,5 +1,3 @@
-'use strict';
-
 // src/urls/index.ts
 var API_VERSION = "v1";
 var API_ROUTES = {
@@ -88,7 +86,8 @@ var API_ROUTES = {
     GARAGE_ASSIGNMENTS: (buildingId, garageId) => `/buildings/${buildingId}/garages/${garageId}/owners`,
     GARAGE_ASSIGNMENT_DETAIL: (buildingId, garageId, ownerId) => `/buildings/${buildingId}/garages/${garageId}/owners/${ownerId}`,
     STORAGE_ASSIGNMENTS: (buildingId, storageUnitId) => `/buildings/${buildingId}/storage-units/${storageUnitId}/owners`,
-    STORAGE_ASSIGNMENT_DETAIL: (buildingId, storageUnitId, ownerId) => `/buildings/${buildingId}/storage-units/${storageUnitId}/owners/${ownerId}`
+    STORAGE_ASSIGNMENT_DETAIL: (buildingId, storageUnitId, ownerId) => `/buildings/${buildingId}/storage-units/${storageUnitId}/owners/${ownerId}`,
+    INVITE: (buildingId, ownerId) => `/buildings/${buildingId}/owners/${ownerId}/invite`
   },
   // ── Units (generic) ──────────────────────────────────────────────────
   UNITS: {
@@ -112,6 +111,8 @@ var API_ROUTES = {
     VOTERS: (buildingId, pollId) => `/buildings/${buildingId}/polls/${pollId}/voters`,
     RESULTS: (buildingId) => `/buildings/${buildingId}/polls/results`,
     OFFLINE_VOTES: (buildingId, pollId) => `/buildings/${buildingId}/polls/${pollId}/offline-votes`,
+    ELIGIBLE_VOTERS: (buildingId, pollId) => `/buildings/${buildingId}/polls/${pollId}/eligible-voters`,
+    SIGNATURE_SHEET_PDF: (buildingId, pollId) => `/buildings/${buildingId}/polls/${pollId}/signature-sheet.pdf`,
     SIGNATURE_BALLOT_PDF: (buildingId, pollId) => `/buildings/${buildingId}/polls/${pollId}/signature-ballot.pdf`,
     SIGNATURE_VOTE: (buildingId, pollId) => `/buildings/${buildingId}/polls/${pollId}/signature-vote`,
     PENDING_SIGNATURES: (buildingId) => `/buildings/${buildingId}/poll-votes/pending-signatures`,
@@ -284,7 +285,6 @@ var API_ROUTES = {
   }
 };
 
-exports.API_ROUTES = API_ROUTES;
-exports.API_VERSION = API_VERSION;
-//# sourceMappingURL=chunk-D5R2N5DP.cjs.map
-//# sourceMappingURL=chunk-D5R2N5DP.cjs.map
+export { API_ROUTES, API_VERSION };
+//# sourceMappingURL=chunk-IJGS45X7.js.map
+//# sourceMappingURL=chunk-IJGS45X7.js.map

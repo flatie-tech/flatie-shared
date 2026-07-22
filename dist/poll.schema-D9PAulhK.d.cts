@@ -294,7 +294,7 @@ declare const createPollSchema: z.ZodObject<{
     consensusCategory: z.ZodOptional<z.ZodString>;
     legalBasis: z.ZodOptional<z.ZodString>;
     scopedUnitIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
-    scopedUserIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
+    scopedOwnerIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
     fileIds: z.ZodDefault<z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>>;
 }, z.core.$strip>;
 /**
@@ -319,7 +319,7 @@ declare const updatePollSchema: z.ZodObject<{
         ended: "ended";
     }>>;
     scopedUnitIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
-    scopedUserIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
+    scopedOwnerIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
     fileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
     removeChildFileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
 }, z.core.$strip>;
@@ -334,6 +334,17 @@ declare const votePollSchema: z.ZodObject<{
     selectedOptionIndex: z.ZodNumber;
 }, z.core.$strip>;
 /**
+ * Record-offline-votes request schema
+ *
+ * A representative records approval votes collected on a printed
+ * signature sheet (potpisna lista). Votes are attributed to owner
+ * records — owners need no user account.
+ */
+declare const recordOfflineVotesSchema: z.ZodObject<{
+    ownerIds: z.ZodArray<z.ZodString>;
+    proofFileId: z.ZodOptional<z.ZodString>;
+}, z.core.$strip>;
+/**
  * Finalize poll request schema
  *
  * A boolean toggle — `true` seals the poll, `false` is a no-op the
@@ -346,5 +357,6 @@ type CreatePollSchema = z.infer<typeof createPollSchema>;
 type UpdatePollSchema = z.infer<typeof updatePollSchema>;
 type VotePollSchema = z.infer<typeof votePollSchema>;
 type FinalizePollSchema = z.infer<typeof finalizePollSchema>;
+type RecordOfflineVotesSchema = z.infer<typeof recordOfflineVotesSchema>;
 
-export { pollTypeSchema as A, updatePollSchema as B, type CreateEventSchema as C, votePollSchema as D, type EventColorOption as E, type FinalizePollSchema as F, type MaintenanceFinancedByOption as M, type PollTypeOption as P, type RecurrenceTypeOption as R, type TimeSchema as T, type UpdateEventSchema as U, type VotePollSchema as V, type EventTypeOption as a, EVENT_COLORS as b, createEventSchema as c, EVENT_TYPE_COLOR_MAP as d, EVENT_TYPES as e, eventColorSchema as f, eventTypeSchema as g, RECURRENCE_TYPES as h, type CreateMaintenanceLogSchema as i, type MaintenanceLogEventSchema as j, type UpdateMaintenanceLogSchema as k, createMaintenanceLogSchema as l, MAINTENANCE_FINANCED_BY as m, MAINTENANCE_LOG_LIMITS as n, maintenanceFinancedBySchema as o, maintenanceLogEventSchema as p, updateMaintenanceLogSchema as q, recurrenceTypeSchema as r, type CreatePollSchema as s, timeSchema as t, updateEventSchema as u, type UpdatePollSchema as v, createPollSchema as w, finalizePollSchema as x, POLL_LIMITS as y, POLL_TYPES as z };
+export { POLL_TYPES as A, pollTypeSchema as B, type CreateEventSchema as C, recordOfflineVotesSchema as D, type EventColorOption as E, type FinalizePollSchema as F, updatePollSchema as G, votePollSchema as H, type MaintenanceFinancedByOption as M, type PollTypeOption as P, type RecurrenceTypeOption as R, type TimeSchema as T, type UpdateEventSchema as U, type VotePollSchema as V, type EventTypeOption as a, EVENT_COLORS as b, createEventSchema as c, EVENT_TYPE_COLOR_MAP as d, EVENT_TYPES as e, eventColorSchema as f, eventTypeSchema as g, RECURRENCE_TYPES as h, type CreateMaintenanceLogSchema as i, type MaintenanceLogEventSchema as j, type UpdateMaintenanceLogSchema as k, createMaintenanceLogSchema as l, MAINTENANCE_FINANCED_BY as m, MAINTENANCE_LOG_LIMITS as n, maintenanceFinancedBySchema as o, maintenanceLogEventSchema as p, updateMaintenanceLogSchema as q, recurrenceTypeSchema as r, type CreatePollSchema as s, timeSchema as t, updateEventSchema as u, type RecordOfflineVotesSchema as v, type UpdatePollSchema as w, createPollSchema as x, finalizePollSchema as y, POLL_LIMITS as z };

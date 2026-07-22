@@ -1063,6 +1063,8 @@ var ownerResponseSchema = zod.z.object({
   /** FK into the DGU-backed `addresses` table; null for legacy free-text rows. */
   addressId: zod.z.string().uuid().nullable().optional(),
   paymentRefCode: zod.z.string().nullable().optional(),
+  /** When a representative last sent this owner a building invite; null when never invited. */
+  lastInvitedAt: zod.z.union([zod.z.string(), zod.z.date()]).nullable().optional(),
   createdAt: zod.z.union([zod.z.string(), zod.z.date()]),
   updatedAt: zod.z.union([zod.z.string(), zod.z.date()]).nullable().optional()
 }).meta({ id: "OwnerResponse" });
@@ -1087,6 +1089,9 @@ var assignOwnerSchema = zod.z.object({
   ownerId: zod.z.string().uuid(),
   ownershipPercentage: zod.z.number().min(0).max(100).nullable().optional()
 }).meta({ id: "AssignOwner" });
+var inviteOwnerSchema = zod.z.object({
+  message: zod.z.string().trim().max(500).optional().describe("Optional personal message included in the invite email.")
+}).meta({ id: "InviteOwner" });
 var POLL_TYPES = [chunkZASNDKJM_cjs.PollType.CONSENSUS, chunkZASNDKJM_cjs.PollType.COMMUNITY];
 var pollTypeSchema = zod.z.enum(POLL_TYPES).describe(
   "`community` polls pass by simple majority of votes cast; `consensus` polls require an ownership-weighted approval threshold."
@@ -1125,7 +1130,9 @@ var createPollSchema = zod.z.object({
   scopedUnitIds: multipartArray(uuidSchema).optional().describe(
     "UUIDs of units whose owners/tenants are eligible to vote. Omit for building-wide polls."
   ),
-  scopedUserIds: multipartArray(uuidSchema).optional().describe("UUIDs of users explicitly added to the eligible-voter list. Omit when not used."),
+  scopedOwnerIds: multipartArray(uuidSchema).optional().describe(
+    "UUIDs of owner records explicitly added to the eligible-voter list. Owners need no user account. Omit when not used."
+  ),
   fileIds: multipartArray(uuidSchema).optional().default([]).describe("UUIDs of previously-uploaded supporting documents (proposals, receipts, specs).")
 }).refine(
   (data) => {
@@ -1165,12 +1172,16 @@ var updatePollSchema = zod.z.object({
     "Lifecycle override: `active` accepts votes, `inactive` pauses the poll, `ended` seals it."
   ),
   scopedUnitIds: multipartArray(uuidSchema).optional().describe("Replacement list of scoped unit UUIDs. Empty array clears scoping."),
-  scopedUserIds: multipartArray(uuidSchema).optional().describe("Replacement list of scoped user UUIDs. Empty array clears explicit-user scoping."),
+  scopedOwnerIds: multipartArray(uuidSchema).optional().describe("Replacement list of scoped owner UUIDs. Empty array clears explicit-owner scoping."),
   fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of newly-uploaded supporting documents to attach."),
   removeChildFileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-attached files to detach from the poll.")
 });
 var votePollSchema = zod.z.object({
   selectedOptionIndex: zod.z.number().int().min(0).describe("Zero-based index into the poll\u2019s `options` array identifying the chosen option.")
+});
+var recordOfflineVotesSchema = zod.z.object({
+  ownerIds: zod.z.array(uuidSchema).min(1).describe("UUIDs of owner records whose signed approvals are being recorded."),
+  proofFileId: uuidSchema.optional().describe("UUID of an uploaded scan of the signed sheet, stored as evidence.")
 });
 var finalizePollSchema = zod.z.object({
   finalize: zod.z.boolean().describe(
@@ -2335,10 +2346,11 @@ var pollScopedUnitSchema = zod.z.looseObject({
   label: zod.z.string().describe('Human-readable unit label (e.g. "Apartment 4B").'),
   floor: zod.z.string().optional().describe("Floor label where the unit is located; absent when not recorded.")
 }).describe("Unit whose owners/tenants are eligible to participate in a scoped poll.");
-var pollScopedUserSchema = zod.z.looseObject({
-  userId: zod.z.string().describe("UUID of the explicitly-eligible user."),
-  name: zod.z.string().describe("Display name of the scoped user.")
-}).describe("User explicitly added to the poll\u2019s eligible-voter list.");
+var pollScopedOwnerSchema = zod.z.looseObject({
+  ownerId: zod.z.string().describe("UUID of the explicitly-eligible owner record."),
+  fullName: zod.z.string().describe("Display name of the scoped owner."),
+  userId: zod.z.string().nullable().optional().describe("UUID of the linked user account; null for placeholder owners without an account.")
+}).describe("Owner record explicitly added to the poll\u2019s eligible-voter list.");
 var pollResponseSchema = zod.z.looseObject({
   id: zod.z.string().uuid(),
   buildingId: zod.z.string().uuid().describe("UUID of the building this poll belongs to."),
@@ -2425,21 +2437,56 @@ var pollResultsSchema = zod.z.looseObject({
   eligibleTotalWeight: zod.z.number().optional().describe(
     "Cached sum of eligible voters\u2019 ownership percentages captured at poll creation. Used to normalise `totalWeight` against the full eligible weight."
   ),
-  scopedUsers: zod.z.array(pollScopedUserSchema).optional().describe("Users scoped into eligibility by explicit selection; absent when not used."),
+  scopedOwners: zod.z.array(pollScopedOwnerSchema).optional().describe("Owners scoped into eligibility by explicit selection; absent when not used."),
   maintenanceLogs: zod.z.array(pollMaintenanceLogReferenceSchema).optional().describe("Maintenance logs linked to the poll (for context); absent when none."),
   files: zod.z.array(pollDocumentReferenceSchema).optional().describe("Supporting documents uploaded with the poll; absent when none.")
 });
 var pollVoterSchema = zod.z.looseObject({
-  userId: zod.z.string().describe("UUID of the voter."),
-  name: zod.z.string().describe("Voter display name."),
-  email: zod.z.string().describe("Voter contact email."),
+  userId: zod.z.string().nullable().describe(
+    "UUID of the voting user; null for paper votes recorded for owners without accounts."
+  ),
+  ownerId: zod.z.string().nullable().optional().describe("UUID of the owner record the vote is attributed to; null for non-owner voters."),
+  name: zod.z.string().describe("Voter display name (owner full name for owner-attributed votes)."),
+  email: zod.z.string().nullable().optional().describe("Voter contact email; null when unknown."),
   selectedOptionIndex: zod.z.number().describe("Zero-based index of the option the voter chose."),
   selectedOptionText: zod.z.string().describe("Text of the chosen option (denormalised)."),
   voteWeight: zod.z.number().describe(
-    "Weight contributed by this vote. 1.00 for community polls; the voter\u2019s ownership percentage for consensus polls."
+    "Weight contributed by this vote. 1.00 for community polls; the voter\u2019s derived building ownership share (5-decimal precision) for consensus polls."
   ),
-  votedAt: zod.z.string().describe("ISO-8601 timestamp when the vote was recorded.")
+  votedAt: zod.z.string().describe("ISO-8601 timestamp when the vote was recorded."),
+  isOffline: zod.z.boolean().optional().describe("True when the vote was recorded by a representative from a paper signature."),
+  hasAccount: zod.z.boolean().optional().describe("True when the voter has a registered user account.")
 }).describe("Individual voter entry returned by the poll voters endpoint.");
+var pollEligibleVoterSchema = zod.z.looseObject({
+  ownerId: zod.z.string().uuid().describe("UUID of the owner record."),
+  userId: zod.z.string().nullable().describe("UUID of the linked user account; null for placeholder owners."),
+  fullName: zod.z.string().describe("Owner full name (person, joint couple, or legal entity)."),
+  email: zod.z.string().nullable().describe("Owner contact email; null when not recorded."),
+  oib: zod.z.string().nullable().describe("Croatian OIB of the owner; null when not recorded."),
+  weightPct: zod.z.string().describe(
+    'Derived ownership weight in percent as an exact decimal string (5-decimal precision), e.g. "12.20000".'
+  ),
+  holdings: zod.z.array(
+    zod.z.looseObject({
+      unitType: zod.z.string().describe("Kind of unit held (`apartment`, `garage`, `storage_unit`)."),
+      unitId: zod.z.string().describe("UUID of the unit."),
+      label: zod.z.string().describe('Human-readable unit label (e.g. "ST 3448").'),
+      floor: zod.z.string().nullable().optional().describe("Floor label; null when not recorded."),
+      areaM2: zod.z.string().nullable().describe("Unit area in m\xB2 as a decimal string; null when not recorded."),
+      unitSharePct: zod.z.string().describe("Owner\u2019s share of this unit in percent as a decimal string.")
+    })
+  ).describe("Units this owner currently holds, with per-unit shares."),
+  voteStatus: zod.z.enum(["not_voted", "accepted", "pending_signature_review", "rejected"]).optional().describe("The owner\u2019s vote state on the poll in question, when requested per-poll.")
+}).describe("Aggregated per-owner roster row for a poll\u2019s electorate.");
+var pollEligibleVotersResponseSchema = zod.z.looseObject({
+  pollId: zod.z.string().uuid().describe("UUID of the poll this electorate belongs to."),
+  voters: zod.z.array(pollEligibleVoterSchema).describe("One entry per eligible owner."),
+  totalWeightPct: zod.z.string().describe("Sum of eligible owners\u2019 derived weights as an exact decimal string."),
+  warnings: zod.z.looseObject({
+    unitsWithoutArea: zod.z.array(zod.z.string()).describe("Labels of units with no recorded area (excluded from weight math)."),
+    unitsWithoutOwners: zod.z.array(zod.z.string()).describe("Labels of units with no active owner (weight unassigned).")
+  }).describe("Data-quality warnings surfaced by the roster derivation.")
+});
 var pollVotersResponseSchema = zod.z.looseObject({
   pollId: zod.z.string().uuid().describe("UUID of the poll these voters belong to."),
   question: zod.z.string().describe("Poll question, repeated for convenience."),
@@ -2712,6 +2759,7 @@ exports.getRepBuildingsParamsSchema = getRepBuildingsParamsSchema;
 exports.getRepUsersParamsSchema = getRepUsersParamsSchema;
 exports.getTransactionCategoriesQuerySchema = getTransactionCategoriesQuerySchema;
 exports.inviteOrgMemberSchema = inviteOrgMemberSchema;
+exports.inviteOwnerSchema = inviteOwnerSchema;
 exports.joinBuildingWithOtpSchema = joinBuildingWithOtpSchema;
 exports.linkableEntityTypeSchema = linkableEntityTypeSchema;
 exports.listArchivedResponseSchema = listArchivedResponseSchema;
@@ -2749,11 +2797,14 @@ exports.paginationParamsSchema = paginationParamsSchema;
 exports.passwordSchema = passwordSchema;
 exports.permissionFieldsSchema = permissionFieldsSchema;
 exports.permissionsResponseSchema = permissionsResponseSchema;
+exports.pollEligibleVoterSchema = pollEligibleVoterSchema;
+exports.pollEligibleVotersResponseSchema = pollEligibleVotersResponseSchema;
 exports.pollResponseSchema = pollResponseSchema;
 exports.pollResultsSchema = pollResultsSchema;
 exports.pollTypeSchema = pollTypeSchema;
 exports.pollVotersResponseSchema = pollVotersResponseSchema;
 exports.priorityOptions = priorityOptions;
+exports.recordOfflineVotesSchema = recordOfflineVotesSchema;
 exports.recurrenceTypeSchema = recurrenceTypeSchema;
 exports.registerSchema = registerSchema;
 exports.reorderBoardColumnsSchema = reorderBoardColumnsSchema;
@@ -2807,5 +2858,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-XML3XEQD.cjs.map
-//# sourceMappingURL=chunk-XML3XEQD.cjs.map
+//# sourceMappingURL=chunk-YJKJTJXZ.cjs.map
+//# sourceMappingURL=chunk-YJKJTJXZ.cjs.map
