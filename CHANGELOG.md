@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.76.0
+
+### Changes
+
+- chore(rbac)!: delete 10 dead permissions (granted but never enforced)
+
 ## 0.75.1
 
 ### Changes
