@@ -327,6 +327,9 @@ export const ownerKeys = {
     [...ownerKeys.details(), buildingId, ownerId] as const,
   assignments: (buildingId: string, unitKind: string, unitId: string) =>
     [...ownerKeys.all, 'assignments', buildingId, unitKind, unitId] as const,
+  /** Building-wide current assignments — the owners board aggregate. */
+  buildingAssignments: (buildingId: string) =>
+    [...ownerKeys.all, 'building-assignments', buildingId] as const,
 };
 
 export const unitReminderKeys = {

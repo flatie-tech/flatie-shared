@@ -61,6 +61,8 @@ declare const API_ROUTES: {
     };
     readonly OWNERS: {
         readonly LIST: (buildingId: string) => string;
+        /** Building-wide current owner↔unit assignments (owners board aggregate). */
+        readonly BUILDING_ASSIGNMENTS: (buildingId: string) => string;
         readonly DETAIL: (buildingId: string, ownerId: string) => string;
         readonly UNIT_ASSIGNMENTS: (buildingId: string, unitId: string) => string;
         readonly UNIT_ASSIGNMENT_DETAIL: (buildingId: string, unitId: string, ownerId: string) => string;

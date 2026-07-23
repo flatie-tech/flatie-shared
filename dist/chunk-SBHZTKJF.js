@@ -1,5 +1,3 @@
-'use strict';
-
 // src/urls/index.ts
 var API_VERSION = "v1";
 var API_ROUTES = {
@@ -65,6 +63,8 @@ var API_ROUTES = {
   // ── Owners (building-scoped, user-link optional) ────────────────────
   OWNERS: {
     LIST: (buildingId) => `/buildings/${buildingId}/owners`,
+    /** Building-wide current owner↔unit assignments (owners board aggregate). */
+    BUILDING_ASSIGNMENTS: (buildingId) => `/buildings/${buildingId}/owner-assignments`,
     DETAIL: (buildingId, ownerId) => `/buildings/${buildingId}/owners/${ownerId}`,
     UNIT_ASSIGNMENTS: (buildingId, unitId) => `/buildings/${buildingId}/units/${unitId}/owners`,
     UNIT_ASSIGNMENT_DETAIL: (buildingId, unitId, ownerId) => `/buildings/${buildingId}/units/${unitId}/owners/${ownerId}`,
@@ -261,7 +261,6 @@ var API_ROUTES = {
   }
 };
 
-exports.API_ROUTES = API_ROUTES;
-exports.API_VERSION = API_VERSION;
-//# sourceMappingURL=chunk-B7YKWSOK.cjs.map
-//# sourceMappingURL=chunk-B7YKWSOK.cjs.map
+export { API_ROUTES, API_VERSION };
+//# sourceMappingURL=chunk-SBHZTKJF.js.map
+//# sourceMappingURL=chunk-SBHZTKJF.js.map

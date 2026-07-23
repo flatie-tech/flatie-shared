@@ -80,6 +80,8 @@ export const API_ROUTES = {
   // ── Owners (building-scoped, user-link optional) ────────────────────
   OWNERS: {
     LIST: (buildingId: string) => `/buildings/${buildingId}/owners`,
+    /** Building-wide current owner↔unit assignments (owners board aggregate). */
+    BUILDING_ASSIGNMENTS: (buildingId: string) => `/buildings/${buildingId}/owner-assignments`,
     DETAIL: (buildingId: string, ownerId: string) => `/buildings/${buildingId}/owners/${ownerId}`,
     UNIT_ASSIGNMENTS: (buildingId: string, unitId: string) =>
       `/buildings/${buildingId}/units/${unitId}/owners`,

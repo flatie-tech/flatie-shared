@@ -245,6 +245,7 @@ export {
 // Owner schemas
 export type {
   AssignOwnerInput,
+  BuildingOwnerAssignment,
   CreateOwnerInput,
   InviteOwnerInput,
   OwnerResponse,
@@ -252,6 +253,7 @@ export type {
 } from './owner.schema';
 export {
   assignOwnerSchema,
+  buildingOwnerAssignmentSchema,
   createOwnerSchema,
   inviteOwnerSchema,
   ownerResponseSchema,

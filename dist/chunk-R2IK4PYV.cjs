@@ -1085,6 +1085,11 @@ var assignOwnerSchema = zod.z.object({
   ownerId: zod.z.string().uuid(),
   ownershipPercentage: zod.z.number().min(0).max(100).nullable().optional()
 }).meta({ id: "AssignOwner" });
+var buildingOwnerAssignmentSchema = zod.z.object({
+  unitId: zod.z.string().uuid(),
+  ownerId: zod.z.string().uuid(),
+  ownershipPercentage: zod.z.number().nullable().optional()
+}).meta({ id: "BuildingOwnerAssignment" });
 var inviteOwnerSchema = zod.z.object({
   message: zod.z.string().trim().max(500).optional().describe("Optional personal message included in the invite email.")
 }).meta({ id: "InviteOwner" });
@@ -2635,6 +2640,7 @@ exports.buildingDetailResponseSchema = buildingDetailResponseSchema;
 exports.buildingEntitySchema = buildingEntitySchema;
 exports.buildingFundsLedgerResponseSchema = buildingFundsLedgerResponseSchema;
 exports.buildingFundsLedgerRowSchema = buildingFundsLedgerRowSchema;
+exports.buildingOwnerAssignmentSchema = buildingOwnerAssignmentSchema;
 exports.buildingQuotaConfigSchema = buildingQuotaConfigSchema;
 exports.buildingQuotaEntrySchema = buildingQuotaEntrySchema;
 exports.buildingQuotaListSchema = buildingQuotaListSchema;
@@ -2813,5 +2819,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-MIPDBDNI.cjs.map
-//# sourceMappingURL=chunk-MIPDBDNI.cjs.map
+//# sourceMappingURL=chunk-R2IK4PYV.cjs.map
+//# sourceMappingURL=chunk-R2IK4PYV.cjs.map

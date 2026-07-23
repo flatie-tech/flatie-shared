@@ -76,6 +76,23 @@ export const assignOwnerSchema = z
 export type AssignOwnerInput = z.infer<typeof assignOwnerSchema>;
 
 /**
+ * One current owner↔unit assignment, as returned by the building-wide
+ * aggregate (`GET /buildings/:id/owner-assignments`). Deliberately flat —
+ * the owners board joins these against the owner list and the unit lists
+ * on the client, so the payload is one small row per current link
+ * (`endedAt IS NULL`) instead of nested owner/unit objects.
+ */
+export const buildingOwnerAssignmentSchema = z
+  .object({
+    unitId: z.string().uuid(),
+    ownerId: z.string().uuid(),
+    ownershipPercentage: z.number().nullable().optional(),
+  })
+  .meta({ id: 'BuildingOwnerAssignment' });
+
+export type BuildingOwnerAssignment = z.infer<typeof buildingOwnerAssignmentSchema>;
+
+/**
  * Invite an owner to register. Valid only for owner rows that have an
  * email and no linked user; the backend sends the standard building
  * OTP invite to `owner.email` and stamps `lastInvitedAt`.

@@ -387,6 +387,8 @@ declare const ownerKeys: {
     details: () => readonly ["owner", "detail"];
     detail: (buildingId: string, ownerId: string) => readonly ["owner", "detail", string, string];
     assignments: (buildingId: string, unitKind: string, unitId: string) => readonly ["owner", "assignments", string, string, string];
+    /** Building-wide current assignments — the owners board aggregate. */
+    buildingAssignments: (buildingId: string) => readonly ["owner", "building-assignments", string];
 };
 declare const unitReminderKeys: {
     all: readonly ["unitReminder"];
