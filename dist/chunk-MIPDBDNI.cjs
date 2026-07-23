@@ -541,7 +541,11 @@ var updateUserBuildingRoleSchema = zod.z.object({
   roleType: zod.z.enum([
     chunkD2MJJ7NU_cjs.BuildingRole.OWNER_REPRESENTATIVE,
     chunkD2MJJ7NU_cjs.BuildingRole.DEPUTY_REPRESENTATIVE,
-    chunkD2MJJ7NU_cjs.BuildingRole.CO_OWNER
+    chunkD2MJJ7NU_cjs.BuildingRole.CO_OWNER,
+    // RESIDENT was unassignable through any endpoint until 2026-07-23
+    // (the role existed but the wire schema accepted only the other
+    // three). The backend hierarchy check (canAssignRole) covers it.
+    chunkD2MJJ7NU_cjs.BuildingRole.RESIDENT
   ]).optional().describe(
     "New building role for the user; omit to leave the role unchanged while updating other fields."
   ),
@@ -2809,5 +2813,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-XDLJHDK4.cjs.map
-//# sourceMappingURL=chunk-XDLJHDK4.cjs.map
+//# sourceMappingURL=chunk-MIPDBDNI.cjs.map
+//# sourceMappingURL=chunk-MIPDBDNI.cjs.map

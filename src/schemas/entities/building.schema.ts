@@ -255,6 +255,10 @@ export const updateUserBuildingRoleSchema = z.object({
       BuildingRole.OWNER_REPRESENTATIVE,
       BuildingRole.DEPUTY_REPRESENTATIVE,
       BuildingRole.CO_OWNER,
+      // RESIDENT was unassignable through any endpoint until 2026-07-23
+      // (the role existed but the wire schema accepted only the other
+      // three). The backend hierarchy check (canAssignRole) covers it.
+      BuildingRole.RESIDENT,
     ])
     .optional()
     .describe(

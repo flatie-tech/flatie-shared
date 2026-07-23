@@ -889,6 +889,7 @@ declare const updateUserBuildingRoleSchema: z.ZodObject<{
         co_owner: "co_owner";
         owner_representative: "owner_representative";
         deputy_representative: "deputy_representative";
+        resident: "resident";
     }>>;
     buildingSurfacePercentage: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
     chatVisibleToCoOwners: z.ZodOptional<z.ZodBoolean>;
