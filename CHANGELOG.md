@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.77.0
+
+### Changes
+
+- Owners board: building-wide owner-assignments aggregate route + schema + query key.
+
 ## 0.76.1
 
 ### Changes
