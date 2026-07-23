@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.76.1
+
+### Changes
+
+- feat(rbac): RESIDENT assignable via updateUserBuildingRoleSchema
+
 ## 0.76.0
 
 ### Changes
