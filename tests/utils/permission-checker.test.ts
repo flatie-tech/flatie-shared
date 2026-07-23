@@ -27,17 +27,17 @@ describe('createPermissionChecker', () => {
     });
 
     it('returns false when the subject lacks the permission', () => {
-      expect(checker.can(Permission.BUILDING_DELETE)).toBe(false);
+      expect(checker.can(Permission.USER_KICK)).toBe(false);
     });
   });
 
   describe('canAny', () => {
     it('returns true when at least one permission matches', () => {
-      expect(checker.canAny([Permission.BUILDING_DELETE, Permission.NOTICE_CREATE])).toBe(true);
+      expect(checker.canAny([Permission.USER_KICK, Permission.NOTICE_CREATE])).toBe(true);
     });
 
     it('returns false when none match', () => {
-      expect(checker.canAny([Permission.BUILDING_DELETE, Permission.BUILDING_UPDATE])).toBe(false);
+      expect(checker.canAny([Permission.USER_KICK, Permission.BUILDING_UPDATE])).toBe(false);
     });
 
     it('returns false for an empty list', () => {
@@ -51,7 +51,7 @@ describe('createPermissionChecker', () => {
     });
 
     it('returns false when any permission is missing', () => {
-      expect(checker.canAll([Permission.BUILDING_READ, Permission.BUILDING_DELETE])).toBe(false);
+      expect(checker.canAll([Permission.BUILDING_READ, Permission.USER_KICK])).toBe(false);
     });
 
     it('returns true for an empty list (vacuous truth)', () => {

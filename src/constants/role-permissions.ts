@@ -65,8 +65,6 @@ const CO_OWNER_PERMISSIONS = [
   // NOTE: building_email:view deliberately NOT granted — the building mailbox
   // (manager correspondence) is management-only (decision 2026-07-21); the
   // grant moved to REPRESENTATIVE_PERMISSIONS.
-  'vote:cast',
-  'vote:weight_based',
   'user:delete:own',
 ];
 
@@ -90,20 +88,16 @@ const REPRESENTATIVE_PERMISSIONS = [
   'event:approve',
   'poll:approve',
   'poll:finalize',
-  'poll:delete_after_vote',
   'poll:export_signers',
   'document:set_private',
   'chat:create_group',
-  'building:create',
   'building:update',
-  'building:delete',
   'user:create',
   'user:update',
   'user:kick',
   'building_role:assign',
   'building_role:update',
   'building_role:remove',
-  'house_rules:manage',
   'building_settings:manage',
   // Mailbox is management-only: reps get BOTH the read gate (view) and the
   // mutate gate (manage). view moved here from CO_OWNER_PERMISSIONS 2026-07-21.
@@ -158,12 +152,9 @@ const OPERATIVE_BUILDING_PERMISSIONS = [
 
 const ORG_ADMIN_ORG_PERMISSIONS = [
   'org:manage_members',
-  'org:manage_roles',
   'org:assign_buildings',
   'org:assign_referents',
   'org:manage_settings',
-  'org:view_analytics',
-  'org:manage_contracts',
   'org:view_buildings',
   'org:view_partners',
   'org:manage_partners',
@@ -171,7 +162,6 @@ const ORG_ADMIN_ORG_PERMISSIONS = [
 
 const SUPERVISOR_ORG_PERMISSIONS = [
   'org:view_buildings',
-  'org:view_analytics',
   'org:assign_referents',
   'org:view_partners',
   'org:manage_partners',
@@ -207,7 +197,6 @@ export const PLATFORM_ROLE_PERMISSIONS: Record<PlatformRole, Permission[]> = {
     'platform:view_analytics',
     'platform:moderate_content',
     'platform:manage_settings',
-    'platform:manage_operatives',
     'platform:manage_subscriptions',
     'platform:purge',
     'platform:view_archive',

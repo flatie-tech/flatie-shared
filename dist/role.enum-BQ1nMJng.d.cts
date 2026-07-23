@@ -9,10 +9,8 @@ type ScopedAction = 'update' | 'delete';
  */
 declare function domainPermissions(domain: string, level: 'read' | 'own' | 'manage'): string[];
 declare const Permission: {
-    readonly BUILDING_CREATE: "building:create";
     readonly BUILDING_READ: "building:read";
     readonly BUILDING_UPDATE: "building:update";
-    readonly BUILDING_DELETE: "building:delete";
     readonly BUILDING_MANAGE: "building:manage";
     readonly BUILDING_GENERATE_OTP: "building:generate_otp";
     readonly USER_CREATE: "user:create";
@@ -48,7 +46,6 @@ declare const Permission: {
     readonly POLL_APPROVE: "poll:approve";
     readonly POLL_VOTE: "poll:vote";
     readonly POLL_FINALIZE: "poll:finalize";
-    readonly POLL_DELETE_AFTER_VOTE: "poll:delete_after_vote";
     readonly POLL_EXPORT_SIGNERS: "poll:export_signers";
     readonly FAILURE_REPORT_CREATE: "failure_report:create";
     readonly FAILURE_REPORT_READ: "failure_report:read";
@@ -81,7 +78,6 @@ declare const Permission: {
     readonly APARTMENT_DELETE: "apartment:delete";
     readonly APARTMENT_MANAGE_USERS: "apartment:manage_users";
     readonly HOUSE_RULES_READ: "house_rules:read";
-    readonly HOUSE_RULES_MANAGE: "house_rules:manage";
     readonly FAQ_READ: "faq:read";
     readonly FAQ_MANAGE_REPRESENTATIVE: "faq:manage:representative";
     readonly FAQ_MANAGE_MANAGER: "faq:manage:manager";
@@ -90,19 +86,14 @@ declare const Permission: {
     readonly BUILDING_SETTINGS_MANAGE: "building_settings:manage";
     readonly BUILDING_EMAIL_VIEW: "building_email:view";
     readonly BUILDING_EMAIL_MANAGE: "building_email:manage";
-    readonly VOTE_CAST: "vote:cast";
-    readonly VOTE_WEIGHT_BASED: "vote:weight_based";
     readonly SYSTEM_ADMIN: "system:admin";
     readonly SYSTEM_MANAGE: "system:manage";
     readonly SYSTEM_DELETE_USER: "system:delete_user";
     readonly SYSTEM_CREATE_ORGANIZATION: "system:create_organization";
     readonly ORG_MANAGE_MEMBERS: "org:manage_members";
-    readonly ORG_MANAGE_ROLES: "org:manage_roles";
     readonly ORG_ASSIGN_BUILDINGS: "org:assign_buildings";
     readonly ORG_ASSIGN_REFERENTS: "org:assign_referents";
     readonly ORG_MANAGE_SETTINGS: "org:manage_settings";
-    readonly ORG_VIEW_ANALYTICS: "org:view_analytics";
-    readonly ORG_MANAGE_CONTRACTS: "org:manage_contracts";
     readonly ORG_VIEW_BUILDINGS: "org:view_buildings";
     readonly ORG_VIEW_PARTNERS: "org:view_partners";
     readonly ORG_MANAGE_PARTNERS: "org:manage_partners";
@@ -113,7 +104,6 @@ declare const Permission: {
     readonly PLATFORM_VIEW_ANALYTICS: "platform:view_analytics";
     readonly PLATFORM_MODERATE_CONTENT: "platform:moderate_content";
     readonly PLATFORM_MANAGE_SETTINGS: "platform:manage_settings";
-    readonly PLATFORM_MANAGE_OPERATIVES: "platform:manage_operatives";
     readonly PLATFORM_MANAGE_SUBSCRIPTIONS: "platform:manage_subscriptions";
     readonly PLATFORM_PURGE: "platform:purge";
     readonly PLATFORM_VIEW_ARCHIVE: "platform:view_archive";

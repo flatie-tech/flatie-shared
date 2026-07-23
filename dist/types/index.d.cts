@@ -1,5 +1,5 @@
 import { B as BuildingType, P as PollType } from '../poll-type.enum-CGV5tBqR.cjs';
-import { e as BuildingRole, P as Permission, i as OrgRole, k as PlatformRole } from '../role.enum-MLM2GI6q.cjs';
+import { e as BuildingRole, P as Permission, i as OrgRole, k as PlatformRole } from '../role.enum-BQ1nMJng.cjs';
 import { z } from 'zod';
 import { g as eventTypeSchema, f as eventColorSchema, r as recurrenceTypeSchema, o as maintenanceFinancedBySchema, H as votePollSchema } from '../poll.schema-D9PAulhK.cjs';
 import { F as FailureStatus, e as TransactionType, T as TransactionCategory, C as CommonStatus } from '../status.enum-BYlt7_Fs.cjs';

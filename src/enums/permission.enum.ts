@@ -39,10 +39,8 @@ export function domainPermissions(domain: string, level: 'read' | 'own' | 'manag
 
 export const Permission = {
   // Building
-  BUILDING_CREATE: 'building:create',
   BUILDING_READ: 'building:read',
   BUILDING_UPDATE: 'building:update',
-  BUILDING_DELETE: 'building:delete',
   BUILDING_MANAGE: 'building:manage',
   BUILDING_GENERATE_OTP: 'building:generate_otp',
 
@@ -88,7 +86,6 @@ export const Permission = {
   POLL_APPROVE: 'poll:approve',
   POLL_VOTE: 'poll:vote',
   POLL_FINALIZE: 'poll:finalize',
-  POLL_DELETE_AFTER_VOTE: 'poll:delete_after_vote',
   POLL_EXPORT_SIGNERS: 'poll:export_signers',
 
   // Failure Report
@@ -135,7 +132,6 @@ export const Permission = {
 
   // House Rules
   HOUSE_RULES_READ: 'house_rules:read',
-  HOUSE_RULES_MANAGE: 'house_rules:manage',
 
   // FAQ
   FAQ_READ: 'faq:read',
@@ -156,8 +152,6 @@ export const Permission = {
   BUILDING_EMAIL_MANAGE: 'building_email:manage',
 
   // Voting
-  VOTE_CAST: 'vote:cast',
-  VOTE_WEIGHT_BASED: 'vote:weight_based',
 
   // System
   SYSTEM_ADMIN: 'system:admin',
@@ -167,12 +161,9 @@ export const Permission = {
 
   // Organization (org-scoped)
   ORG_MANAGE_MEMBERS: 'org:manage_members',
-  ORG_MANAGE_ROLES: 'org:manage_roles',
   ORG_ASSIGN_BUILDINGS: 'org:assign_buildings',
   ORG_ASSIGN_REFERENTS: 'org:assign_referents',
   ORG_MANAGE_SETTINGS: 'org:manage_settings',
-  ORG_VIEW_ANALYTICS: 'org:view_analytics',
-  ORG_MANAGE_CONTRACTS: 'org:manage_contracts',
   ORG_VIEW_BUILDINGS: 'org:view_buildings',
   ORG_VIEW_PARTNERS: 'org:view_partners',
   ORG_MANAGE_PARTNERS: 'org:manage_partners',
@@ -185,7 +176,6 @@ export const Permission = {
   PLATFORM_VIEW_ANALYTICS: 'platform:view_analytics',
   PLATFORM_MODERATE_CONTENT: 'platform:moderate_content',
   PLATFORM_MANAGE_SETTINGS: 'platform:manage_settings',
-  PLATFORM_MANAGE_OPERATIVES: 'platform:manage_operatives',
   PLATFORM_MANAGE_SUBSCRIPTIONS: 'platform:manage_subscriptions',
   PLATFORM_PURGE: 'platform:purge',
   PLATFORM_VIEW_ARCHIVE: 'platform:view_archive',
