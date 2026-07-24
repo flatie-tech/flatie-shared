@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.79.0
+
+### Changes
+
+- OWNERSHIP_DERIVED_PERMISSIONS for ledger-derived ownership rights.
+
 ## 0.78.0
 
 ### Changes
