@@ -69,6 +69,25 @@ const CO_OWNER_PERMISSIONS = [
 ];
 
 /**
+ * Permissions an OWNER holds on top of a plain RESIDENT — the co-ownership
+ * rights (fund/board visibility, own community content, and the vote). These
+ * are granted server-side from the OWNERS LEDGER (a user who holds an owner
+ * record in the building), NOT from a role. This is the relocation target as
+ * the CO_OWNER role is deprecated: ownership becomes a ledger fact, so the
+ * rights follow the ledger and can't drift from a hand-assigned role.
+ * `poll:vote` gates participation; consensus vote WEIGHT stays ledger-derived
+ * and is enforced separately in poll-voting.
+ */
+export const OWNERSHIP_DERIVED_PERMISSIONS = unique([
+  ...CO_OWNER_ONLY_READS,
+  ...domainPermissions('notice', 'own'),
+  ...domainPermissions('event', 'own'),
+  ...domainPermissions('poll', 'own'),
+  'poll:vote',
+  ...domainPermissions('document', 'own'),
+]);
+
+/**
  * REPRESENTATIVE (Owner + Deputy): manage for scoped domains + approve + building mgmt.
  *
  * OWNER_REPRESENTATIVE and DEPUTY_REPRESENTATIVE share identical permissions by design,
