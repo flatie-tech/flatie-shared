@@ -2604,12 +2604,7 @@ declare const commentResponseSchema: z.ZodObject<{
 type CommentResponse = Strict<z.infer<typeof commentResponseSchema>>;
 
 declare const documentLinkedRecordSchema: z.ZodObject<{
-    type: z.ZodEnum<{
-        failure_report: "failure_report";
-        maintenance_log: "maintenance_log";
-        notice: "notice";
-        poll: "poll";
-    }>;
+    type: z.ZodString;
     id: z.ZodString;
     title: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     status: z.ZodNullable<z.ZodOptional<z.ZodEnum<{
@@ -2659,22 +2654,11 @@ declare const documentResponseSchema: z.ZodObject<{
     canDelete: z.ZodBoolean;
     isOwner: z.ZodBoolean;
     isPrivate: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
-    type: z.ZodOptional<z.ZodEnum<{
-        document: "document";
-        failure_report: "failure_report";
-        maintenance_log: "maintenance_log";
-        notice: "notice";
-        poll: "poll";
-    }>>;
+    type: z.ZodOptional<z.ZodString>;
     sourceId: z.ZodOptional<z.ZodString>;
     sourceTitle: z.ZodOptional<z.ZodString>;
     linkedRecords: z.ZodDefault<z.ZodOptional<z.ZodArray<z.ZodObject<{
-        type: z.ZodEnum<{
-            failure_report: "failure_report";
-            maintenance_log: "maintenance_log";
-            notice: "notice";
-            poll: "poll";
-        }>;
+        type: z.ZodString;
         id: z.ZodString;
         title: z.ZodNullable<z.ZodOptional<z.ZodString>>;
         status: z.ZodNullable<z.ZodOptional<z.ZodEnum<{
@@ -2722,22 +2706,11 @@ declare const paginatedDocumentsResponseSchema: z.ZodObject<{
         canDelete: z.ZodBoolean;
         isOwner: z.ZodBoolean;
         isPrivate: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
-        type: z.ZodOptional<z.ZodEnum<{
-            document: "document";
-            failure_report: "failure_report";
-            maintenance_log: "maintenance_log";
-            notice: "notice";
-            poll: "poll";
-        }>>;
+        type: z.ZodOptional<z.ZodString>;
         sourceId: z.ZodOptional<z.ZodString>;
         sourceTitle: z.ZodOptional<z.ZodString>;
         linkedRecords: z.ZodDefault<z.ZodOptional<z.ZodArray<z.ZodObject<{
-            type: z.ZodEnum<{
-                failure_report: "failure_report";
-                maintenance_log: "maintenance_log";
-                notice: "notice";
-                poll: "poll";
-            }>;
+            type: z.ZodString;
             id: z.ZodString;
             title: z.ZodNullable<z.ZodOptional<z.ZodString>>;
             status: z.ZodNullable<z.ZodOptional<z.ZodEnum<{

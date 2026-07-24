@@ -1724,7 +1724,9 @@ var PrioritySchema = zod.z.enum(priorityOptions);
 
 // src/schemas/responses/documents.ts
 var documentLinkedRecordSchema = zod.z.looseObject({
-  type: zod.z.enum(["notice", "maintenance_log", "failure_report", "poll"]).describe("Kind of entity this document is linked to."),
+  type: zod.z.string().describe(
+    "Kind of entity this document is linked to. Known values are listed in DOCUMENT_SOURCE_TYPES; accepts future entity types so new link sources never break parsing."
+  ),
   id: zod.z.string().describe("UUID of the linked entity."),
   title: zod.z.string().optional().nullable().describe("Title of the linked entity."),
   status: FailureStatusSchema.optional().nullable().describe("Status of the linked failure report; null for other entity types."),
@@ -1759,7 +1761,9 @@ var documentResponseSchema = zod.z.looseObject({
   canDelete: zod.z.boolean().describe("True when the calling user may delete this document."),
   isOwner: zod.z.boolean().describe("True when the calling user is the creator of this document."),
   isPrivate: zod.z.boolean().optional().default(false).describe("True when the document is visible only to managers."),
-  type: zod.z.enum(["document", "notice", "failure_report", "maintenance_log", "poll"]).optional().describe("Source entity type; absent for standalone documents."),
+  type: zod.z.string().optional().describe(
+    "Source entity type ('document' for standalone uploads; otherwise an entity type from DOCUMENT_SOURCE_TYPES). Accepts future entity types so new link sources never break parsing."
+  ),
   sourceId: zod.z.string().optional().describe("UUID of the source entity when type is set; absent for standalone documents."),
   sourceTitle: zod.z.string().optional().describe("Title of the source entity for quick display; absent for standalone documents."),
   linkedRecords: zod.z.array(documentLinkedRecordSchema).optional().default([]).describe("Entities linked to this document; empty when none."),
@@ -2828,5 +2832,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-2BOSDVF5.cjs.map
-//# sourceMappingURL=chunk-2BOSDVF5.cjs.map
+//# sourceMappingURL=chunk-TTSKE6DU.cjs.map
+//# sourceMappingURL=chunk-TTSKE6DU.cjs.map

@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.82.0
+
+### Changes
+
+- feat(schemas): tolerant document source types — string type + DOCUMENT_SOURCE_TYPES constant
+
 ## 0.81.0
 
 ### Changes
