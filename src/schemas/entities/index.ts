@@ -96,7 +96,6 @@ export {
   paginatedUnitsResponseSchema,
   UNIT_KINDS,
   unitKindSchema,
-  unitRoleSchema,
   unitSchema,
   unitUserSchema,
   updateUnitSchema,

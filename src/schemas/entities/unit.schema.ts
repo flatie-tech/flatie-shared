@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { ApartmentRole } from '../../enums/apartment-role.enum';
 import { paginatedResponseSchema } from '../pagination.schema';
 
 /**
@@ -15,11 +14,12 @@ export const unitKindSchema = z
   .enum(UNIT_KINDS)
   .describe('What the unit physically is: `apartment`, `garage`, or `storage_unit`.');
 
-export const unitRoleSchema = z
-  .enum([ApartmentRole.OWNER, ApartmentRole.TENANT])
-  .describe('`OWNER` for the title-deed holder, `TENANT` for a resident renting from the owner.');
-
-/** A user attached to a unit (residency/tenancy view — accounts, not the owners ledger). */
+/**
+ * A user attached to a unit as an occupant — who lives at / is associated
+ * with the unit. Occupancy carries no role and no ownership share; ownership
+ * is a fact of the owners ledger (`unit_owners` via the owner-assignment
+ * routes), decoupled from who occupies the unit.
+ */
 export const unitUserSchema = z.looseObject({
   id: z.string(),
   name: z.string().describe('Display name of the unit member.'),
@@ -29,15 +29,7 @@ export const unitUserSchema = z.looseObject({
     .nullable()
     .optional()
     .describe('Absolute URL to the member’s profile image; null when none is set.'),
-  roleType: unitRoleSchema.describe('Relationship of this user to the unit (`OWNER` or `TENANT`).'),
   joinedAt: z.string().describe('ISO-8601 timestamp when the user was attached to the unit.'),
-  ownershipPercentage: z
-    .number()
-    .nullable()
-    .optional()
-    .describe(
-      'Share of the unit held by this user, 0–100. Null for tenants and for owners whose share has not been recorded.',
-    ),
 });
 export type UnitUser = z.infer<typeof unitUserSchema>;
 

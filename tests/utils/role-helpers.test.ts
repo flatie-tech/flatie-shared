@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ApartmentRole, BuildingRole, OrgRole, PlatformRole } from '../../src/enums';
+import { BuildingRole, OrgRole, PlatformRole } from '../../src/enums';
 import {
   getRoleBadge,
   ROLE_BADGE_COLORS,
@@ -11,7 +11,6 @@ const ALL_DISPLAYABLE_ROLES: string[] = [
   ...Object.values(BuildingRole),
   ...Object.values(OrgRole),
   ...Object.values(PlatformRole),
-  ApartmentRole.TENANT,
 ];
 
 describe('role display maps', () => {
@@ -44,10 +43,6 @@ describe('getRoleBadge', () => {
     expect(getRoleBadge(OrgRole.ORG_ADMIN)).toEqual({
       translationKey: 'roles.ORG_ADMIN',
       color: 'purple',
-    });
-    expect(getRoleBadge(ApartmentRole.TENANT)).toEqual({
-      translationKey: 'roles.TENANT',
-      color: 'neutral',
     });
   });
 

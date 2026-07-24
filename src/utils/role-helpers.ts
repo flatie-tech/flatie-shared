@@ -1,12 +1,7 @@
-import { ApartmentRole, BuildingRole, OrgRole, PlatformRole } from '../enums';
+import { BuildingRole, OrgRole, PlatformRole } from '../enums';
 
-/**
- * Every role value that UIs render as a label/badge. `ApartmentRole.TENANT`
- * is included because the web role picker surfaces it as a UI-only role
- * (persisted as `CO_OWNER` on the backend); `ApartmentRole.OWNER` is never
- * displayed as a role label, so it stays out.
- */
-export type DisplayableRole = BuildingRole | OrgRole | PlatformRole | typeof ApartmentRole.TENANT;
+/** Every role value that UIs render as a label/badge. */
+export type DisplayableRole = BuildingRole | OrgRole | PlatformRole;
 
 /**
  * Building roles that grant admin-level access to building management.
@@ -46,9 +41,6 @@ export const ROLE_TRANSLATION_KEYS: Record<DisplayableRole, string> = {
   [BuildingRole.CO_OWNER]: 'roles.CO_OWNER',
   [BuildingRole.RESIDENT]: 'roles.RESIDENT',
 
-  // Apartment role surfaced by the web role picker (UI-only; persists as CO_OWNER)
-  [ApartmentRole.TENANT]: 'roles.TENANT',
-
   // Org roles
   [OrgRole.ORG_ADMIN]: 'roles.ORG_ADMIN',
   [OrgRole.SUPERVISOR]: 'roles.SUPERVISOR',
@@ -73,7 +65,6 @@ export const ROLE_DESCRIPTION_KEYS: Record<DisplayableRole, string> = {
   [BuildingRole.DEPUTY_REPRESENTATIVE]: 'roles.DEPUTY_REPRESENTATIVE_DESC',
   [BuildingRole.CO_OWNER]: 'roles.CO_OWNER_DESC',
   [BuildingRole.RESIDENT]: 'roles.RESIDENT_DESC',
-  [ApartmentRole.TENANT]: 'roles.TENANT_DESC',
 
   [OrgRole.ORG_ADMIN]: 'roles.ORG_ADMIN_DESC',
   [OrgRole.SUPERVISOR]: 'roles.SUPERVISOR_DESC',
@@ -105,7 +96,6 @@ export const ROLE_BADGE_COLORS: Record<DisplayableRole, RoleBadgeColor> = {
   [BuildingRole.DEPUTY_REPRESENTATIVE]: 'success',
   [BuildingRole.CO_OWNER]: 'warning',
   [BuildingRole.RESIDENT]: 'neutral',
-  [ApartmentRole.TENANT]: 'neutral',
 
   // Org roles
   [OrgRole.ORG_ADMIN]: 'purple',
