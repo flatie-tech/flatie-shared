@@ -68,9 +68,11 @@ export type {
   DocumentFile,
   DocumentLinkedRecord,
   DocumentResponse,
+  DocumentSourceType,
   PaginatedDocumentsResponse,
 } from './documents';
 export {
+  DOCUMENT_SOURCE_TYPES,
   documentFileSchema,
   documentLinkedRecordSchema,
   documentResponseSchema,
