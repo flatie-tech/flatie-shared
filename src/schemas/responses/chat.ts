@@ -28,8 +28,14 @@ export const conversationLastMessageSchema = z
   .looseObject({
     id: z.string().describe('UUID of the message.'),
     content: z.string().describe('Plain-text message body (may be truncated for preview).'),
-    senderId: z.string().describe('UUID of the user who sent the message.'),
-    senderName: z.string().describe('Display name of the sender.'),
+    senderId: z
+      .string()
+      .nullable()
+      .describe('UUID of the sender; null when the account was deleted (anonymized).'),
+    senderName: z
+      .string()
+      .nullable()
+      .describe('Display name of the sender; null when the account was deleted.'),
     createdAt: z.string().describe('ISO-8601 timestamp when the message was sent.'),
   })
   .describe('Last message preview embedded in conversation list responses.');
@@ -71,8 +77,14 @@ export const chatMessageResponseSchema = z
   .looseObject({
     id: z.string().describe('UUID of the message.'),
     conversationId: z.string().describe('UUID of the parent conversation.'),
-    senderId: z.string().describe('UUID of the user who sent the message.'),
-    senderName: z.string().describe('Display name of the sender.'),
+    senderId: z
+      .string()
+      .nullable()
+      .describe('UUID of the sender; null when the account was deleted (anonymized).'),
+    senderName: z
+      .string()
+      .nullable()
+      .describe('Display name of the sender; null when the account was deleted.'),
     senderImage: z
       .string()
       .nullable()
