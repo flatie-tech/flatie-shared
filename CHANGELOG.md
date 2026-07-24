@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.82.1
+
+### Changes
+
+- fix(schemas): export DOCUMENT_SOURCE_TYPES + DocumentSourceType through both barrels
+
 ## 0.82.0
 
 ### Changes

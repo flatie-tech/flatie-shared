@@ -1723,6 +1723,15 @@ var FailureStatusSchema = zod.z.enum(failureStatusOptions);
 var PrioritySchema = zod.z.enum(priorityOptions);
 
 // src/schemas/responses/documents.ts
+var DOCUMENT_SOURCE_TYPES = [
+  "notice",
+  "failure_report",
+  "maintenance_log",
+  "poll",
+  "event",
+  "board_card",
+  "expense_transaction"
+];
 var documentLinkedRecordSchema = zod.z.looseObject({
   type: zod.z.string().describe(
     "Kind of entity this document is linked to. Known values are listed in DOCUMENT_SOURCE_TYPES; accepts future entity types so new link sources never break parsing."
@@ -2612,6 +2621,7 @@ exports.BUILDING_TYPES = BUILDING_TYPES;
 exports.CHAT_LIMITS = CHAT_LIMITS;
 exports.CommonStatusSchema = CommonStatusSchema;
 exports.DOCUMENT_LIMITS = DOCUMENT_LIMITS;
+exports.DOCUMENT_SOURCE_TYPES = DOCUMENT_SOURCE_TYPES;
 exports.EMAIL_LIMITS = EMAIL_LIMITS;
 exports.ENTITY_LINK_TYPES = ENTITY_LINK_TYPES;
 exports.EVENT_COLORS = EVENT_COLORS;
@@ -2832,5 +2842,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-TTSKE6DU.cjs.map
-//# sourceMappingURL=chunk-TTSKE6DU.cjs.map
+//# sourceMappingURL=chunk-6OT53U55.cjs.map
+//# sourceMappingURL=chunk-6OT53U55.cjs.map
