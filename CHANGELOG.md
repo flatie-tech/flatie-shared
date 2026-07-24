@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.78.0
+
+### Changes
+
+- Per-owner building ownership share (derived/manual).
+
 ## 0.77.0
 
 ### Changes
