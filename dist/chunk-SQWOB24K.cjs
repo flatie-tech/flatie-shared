@@ -1,68 +1,64 @@
 'use strict';
 
-var chunkD2MJJ7NU_cjs = require('./chunk-D2MJJ7NU.cjs');
+var chunk3K77TZB5_cjs = require('./chunk-3K77TZB5.cjs');
 var chunkAKVKGQ3H_cjs = require('./chunk-AKVKGQ3H.cjs');
 var chunkOOJKTZT4_cjs = require('./chunk-OOJKTZT4.cjs');
 
 // src/utils/role-helpers.ts
 var MANAGERIAL_BUILDING_ROLES = [
-  chunkD2MJJ7NU_cjs.BuildingRole.OWNER_REPRESENTATIVE,
-  chunkD2MJJ7NU_cjs.BuildingRole.DEPUTY_REPRESENTATIVE
+  chunk3K77TZB5_cjs.BuildingRole.OWNER_REPRESENTATIVE,
+  chunk3K77TZB5_cjs.BuildingRole.DEPUTY_REPRESENTATIVE
 ];
 function isManagerialRole(role) {
   return MANAGERIAL_BUILDING_ROLES.includes(role);
 }
 var ROLE_TRANSLATION_KEYS = {
   // Building roles
-  [chunkD2MJJ7NU_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
-  [chunkD2MJJ7NU_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
-  [chunkD2MJJ7NU_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER",
-  [chunkD2MJJ7NU_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT",
-  // Apartment role surfaced by the web role picker (UI-only; persists as CO_OWNER)
-  [chunkD2MJJ7NU_cjs.ApartmentRole.TENANT]: "roles.TENANT",
+  [chunk3K77TZB5_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
+  [chunk3K77TZB5_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
+  [chunk3K77TZB5_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER",
+  [chunk3K77TZB5_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT",
   // Org roles
-  [chunkD2MJJ7NU_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
-  [chunkD2MJJ7NU_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
-  [chunkD2MJJ7NU_cjs.OrgRole.REFERENT]: "roles.REFERENT",
-  [chunkD2MJJ7NU_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE",
+  [chunk3K77TZB5_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
+  [chunk3K77TZB5_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
+  [chunk3K77TZB5_cjs.OrgRole.REFERENT]: "roles.REFERENT",
+  [chunk3K77TZB5_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE",
   // Platform roles
-  [chunkD2MJJ7NU_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
-  [chunkD2MJJ7NU_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
-  [chunkD2MJJ7NU_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
-  [chunkD2MJJ7NU_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
+  [chunk3K77TZB5_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
+  [chunk3K77TZB5_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
+  [chunk3K77TZB5_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
+  [chunk3K77TZB5_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
 };
 var ROLE_DESCRIPTION_KEYS = {
-  [chunkD2MJJ7NU_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
-  [chunkD2MJJ7NU_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
-  [chunkD2MJJ7NU_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
-  [chunkD2MJJ7NU_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
-  [chunkD2MJJ7NU_cjs.ApartmentRole.TENANT]: "roles.TENANT_DESC",
-  [chunkD2MJJ7NU_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
-  [chunkD2MJJ7NU_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
-  [chunkD2MJJ7NU_cjs.OrgRole.REFERENT]: "roles.REFERENT_DESC",
-  [chunkD2MJJ7NU_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
-  [chunkD2MJJ7NU_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
-  [chunkD2MJJ7NU_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
-  [chunkD2MJJ7NU_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
-  [chunkD2MJJ7NU_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
+  [chunk3K77TZB5_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
+  [chunk3K77TZB5_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
+  [chunk3K77TZB5_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
+  [chunk3K77TZB5_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
+  [chunk3K77TZB5_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
+  [chunk3K77TZB5_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
+  [chunk3K77TZB5_cjs.OrgRole.REFERENT]: "roles.REFERENT_DESC",
+  [chunk3K77TZB5_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
+  [chunk3K77TZB5_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
+  [chunk3K77TZB5_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
+  [chunk3K77TZB5_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
+  [chunk3K77TZB5_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
 };
 var ROLE_BADGE_COLORS = {
   // Building roles
-  [chunkD2MJJ7NU_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "info",
-  [chunkD2MJJ7NU_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "success",
-  [chunkD2MJJ7NU_cjs.BuildingRole.CO_OWNER]: "warning",
-  [chunkD2MJJ7NU_cjs.BuildingRole.RESIDENT]: "neutral",
-  [chunkD2MJJ7NU_cjs.ApartmentRole.TENANT]: "neutral",
+  [chunk3K77TZB5_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "info",
+  [chunk3K77TZB5_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "success",
+  [chunk3K77TZB5_cjs.BuildingRole.CO_OWNER]: "warning",
+  [chunk3K77TZB5_cjs.BuildingRole.RESIDENT]: "neutral",
   // Org roles
-  [chunkD2MJJ7NU_cjs.OrgRole.ORG_ADMIN]: "purple",
-  [chunkD2MJJ7NU_cjs.OrgRole.SUPERVISOR]: "info",
-  [chunkD2MJJ7NU_cjs.OrgRole.REFERENT]: "success",
-  [chunkD2MJJ7NU_cjs.OrgRole.OPERATIVE]: "amber",
+  [chunk3K77TZB5_cjs.OrgRole.ORG_ADMIN]: "purple",
+  [chunk3K77TZB5_cjs.OrgRole.SUPERVISOR]: "info",
+  [chunk3K77TZB5_cjs.OrgRole.REFERENT]: "success",
+  [chunk3K77TZB5_cjs.OrgRole.OPERATIVE]: "amber",
   // Platform roles
-  [chunkD2MJJ7NU_cjs.PlatformRole.PLATFORM_ADMIN]: "purple",
-  [chunkD2MJJ7NU_cjs.PlatformRole.PLATFORM_MODERATOR]: "info",
-  [chunkD2MJJ7NU_cjs.PlatformRole.PLATFORM_SUPPORT]: "success",
-  [chunkD2MJJ7NU_cjs.PlatformRole.PLATFORM_OPERATIVE]: "amber"
+  [chunk3K77TZB5_cjs.PlatformRole.PLATFORM_ADMIN]: "purple",
+  [chunk3K77TZB5_cjs.PlatformRole.PLATFORM_MODERATOR]: "info",
+  [chunk3K77TZB5_cjs.PlatformRole.PLATFORM_SUPPORT]: "success",
+  [chunk3K77TZB5_cjs.PlatformRole.PLATFORM_OPERATIVE]: "amber"
 };
 function getRoleBadge(role) {
   const known = role;
@@ -78,7 +74,7 @@ function canMessageUser(callerIsManagerial, target) {
   const role = target.buildingRole?.roleType;
   if (!role) return false;
   if (isManagerialRole(role)) return true;
-  return role === chunkD2MJJ7NU_cjs.BuildingRole.CO_OWNER && target.buildingRole?.chatVisibleToCoOwners === true;
+  return role === chunk3K77TZB5_cjs.BuildingRole.CO_OWNER && target.buildingRole?.chatVisibleToCoOwners === true;
 }
 function getMessageableUsers(users, callerIsManagerial) {
   return users.filter((user) => canMessageUser(callerIsManagerial, user));
@@ -300,13 +296,13 @@ function canDo(subject, permission) {
   return subject.permissions.includes(permission);
 }
 function canDoOnResource(subject, domain, action, resourceOwnerId) {
-  const scopedPerms = chunkD2MJJ7NU_cjs.SCOPED_PERMISSIONS[domain]?.[action];
+  const scopedPerms = chunk3K77TZB5_cjs.SCOPED_PERMISSIONS[domain]?.[action];
   if (!scopedPerms) return false;
   if (subject.permissions.includes(scopedPerms.any)) return true;
   return subject.permissions.includes(scopedPerms.own) && resourceOwnerId === subject.userId;
 }
 function computeActionFlags(subject, domain, resourceOwnerId) {
-  const approvePermission = chunkD2MJJ7NU_cjs.APPROVE_PERMISSIONS[domain];
+  const approvePermission = chunk3K77TZB5_cjs.APPROVE_PERMISSIONS[domain];
   return {
     canEdit: canDoOnResource(subject, domain, "update", resourceOwnerId),
     canDelete: canDoOnResource(subject, domain, "delete", resourceOwnerId),
@@ -354,11 +350,11 @@ function applyResidentRestriction(items, isRestrictedView) {
 // src/utils/status-variants.ts
 function failureStatusVariant(status) {
   switch (status) {
-    case chunkD2MJJ7NU_cjs.FailureStatus.PENDING:
+    case chunk3K77TZB5_cjs.FailureStatus.PENDING:
       return "info";
-    case chunkD2MJJ7NU_cjs.FailureStatus.IN_PROGRESS:
+    case chunk3K77TZB5_cjs.FailureStatus.IN_PROGRESS:
       return "warning";
-    case chunkD2MJJ7NU_cjs.FailureStatus.RESOLVED:
+    case chunk3K77TZB5_cjs.FailureStatus.RESOLVED:
       return "success";
     default:
       return "neutral";
@@ -366,9 +362,9 @@ function failureStatusVariant(status) {
 }
 function priorityVariant(priority) {
   switch (priority) {
-    case chunkD2MJJ7NU_cjs.Priority.URGENT:
+    case chunk3K77TZB5_cjs.Priority.URGENT:
       return "danger";
-    case chunkD2MJJ7NU_cjs.Priority.NORMAL:
+    case chunk3K77TZB5_cjs.Priority.NORMAL:
       return "neutral";
     default:
       return "neutral";
@@ -492,5 +488,5 @@ exports.parseData = parseData;
 exports.priorityVariant = priorityVariant;
 exports.resolveVotingMethods = resolveVotingMethods;
 exports.violatesVotingMethodLock = violatesVotingMethodLock;
-//# sourceMappingURL=chunk-7VPRRIJI.cjs.map
-//# sourceMappingURL=chunk-7VPRRIJI.cjs.map
+//# sourceMappingURL=chunk-SQWOB24K.cjs.map
+//# sourceMappingURL=chunk-SQWOB24K.cjs.map

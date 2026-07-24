@@ -3,7 +3,6 @@ import { P as PaginatedResponse } from '../pagination.types-BdLhL-Jg.js';
 import { z } from 'zod';
 import { BackendErrorCode } from '../errors/index.js';
 import { P as Permission, c as ScopedDomain, b as ScopedAction, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-BQ1nMJng.js';
-import { A as ApartmentRole } from '../apartment-role.enum-CNJsuYgq.js';
 import { F as FailureStatus, P as Priority } from '../status.enum-BYlt7_Fs.js';
 
 /**
@@ -410,13 +409,8 @@ declare function applyResidentRestrictionToItem<T extends RestrictableActionFlag
  */
 declare function applyResidentRestriction<T extends RestrictableActionFlags>(items: T[], isRestrictedView: boolean): T[];
 
-/**
- * Every role value that UIs render as a label/badge. `ApartmentRole.TENANT`
- * is included because the web role picker surfaces it as a UI-only role
- * (persisted as `CO_OWNER` on the backend); `ApartmentRole.OWNER` is never
- * displayed as a role label, so it stays out.
- */
-type DisplayableRole = BuildingRole | OrgRole | PlatformRole | typeof ApartmentRole.TENANT;
+/** Every role value that UIs render as a label/badge. */
+type DisplayableRole = BuildingRole | OrgRole | PlatformRole;
 /**
  * Building roles that grant admin-level access to building management.
  *

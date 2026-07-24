@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.80.0
+
+### Changes
+
+- refactor(units): drop ApartmentRole/TENANT — occupancy is role-less, ownership lives in the ledger
+
 ## 0.79.0
 
 ### Changes

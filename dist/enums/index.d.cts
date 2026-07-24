@@ -1,4 +1,3 @@
-export { A as ApartmentRole } from '../apartment-role.enum-CNJsuYgq.cjs';
 export { B as BuildingType, P as PollType } from '../poll-type.enum-CGV5tBqR.cjs';
 export { E as EntityLinkType, L as LinkableEntityType } from '../entity-link.enum-BYEzMg8A.cjs';
 export { A as APPROVE_PERMISSIONS, B as BUILDING_ROLE_RANK, e as BuildingRole, O as ORG_ROLE_RANK, i as OrgRole, j as PLATFORM_ROLE_RANK, P as Permission, k as PlatformRole, S as SCOPED_DOMAINS, a as SCOPED_PERMISSIONS, b as ScopedAction, c as ScopedDomain, f as canAssignOrgRole, g as canAssignPlatformRole, h as canAssignRole, d as domainPermissions } from '../role.enum-BQ1nMJng.cjs';

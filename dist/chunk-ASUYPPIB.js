@@ -1,4 +1,4 @@
-import { BuildingRole, PlatformRole, OrgRole, ApartmentRole, SCOPED_PERMISSIONS, APPROVE_PERMISSIONS, FailureStatus, Priority } from './chunk-SK7QENXP.js';
+import { BuildingRole, PlatformRole, OrgRole, SCOPED_PERMISSIONS, APPROVE_PERMISSIONS, FailureStatus, Priority } from './chunk-FNTWUPDH.js';
 import { isBackendErrorCode } from './chunk-6KZX2TOR.js';
 import { createPaginatedResponse } from './chunk-E4FOXN63.js';
 
@@ -16,8 +16,6 @@ var ROLE_TRANSLATION_KEYS = {
   [BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
   [BuildingRole.CO_OWNER]: "roles.CO_OWNER",
   [BuildingRole.RESIDENT]: "roles.RESIDENT",
-  // Apartment role surfaced by the web role picker (UI-only; persists as CO_OWNER)
-  [ApartmentRole.TENANT]: "roles.TENANT",
   // Org roles
   [OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
   [OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
@@ -34,7 +32,6 @@ var ROLE_DESCRIPTION_KEYS = {
   [BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
   [BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
   [BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
-  [ApartmentRole.TENANT]: "roles.TENANT_DESC",
   [OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
   [OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
   [OrgRole.REFERENT]: "roles.REFERENT_DESC",
@@ -50,7 +47,6 @@ var ROLE_BADGE_COLORS = {
   [BuildingRole.DEPUTY_REPRESENTATIVE]: "success",
   [BuildingRole.CO_OWNER]: "warning",
   [BuildingRole.RESIDENT]: "neutral",
-  [ApartmentRole.TENANT]: "neutral",
   // Org roles
   [OrgRole.ORG_ADMIN]: "purple",
   [OrgRole.SUPERVISOR]: "info",
@@ -449,5 +445,5 @@ function debounce(func, delay) {
 }
 
 export { DATETIME_FORMATS, DATE_FORMATS, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, ROLE_BADGE_COLORS, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, TIME_FORMATS, VOTING_METHOD_SETTINGS, applyResidentRestriction, applyResidentRestrictionToItem, buildGoogleCalendarUrl, calculatePaginationMeta, canDo, canDoOnResource, canMessageUser, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatCurrencyByLocale, formatCurrencyEUR, formatDate, formatDateTime, formatText, getContextUserId, getDateLocale, getDateRange, getInitials, getMessageableUsers, getRoleBadge, isLastEnabledVotingMethod, isManagerialRole, normalizePaginatedResponse, parseApiError, parseData, priorityVariant, resolveVotingMethods, violatesVotingMethodLock };
-//# sourceMappingURL=chunk-5DJZX6PC.js.map
-//# sourceMappingURL=chunk-5DJZX6PC.js.map
+//# sourceMappingURL=chunk-ASUYPPIB.js.map
+//# sourceMappingURL=chunk-ASUYPPIB.js.map
