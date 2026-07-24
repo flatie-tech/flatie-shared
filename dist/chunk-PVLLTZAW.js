@@ -348,7 +348,16 @@ var Permission = {
   DOCUMENT_SET_PRIVATE: "document:set_private",
   // Chat
   CHAT_CREATE_GROUP: "chat:create_group",
-  // Apartment (flat, no :own/:any)
+  // Unit (flat, no :own/:any) — canonical gate for units + owners endpoints.
+  UNIT_CREATE: "unit:create",
+  UNIT_READ: "unit:read",
+  UNIT_UPDATE: "unit:update",
+  UNIT_DELETE: "unit:delete",
+  UNIT_MANAGE_USERS: "unit:manage_users",
+  // Apartment — DEPRECATED aliases of the UNIT_* permissions above. Kept and
+  // still granted (see role-permissions.ts) so already-deployed clients/app
+  // versions checking `apartment:*` keep working during the rename window.
+  // Remove once every consumer (incl. shipped mobile builds) is on `unit:*`.
   APARTMENT_CREATE: "apartment:create",
   APARTMENT_READ: "apartment:read",
   APARTMENT_UPDATE: "apartment:update",
@@ -624,5 +633,5 @@ var UnitType = {
 };
 
 export { APPROVE_PERMISSIONS, ApprovalStatus, BUILDING_ROLE_RANK, BoardVisibility, BuildingOtpExpiry, BuildingRole, BuildingStatus, BuildingType, CO_OWNER_VISIBLE_SYSTEM_TYPES, CommonStatus, DevicePlatform, EntityLinkType, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, IdentityVerificationMethod, JoinRequestStatus, LinkableEntityType, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, ORG_ROLE_RANK, OrgQuotaResourceType, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, POLL_CANNOT_VOTE_REASON_KEY, Permission, PlatformRole, PollCannotVoteReason, PollStatus, PollType, PollVoteStatus, PricuvaRefMode, Priority, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, domainPermissions, methodToTier };
-//# sourceMappingURL=chunk-FNTWUPDH.js.map
-//# sourceMappingURL=chunk-FNTWUPDH.js.map
+//# sourceMappingURL=chunk-PVLLTZAW.js.map
+//# sourceMappingURL=chunk-PVLLTZAW.js.map

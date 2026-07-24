@@ -72,6 +72,11 @@ declare const Permission: {
     readonly DOCUMENT_DELETE_ANY: "document:delete:any";
     readonly DOCUMENT_SET_PRIVATE: "document:set_private";
     readonly CHAT_CREATE_GROUP: "chat:create_group";
+    readonly UNIT_CREATE: "unit:create";
+    readonly UNIT_READ: "unit:read";
+    readonly UNIT_UPDATE: "unit:update";
+    readonly UNIT_DELETE: "unit:delete";
+    readonly UNIT_MANAGE_USERS: "unit:manage_users";
     readonly APARTMENT_CREATE: "apartment:create";
     readonly APARTMENT_READ: "apartment:read";
     readonly APARTMENT_UPDATE: "apartment:update";

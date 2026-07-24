@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.81.0
+
+### Changes
+
+- feat(perms): add canonical unit:* permissions, keep apartment:* as granted aliases
+
 ## 0.80.0
 
 ### Changes
