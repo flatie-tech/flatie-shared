@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.83.0
+
+### Changes
+
+- feat(schemas): nullable chat sender — GDPR deletion anonymizes messages
+
 ## 0.82.1
 
 ### Changes

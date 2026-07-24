@@ -1634,8 +1634,8 @@ var conversationParticipantSchema = zod.z.looseObject({
 var conversationLastMessageSchema = zod.z.looseObject({
   id: zod.z.string().describe("UUID of the message."),
   content: zod.z.string().describe("Plain-text message body (may be truncated for preview)."),
-  senderId: zod.z.string().describe("UUID of the user who sent the message."),
-  senderName: zod.z.string().describe("Display name of the sender."),
+  senderId: zod.z.string().nullable().describe("UUID of the sender; null when the account was deleted (anonymized)."),
+  senderName: zod.z.string().nullable().describe("Display name of the sender; null when the account was deleted."),
   createdAt: zod.z.string().describe("ISO-8601 timestamp when the message was sent.")
 }).describe("Last message preview embedded in conversation list responses.");
 var conversationResponseSchema = zod.z.looseObject({
@@ -1655,8 +1655,8 @@ var conversationResponseSchema = zod.z.looseObject({
 var chatMessageResponseSchema = zod.z.looseObject({
   id: zod.z.string().describe("UUID of the message."),
   conversationId: zod.z.string().describe("UUID of the parent conversation."),
-  senderId: zod.z.string().describe("UUID of the user who sent the message."),
-  senderName: zod.z.string().describe("Display name of the sender."),
+  senderId: zod.z.string().nullable().describe("UUID of the sender; null when the account was deleted (anonymized)."),
+  senderName: zod.z.string().nullable().describe("Display name of the sender; null when the account was deleted."),
   senderImage: zod.z.string().nullable().optional().describe("Avatar URL of the sender; null when no profile image is set."),
   senderRoleType: zod.z.string().nullable().optional().describe(
     "Sender role within the conversation's scope \u2014 a building role for building chats, an org role for org chats; null when not applicable."
@@ -2842,5 +2842,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-6OT53U55.cjs.map
-//# sourceMappingURL=chunk-6OT53U55.cjs.map
+//# sourceMappingURL=chunk-WJHE3BUA.cjs.map
+//# sourceMappingURL=chunk-WJHE3BUA.cjs.map

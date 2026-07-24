@@ -2490,8 +2490,8 @@ declare const conversationParticipantSchema: z.ZodObject<{
 declare const conversationLastMessageSchema: z.ZodObject<{
     id: z.ZodString;
     content: z.ZodString;
-    senderId: z.ZodString;
-    senderName: z.ZodString;
+    senderId: z.ZodNullable<z.ZodString>;
+    senderName: z.ZodNullable<z.ZodString>;
     createdAt: z.ZodString;
 }, z.core.$loose>;
 declare const conversationResponseSchema: z.ZodObject<{
@@ -2514,8 +2514,8 @@ declare const conversationResponseSchema: z.ZodObject<{
     lastMessage: z.ZodOptional<z.ZodNullable<z.ZodObject<{
         id: z.ZodString;
         content: z.ZodString;
-        senderId: z.ZodString;
-        senderName: z.ZodString;
+        senderId: z.ZodNullable<z.ZodString>;
+        senderName: z.ZodNullable<z.ZodString>;
         createdAt: z.ZodString;
     }, z.core.$loose>>>;
     unreadCount: z.ZodNumber;
@@ -2525,8 +2525,8 @@ declare const conversationResponseSchema: z.ZodObject<{
 declare const chatMessageResponseSchema: z.ZodObject<{
     id: z.ZodString;
     conversationId: z.ZodString;
-    senderId: z.ZodString;
-    senderName: z.ZodString;
+    senderId: z.ZodNullable<z.ZodString>;
+    senderName: z.ZodNullable<z.ZodString>;
     senderImage: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     senderRoleType: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     content: z.ZodString;
@@ -2553,8 +2553,8 @@ declare const conversationsListResponseSchema: z.ZodObject<{
         lastMessage: z.ZodOptional<z.ZodNullable<z.ZodObject<{
             id: z.ZodString;
             content: z.ZodString;
-            senderId: z.ZodString;
-            senderName: z.ZodString;
+            senderId: z.ZodNullable<z.ZodString>;
+            senderName: z.ZodNullable<z.ZodString>;
             createdAt: z.ZodString;
         }, z.core.$loose>>>;
         unreadCount: z.ZodNumber;
@@ -2567,8 +2567,8 @@ declare const messagesListResponseSchema: z.ZodObject<{
     data: z.ZodArray<z.ZodObject<{
         id: z.ZodString;
         conversationId: z.ZodString;
-        senderId: z.ZodString;
-        senderName: z.ZodString;
+        senderId: z.ZodNullable<z.ZodString>;
+        senderName: z.ZodNullable<z.ZodString>;
         senderImage: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         senderRoleType: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         content: z.ZodString;
