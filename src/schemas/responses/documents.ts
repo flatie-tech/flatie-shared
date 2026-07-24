@@ -3,11 +3,31 @@ import { maintenanceFinancedBySchema } from '../entities/maintenance-log.schema'
 import { paginatedResponseSchema } from '../pagination.schema';
 import { FailureStatusSchema } from '../status.schema';
 
+/**
+ * Entity types that can be the SOURCE of a file attachment link — the
+ * possible values of a document's `type` / `linkedRecords[].type` besides
+ * the standalone `'document'`. Kept as a constant (not a schema enum) so
+ * adding a link source never breaks older clients' response parsing —
+ * clients should render unknown types with a generic fallback.
+ */
+export const DOCUMENT_SOURCE_TYPES = [
+  'notice',
+  'failure_report',
+  'maintenance_log',
+  'poll',
+  'event',
+  'board_card',
+  'expense_transaction',
+] as const;
+export type DocumentSourceType = (typeof DOCUMENT_SOURCE_TYPES)[number];
+
 export const documentLinkedRecordSchema = z
   .looseObject({
     type: z
-      .enum(['notice', 'maintenance_log', 'failure_report', 'poll'])
-      .describe('Kind of entity this document is linked to.'),
+      .string()
+      .describe(
+        'Kind of entity this document is linked to. Known values are listed in DOCUMENT_SOURCE_TYPES; accepts future entity types so new link sources never break parsing.',
+      ),
     id: z.string().describe('UUID of the linked entity.'),
     title: z.string().optional().nullable().describe('Title of the linked entity.'),
     status: FailureStatusSchema.optional()
@@ -100,9 +120,11 @@ export const documentResponseSchema = z
       .default(false)
       .describe('True when the document is visible only to managers.'),
     type: z
-      .enum(['document', 'notice', 'failure_report', 'maintenance_log', 'poll'])
+      .string()
       .optional()
-      .describe('Source entity type; absent for standalone documents.'),
+      .describe(
+        "Source entity type ('document' for standalone uploads; otherwise an entity type from DOCUMENT_SOURCE_TYPES). Accepts future entity types so new link sources never break parsing.",
+      ),
     sourceId: z
       .string()
       .optional()
