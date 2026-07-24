@@ -20,6 +20,15 @@ export const ownerResponseSchema = z
     paymentRefCode: z.string().nullable().optional(),
     /** When a representative last sent this owner a building invite; null when never invited. */
     lastInvitedAt: z.union([z.string(), z.date()]).nullable().optional(),
+    /**
+     * The owner's share of the whole building in percent. For stratified
+     * buildings this is DERIVED live from unit holdings (area × unit share)
+     * and `isBuildingShareDerived` is true; for non-stratified buildings it is
+     * the manually-entered value stored on the owner. Null until set/derivable.
+     */
+    buildingSharePercentage: z.number().nullable().optional(),
+    /** True when `buildingSharePercentage` is derived (stratified) and read-only. */
+    isBuildingShareDerived: z.boolean().optional(),
     createdAt: z.union([z.string(), z.date()]),
     updatedAt: z.union([z.string(), z.date()]).nullable().optional(),
   })
@@ -53,6 +62,12 @@ export const createOwnerSchema = z
     houseNumber: z.string().trim().min(1).max(20).optional().nullable(),
     paymentRefCode: z.string().trim().max(22).optional().nullable(),
     userId: z.string().uuid().optional().nullable(),
+    /**
+     * Manual building-ownership share (percent) — accepted only for
+     * NON-stratified buildings; ignored for stratified ones, where the share
+     * is derived from unit holdings. See ownerResponseSchema.buildingSharePercentage.
+     */
+    buildingSharePercentage: z.number().min(0).max(100).optional().nullable(),
   })
   .meta({ id: 'CreateOwner' });
 

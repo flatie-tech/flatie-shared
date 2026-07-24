@@ -1061,6 +1061,15 @@ var ownerResponseSchema = zod.z.object({
   paymentRefCode: zod.z.string().nullable().optional(),
   /** When a representative last sent this owner a building invite; null when never invited. */
   lastInvitedAt: zod.z.union([zod.z.string(), zod.z.date()]).nullable().optional(),
+  /**
+   * The owner's share of the whole building in percent. For stratified
+   * buildings this is DERIVED live from unit holdings (area × unit share)
+   * and `isBuildingShareDerived` is true; for non-stratified buildings it is
+   * the manually-entered value stored on the owner. Null until set/derivable.
+   */
+  buildingSharePercentage: zod.z.number().nullable().optional(),
+  /** True when `buildingSharePercentage` is derived (stratified) and read-only. */
+  isBuildingShareDerived: zod.z.boolean().optional(),
   createdAt: zod.z.union([zod.z.string(), zod.z.date()]),
   updatedAt: zod.z.union([zod.z.string(), zod.z.date()]).nullable().optional()
 }).meta({ id: "OwnerResponse" });
@@ -1078,7 +1087,13 @@ var createOwnerSchema = zod.z.object({
   streetId: zod.z.string().uuid().optional().nullable(),
   houseNumber: zod.z.string().trim().min(1).max(20).optional().nullable(),
   paymentRefCode: zod.z.string().trim().max(22).optional().nullable(),
-  userId: zod.z.string().uuid().optional().nullable()
+  userId: zod.z.string().uuid().optional().nullable(),
+  /**
+   * Manual building-ownership share (percent) — accepted only for
+   * NON-stratified buildings; ignored for stratified ones, where the share
+   * is derived from unit holdings. See ownerResponseSchema.buildingSharePercentage.
+   */
+  buildingSharePercentage: zod.z.number().min(0).max(100).optional().nullable()
 }).meta({ id: "CreateOwner" });
 var updateOwnerSchema = createOwnerSchema.partial().meta({ id: "UpdateOwner" });
 var assignOwnerSchema = zod.z.object({
@@ -2819,5 +2834,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-R2IK4PYV.cjs.map
-//# sourceMappingURL=chunk-R2IK4PYV.cjs.map
+//# sourceMappingURL=chunk-TOGYBIQY.cjs.map
+//# sourceMappingURL=chunk-TOGYBIQY.cjs.map

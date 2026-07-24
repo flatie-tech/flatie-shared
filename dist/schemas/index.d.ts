@@ -1532,6 +1532,8 @@ declare const ownerResponseSchema: z.ZodObject<{
     addressId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     paymentRefCode: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     lastInvitedAt: z.ZodOptional<z.ZodNullable<z.ZodUnion<readonly [z.ZodString, z.ZodDate]>>>;
+    buildingSharePercentage: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
+    isBuildingShareDerived: z.ZodOptional<z.ZodBoolean>;
     createdAt: z.ZodUnion<readonly [z.ZodString, z.ZodDate]>;
     updatedAt: z.ZodOptional<z.ZodNullable<z.ZodUnion<readonly [z.ZodString, z.ZodDate]>>>;
 }, z.core.$strip>;
@@ -1553,6 +1555,7 @@ declare const createOwnerSchema: z.ZodObject<{
     houseNumber: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     paymentRefCode: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     userId: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    buildingSharePercentage: z.ZodNullable<z.ZodOptional<z.ZodNumber>>;
 }, z.core.$strip>;
 type CreateOwnerInput = z.infer<typeof createOwnerSchema>;
 declare const updateOwnerSchema: z.ZodObject<{
@@ -1566,6 +1569,7 @@ declare const updateOwnerSchema: z.ZodObject<{
     houseNumber: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
     paymentRefCode: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
     userId: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    buildingSharePercentage: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodNumber>>>;
 }, z.core.$strip>;
 type UpdateOwnerInput = z.infer<typeof updateOwnerSchema>;
 /**
