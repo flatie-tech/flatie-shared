@@ -22,7 +22,8 @@ const ALL_READS = [
   ...domainPermissions('maintenance_log', 'read'),
   ...domainPermissions('financial', 'read'),
   ...domainPermissions('document', 'read'),
-  ...domainPermissions('apartment', 'read'),
+  ...domainPermissions('unit', 'read'),
+  ...domainPermissions('apartment', 'read'), // deprecated alias of unit:read
   'house_rules:read',
   'faq:read',
   'board_card:read',
@@ -124,7 +125,8 @@ const REPRESENTATIVE_PERMISSIONS = [
   'building_email:manage',
   'board_card:manage',
   'faq:manage:representative',
-  'apartment:update',
+  'unit:update',
+  'apartment:update', // deprecated alias of unit:update
 ];
 
 // ─── Org Role Building Permission Mappings ──────────────────────────
@@ -135,7 +137,11 @@ const ORG_ADMIN_BUILDING_PERMISSIONS = [
   'financial:create',
   'financial:update',
   'financial:delete',
-  'apartment:create',
+  'unit:create',
+  'unit:update',
+  'unit:delete',
+  'unit:manage_users',
+  'apartment:create', // deprecated aliases of unit:* below — granted during rename window
   'apartment:update',
   'apartment:delete',
   'apartment:manage_users',

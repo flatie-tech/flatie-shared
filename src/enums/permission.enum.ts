@@ -123,7 +123,17 @@ export const Permission = {
   // Chat
   CHAT_CREATE_GROUP: 'chat:create_group',
 
-  // Apartment (flat, no :own/:any)
+  // Unit (flat, no :own/:any) — canonical gate for units + owners endpoints.
+  UNIT_CREATE: 'unit:create',
+  UNIT_READ: 'unit:read',
+  UNIT_UPDATE: 'unit:update',
+  UNIT_DELETE: 'unit:delete',
+  UNIT_MANAGE_USERS: 'unit:manage_users',
+
+  // Apartment — DEPRECATED aliases of the UNIT_* permissions above. Kept and
+  // still granted (see role-permissions.ts) so already-deployed clients/app
+  // versions checking `apartment:*` keep working during the rename window.
+  // Remove once every consumer (incl. shipped mobile builds) is on `unit:*`.
   APARTMENT_CREATE: 'apartment:create',
   APARTMENT_READ: 'apartment:read',
   APARTMENT_UPDATE: 'apartment:update',
