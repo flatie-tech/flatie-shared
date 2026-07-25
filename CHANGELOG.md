@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.85.0
+
+### Changes
+
+- Drop unit occupancy (unit_users) and unit reminders: remove unitUserSchema/UnitUser, the users/userCount unit-response fields, unitReminderKeys, and the UNITS.USERS/USER_DETAIL + UNIT_REMINDERS routes. Ownership is the owners ledger; per-unit reminders are the calendar.
+
 ## 0.84.0
 
 ### Changes
