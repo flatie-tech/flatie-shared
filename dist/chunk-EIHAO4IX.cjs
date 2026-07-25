@@ -119,24 +119,6 @@ var JoinRequestStatus = {
   REJECTED: "rejected"
 };
 
-// src/enums/voting-strength.enum.ts
-var VotingStrength = {
-  /** No verified contact — cannot vote online. */
-  NONE: 0,
-  /** Verified e-mail address (the default floor — every active account). */
-  EMAIL: 10,
-  /** Verified e-mail + SMS-verified mobile number. */
-  PHONE: 20,
-  /** eID / qualified electronic signature (Certilia-verified account). */
-  EID: 30
-};
-function deriveVotingStrength(user) {
-  if ((user.verificationTier ?? 0) >= VerificationTier.QUALIFIED) return VotingStrength.EID;
-  if (user.phoneVerified && user.emailVerified) return VotingStrength.PHONE;
-  if (user.emailVerified) return VotingStrength.EMAIL;
-  return VotingStrength.NONE;
-}
-
 // src/enums/maintenance-log.enum.ts
 var MaintenanceLogFinancedBy = {
   BUILDING_FUNDS: "building_funds",
@@ -652,6 +634,24 @@ var UnitType = {
   COMMERCIAL: "commercial"
 };
 
+// src/enums/voting-strength.enum.ts
+var VotingStrength = {
+  /** No verified contact — cannot vote online. */
+  NONE: 0,
+  /** Verified e-mail address (the default floor — every active account). */
+  EMAIL: 10,
+  /** Verified e-mail + SMS-verified mobile number. */
+  PHONE: 20,
+  /** eID / qualified electronic signature (Certilia-verified account). */
+  EID: 30
+};
+function deriveVotingStrength(user) {
+  if ((user.verificationTier ?? 0) >= VerificationTier.QUALIFIED) return VotingStrength.EID;
+  if (user.phoneVerified && user.emailVerified) return VotingStrength.PHONE;
+  if (user.emailVerified) return VotingStrength.EMAIL;
+  return VotingStrength.NONE;
+}
+
 exports.APPROVE_PERMISSIONS = APPROVE_PERMISSIONS;
 exports.ApprovalStatus = ApprovalStatus;
 exports.BUILDING_ROLE_RANK = BUILDING_ROLE_RANK;
@@ -718,5 +718,5 @@ exports.canAssignRole = canAssignRole;
 exports.deriveVotingStrength = deriveVotingStrength;
 exports.domainPermissions = domainPermissions;
 exports.methodToTier = methodToTier;
-//# sourceMappingURL=chunk-2DDDRRD6.cjs.map
-//# sourceMappingURL=chunk-2DDDRRD6.cjs.map
+//# sourceMappingURL=chunk-EIHAO4IX.cjs.map
+//# sourceMappingURL=chunk-EIHAO4IX.cjs.map

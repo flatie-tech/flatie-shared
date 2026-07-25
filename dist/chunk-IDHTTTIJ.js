@@ -117,24 +117,6 @@ var JoinRequestStatus = {
   REJECTED: "rejected"
 };
 
-// src/enums/voting-strength.enum.ts
-var VotingStrength = {
-  /** No verified contact — cannot vote online. */
-  NONE: 0,
-  /** Verified e-mail address (the default floor — every active account). */
-  EMAIL: 10,
-  /** Verified e-mail + SMS-verified mobile number. */
-  PHONE: 20,
-  /** eID / qualified electronic signature (Certilia-verified account). */
-  EID: 30
-};
-function deriveVotingStrength(user) {
-  if ((user.verificationTier ?? 0) >= VerificationTier.QUALIFIED) return VotingStrength.EID;
-  if (user.phoneVerified && user.emailVerified) return VotingStrength.PHONE;
-  if (user.emailVerified) return VotingStrength.EMAIL;
-  return VotingStrength.NONE;
-}
-
 // src/enums/maintenance-log.enum.ts
 var MaintenanceLogFinancedBy = {
   BUILDING_FUNDS: "building_funds",
@@ -650,6 +632,24 @@ var UnitType = {
   COMMERCIAL: "commercial"
 };
 
+// src/enums/voting-strength.enum.ts
+var VotingStrength = {
+  /** No verified contact — cannot vote online. */
+  NONE: 0,
+  /** Verified e-mail address (the default floor — every active account). */
+  EMAIL: 10,
+  /** Verified e-mail + SMS-verified mobile number. */
+  PHONE: 20,
+  /** eID / qualified electronic signature (Certilia-verified account). */
+  EID: 30
+};
+function deriveVotingStrength(user) {
+  if ((user.verificationTier ?? 0) >= VerificationTier.QUALIFIED) return VotingStrength.EID;
+  if (user.phoneVerified && user.emailVerified) return VotingStrength.PHONE;
+  if (user.emailVerified) return VotingStrength.EMAIL;
+  return VotingStrength.NONE;
+}
+
 export { APPROVE_PERMISSIONS, ApprovalStatus, BUILDING_ROLE_RANK, BoardVisibility, BuildingOtpExpiry, BuildingRole, BuildingStatus, BuildingType, CO_OWNER_VISIBLE_SYSTEM_TYPES, CommonStatus, DevicePlatform, EntityLinkType, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, IdentityVerificationMethod, JoinRequestStatus, LinkableEntityType, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, ORG_ROLE_RANK, OrgQuotaResourceType, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, POLL_CANNOT_VOTE_REASON_KEY, Permission, PlatformRole, PollCannotVoteReason, PollStatus, PollType, PollVoteStatus, PricuvaRefMode, Priority, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, VotingStrength, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, deriveVotingStrength, domainPermissions, methodToTier };
-//# sourceMappingURL=chunk-TTLM6ECD.js.map
-//# sourceMappingURL=chunk-TTLM6ECD.js.map
+//# sourceMappingURL=chunk-IDHTTTIJ.js.map
+//# sourceMappingURL=chunk-IDHTTTIJ.js.map

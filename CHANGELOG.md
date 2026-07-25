@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.84.0
+
+### Changes
+
+- VotingStrength ladder (EMAIL/PHONE/EID) + minVotingStrengthForConsensus; legacy voting-method toggles and tier floor deprecated; VOTING_STRENGTH_TOO_LOW + CONSENSUS_POLL_IMMUTABLE error codes
+
 ## 0.83.0
 
 ### Changes
