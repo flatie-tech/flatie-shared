@@ -384,13 +384,6 @@ var paginatedResponseSchema = (itemSchema) => zod.z.object({
 // src/schemas/entities/unit.schema.ts
 var UNIT_KINDS = ["apartment", "garage", "storage_unit"];
 var unitKindSchema = zod.z.enum(UNIT_KINDS).describe("What the unit physically is: `apartment`, `garage`, or `storage_unit`.");
-var unitUserSchema = zod.z.looseObject({
-  id: zod.z.string(),
-  name: zod.z.string().describe("Display name of the unit member."),
-  email: zod.z.string().describe("Contact email of the unit member."),
-  image: zod.z.string().nullable().optional().describe("Absolute URL to the member\u2019s profile image; null when none is set."),
-  joinedAt: zod.z.string().describe("ISO-8601 timestamp when the user was attached to the unit.")
-});
 var unitSchema = zod.z.looseObject({
   id: zod.z.string(),
   buildingId: zod.z.string(),
@@ -406,8 +399,6 @@ var unitSchema = zod.z.looseObject({
   ),
   surnameOnDoor: zod.z.string().nullable().optional().describe("Surname shown on the door plate; apartments only, null otherwise."),
   surnameOnIntercom: zod.z.string().nullable().optional().describe("Surname shown on the intercom; apartments only, null otherwise."),
-  users: zod.z.array(unitUserSchema).optional().describe("Users attached to the unit (residency view); present on detail/list endpoints."),
-  userCount: zod.z.number().optional().describe("Number of users attached to the unit; present on list endpoints."),
   canEdit: zod.z.boolean().optional().describe("True when the calling user may edit this unit (management gate)."),
   canDelete: zod.z.boolean().optional().describe("True when the calling user may archive this unit (management gate)."),
   createdAt: zod.z.string().optional(),
@@ -2811,7 +2802,6 @@ exports.strongPasswordSchema = strongPasswordSchema;
 exports.timeSchema = timeSchema;
 exports.unitKindSchema = unitKindSchema;
 exports.unitSchema = unitSchema;
-exports.unitUserSchema = unitUserSchema;
 exports.unreadCountResponseSchema = unreadCountResponseSchema;
 exports.updateBoardCardSchema = updateBoardCardSchema;
 exports.updateBoardColumnSchema = updateBoardColumnSchema;
@@ -2844,5 +2834,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-IBFVFAO6.cjs.map
-//# sourceMappingURL=chunk-IBFVFAO6.cjs.map
+//# sourceMappingURL=chunk-3XKYIGXA.cjs.map
+//# sourceMappingURL=chunk-3XKYIGXA.cjs.map

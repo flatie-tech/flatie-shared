@@ -51,7 +51,6 @@ export {
   spotlightKeys,
   storageUnitKeys,
   transactionCategoryKeys,
-  unitReminderKeys,
   unitSearchKeys,
   userKeys,
   widgetKeys,

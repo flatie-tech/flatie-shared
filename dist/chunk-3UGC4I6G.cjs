@@ -1,3 +1,5 @@
+'use strict';
+
 // src/urls/index.ts
 var API_VERSION = "v1";
 var API_ROUTES = {
@@ -50,15 +52,8 @@ var API_ROUTES = {
     LIST: (buildingId) => `/buildings/${buildingId}/units`,
     DETAIL: (buildingId, unitId) => `/buildings/${buildingId}/units/${unitId}`,
     RESTORE: (buildingId, unitId) => `/buildings/${buildingId}/units/${unitId}/restore`,
-    USERS: (buildingId, unitId) => `/buildings/${buildingId}/units/${unitId}/users`,
-    USER_DETAIL: (buildingId, unitId, userId) => `/buildings/${buildingId}/units/${unitId}/users/${userId}`,
     FLOORS: (buildingId) => `/buildings/${buildingId}/units/floors`,
     USER_UNITS: (buildingId) => `/users/me/buildings/${buildingId}/units`
-  },
-  // ── Unit Reminders ────────────────────────────────────────────────────
-  UNIT_REMINDERS: {
-    LIST: (buildingId) => `/buildings/${buildingId}/unit-reminders`,
-    DETAIL: (buildingId, reminderId) => `/buildings/${buildingId}/unit-reminders/${reminderId}`
   },
   // ── Owners (building-scoped, user-link optional) ────────────────────
   OWNERS: {
@@ -261,6 +256,7 @@ var API_ROUTES = {
   }
 };
 
-export { API_ROUTES, API_VERSION };
-//# sourceMappingURL=chunk-SBHZTKJF.js.map
-//# sourceMappingURL=chunk-SBHZTKJF.js.map
+exports.API_ROUTES = API_ROUTES;
+exports.API_VERSION = API_VERSION;
+//# sourceMappingURL=chunk-3UGC4I6G.cjs.map
+//# sourceMappingURL=chunk-3UGC4I6G.cjs.map

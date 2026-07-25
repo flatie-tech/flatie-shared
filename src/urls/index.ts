@@ -63,18 +63,8 @@ export const API_ROUTES = {
     DETAIL: (buildingId: string, unitId: string) => `/buildings/${buildingId}/units/${unitId}`,
     RESTORE: (buildingId: string, unitId: string) =>
       `/buildings/${buildingId}/units/${unitId}/restore`,
-    USERS: (buildingId: string, unitId: string) => `/buildings/${buildingId}/units/${unitId}/users`,
-    USER_DETAIL: (buildingId: string, unitId: string, userId: string) =>
-      `/buildings/${buildingId}/units/${unitId}/users/${userId}`,
     FLOORS: (buildingId: string) => `/buildings/${buildingId}/units/floors`,
     USER_UNITS: (buildingId: string) => `/users/me/buildings/${buildingId}/units`,
-  },
-
-  // ── Unit Reminders ────────────────────────────────────────────────────
-  UNIT_REMINDERS: {
-    LIST: (buildingId: string) => `/buildings/${buildingId}/unit-reminders`,
-    DETAIL: (buildingId: string, reminderId: string) =>
-      `/buildings/${buildingId}/unit-reminders/${reminderId}`,
   },
 
   // ── Owners (building-scoped, user-link optional) ────────────────────

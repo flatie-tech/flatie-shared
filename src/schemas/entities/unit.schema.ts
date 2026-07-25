@@ -14,25 +14,6 @@ export const unitKindSchema = z
   .enum(UNIT_KINDS)
   .describe('What the unit physically is: `apartment`, `garage`, or `storage_unit`.');
 
-/**
- * A user attached to a unit as an occupant — who lives at / is associated
- * with the unit. Occupancy carries no role and no ownership share; ownership
- * is a fact of the owners ledger (`unit_owners` via the owner-assignment
- * routes), decoupled from who occupies the unit.
- */
-export const unitUserSchema = z.looseObject({
-  id: z.string(),
-  name: z.string().describe('Display name of the unit member.'),
-  email: z.string().describe('Contact email of the unit member.'),
-  image: z
-    .string()
-    .nullable()
-    .optional()
-    .describe('Absolute URL to the member’s profile image; null when none is set.'),
-  joinedAt: z.string().describe('ISO-8601 timestamp when the user was attached to the unit.'),
-});
-export type UnitUser = z.infer<typeof unitUserSchema>;
-
 export const unitSchema = z.looseObject({
   id: z.string(),
   buildingId: z.string(),
@@ -73,14 +54,6 @@ export const unitSchema = z.looseObject({
     .nullable()
     .optional()
     .describe('Surname shown on the intercom; apartments only, null otherwise.'),
-  users: z
-    .array(unitUserSchema)
-    .optional()
-    .describe('Users attached to the unit (residency view); present on detail/list endpoints.'),
-  userCount: z
-    .number()
-    .optional()
-    .describe('Number of users attached to the unit; present on list endpoints.'),
   canEdit: z
     .boolean()
     .optional()

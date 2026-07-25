@@ -332,12 +332,6 @@ export const ownerKeys = {
     [...ownerKeys.all, 'building-assignments', buildingId] as const,
 };
 
-export const unitReminderKeys = {
-  all: ['unitReminder'] as const,
-  list: (buildingId: string, unitKind: string, unitId: string) =>
-    [...unitReminderKeys.all, 'list', buildingId, unitKind, unitId] as const,
-};
-
 export const businessPartnerKeys = {
   all: ['businessPartner'] as const,
   lists: () => [...businessPartnerKeys.all, 'list'] as const,

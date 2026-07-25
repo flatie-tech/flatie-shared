@@ -88,7 +88,6 @@ export type {
   PaginatedUnitsResponse,
   Unit,
   UnitKind,
-  UnitUser,
   UpdateUnitInput,
 } from './unit.schema';
 export {
@@ -97,7 +96,6 @@ export {
   UNIT_KINDS,
   unitKindSchema,
   unitSchema,
-  unitUserSchema,
   updateUnitSchema,
 } from './unit.schema';
 

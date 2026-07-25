@@ -50,14 +50,8 @@ declare const API_ROUTES: {
         readonly LIST: (buildingId: string) => string;
         readonly DETAIL: (buildingId: string, unitId: string) => string;
         readonly RESTORE: (buildingId: string, unitId: string) => string;
-        readonly USERS: (buildingId: string, unitId: string) => string;
-        readonly USER_DETAIL: (buildingId: string, unitId: string, userId: string) => string;
         readonly FLOORS: (buildingId: string) => string;
         readonly USER_UNITS: (buildingId: string) => string;
-    };
-    readonly UNIT_REMINDERS: {
-        readonly LIST: (buildingId: string) => string;
-        readonly DETAIL: (buildingId: string, reminderId: string) => string;
     };
     readonly OWNERS: {
         readonly LIST: (buildingId: string) => string;
