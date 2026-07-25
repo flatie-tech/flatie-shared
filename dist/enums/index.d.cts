@@ -111,6 +111,44 @@ declare const JoinRequestStatus: {
 };
 type JoinRequestStatus = (typeof JoinRequestStatus)[keyof typeof JoinRequestStatus];
 
+/**
+ * How strongly a voter's account is verified — the ladder a building's
+ * `minVotingStrengthForConsensus` floor is measured against.
+ *
+ * Distinct from {@link VerificationTier}: strength is about the *account*
+ * (contact + identity confirmation a co-owner has completed), not about the
+ * evidence attached to a single ballot. Rep-recorded paper votes sit outside
+ * this ladder entirely — they are attested by the representative and are never
+ * gated by the floor.
+ *
+ * Numeric with gaps so future rungs (declared OIB, ID-card number, …) can slot
+ * between existing ones without renumbering. Stored as a smallint, compared
+ * with `>=`.
+ */
+declare const VotingStrength: {
+    /** No verified contact — cannot vote online. */
+    readonly NONE: 0;
+    /** Verified e-mail address (the default floor — every active account). */
+    readonly EMAIL: 10;
+    /** Verified e-mail + SMS-verified mobile number. */
+    readonly PHONE: 20;
+    /** eID / qualified electronic signature (Certilia-verified account). */
+    readonly EID: 30;
+};
+type VotingStrength = (typeof VotingStrength)[keyof typeof VotingStrength];
+/**
+ * Derive a user's current voting strength from account state.
+ *
+ * `verificationTier` is the user's durable {@link VerificationTier}; only
+ * QUALIFIED (eID) raises strength above the contact rungs — OIB/IDENTITY
+ * are identity-proof concepts that don't (yet) map to a rung of their own.
+ */
+declare function deriveVotingStrength(user: {
+    emailVerified?: boolean | null;
+    phoneVerified?: boolean | null;
+    verificationTier?: number | null;
+}): VotingStrength;
+
 declare const MaintenanceLogFinancedBy: {
     readonly BUILDING_FUNDS: "building_funds";
     readonly INSURANCE: "insurance";
@@ -320,4 +358,4 @@ declare const UnitType: {
 };
 type UnitType = (typeof UnitType)[keyof typeof UnitType];
 
-export { BoardVisibility, BuildingOtpExpiry, BuildingStatus, CO_OWNER_VISIBLE_SYSTEM_TYPES, DevicePlatform, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, JoinRequestStatus, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, OrgQuotaResourceType, OrgStatus, OrgType, POLL_CANNOT_VOTE_REASON_KEY, PollCannotVoteReason, PollStatus, PollVoteStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, TransactionSource, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, WASTE_SUBTYPE_NOTIFICATION_MAP, methodToTier };
+export { BoardVisibility, BuildingOtpExpiry, BuildingStatus, CO_OWNER_VISIBLE_SYSTEM_TYPES, DevicePlatform, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, JoinRequestStatus, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, OrgQuotaResourceType, OrgStatus, OrgType, POLL_CANNOT_VOTE_REASON_KEY, PollCannotVoteReason, PollStatus, PollVoteStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, TransactionSource, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, VotingStrength, WASTE_SUBTYPE_NOTIFICATION_MAP, deriveVotingStrength, methodToTier };

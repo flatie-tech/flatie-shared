@@ -4,12 +4,11 @@ import { z } from 'zod';
  * Update building settings request — body of
  * `PATCH /buildings/:buildingId/settings`.
  *
- * Every field optional (partial patch). The backend service enforces
- * two invariants on top of this shape:
- *  - last-method-lock: at least one `voting*Enabled` flag must remain
- *    true (see `utils/voting-methods.ts` for the client-side check);
- *  - `minVerificationTierForConsensus` cannot go below the ZUOZ legal
- *    floor and must stay consistent with the printed-signature toggle.
+ * Every field optional (partial patch). Consensus voting is governed by
+ * `minVotingStrengthForConsensus` (a `VotingStrength` rung): the minimum
+ * account verification an ONLINE consensus ballot must carry. Rep-recorded
+ * paper votes are never gated by it. The backend rejects the PHONE rung
+ * while no SMS provider is configured.
  */
 export const updateBuildingSettingsSchema = z.object({
   ownershipPercentageSource: z
@@ -26,8 +25,14 @@ export const updateBuildingSettingsSchema = z.object({
   houseRulesEnabled: z.boolean().optional(),
   chatEnabled: z.boolean().optional(),
   commentsEnabled: z.boolean().optional(),
-  votingCertiliaEnabled: z.boolean().optional(),
-  votingPrintedSignatureEnabled: z.boolean().optional(),
+  votingCertiliaEnabled: z
+    .boolean()
+    .optional()
+    .describe('Deprecated: no longer enforced; accepted for old clients and ignored.'),
+  votingPrintedSignatureEnabled: z
+    .boolean()
+    .optional()
+    .describe('Deprecated: no longer enforced; accepted for old clients and ignored.'),
   minVerificationTierForConsensus: z
     .number()
     .int()
@@ -35,7 +40,16 @@ export const updateBuildingSettingsSchema = z.object({
     .max(3)
     .optional()
     .describe(
-      'Minimum durable VerificationTier ordinal for CONSENSUS ballots. The backend enforces the ZUOZ legal floor (IDENTITY = 2) and consistency with the printed-signature toggle.',
+      'Deprecated: superseded by minVotingStrengthForConsensus. Accepted from old clients and translated by the backend (3 → EID, else EMAIL).',
+    ),
+  minVotingStrengthForConsensus: z
+    .number()
+    .int()
+    .min(0)
+    .max(100)
+    .optional()
+    .describe(
+      'Minimum VotingStrength rung (EMAIL=10, PHONE=20, EID=30) an ONLINE consensus ballot must carry. Paper votes recorded by the representative are never gated by it.',
     ),
   addonAiEnabled: z.boolean().optional(),
   addonStorage5gbEnabled: z.boolean().optional(),

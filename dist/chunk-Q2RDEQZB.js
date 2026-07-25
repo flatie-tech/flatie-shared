@@ -1,8 +1,8 @@
 import { normalizeMoney } from './chunk-2VRMXLEK.js';
 import { optionalIbanSchema } from './chunk-WK7VOCOE.js';
 import { AI_CHAT_LIMITS } from './chunk-BYX5R6MR.js';
-import { BoardVisibility, Priority, OrgRole, OrgType, BuildingType, BuildingRole, PricuvaRefMode, FundsSource, QUOTA_RESOURCE_TYPES, FailureUnitType, FailureLocationType, FailureStatus, PollType, TransactionType, PlatformRole, BuildingStatus, CommonStatus, ApprovalStatus, MaintenanceStatus, NotificationType, PollCannotVoteReason } from './chunk-PVLLTZAW.js';
-import { BACKEND_ERROR_CODES } from './chunk-6KZX2TOR.js';
+import { BoardVisibility, Priority, OrgRole, OrgType, BuildingType, BuildingRole, PricuvaRefMode, FundsSource, QUOTA_RESOURCE_TYPES, FailureUnitType, FailureLocationType, FailureStatus, PollType, TransactionType, PlatformRole, BuildingStatus, CommonStatus, ApprovalStatus, MaintenanceStatus, NotificationType, PollCannotVoteReason } from './chunk-TTLM6ECD.js';
+import { BACKEND_ERROR_CODES } from './chunk-OE365FC6.js';
 import { z } from 'zod';
 
 var apiErrorSchema = z.object({
@@ -571,10 +571,13 @@ var updateBuildingSettingsSchema = z.object({
   houseRulesEnabled: z.boolean().optional(),
   chatEnabled: z.boolean().optional(),
   commentsEnabled: z.boolean().optional(),
-  votingCertiliaEnabled: z.boolean().optional(),
-  votingPrintedSignatureEnabled: z.boolean().optional(),
+  votingCertiliaEnabled: z.boolean().optional().describe("Deprecated: no longer enforced; accepted for old clients and ignored."),
+  votingPrintedSignatureEnabled: z.boolean().optional().describe("Deprecated: no longer enforced; accepted for old clients and ignored."),
   minVerificationTierForConsensus: z.number().int().min(0).max(3).optional().describe(
-    "Minimum durable VerificationTier ordinal for CONSENSUS ballots. The backend enforces the ZUOZ legal floor (IDENTITY = 2) and consistency with the printed-signature toggle."
+    "Deprecated: superseded by minVotingStrengthForConsensus. Accepted from old clients and translated by the backend (3 \u2192 EID, else EMAIL)."
+  ),
+  minVotingStrengthForConsensus: z.number().int().min(0).max(100).optional().describe(
+    "Minimum VotingStrength rung (EMAIL=10, PHONE=20, EID=30) an ONLINE consensus ballot must carry. Paper votes recorded by the representative are never gated by it."
   ),
   addonAiEnabled: z.boolean().optional(),
   addonStorage5gbEnabled: z.boolean().optional()
@@ -1605,14 +1608,13 @@ var buildingSettingsResponseSchema = z.looseObject({
   houseRulesEnabled: z.boolean().describe("Whether the house-rules section is available in this building."),
   chatEnabled: z.boolean().describe("Whether building chat is available in this building."),
   commentsEnabled: z.boolean().describe("Whether commenting on notices/reports is available in this building."),
-  votingCertiliaEnabled: z.boolean().describe(
-    "Whether the Certilia eID online voting path is offered on CONSENSUS polls. Subject to the last-method-lock invariant."
-  ),
-  votingPrintedSignatureEnabled: z.boolean().describe(
-    "Whether the printed-signature voting path (rep-reviewed paper ballots) is offered on CONSENSUS polls. Subject to the last-method-lock invariant."
-  ),
+  votingCertiliaEnabled: z.boolean().describe("Deprecated: emitted for old clients, no longer enforced."),
+  votingPrintedSignatureEnabled: z.boolean().describe("Deprecated: emitted for old clients, no longer enforced."),
   minVerificationTierForConsensus: z.number().int().describe(
-    "Minimum durable VerificationTier ordinal a co-owner must hold to cast a binding CONSENSUS vote. The backend enforces the ZUOZ legal floor."
+    "Deprecated: derived from minVotingStrengthForConsensus for old clients (EID \u2192 3, else 2)."
+  ),
+  minVotingStrengthForConsensus: z.number().int().optional().describe(
+    "Minimum VotingStrength rung (EMAIL=10, PHONE=20, EID=30) an ONLINE consensus ballot must carry. Rep-recorded paper votes are never gated by it."
   ),
   addonAiEnabled: z.boolean().optional().describe("Whether the AI add-on is enabled (billed on the next HUB-3 invoice)."),
   addonStorage5gbEnabled: z.boolean().optional().describe("Whether the 5 GB storage add-on is enabled."),
@@ -2610,5 +2612,5 @@ var repDashboardSummaryResponseSchema = z.looseObject({
 }).describe("Payload of `GET /representatives/dashboard/summary`.");
 
 export { ARCHIVE_TYPES, ApprovalStatusSchema, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, EMAIL_LIMITS, ENTITY_LINK_TYPES, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, LINKABLE_ENTITY_TYPES, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, POLL_LIMITS, POLL_TYPES, PrioritySchema, RECURRENCE_TYPES, REP_RECENT_ACTIVITY_TYPES, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingOwnerAssignmentSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createEventSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createMaintenanceLogSchema, createNoticeSchema, createOrganizationSchema, createOwnerSchema, createPollSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, inviteOwnerSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, recordOfflineVotesSchema, recurrenceTypeSchema, registerSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, signedMoneyStringSchema, strongPasswordSchema, timeSchema, unitKindSchema, unitSchema, unitUserSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateEventSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-NS3E6HJA.js.map
-//# sourceMappingURL=chunk-NS3E6HJA.js.map
+//# sourceMappingURL=chunk-Q2RDEQZB.js.map
+//# sourceMappingURL=chunk-Q2RDEQZB.js.map

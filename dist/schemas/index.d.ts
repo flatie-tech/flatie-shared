@@ -938,12 +938,11 @@ type BuildingQuotaList = z.infer<typeof buildingQuotaListSchema>;
  * Update building settings request — body of
  * `PATCH /buildings/:buildingId/settings`.
  *
- * Every field optional (partial patch). The backend service enforces
- * two invariants on top of this shape:
- *  - last-method-lock: at least one `voting*Enabled` flag must remain
- *    true (see `utils/voting-methods.ts` for the client-side check);
- *  - `minVerificationTierForConsensus` cannot go below the ZUOZ legal
- *    floor and must stay consistent with the printed-signature toggle.
+ * Every field optional (partial patch). Consensus voting is governed by
+ * `minVotingStrengthForConsensus` (a `VotingStrength` rung): the minimum
+ * account verification an ONLINE consensus ballot must carry. Rep-recorded
+ * paper votes are never gated by it. The backend rejects the PHONE rung
+ * while no SMS provider is configured.
  */
 declare const updateBuildingSettingsSchema: z.ZodObject<{
     ownershipPercentageSource: z.ZodOptional<z.ZodNullable<z.ZodEnum<{
@@ -962,6 +961,7 @@ declare const updateBuildingSettingsSchema: z.ZodObject<{
     votingCertiliaEnabled: z.ZodOptional<z.ZodBoolean>;
     votingPrintedSignatureEnabled: z.ZodOptional<z.ZodBoolean>;
     minVerificationTierForConsensus: z.ZodOptional<z.ZodNumber>;
+    minVotingStrengthForConsensus: z.ZodOptional<z.ZodNumber>;
     addonAiEnabled: z.ZodOptional<z.ZodBoolean>;
     addonStorage5gbEnabled: z.ZodOptional<z.ZodBoolean>;
 }, z.core.$strip>;
@@ -2448,10 +2448,10 @@ type BuildingFundsLedgerResponse = Strict<z.infer<typeof buildingFundsLedgerResp
  * Building settings response — shape returned from
  * `GET /buildings/:buildingId/settings`.
  *
- * Field set mirrors the backend `building_settings` row. The voting
- * method toggles are subject to the last-method-lock invariant (see
- * `utils/voting-methods.ts`): at least one of the `voting*Enabled`
- * flags must stay true so CONSENSUS polls always have a voting path.
+ * Field set mirrors the backend `building_settings` row. Consensus voting
+ * is governed by `minVotingStrengthForConsensus`; the legacy voting-method
+ * toggles and `minVerificationTierForConsensus` are still emitted for old
+ * clients but no longer enforced.
  */
 declare const buildingSettingsResponseSchema: z.ZodObject<{
     id: z.ZodOptional<z.ZodString>;
@@ -2472,6 +2472,7 @@ declare const buildingSettingsResponseSchema: z.ZodObject<{
     votingCertiliaEnabled: z.ZodBoolean;
     votingPrintedSignatureEnabled: z.ZodBoolean;
     minVerificationTierForConsensus: z.ZodNumber;
+    minVotingStrengthForConsensus: z.ZodOptional<z.ZodNumber>;
     addonAiEnabled: z.ZodOptional<z.ZodBoolean>;
     addonStorage5gbEnabled: z.ZodOptional<z.ZodBoolean>;
     createdAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;

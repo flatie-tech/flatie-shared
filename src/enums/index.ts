@@ -74,3 +74,4 @@ export {
   TransactionType,
 } from './status.enum';
 export { UnitType } from './unit-type.enum';
+export { deriveVotingStrength, VotingStrength } from './voting-strength.enum';

@@ -1,15 +1,9 @@
 /**
- * Voting-method last-method-lock invariant.
- *
- * Buildings offer one or more voting paths on CONSENSUS polls
- * (`voting_<method>_enabled` flags in building settings). At least one
- * method must stay enabled at all times — otherwise consensus polls
- * would have no way to collect binding votes.
- *
- * The backend settings service is the enforcement authority (it
- * rejects a patch that would disable the last method). These helpers
- * give clients the same check so the UI can lock the final toggle
- * instead of letting the user hit a server error.
+ * Deprecated: the voting-method toggles are no longer enforced — consensus
+ * voting is governed by `minVotingStrengthForConsensus` (see
+ * `enums/voting-strength.enum.ts`), and rep-recorded paper votes are always
+ * available. Kept only so old mobile builds keep type-checking; remove with
+ * the toggles in a future release.
  */
 
 export const VOTING_METHOD_SETTINGS = [

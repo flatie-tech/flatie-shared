@@ -69,7 +69,14 @@ var BACKEND_ERROR_CODES = {
   POLL_NOT_APPROVED: "POLL_NOT_APPROVED",
   POLL_EXPIRED: "POLL_EXPIRED",
   USER_ALREADY_VOTED: "USER_ALREADY_VOTED",
+  // Deprecated: superseded by VOTING_STRENGTH_TOO_LOW (kept for old clients).
   CONSENSUS_TIER_TOO_LOW: "CONSENSUS_TIER_TOO_LOW",
+  // Voter's account VotingStrength is below the building's
+  // `minVotingStrengthForConsensus` floor for an ONLINE consensus vote.
+  VOTING_STRENGTH_TOO_LOW: "VOTING_STRENGTH_TOO_LOW",
+  // Consensus polls with recorded votes (or finalized) are permanent
+  // records — rep-level archive/delete is refused.
+  CONSENSUS_POLL_IMMUTABLE: "CONSENSUS_POLL_IMMUTABLE",
   // Join request workflow
   JOIN_REQUEST_PENDING: "JOIN_REQUEST_PENDING",
   JOIN_REQUEST_NOT_FOUND: "JOIN_REQUEST_NOT_FOUND",
@@ -132,5 +139,5 @@ function isBackendErrorCode(code) {
 }
 
 export { BACKEND_ERROR_CODES, isBackendErrorCode };
-//# sourceMappingURL=chunk-6KZX2TOR.js.map
-//# sourceMappingURL=chunk-6KZX2TOR.js.map
+//# sourceMappingURL=chunk-OE365FC6.js.map
+//# sourceMappingURL=chunk-OE365FC6.js.map

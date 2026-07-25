@@ -5,10 +5,10 @@ import type { Strict } from './_strict';
  * Building settings response — shape returned from
  * `GET /buildings/:buildingId/settings`.
  *
- * Field set mirrors the backend `building_settings` row. The voting
- * method toggles are subject to the last-method-lock invariant (see
- * `utils/voting-methods.ts`): at least one of the `voting*Enabled`
- * flags must stay true so CONSENSUS polls always have a voting path.
+ * Field set mirrors the backend `building_settings` row. Consensus voting
+ * is governed by `minVotingStrengthForConsensus`; the legacy voting-method
+ * toggles and `minVerificationTierForConsensus` are still emitted for old
+ * clients but no longer enforced.
  */
 export const buildingSettingsResponseSchema = z
   .looseObject({
@@ -46,19 +46,22 @@ export const buildingSettingsResponseSchema = z
       .describe('Whether commenting on notices/reports is available in this building.'),
     votingCertiliaEnabled: z
       .boolean()
-      .describe(
-        'Whether the Certilia eID online voting path is offered on CONSENSUS polls. Subject to the last-method-lock invariant.',
-      ),
+      .describe('Deprecated: emitted for old clients, no longer enforced.'),
     votingPrintedSignatureEnabled: z
       .boolean()
-      .describe(
-        'Whether the printed-signature voting path (rep-reviewed paper ballots) is offered on CONSENSUS polls. Subject to the last-method-lock invariant.',
-      ),
+      .describe('Deprecated: emitted for old clients, no longer enforced.'),
     minVerificationTierForConsensus: z
       .number()
       .int()
       .describe(
-        'Minimum durable VerificationTier ordinal a co-owner must hold to cast a binding CONSENSUS vote. The backend enforces the ZUOZ legal floor.',
+        'Deprecated: derived from minVotingStrengthForConsensus for old clients (EID → 3, else 2).',
+      ),
+    minVotingStrengthForConsensus: z
+      .number()
+      .int()
+      .optional()
+      .describe(
+        'Minimum VotingStrength rung (EMAIL=10, PHONE=20, EID=30) an ONLINE consensus ballot must carry. Rep-recorded paper votes are never gated by it.',
       ),
     addonAiEnabled: z
       .boolean()

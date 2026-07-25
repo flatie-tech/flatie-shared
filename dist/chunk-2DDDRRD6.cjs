@@ -119,6 +119,24 @@ var JoinRequestStatus = {
   REJECTED: "rejected"
 };
 
+// src/enums/voting-strength.enum.ts
+var VotingStrength = {
+  /** No verified contact — cannot vote online. */
+  NONE: 0,
+  /** Verified e-mail address (the default floor — every active account). */
+  EMAIL: 10,
+  /** Verified e-mail + SMS-verified mobile number. */
+  PHONE: 20,
+  /** eID / qualified electronic signature (Certilia-verified account). */
+  EID: 30
+};
+function deriveVotingStrength(user) {
+  if ((user.verificationTier ?? 0) >= VerificationTier.QUALIFIED) return VotingStrength.EID;
+  if (user.phoneVerified && user.emailVerified) return VotingStrength.PHONE;
+  if (user.emailVerified) return VotingStrength.EMAIL;
+  return VotingStrength.NONE;
+}
+
 // src/enums/maintenance-log.enum.ts
 var MaintenanceLogFinancedBy = {
   BUILDING_FUNDS: "building_funds",
@@ -692,11 +710,13 @@ exports.TransactionType = TransactionType;
 exports.UNIMPLEMENTED_NOTIFICATION_TYPES = UNIMPLEMENTED_NOTIFICATION_TYPES;
 exports.UnitType = UnitType;
 exports.VerificationTier = VerificationTier;
+exports.VotingStrength = VotingStrength;
 exports.WASTE_SUBTYPE_NOTIFICATION_MAP = WASTE_SUBTYPE_NOTIFICATION_MAP;
 exports.canAssignOrgRole = canAssignOrgRole;
 exports.canAssignPlatformRole = canAssignPlatformRole;
 exports.canAssignRole = canAssignRole;
+exports.deriveVotingStrength = deriveVotingStrength;
 exports.domainPermissions = domainPermissions;
 exports.methodToTier = methodToTier;
-//# sourceMappingURL=chunk-PMF623UP.cjs.map
-//# sourceMappingURL=chunk-PMF623UP.cjs.map
+//# sourceMappingURL=chunk-2DDDRRD6.cjs.map
+//# sourceMappingURL=chunk-2DDDRRD6.cjs.map
