@@ -8,23 +8,24 @@ const rep: MessageableUserShape = {
 const deputy: MessageableUserShape = {
   buildingRole: { roleType: BuildingRole.DEPUTY_REPRESENTATIVE },
 };
-const optedInCoOwner: MessageableUserShape = {
-  buildingRole: { roleType: BuildingRole.CO_OWNER, chatVisibleToCoOwners: true },
+const optedInResident: MessageableUserShape = {
+  buildingRole: { roleType: BuildingRole.RESIDENT, chatVisibleToCoOwners: true },
 };
-const hiddenCoOwner: MessageableUserShape = {
-  buildingRole: { roleType: BuildingRole.CO_OWNER, chatVisibleToCoOwners: false },
+const hiddenResident: MessageableUserShape = {
+  buildingRole: { roleType: BuildingRole.RESIDENT, chatVisibleToCoOwners: false },
 };
-const undefinedVisibilityCoOwner: MessageableUserShape = {
-  buildingRole: { roleType: BuildingRole.CO_OWNER },
-};
-const resident: MessageableUserShape = {
+const undefinedVisibilityResident: MessageableUserShape = {
   buildingRole: { roleType: BuildingRole.RESIDENT },
+};
+// Legacy value on un-migrated environments — must behave exactly like resident.
+const optedInLegacyCoOwner: MessageableUserShape = {
+  buildingRole: { roleType: BuildingRole.CO_OWNER, chatVisibleToCoOwners: true },
 };
 const roleless: MessageableUserShape = { buildingRole: null };
 
 describe('canMessageUser', () => {
   it('managerial callers can message anyone', () => {
-    for (const target of [rep, deputy, optedInCoOwner, hiddenCoOwner, resident, roleless]) {
+    for (const target of [rep, deputy, optedInResident, hiddenResident, roleless]) {
       expect(canMessageUser(true, target)).toBe(true);
     }
   });
@@ -34,30 +35,30 @@ describe('canMessageUser', () => {
     expect(canMessageUser(false, deputy)).toBe(true);
   });
 
-  it('non-managerial callers can message only opted-in co-owners', () => {
-    expect(canMessageUser(false, optedInCoOwner)).toBe(true);
-    expect(canMessageUser(false, hiddenCoOwner)).toBe(false);
+  it('non-managerial callers can message opted-in members regardless of role', () => {
+    expect(canMessageUser(false, optedInResident)).toBe(true);
+    expect(canMessageUser(false, optedInLegacyCoOwner)).toBe(true);
+    expect(canMessageUser(false, hiddenResident)).toBe(false);
   });
 
   it('treats an undefined chatVisibleToCoOwners flag as opted out', () => {
-    expect(canMessageUser(false, undefinedVisibilityCoOwner)).toBe(false);
+    expect(canMessageUser(false, undefinedVisibilityResident)).toBe(false);
   });
 
-  it('non-managerial callers cannot message residents or roleless users', () => {
-    expect(canMessageUser(false, resident)).toBe(false);
+  it('non-managerial callers cannot message roleless users', () => {
     expect(canMessageUser(false, roleless)).toBe(false);
     expect(canMessageUser(false, {})).toBe(false);
   });
 });
 
 describe('getMessageableUsers', () => {
-  const all = [rep, deputy, optedInCoOwner, hiddenCoOwner, undefinedVisibilityCoOwner, resident];
+  const all = [rep, deputy, optedInResident, hiddenResident, undefinedVisibilityResident];
 
   it('returns everyone for a managerial caller', () => {
     expect(getMessageableUsers(all, true)).toEqual(all);
   });
 
-  it('filters to reps, deputies, and opted-in co-owners for everyone else', () => {
-    expect(getMessageableUsers(all, false)).toEqual([rep, deputy, optedInCoOwner]);
+  it('filters to reps, deputies, and opted-in members for everyone else', () => {
+    expect(getMessageableUsers(all, false)).toEqual([rep, deputy, optedInResident]);
   });
 });

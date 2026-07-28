@@ -34,6 +34,7 @@ export const NotificationType = {
   BUILDING_JOIN_REQUEST_REJECTED: 'building_join_request_rejected',
   BUILDING_MEMBER_JOINED: 'building_member_joined',
   BUILDING_ROLE_CHANGED: 'building_role_changed',
+  OWNER_RECORD_LINKED: 'owner_record_linked',
   BUILDING_PENDING_APPROVAL: 'building_pending_approval',
   BUILDING_APPROVED: 'building_approved',
   BUILDING_REJECTED: 'building_rejected',
@@ -132,6 +133,7 @@ export const NOTIFICATION_TYPE_CATEGORY: Record<NotificationType, NotificationCa
   [NotificationType.BUILDING_JOIN_REQUEST_REJECTED]: NotificationCategory.SYSTEM,
   [NotificationType.BUILDING_MEMBER_JOINED]: NotificationCategory.SYSTEM,
   [NotificationType.BUILDING_ROLE_CHANGED]: NotificationCategory.SYSTEM,
+  [NotificationType.OWNER_RECORD_LINKED]: NotificationCategory.SYSTEM,
   [NotificationType.BUILDING_PENDING_APPROVAL]: NotificationCategory.SYSTEM,
   [NotificationType.BUILDING_APPROVED]: NotificationCategory.SYSTEM,
   [NotificationType.BUILDING_REJECTED]: NotificationCategory.SYSTEM,
@@ -157,12 +159,19 @@ export const UNIMPLEMENTED_NOTIFICATION_TYPES: ReadonlySet<NotificationType> =
   ]);
 
 /**
- * System-category types visible to co-owners and tenants in notification
+ * System-category types visible to non-managerial building members
+ * (residents; legacy co_owner/tenant rows included) in notification
  * preferences. The rest of the system category (join requests, building
  * approval flow, role changes) is managerial and hidden for those roles.
  */
-export const CO_OWNER_VISIBLE_SYSTEM_TYPES: ReadonlySet<NotificationType> =
-  new Set<NotificationType>([NotificationType.BUILDING_MEMBER_JOINED]);
+export const RESIDENT_VISIBLE_SYSTEM_TYPES: ReadonlySet<NotificationType> =
+  new Set<NotificationType>([
+    NotificationType.BUILDING_MEMBER_JOINED,
+    NotificationType.OWNER_RECORD_LINKED,
+  ]);
+
+/** @deprecated Renamed after the CO_OWNER deprecation — use RESIDENT_VISIBLE_SYSTEM_TYPES. */
+export const CO_OWNER_VISIBLE_SYSTEM_TYPES = RESIDENT_VISIBLE_SYSTEM_TYPES;
 
 /**
  * Maps waste-collection subtype keys to the corresponding notification type.

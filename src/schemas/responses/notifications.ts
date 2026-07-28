@@ -126,6 +126,12 @@ const buildingRoleChangedDataSchema = baseNotificationDataSchema.extend({
   role: z.string(),
 });
 
+// Fired at the user whose account got linked to an owners-ledger record
+// (signup/verify auto-link or a rep linking them explicitly).
+const ownerRecordLinkedDataSchema = baseNotificationDataSchema.extend({
+  buildingName: z.string(),
+});
+
 const buildingPendingApprovalDataSchema = baseNotificationDataSchema.extend({
   buildingName: z.string(),
 });
@@ -211,6 +217,7 @@ const notificationDataSchemaByType = {
   [NotificationType.BUILDING_JOIN_REQUEST_REJECTED]: buildingJoinRequestDecidedDataSchema,
   [NotificationType.BUILDING_MEMBER_JOINED]: buildingMemberJoinedDataSchema,
   [NotificationType.BUILDING_ROLE_CHANGED]: buildingRoleChangedDataSchema,
+  [NotificationType.OWNER_RECORD_LINKED]: ownerRecordLinkedDataSchema,
   [NotificationType.BUILDING_PENDING_APPROVAL]: buildingPendingApprovalDataSchema,
   [NotificationType.BUILDING_APPROVED]: buildingApprovedDataSchema,
   [NotificationType.BUILDING_REJECTED]: buildingRejectedDataSchema,
@@ -250,6 +257,7 @@ export const notificationDataSchema = z.union([
   buildingJoinRequestDecidedDataSchema,
   buildingMemberJoinedDataSchema,
   buildingRoleChangedDataSchema,
+  ownerRecordLinkedDataSchema,
   buildingPendingApprovalDataSchema,
   buildingApprovedDataSchema,
   buildingRejectedDataSchema,

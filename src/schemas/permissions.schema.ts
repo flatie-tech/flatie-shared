@@ -24,6 +24,13 @@ export const permissionsResponseSchema = z.object({
   buildingId: z.string().uuid().optional(),
   orgId: z.string().uuid().optional(),
   chatVisibleToCoOwners: z.boolean().optional(),
+  /**
+   * Building scope only: whether the user has an active (non-archived)
+   * owners-ledger record in this building. Ownership is a ledger fact, not
+   * a role — clients gate owner-visible UI (e.g. owner notification types)
+   * on this, never on a role value.
+   */
+  isOwner: z.boolean().optional(),
 });
 
 export type PermissionsResponseSchema = z.infer<typeof permissionsResponseSchema>;
