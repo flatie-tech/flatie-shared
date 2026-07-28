@@ -20,6 +20,7 @@ export {
   NotificationChannel,
   NotificationDeliveryStatus,
   NotificationType,
+  RESIDENT_VISIBLE_SYSTEM_TYPES,
   UNIMPLEMENTED_NOTIFICATION_TYPES,
   WASTE_SUBTYPE_NOTIFICATION_MAP,
 } from './notification.enum';
