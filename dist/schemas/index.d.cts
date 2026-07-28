@@ -1703,6 +1703,7 @@ declare const permissionsResponseSchema: z.ZodObject<{
     buildingId: z.ZodOptional<z.ZodString>;
     orgId: z.ZodOptional<z.ZodString>;
     chatVisibleToCoOwners: z.ZodOptional<z.ZodBoolean>;
+    isOwner: z.ZodOptional<z.ZodBoolean>;
 }, z.core.$strip>;
 type PermissionsResponseSchema = z.infer<typeof permissionsResponseSchema>;
 
@@ -3369,6 +3370,7 @@ declare const notificationResponseSchema: z.ZodObject<{
         building_join_request_rejected: "building_join_request_rejected";
         building_member_joined: "building_member_joined";
         building_role_changed: "building_role_changed";
+        owner_record_linked: "owner_record_linked";
         building_pending_approval: "building_pending_approval";
         building_approved: "building_approved";
         building_rejected: "building_rejected";
@@ -3529,6 +3531,13 @@ declare const notificationResponseSchema: z.ZodObject<{
         actorName: z.ZodOptional<z.ZodString>;
         actionUrl: z.ZodOptional<z.ZodString>;
         role: z.ZodString;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        buildingName: z.ZodString;
     }, z.core.$strip>, z.ZodObject<{
         entityType: z.ZodOptional<z.ZodString>;
         entityId: z.ZodOptional<z.ZodString>;

@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.87.0
+
+### Changes
+
+- fix(chat)!: message eligibility gates on the opt-in flag, not the deprecated co_owner role
+
 ## 0.86.0
 
 ### Changes

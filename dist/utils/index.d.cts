@@ -24,8 +24,11 @@ interface MessageableUserShape {
  *
  * Rules (mirrors the backend's `createDirectConversation` check):
  * - Managerial callers (owner/deputy representative) may message anyone.
- * - Everyone else may message representatives, plus co-owners who opted in
- *   via `chatVisibleToCoOwners`. A missing/undefined flag counts as opted out.
+ * - Everyone else may message representatives, plus any member who opted in
+ *   via `chatVisibleToCoOwners` — role-independent, matching the backend
+ *   gate (post CO_OWNER-deprecation the roster holds `resident` rows; the
+ *   old `role === CO_OWNER` clause silently hid every opted-in resident).
+ *   A missing/undefined flag counts as opted out.
  *
  * `callerIsManagerial` is an input on purpose: every consumer must derive it
  * from the caller's DIRECT building role (`isManagerialRole(role)`), never

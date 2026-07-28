@@ -148,6 +148,7 @@ declare const NotificationType: {
     readonly BUILDING_JOIN_REQUEST_REJECTED: "building_join_request_rejected";
     readonly BUILDING_MEMBER_JOINED: "building_member_joined";
     readonly BUILDING_ROLE_CHANGED: "building_role_changed";
+    readonly OWNER_RECORD_LINKED: "owner_record_linked";
     readonly BUILDING_PENDING_APPROVAL: "building_pending_approval";
     readonly BUILDING_APPROVED: "building_approved";
     readonly BUILDING_REJECTED: "building_rejected";
@@ -200,11 +201,7 @@ declare const NOTIFICATION_TYPE_CATEGORY: Record<NotificationType, NotificationC
  * UI layers hide these from user preferences until their triggers are built.
  */
 declare const UNIMPLEMENTED_NOTIFICATION_TYPES: ReadonlySet<NotificationType>;
-/**
- * System-category types visible to co-owners and tenants in notification
- * preferences. The rest of the system category (join requests, building
- * approval flow, role changes) is managerial and hidden for those roles.
- */
+/** @deprecated Renamed after the CO_OWNER deprecation — use RESIDENT_VISIBLE_SYSTEM_TYPES. */
 declare const CO_OWNER_VISIBLE_SYSTEM_TYPES: ReadonlySet<NotificationType>;
 /**
  * Maps waste-collection subtype keys to the corresponding notification type.
