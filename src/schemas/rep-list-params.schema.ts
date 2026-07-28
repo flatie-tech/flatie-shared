@@ -21,7 +21,9 @@ export const getRepUsersParamsSchema = z.object({
     .enum([
       BuildingRole.OWNER_REPRESENTATIVE,
       BuildingRole.DEPUTY_REPRESENTATIVE,
+      // CO_OWNER kept for old clients; post-deprecation rows are RESIDENT.
       BuildingRole.CO_OWNER,
+      BuildingRole.RESIDENT,
     ])
     .optional()
     .describe('Restrict to users holding this role in at least one of the caller’s buildings.'),
