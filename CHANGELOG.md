@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.87.1
+
+### Changes
+
+- fix(enums): export RESIDENT_VISIBLE_SYSTEM_TYPES from the barrel
+
 ## 0.87.0
 
 ### Changes
