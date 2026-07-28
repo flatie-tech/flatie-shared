@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.86.0
+
+### Changes
+
+- feat(schemas): allow RESIDENT in rep-users buildingRole filter
+
 ## 0.85.0
 
 ### Changes

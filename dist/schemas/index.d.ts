@@ -1713,6 +1713,7 @@ declare const getRepUsersParamsSchema: z.ZodObject<{
         co_owner: "co_owner";
         owner_representative: "owner_representative";
         deputy_representative: "deputy_representative";
+        resident: "resident";
     }>>;
     fromDate: z.ZodOptional<z.ZodString>;
     toDate: z.ZodOptional<z.ZodString>;

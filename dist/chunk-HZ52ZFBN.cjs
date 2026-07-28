@@ -1248,7 +1248,9 @@ var getRepUsersParamsSchema = zod.z.object({
   buildingRole: zod.z.enum([
     chunkEIHAO4IX_cjs.BuildingRole.OWNER_REPRESENTATIVE,
     chunkEIHAO4IX_cjs.BuildingRole.DEPUTY_REPRESENTATIVE,
-    chunkEIHAO4IX_cjs.BuildingRole.CO_OWNER
+    // CO_OWNER kept for old clients; post-deprecation rows are RESIDENT.
+    chunkEIHAO4IX_cjs.BuildingRole.CO_OWNER,
+    chunkEIHAO4IX_cjs.BuildingRole.RESIDENT
   ]).optional().describe("Restrict to users holding this role in at least one of the caller\u2019s buildings."),
   fromDate: zod.z.string().optional().describe("Inclusive lower bound (ISO date) on the user\u2019s earliest building-join date."),
   toDate: zod.z.string().optional().describe("Inclusive upper bound (ISO date) on the user\u2019s earliest building-join date."),
@@ -2834,5 +2836,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-3XKYIGXA.cjs.map
-//# sourceMappingURL=chunk-3XKYIGXA.cjs.map
+//# sourceMappingURL=chunk-HZ52ZFBN.cjs.map
+//# sourceMappingURL=chunk-HZ52ZFBN.cjs.map
