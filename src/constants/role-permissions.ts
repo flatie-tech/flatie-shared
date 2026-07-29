@@ -29,28 +29,35 @@ const ALL_READS = [
   'board_card:read',
 ];
 
-// Reads available to co-owners and above but not plain residents (tenants).
-// Residents see community content but not fund finances or the work board.
-const CO_OWNER_ONLY_READS = ['financial:read', 'board_card:read'];
+// Reads available to ledger owners and managers but not plain residents:
+// fund finances and the (money-adjacent) work board. Under Croatian ZUOZ /
+// NN 152/2024 the pričuva is a co-ownership concern.
+const OWNER_ONLY_READS = ['financial:read', 'board_card:read'];
 
 // ─── Building Role Permission Mappings ──────────────────────────────
 
 /**
  * RESIDENT: default building-level membership for anyone who lives in the
- * building but hasn't been confirmed as a co-owner. Covers tenants, family
- * members of co-owners, pre-land-book-registration buyers, and similar.
+ * building — owners and non-owners alike (tenants, family members of owners,
+ * pre-land-book-registration buyers). Ownership itself is an owners-ledger
+ * fact, layered on via OWNERSHIP_DERIVED_PERMISSIONS.
  *
- * Reads community content and files their own failure reports. Cannot see
- * fund finances or vote — under Croatian ZUOZ / NN 152/2024, pričuva and
- * voting are co-ownership rights.
+ * The rule (decided 2026-07-28): membership grants PARTICIPATION — reads,
+ * own community content (notices, events, polls, documents, failure
+ * reports), and voting in ordinary polls. Ownership grants MONEY (fund
+ * finances, work board) and LEGAL DECISIONS — consensus-poll eligibility is
+ * enforced by ledger-derived voting weight in poll-voting, not by this
+ * permission list, so `poll:vote` here cannot reach a potpisna lista.
  */
 const RESIDENT_PERMISSIONS = [
-  // ALL_READS minus co-owner-only reads (fund balances, work board).
-  ...ALL_READS.filter((p) => !CO_OWNER_ONLY_READS.includes(p)),
-  // File their own issue reports (plumbing, heating, common-area issues).
-  'failure_report:create',
-  'failure_report:update:own',
-  'failure_report:delete:own',
+  // ALL_READS minus owner-only reads (fund balances, work board).
+  ...ALL_READS.filter((p) => !OWNER_ONLY_READS.includes(p)),
+  ...domainPermissions('notice', 'own'),
+  ...domainPermissions('event', 'own'),
+  ...domainPermissions('poll', 'own'),
+  'poll:vote',
+  ...domainPermissions('failure_report', 'own'),
+  ...domainPermissions('document', 'own'),
   'user:delete:own',
 ];
 
@@ -70,23 +77,15 @@ const CO_OWNER_PERMISSIONS = [
 ];
 
 /**
- * Permissions an OWNER holds on top of a plain RESIDENT — the co-ownership
- * rights (fund/board visibility, own community content, and the vote). These
- * are granted server-side from the OWNERS LEDGER (a user who holds an owner
- * record in the building), NOT from a role. This is the relocation target as
- * the CO_OWNER role is deprecated: ownership becomes a ledger fact, so the
- * rights follow the ledger and can't drift from a hand-assigned role.
- * `poll:vote` gates participation; consensus vote WEIGHT stays ledger-derived
- * and is enforced separately in poll-voting.
+ * Permissions an OWNER holds on top of a plain RESIDENT, granted server-side
+ * from the OWNERS LEDGER (a user who holds an active owner record in the
+ * building), NOT from a role. Deliberately tiny (2026-07-28 simplification):
+ * ownership adds MONEY visibility only — fund finances and the work board.
+ * Community participation (own content, ordinary-poll voting) is membership
+ * (RESIDENT_PERMISSIONS), and consensus-poll eligibility is enforced by
+ * ledger-derived voting weight in poll-voting, not by any permission here.
  */
-export const OWNERSHIP_DERIVED_PERMISSIONS = unique([
-  ...CO_OWNER_ONLY_READS,
-  ...domainPermissions('notice', 'own'),
-  ...domainPermissions('event', 'own'),
-  ...domainPermissions('poll', 'own'),
-  'poll:vote',
-  ...domainPermissions('document', 'own'),
-]);
+export const OWNERSHIP_DERIVED_PERMISSIONS = unique([...OWNER_ONLY_READS]);
 
 /**
  * REPRESENTATIVE (Owner + Deputy): manage for scoped domains + approve + building mgmt.
