@@ -420,14 +420,16 @@ var ALL_READS = [
   "faq:read",
   "board_card:read"
 ];
-var CO_OWNER_ONLY_READS = ["financial:read", "board_card:read"];
+var OWNER_ONLY_READS = ["financial:read", "board_card:read"];
 var RESIDENT_PERMISSIONS = [
-  // ALL_READS minus co-owner-only reads (fund balances, work board).
-  ...ALL_READS.filter((p) => !CO_OWNER_ONLY_READS.includes(p)),
-  // File their own issue reports (plumbing, heating, common-area issues).
-  "failure_report:create",
-  "failure_report:update:own",
-  "failure_report:delete:own",
+  // ALL_READS minus owner-only reads (fund balances, work board).
+  ...ALL_READS.filter((p) => !OWNER_ONLY_READS.includes(p)),
+  ...chunkQCII5GOG_cjs.domainPermissions("notice", "own"),
+  ...chunkQCII5GOG_cjs.domainPermissions("event", "own"),
+  ...chunkQCII5GOG_cjs.domainPermissions("poll", "own"),
+  "poll:vote",
+  ...chunkQCII5GOG_cjs.domainPermissions("failure_report", "own"),
+  ...chunkQCII5GOG_cjs.domainPermissions("document", "own"),
   "user:delete:own"
 ];
 var CO_OWNER_PERMISSIONS = [
@@ -443,14 +445,7 @@ var CO_OWNER_PERMISSIONS = [
   // grant moved to REPRESENTATIVE_PERMISSIONS.
   "user:delete:own"
 ];
-var OWNERSHIP_DERIVED_PERMISSIONS = unique([
-  ...CO_OWNER_ONLY_READS,
-  ...chunkQCII5GOG_cjs.domainPermissions("notice", "own"),
-  ...chunkQCII5GOG_cjs.domainPermissions("event", "own"),
-  ...chunkQCII5GOG_cjs.domainPermissions("poll", "own"),
-  "poll:vote",
-  ...chunkQCII5GOG_cjs.domainPermissions("document", "own")
-]);
+var OWNERSHIP_DERIVED_PERMISSIONS = unique([...OWNER_ONLY_READS]);
 var REPRESENTATIVE_PERMISSIONS = [
   ...CO_OWNER_PERMISSIONS,
   ...chunkQCII5GOG_cjs.domainPermissions("notice", "manage"),
@@ -635,5 +630,5 @@ exports.transactionCategoryKeys = transactionCategoryKeys;
 exports.unitSearchKeys = unitSearchKeys;
 exports.userKeys = userKeys;
 exports.widgetKeys = widgetKeys;
-//# sourceMappingURL=chunk-IT4OFD7A.cjs.map
-//# sourceMappingURL=chunk-IT4OFD7A.cjs.map
+//# sourceMappingURL=chunk-ZC7MA6MT.cjs.map
+//# sourceMappingURL=chunk-ZC7MA6MT.cjs.map

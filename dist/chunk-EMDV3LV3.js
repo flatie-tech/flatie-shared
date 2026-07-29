@@ -418,14 +418,16 @@ var ALL_READS = [
   "faq:read",
   "board_card:read"
 ];
-var CO_OWNER_ONLY_READS = ["financial:read", "board_card:read"];
+var OWNER_ONLY_READS = ["financial:read", "board_card:read"];
 var RESIDENT_PERMISSIONS = [
-  // ALL_READS minus co-owner-only reads (fund balances, work board).
-  ...ALL_READS.filter((p) => !CO_OWNER_ONLY_READS.includes(p)),
-  // File their own issue reports (plumbing, heating, common-area issues).
-  "failure_report:create",
-  "failure_report:update:own",
-  "failure_report:delete:own",
+  // ALL_READS minus owner-only reads (fund balances, work board).
+  ...ALL_READS.filter((p) => !OWNER_ONLY_READS.includes(p)),
+  ...domainPermissions("notice", "own"),
+  ...domainPermissions("event", "own"),
+  ...domainPermissions("poll", "own"),
+  "poll:vote",
+  ...domainPermissions("failure_report", "own"),
+  ...domainPermissions("document", "own"),
   "user:delete:own"
 ];
 var CO_OWNER_PERMISSIONS = [
@@ -441,14 +443,7 @@ var CO_OWNER_PERMISSIONS = [
   // grant moved to REPRESENTATIVE_PERMISSIONS.
   "user:delete:own"
 ];
-var OWNERSHIP_DERIVED_PERMISSIONS = unique([
-  ...CO_OWNER_ONLY_READS,
-  ...domainPermissions("notice", "own"),
-  ...domainPermissions("event", "own"),
-  ...domainPermissions("poll", "own"),
-  "poll:vote",
-  ...domainPermissions("document", "own")
-]);
+var OWNERSHIP_DERIVED_PERMISSIONS = unique([...OWNER_ONLY_READS]);
 var REPRESENTATIVE_PERMISSIONS = [
   ...CO_OWNER_PERMISSIONS,
   ...domainPermissions("notice", "manage"),
@@ -583,5 +578,5 @@ var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[OrgRole.ORG_ADMIN];
 var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_ADMIN];
 
 export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, ENTITY_LINK_TYPE_META, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, OWNERSHIP_DERIVED_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, blogKeys, boardKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, incomeKeys, isEntityLinkAllowed, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };
-//# sourceMappingURL=chunk-FATC7A77.js.map
-//# sourceMappingURL=chunk-FATC7A77.js.map
+//# sourceMappingURL=chunk-EMDV3LV3.js.map
+//# sourceMappingURL=chunk-EMDV3LV3.js.map

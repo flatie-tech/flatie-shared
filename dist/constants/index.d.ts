@@ -737,14 +737,13 @@ declare const queryKeys: {
 };
 
 /**
- * Permissions an OWNER holds on top of a plain RESIDENT — the co-ownership
- * rights (fund/board visibility, own community content, and the vote). These
- * are granted server-side from the OWNERS LEDGER (a user who holds an owner
- * record in the building), NOT from a role. This is the relocation target as
- * the CO_OWNER role is deprecated: ownership becomes a ledger fact, so the
- * rights follow the ledger and can't drift from a hand-assigned role.
- * `poll:vote` gates participation; consensus vote WEIGHT stays ledger-derived
- * and is enforced separately in poll-voting.
+ * Permissions an OWNER holds on top of a plain RESIDENT, granted server-side
+ * from the OWNERS LEDGER (a user who holds an active owner record in the
+ * building), NOT from a role. Deliberately tiny (2026-07-28 simplification):
+ * ownership adds MONEY visibility only — fund finances and the work board.
+ * Community participation (own content, ordinary-poll voting) is membership
+ * (RESIDENT_PERMISSIONS), and consensus-poll eligibility is enforced by
+ * ledger-derived voting weight in poll-voting, not by any permission here.
  */
 declare const OWNERSHIP_DERIVED_PERMISSIONS: Permission[];
 declare const BUILDING_ROLE_PERMISSIONS: Record<BuildingRole, Permission[]>;

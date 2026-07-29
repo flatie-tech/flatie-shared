@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.88.0
+
+### Changes
+
+- feat(rbac)!: membership grants participation, ownership grants money
+
 ## 0.87.1
 
 ### Changes
