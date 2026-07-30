@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.89.0
+
+### Changes
+
+- Org segment: T4 rep finance grants, invitation/broadcast contract, peer-admin rule, org notification types
+
 ## 0.88.0
 
 ### Changes
