@@ -208,6 +208,13 @@ var API_ROUTES = {
     MEMBER_DETAIL: (orgId, memberId) => `/organizations/${orgId}/members/${memberId}`,
     INVITE: (orgId) => `/organizations/${orgId}/invite`,
     INVITATIONS: (orgId) => `/organizations/${orgId}/invitations`,
+    INVITATION_RESEND: (orgId, invitationId) => `/organizations/${orgId}/invitations/${invitationId}/resend`,
+    // Token-scoped invitation endpoints (public lookup / authenticated accept).
+    INVITATION_BY_TOKEN: (token) => `/organizations/invitations/${token}`,
+    INVITATION_ACCEPT: (token) => `/organizations/invitations/${token}/accept`,
+    BROADCASTS: (orgId) => `/organizations/${orgId}/broadcasts`,
+    BUILDING_CONTRACT: (orgId, buildingId) => `/organizations/${orgId}/buildings/${buildingId}`,
+    DASHBOARD_ATTENTION: (orgId) => `/organizations/${orgId}/dashboard/attention`,
     BUSINESS_PARTNERS: (orgId) => `/organizations/${orgId}/business-partners`,
     BUSINESS_PARTNER_DETAIL: (orgId, partnerId) => `/organizations/${orgId}/business-partners/${partnerId}`
   },
@@ -258,5 +265,5 @@ var API_ROUTES = {
 
 exports.API_ROUTES = API_ROUTES;
 exports.API_VERSION = API_VERSION;
-//# sourceMappingURL=chunk-3UGC4I6G.cjs.map
-//# sourceMappingURL=chunk-3UGC4I6G.cjs.map
+//# sourceMappingURL=chunk-QUHVZKZ6.cjs.map
+//# sourceMappingURL=chunk-QUHVZKZ6.cjs.map

@@ -285,6 +285,15 @@ export const API_ROUTES = {
       `/organizations/${orgId}/members/${memberId}`,
     INVITE: (orgId: string) => `/organizations/${orgId}/invite`,
     INVITATIONS: (orgId: string) => `/organizations/${orgId}/invitations`,
+    INVITATION_RESEND: (orgId: string, invitationId: string) =>
+      `/organizations/${orgId}/invitations/${invitationId}/resend`,
+    // Token-scoped invitation endpoints (public lookup / authenticated accept).
+    INVITATION_BY_TOKEN: (token: string) => `/organizations/invitations/${token}`,
+    INVITATION_ACCEPT: (token: string) => `/organizations/invitations/${token}/accept`,
+    BROADCASTS: (orgId: string) => `/organizations/${orgId}/broadcasts`,
+    BUILDING_CONTRACT: (orgId: string, buildingId: string) =>
+      `/organizations/${orgId}/buildings/${buildingId}`,
+    DASHBOARD_ATTENTION: (orgId: string) => `/organizations/${orgId}/dashboard/attention`,
     BUSINESS_PARTNERS: (orgId: string) => `/organizations/${orgId}/business-partners`,
     BUSINESS_PARTNER_DETAIL: (orgId: string, partnerId: string) =>
       `/organizations/${orgId}/business-partners/${partnerId}`,

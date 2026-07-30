@@ -84,3 +84,39 @@ describe('New permission grants — unified can() migration', () => {
     }
   });
 });
+
+/**
+ * T4 (2026-07-30): representatives run self-managed buildings, so they hold
+ * the pričuva/maintenance writes that were previously org-role-only. Residents
+ * must never gain them. ORG_BROADCAST is the portfolio fan-out gate —
+ * management roles only.
+ */
+describe('rep finance/maintenance grants (T4) + org broadcast', () => {
+  const T4_GRANTS = [
+    Permission.FINANCIAL_CREATE,
+    Permission.FINANCIAL_UPDATE,
+    Permission.FINANCIAL_DELETE,
+    Permission.MAINTENANCE_LOG_CREATE,
+  ] as const;
+
+  for (const role of [BuildingRole.OWNER_REPRESENTATIVE, BuildingRole.DEPUTY_REPRESENTATIVE]) {
+    it(`${role} holds the finance/maintenance writes`, () => {
+      for (const perm of T4_GRANTS) {
+        expect(BUILDING_ROLE_PERMISSIONS[role]).toContain(perm);
+      }
+    });
+  }
+
+  it('RESIDENT does not hold them', () => {
+    for (const perm of T4_GRANTS) {
+      expect(BUILDING_ROLE_PERMISSIONS[BuildingRole.RESIDENT]).not.toContain(perm);
+    }
+  });
+
+  it('ORG_ADMIN and SUPERVISOR hold org:broadcast; REFERENT/OPERATIVE do not', () => {
+    expect(ORG_ROLE_PERMISSIONS[OrgRole.ORG_ADMIN]).toContain(Permission.ORG_BROADCAST);
+    expect(ORG_ROLE_PERMISSIONS[OrgRole.SUPERVISOR]).toContain(Permission.ORG_BROADCAST);
+    expect(ORG_ROLE_PERMISSIONS[OrgRole.REFERENT]).not.toContain(Permission.ORG_BROADCAST);
+    expect(ORG_ROLE_PERMISSIONS[OrgRole.OPERATIVE]).not.toContain(Permission.ORG_BROADCAST);
+  });
+});

@@ -1,64 +1,64 @@
 'use strict';
 
-var chunkQCII5GOG_cjs = require('./chunk-QCII5GOG.cjs');
-var chunkXTSSMJ24_cjs = require('./chunk-XTSSMJ24.cjs');
+var chunkXHUANKAX_cjs = require('./chunk-XHUANKAX.cjs');
+var chunkEZKQ7GPK_cjs = require('./chunk-EZKQ7GPK.cjs');
 var chunkOOJKTZT4_cjs = require('./chunk-OOJKTZT4.cjs');
 
 // src/utils/role-helpers.ts
 var MANAGERIAL_BUILDING_ROLES = [
-  chunkQCII5GOG_cjs.BuildingRole.OWNER_REPRESENTATIVE,
-  chunkQCII5GOG_cjs.BuildingRole.DEPUTY_REPRESENTATIVE
+  chunkXHUANKAX_cjs.BuildingRole.OWNER_REPRESENTATIVE,
+  chunkXHUANKAX_cjs.BuildingRole.DEPUTY_REPRESENTATIVE
 ];
 function isManagerialRole(role) {
   return MANAGERIAL_BUILDING_ROLES.includes(role);
 }
 var ROLE_TRANSLATION_KEYS = {
   // Building roles
-  [chunkQCII5GOG_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
-  [chunkQCII5GOG_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
-  [chunkQCII5GOG_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER",
-  [chunkQCII5GOG_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT",
+  [chunkXHUANKAX_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
+  [chunkXHUANKAX_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
+  [chunkXHUANKAX_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER",
+  [chunkXHUANKAX_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT",
   // Org roles
-  [chunkQCII5GOG_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
-  [chunkQCII5GOG_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
-  [chunkQCII5GOG_cjs.OrgRole.REFERENT]: "roles.REFERENT",
-  [chunkQCII5GOG_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE",
+  [chunkXHUANKAX_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
+  [chunkXHUANKAX_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
+  [chunkXHUANKAX_cjs.OrgRole.REFERENT]: "roles.REFERENT",
+  [chunkXHUANKAX_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE",
   // Platform roles
-  [chunkQCII5GOG_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
-  [chunkQCII5GOG_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
-  [chunkQCII5GOG_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
-  [chunkQCII5GOG_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
+  [chunkXHUANKAX_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
+  [chunkXHUANKAX_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
+  [chunkXHUANKAX_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
+  [chunkXHUANKAX_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
 };
 var ROLE_DESCRIPTION_KEYS = {
-  [chunkQCII5GOG_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
-  [chunkQCII5GOG_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
-  [chunkQCII5GOG_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
-  [chunkQCII5GOG_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
-  [chunkQCII5GOG_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
-  [chunkQCII5GOG_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
-  [chunkQCII5GOG_cjs.OrgRole.REFERENT]: "roles.REFERENT_DESC",
-  [chunkQCII5GOG_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
-  [chunkQCII5GOG_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
-  [chunkQCII5GOG_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
-  [chunkQCII5GOG_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
-  [chunkQCII5GOG_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
+  [chunkXHUANKAX_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
+  [chunkXHUANKAX_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
+  [chunkXHUANKAX_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
+  [chunkXHUANKAX_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
+  [chunkXHUANKAX_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
+  [chunkXHUANKAX_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
+  [chunkXHUANKAX_cjs.OrgRole.REFERENT]: "roles.REFERENT_DESC",
+  [chunkXHUANKAX_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
+  [chunkXHUANKAX_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
+  [chunkXHUANKAX_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
+  [chunkXHUANKAX_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
+  [chunkXHUANKAX_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
 };
 var ROLE_BADGE_COLORS = {
   // Building roles
-  [chunkQCII5GOG_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "info",
-  [chunkQCII5GOG_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "success",
-  [chunkQCII5GOG_cjs.BuildingRole.CO_OWNER]: "warning",
-  [chunkQCII5GOG_cjs.BuildingRole.RESIDENT]: "neutral",
+  [chunkXHUANKAX_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "info",
+  [chunkXHUANKAX_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "success",
+  [chunkXHUANKAX_cjs.BuildingRole.CO_OWNER]: "warning",
+  [chunkXHUANKAX_cjs.BuildingRole.RESIDENT]: "neutral",
   // Org roles
-  [chunkQCII5GOG_cjs.OrgRole.ORG_ADMIN]: "purple",
-  [chunkQCII5GOG_cjs.OrgRole.SUPERVISOR]: "info",
-  [chunkQCII5GOG_cjs.OrgRole.REFERENT]: "success",
-  [chunkQCII5GOG_cjs.OrgRole.OPERATIVE]: "amber",
+  [chunkXHUANKAX_cjs.OrgRole.ORG_ADMIN]: "purple",
+  [chunkXHUANKAX_cjs.OrgRole.SUPERVISOR]: "info",
+  [chunkXHUANKAX_cjs.OrgRole.REFERENT]: "success",
+  [chunkXHUANKAX_cjs.OrgRole.OPERATIVE]: "amber",
   // Platform roles
-  [chunkQCII5GOG_cjs.PlatformRole.PLATFORM_ADMIN]: "purple",
-  [chunkQCII5GOG_cjs.PlatformRole.PLATFORM_MODERATOR]: "info",
-  [chunkQCII5GOG_cjs.PlatformRole.PLATFORM_SUPPORT]: "success",
-  [chunkQCII5GOG_cjs.PlatformRole.PLATFORM_OPERATIVE]: "amber"
+  [chunkXHUANKAX_cjs.PlatformRole.PLATFORM_ADMIN]: "purple",
+  [chunkXHUANKAX_cjs.PlatformRole.PLATFORM_MODERATOR]: "info",
+  [chunkXHUANKAX_cjs.PlatformRole.PLATFORM_SUPPORT]: "success",
+  [chunkXHUANKAX_cjs.PlatformRole.PLATFORM_OPERATIVE]: "amber"
 };
 function getRoleBadge(role) {
   const known = role;
@@ -282,7 +282,7 @@ var parseApiError = (error) => {
   const response = readProp(error, "response");
   const data = readProp(response, "data");
   const rawCode = readProp(data, "code");
-  const code = chunkXTSSMJ24_cjs.isBackendErrorCode(rawCode) ? rawCode : null;
+  const code = chunkEZKQ7GPK_cjs.isBackendErrorCode(rawCode) ? rawCode : null;
   const dataMessage = readProp(data, "message");
   const errorMessage = readProp(error, "message");
   const message = typeof dataMessage === "string" && dataMessage.length > 0 && dataMessage || typeof errorMessage === "string" && errorMessage.length > 0 && errorMessage || "Unknown error";
@@ -296,13 +296,13 @@ function canDo(subject, permission) {
   return subject.permissions.includes(permission);
 }
 function canDoOnResource(subject, domain, action, resourceOwnerId) {
-  const scopedPerms = chunkQCII5GOG_cjs.SCOPED_PERMISSIONS[domain]?.[action];
+  const scopedPerms = chunkXHUANKAX_cjs.SCOPED_PERMISSIONS[domain]?.[action];
   if (!scopedPerms) return false;
   if (subject.permissions.includes(scopedPerms.any)) return true;
   return subject.permissions.includes(scopedPerms.own) && resourceOwnerId === subject.userId;
 }
 function computeActionFlags(subject, domain, resourceOwnerId) {
-  const approvePermission = chunkQCII5GOG_cjs.APPROVE_PERMISSIONS[domain];
+  const approvePermission = chunkXHUANKAX_cjs.APPROVE_PERMISSIONS[domain];
   return {
     canEdit: canDoOnResource(subject, domain, "update", resourceOwnerId),
     canDelete: canDoOnResource(subject, domain, "delete", resourceOwnerId),
@@ -350,11 +350,11 @@ function applyResidentRestriction(items, isRestrictedView) {
 // src/utils/status-variants.ts
 function failureStatusVariant(status) {
   switch (status) {
-    case chunkQCII5GOG_cjs.FailureStatus.PENDING:
+    case chunkXHUANKAX_cjs.FailureStatus.PENDING:
       return "info";
-    case chunkQCII5GOG_cjs.FailureStatus.IN_PROGRESS:
+    case chunkXHUANKAX_cjs.FailureStatus.IN_PROGRESS:
       return "warning";
-    case chunkQCII5GOG_cjs.FailureStatus.RESOLVED:
+    case chunkXHUANKAX_cjs.FailureStatus.RESOLVED:
       return "success";
     default:
       return "neutral";
@@ -362,9 +362,9 @@ function failureStatusVariant(status) {
 }
 function priorityVariant(priority) {
   switch (priority) {
-    case chunkQCII5GOG_cjs.Priority.URGENT:
+    case chunkXHUANKAX_cjs.Priority.URGENT:
       return "danger";
-    case chunkQCII5GOG_cjs.Priority.NORMAL:
+    case chunkXHUANKAX_cjs.Priority.NORMAL:
       return "neutral";
     default:
       return "neutral";
@@ -488,5 +488,5 @@ exports.parseData = parseData;
 exports.priorityVariant = priorityVariant;
 exports.resolveVotingMethods = resolveVotingMethods;
 exports.violatesVotingMethodLock = violatesVotingMethodLock;
-//# sourceMappingURL=chunk-NJCXWXYP.cjs.map
-//# sourceMappingURL=chunk-NJCXWXYP.cjs.map
+//# sourceMappingURL=chunk-4MOVYEU6.cjs.map
+//# sourceMappingURL=chunk-4MOVYEU6.cjs.map

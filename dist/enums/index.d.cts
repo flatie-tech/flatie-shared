@@ -1,6 +1,6 @@
 export { B as BuildingType, P as PollType } from '../poll-type.enum-CGV5tBqR.cjs';
 export { E as EntityLinkType, L as LinkableEntityType } from '../entity-link.enum-BYEzMg8A.cjs';
-export { A as APPROVE_PERMISSIONS, B as BUILDING_ROLE_RANK, e as BuildingRole, O as ORG_ROLE_RANK, i as OrgRole, j as PLATFORM_ROLE_RANK, P as Permission, k as PlatformRole, S as SCOPED_DOMAINS, a as SCOPED_PERMISSIONS, b as ScopedAction, c as ScopedDomain, f as canAssignOrgRole, g as canAssignPlatformRole, h as canAssignRole, d as domainPermissions } from '../role.enum-3xjuk54E.cjs';
+export { A as APPROVE_PERMISSIONS, B as BUILDING_ROLE_RANK, e as BuildingRole, O as ORG_ROLE_RANK, i as OrgRole, j as PLATFORM_ROLE_RANK, P as Permission, k as PlatformRole, S as SCOPED_DOMAINS, a as SCOPED_PERMISSIONS, b as ScopedAction, c as ScopedDomain, f as canAssignOrgRole, g as canAssignPlatformRole, h as canAssignRole, d as domainPermissions } from '../role.enum-Mqqm0r27.cjs';
 export { A as ApprovalStatus, C as CommonStatus, F as FailureStatus, a as FailureType, b as FileCategory, c as Frequency, M as MaintenanceStatus, d as MaintenanceType, P as Priority, T as TransactionCategory, e as TransactionType } from '../status.enum-BYlt7_Fs.cjs';
 
 /**
@@ -156,6 +156,9 @@ declare const NotificationType: {
     readonly POLL_VOTE_SIGNATURE_PENDING: "poll_vote_signature_pending";
     readonly POLL_VOTE_SIGNATURE_APPROVED: "poll_vote_signature_approved";
     readonly POLL_VOTE_SIGNATURE_REJECTED: "poll_vote_signature_rejected";
+    readonly ORG_MEMBER_ADDED: "org_member_added";
+    readonly ORG_MEMBER_REMOVED: "org_member_removed";
+    readonly ORG_MEMBER_ROLE_CHANGED: "org_member_role_changed";
     readonly SYSTEM_ANNOUNCEMENT: "system_announcement";
 };
 type NotificationType = (typeof NotificationType)[keyof typeof NotificationType];

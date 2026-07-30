@@ -45,6 +45,10 @@ export const NotificationType = {
   POLL_VOTE_SIGNATURE_APPROVED: 'poll_vote_signature_approved',
   POLL_VOTE_SIGNATURE_REJECTED: 'poll_vote_signature_rejected',
 
+  ORG_MEMBER_ADDED: 'org_member_added',
+  ORG_MEMBER_REMOVED: 'org_member_removed',
+  ORG_MEMBER_ROLE_CHANGED: 'org_member_role_changed',
+
   SYSTEM_ANNOUNCEMENT: 'system_announcement',
 } as const;
 
@@ -141,6 +145,12 @@ export const NOTIFICATION_TYPE_CATEGORY: Record<NotificationType, NotificationCa
   [NotificationType.POLL_VOTE_SIGNATURE_PENDING]: NotificationCategory.POLLS,
   [NotificationType.POLL_VOTE_SIGNATURE_APPROVED]: NotificationCategory.POLLS,
   [NotificationType.POLL_VOTE_SIGNATURE_REJECTED]: NotificationCategory.POLLS,
+
+  // Org-membership events target the affected member only (org-scoped,
+  // explicit targetUserIds — never a building-wide fan-out).
+  [NotificationType.ORG_MEMBER_ADDED]: NotificationCategory.SYSTEM,
+  [NotificationType.ORG_MEMBER_REMOVED]: NotificationCategory.SYSTEM,
+  [NotificationType.ORG_MEMBER_ROLE_CHANGED]: NotificationCategory.SYSTEM,
 
   [NotificationType.SYSTEM_ANNOUNCEMENT]: NotificationCategory.SYSTEM,
 };

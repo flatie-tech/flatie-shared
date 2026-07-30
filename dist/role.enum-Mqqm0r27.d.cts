@@ -102,6 +102,7 @@ declare const Permission: {
     readonly ORG_VIEW_BUILDINGS: "org:view_buildings";
     readonly ORG_VIEW_PARTNERS: "org:view_partners";
     readonly ORG_MANAGE_PARTNERS: "org:manage_partners";
+    readonly ORG_BROADCAST: "org:broadcast";
     readonly PLATFORM_APPROVE_BUILDINGS: "platform:approve_buildings";
     readonly PLATFORM_MANAGE_USERS: "platform:manage_users";
     readonly PLATFORM_MANAGE_ORGS: "platform:manage_orgs";
@@ -138,6 +139,12 @@ declare const OrgRole: {
 };
 type OrgRole = (typeof OrgRole)[keyof typeof OrgRole];
 declare const ORG_ROLE_RANK: Record<OrgRole, number>;
+/**
+ * ORG_ADMIN may assign any role INCLUDING a peer ORG_ADMIN — someone must be
+ * able to create the second admin, and add-member always allowed it anyway
+ * (the strict-rank rule only made role-CHANGE inconsistent with add/invite).
+ * Every lower role stays strictly-lower: a SUPERVISOR cannot mint SUPERVISORs.
+ */
 declare function canAssignOrgRole(assignerRole: OrgRole, targetRole: OrgRole): boolean;
 declare const PlatformRole: {
     readonly PLATFORM_ADMIN: "platform_admin";

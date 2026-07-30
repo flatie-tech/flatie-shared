@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { OrgType } from '../../enums/org-type.enum';
 import { OrgRole } from '../../enums/role.enum';
 import { uuidSchema } from '../base.schema';
+import { NOTICE_LIMITS } from './notice.schema';
 
 /**
  * Validation constants for organizations
@@ -149,13 +150,23 @@ export const getOrgBuildingsQuerySchema = z.object({
     .describe('Maximum number of items to return per page. Defaults to 10.'),
   search: z.string().optional().describe('Substring matched against building name or address.'),
   sortBy: z
-    .enum(['name', 'address', 'createdAt'])
+    .enum(['name', 'address', 'createdAt', 'contractEnd'])
     .optional()
     .describe('Column to sort results by.'),
   sortOrder: z
     .enum(['asc', 'desc'])
     .optional()
     .describe('Sort direction: `asc` for ascending, `desc` for descending.'),
+  expiringWithinDays: z.coerce
+    .number()
+    .int()
+    .min(1)
+    .max(365)
+    .optional()
+    .describe(
+      'Only buildings whose management contract ends within this many days from now ' +
+        '(and has not already ended). Omit to return all buildings.',
+    ),
 });
 
 /**
@@ -185,6 +196,102 @@ export const getOrgMembersQuerySchema = z.object({
     .describe('Sort direction: `asc` for ascending, `desc` for descending.'),
 });
 
+/**
+ * Update the contract window on an existing org↔building assignment.
+ */
+export const updateOrgBuildingContractSchema = z.object({
+  contractStart: z
+    .string()
+    .nullable()
+    .optional()
+    .describe('New contract start date (ISO-8601 `YYYY-MM-DD`); null clears it.'),
+  contractEnd: z
+    .string()
+    .nullable()
+    .optional()
+    .describe('New contract end date (ISO-8601 `YYYY-MM-DD`); null clears it.'),
+});
+
+/**
+ * Organization invitation lifecycle states. Stored as text (uppercase,
+ * pre-existing data) — deliberately NOT a pg enum.
+ */
+export const OrgInvitationStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+} as const;
+export type OrgInvitationStatus = (typeof OrgInvitationStatus)[keyof typeof OrgInvitationStatus];
+
+/**
+ * An invitation as seen by org managers. The accept token is NEVER exposed
+ * here — it travels only inside the invitation email.
+ */
+export const orgInvitationResponseSchema = z.looseObject({
+  id: uuidSchema.describe('Invitation id.'),
+  email: z.string().describe('Invitee email address.'),
+  orgRole: orgRoleSchema.describe('Role the invitee receives on accept.'),
+  status: z
+    .enum([OrgInvitationStatus.PENDING, OrgInvitationStatus.ACCEPTED])
+    .describe('Lifecycle state; expired invitations stay PENDING but are past expiresAt.'),
+  createdAt: z.string().describe('ISO-8601 timestamp the invitation was created.'),
+  expiresAt: z
+    .string()
+    .nullable()
+    .describe('ISO-8601 expiry; a PENDING invitation past this moment cannot be accepted.'),
+  acceptedAt: z.string().nullable().optional().describe('ISO-8601 acceptance timestamp.'),
+});
+
+/**
+ * The public (token-scoped) view of an invitation, shown on the accept page
+ * before the user authenticates.
+ */
+export const publicOrgInvitationSchema = z.looseObject({
+  orgName: z.string().describe('Name of the inviting organization.'),
+  email: z.string().describe('Email address the invitation was issued to.'),
+  orgRole: orgRoleSchema.describe('Role granted on accept.'),
+  status: z
+    .enum([OrgInvitationStatus.PENDING, OrgInvitationStatus.ACCEPTED])
+    .describe('Lifecycle state of the invitation.'),
+  expiresAt: z.string().nullable().describe('ISO-8601 expiry of the invitation.'),
+  inviterName: z.string().nullable().describe('Display name of the inviting member, if known.'),
+});
+
+/**
+ * Publish one notice to many (or all) buildings the organization manages.
+ */
+export const createOrgBroadcastSchema = z.object({
+  title: z
+    .string()
+    .min(NOTICE_LIMITS.TITLE_MIN, 'Title is required')
+    .max(NOTICE_LIMITS.TITLE_MAX)
+    .describe('Notice title, shared by every created notice (same limits as a single notice).'),
+  content: z
+    .string()
+    .min(1, 'Content is required')
+    .max(NOTICE_LIMITS.CONTENT_MAX)
+    .describe('Notice body, shared by every created notice.'),
+  buildingIds: z
+    .array(uuidSchema)
+    .min(1)
+    .max(200)
+    .optional()
+    .describe(
+      'Target buildings; every id must belong to the organization. ' +
+        'Omit to broadcast to ALL managed buildings.',
+    ),
+  allowComments: z
+    .boolean()
+    .optional()
+    .describe('Whether residents may comment on the created notices. Defaults to true.'),
+});
+
+export const orgBroadcastResponseSchema = z.looseObject({
+  id: uuidSchema.describe('Broadcast id grouping the created notices.'),
+  title: z.string().describe('Broadcast (and notice) title.'),
+  noticeCount: z.number().describe('Number of per-building notices created.'),
+  createdAt: z.string().describe('ISO-8601 creation timestamp.'),
+});
+
 // Inferred types
 export type CreateOrganizationSchema = z.infer<typeof createOrganizationSchema>;
 export type UpdateOrganizationSchema = z.infer<typeof updateOrganizationSchema>;
@@ -196,3 +303,8 @@ export type AssignOrgMemberBuildingSchema = z.infer<typeof assignOrgMemberBuildi
 export type SearchUsersQuerySchema = z.infer<typeof searchUsersQuerySchema>;
 export type GetOrgBuildingsQuerySchema = z.infer<typeof getOrgBuildingsQuerySchema>;
 export type GetOrgMembersQuerySchema = z.infer<typeof getOrgMembersQuerySchema>;
+export type UpdateOrgBuildingContractSchema = z.infer<typeof updateOrgBuildingContractSchema>;
+export type OrgInvitationResponse = z.infer<typeof orgInvitationResponseSchema>;
+export type PublicOrgInvitation = z.infer<typeof publicOrgInvitationSchema>;
+export type CreateOrgBroadcastSchema = z.infer<typeof createOrgBroadcastSchema>;
+export type OrgBroadcastResponse = z.infer<typeof orgBroadcastResponseSchema>;

@@ -1,3 +1,5 @@
+'use strict';
+
 // src/errors/index.ts
 var BACKEND_ERROR_CODES = {
   // Auth
@@ -132,12 +134,23 @@ var BACKEND_ERROR_CODES = {
   // ── Building geocoding ──────────────────────────────────────────────
   GEOCODE_NO_ADDRESS: "GEOCODE_NO_ADDRESS",
   GEOCODE_ADDRESS_NOT_FOUND: "GEOCODE_ADDRESS_NOT_FOUND",
-  GEOCODE_COORDINATES_NOT_FOUND: "GEOCODE_COORDINATES_NOT_FOUND"
+  GEOCODE_COORDINATES_NOT_FOUND: "GEOCODE_COORDINATES_NOT_FOUND",
+  // ── Organization invitations & membership ─────────────────────────
+  ORG_INVITATION_NOT_FOUND: "ORG_INVITATION_NOT_FOUND",
+  ORG_INVITATION_EXPIRED: "ORG_INVITATION_EXPIRED",
+  ORG_INVITATION_ALREADY_ACCEPTED: "ORG_INVITATION_ALREADY_ACCEPTED",
+  ORG_INVITATION_EMAIL_MISMATCH: "ORG_INVITATION_EMAIL_MISMATCH",
+  ORG_INVITATION_ALREADY_PENDING: "ORG_INVITATION_ALREADY_PENDING",
+  // Building already has a managing organization (one org per building).
+  BUILDING_ALREADY_MANAGED: "BUILDING_ALREADY_MANAGED",
+  // Removing (as opposed to demoting) the last ORG_ADMIN is refused.
+  LAST_ADMIN_REMOVAL_DENIED: "LAST_ADMIN_REMOVAL_DENIED"
 };
 function isBackendErrorCode(code) {
   return typeof code === "string" && Object.values(BACKEND_ERROR_CODES).includes(code);
 }
 
-export { BACKEND_ERROR_CODES, isBackendErrorCode };
-//# sourceMappingURL=chunk-OE365FC6.js.map
-//# sourceMappingURL=chunk-OE365FC6.js.map
+exports.BACKEND_ERROR_CODES = BACKEND_ERROR_CODES;
+exports.isBackendErrorCode = isBackendErrorCode;
+//# sourceMappingURL=chunk-EZKQ7GPK.cjs.map
+//# sourceMappingURL=chunk-EZKQ7GPK.cjs.map

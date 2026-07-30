@@ -163,6 +163,9 @@ var NotificationType = {
   POLL_VOTE_SIGNATURE_PENDING: "poll_vote_signature_pending",
   POLL_VOTE_SIGNATURE_APPROVED: "poll_vote_signature_approved",
   POLL_VOTE_SIGNATURE_REJECTED: "poll_vote_signature_rejected",
+  ORG_MEMBER_ADDED: "org_member_added",
+  ORG_MEMBER_REMOVED: "org_member_removed",
+  ORG_MEMBER_ROLE_CHANGED: "org_member_role_changed",
   SYSTEM_ANNOUNCEMENT: "system_announcement"
 };
 var NotificationCategory = {
@@ -229,6 +232,11 @@ var NOTIFICATION_TYPE_CATEGORY = {
   [NotificationType.POLL_VOTE_SIGNATURE_PENDING]: NotificationCategory.POLLS,
   [NotificationType.POLL_VOTE_SIGNATURE_APPROVED]: NotificationCategory.POLLS,
   [NotificationType.POLL_VOTE_SIGNATURE_REJECTED]: NotificationCategory.POLLS,
+  // Org-membership events target the affected member only (org-scoped,
+  // explicit targetUserIds — never a building-wide fan-out).
+  [NotificationType.ORG_MEMBER_ADDED]: NotificationCategory.SYSTEM,
+  [NotificationType.ORG_MEMBER_REMOVED]: NotificationCategory.SYSTEM,
+  [NotificationType.ORG_MEMBER_ROLE_CHANGED]: NotificationCategory.SYSTEM,
   [NotificationType.SYSTEM_ANNOUNCEMENT]: NotificationCategory.SYSTEM
 };
 var UNIMPLEMENTED_NOTIFICATION_TYPES = /* @__PURE__ */ new Set([
@@ -399,6 +407,8 @@ var Permission = {
   ORG_VIEW_BUILDINGS: "org:view_buildings",
   ORG_VIEW_PARTNERS: "org:view_partners",
   ORG_MANAGE_PARTNERS: "org:manage_partners",
+  // Publish one notice to many/all managed buildings at once.
+  ORG_BROADCAST: "org:broadcast",
   // Platform (global scope)
   PLATFORM_APPROVE_BUILDINGS: "platform:approve_buildings",
   PLATFORM_MANAGE_USERS: "platform:manage_users",
@@ -550,6 +560,7 @@ var ORG_ROLE_RANK = {
   [OrgRole.ORG_ADMIN]: 3
 };
 function canAssignOrgRole(assignerRole, targetRole) {
+  if (assignerRole === OrgRole.ORG_ADMIN) return true;
   return ORG_ROLE_RANK[assignerRole] > ORG_ROLE_RANK[targetRole];
 }
 var PlatformRole = {
@@ -657,5 +668,5 @@ function deriveVotingStrength(user) {
 }
 
 export { APPROVE_PERMISSIONS, ApprovalStatus, BUILDING_ROLE_RANK, BoardVisibility, BuildingOtpExpiry, BuildingRole, BuildingStatus, BuildingType, CO_OWNER_VISIBLE_SYSTEM_TYPES, CommonStatus, DevicePlatform, EntityLinkType, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, IdentityVerificationMethod, JoinRequestStatus, LinkableEntityType, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, ORG_ROLE_RANK, OrgQuotaResourceType, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, POLL_CANNOT_VOTE_REASON_KEY, Permission, PlatformRole, PollCannotVoteReason, PollStatus, PollType, PollVoteStatus, PricuvaRefMode, Priority, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, RESIDENT_VISIBLE_SYSTEM_TYPES, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, VotingStrength, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, deriveVotingStrength, domainPermissions, methodToTier };
-//# sourceMappingURL=chunk-JMNXOIOQ.js.map
-//# sourceMappingURL=chunk-JMNXOIOQ.js.map
+//# sourceMappingURL=chunk-M4WV2S4O.js.map
+//# sourceMappingURL=chunk-M4WV2S4O.js.map

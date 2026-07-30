@@ -177,6 +177,8 @@ export const Permission = {
   ORG_VIEW_BUILDINGS: 'org:view_buildings',
   ORG_VIEW_PARTNERS: 'org:view_partners',
   ORG_MANAGE_PARTNERS: 'org:manage_partners',
+  // Publish one notice to many/all managed buildings at once.
+  ORG_BROADCAST: 'org:broadcast',
 
   // Platform (global scope)
   PLATFORM_APPROVE_BUILDINGS: 'platform:approve_buildings',

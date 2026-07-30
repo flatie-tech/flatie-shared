@@ -40,6 +40,14 @@ describe('Role Hierarchies', () => {
       expect(canAssignOrgRole(OrgRole.ORG_ADMIN, OrgRole.OPERATIVE)).toBe(true);
     });
 
+    it('ORG_ADMIN can assign a peer ORG_ADMIN (2026-07-30 rule — someone must be able to create the second admin)', () => {
+      expect(canAssignOrgRole(OrgRole.ORG_ADMIN, OrgRole.ORG_ADMIN)).toBe(true);
+    });
+
+    it('ORG_ADMIN can assign a peer ORG_ADMIN (2026-07-30 rule — someone must be able to create the second admin)', () => {
+      expect(canAssignOrgRole(OrgRole.ORG_ADMIN, OrgRole.ORG_ADMIN)).toBe(true);
+    });
+
     it('SUPERVISOR cannot assign ORG_ADMIN (lower → higher)', () => {
       expect(canAssignOrgRole(OrgRole.SUPERVISOR, OrgRole.ORG_ADMIN)).toBe(false);
     });

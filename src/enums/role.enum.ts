@@ -38,7 +38,14 @@ export const ORG_ROLE_RANK: Record<OrgRole, number> = {
   [OrgRole.ORG_ADMIN]: 3,
 };
 
+/**
+ * ORG_ADMIN may assign any role INCLUDING a peer ORG_ADMIN — someone must be
+ * able to create the second admin, and add-member always allowed it anyway
+ * (the strict-rank rule only made role-CHANGE inconsistent with add/invite).
+ * Every lower role stays strictly-lower: a SUPERVISOR cannot mint SUPERVISORs.
+ */
 export function canAssignOrgRole(assignerRole: OrgRole, targetRole: OrgRole): boolean {
+  if (assignerRole === OrgRole.ORG_ADMIN) return true;
   return ORG_ROLE_RANK[assignerRole] > ORG_ROLE_RANK[targetRole];
 }
 

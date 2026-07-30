@@ -151,6 +151,21 @@ const chatMessageDataSchema = baseNotificationDataSchema.extend({
   conversationId: z.string().uuid(),
 });
 
+// Org-membership events, fired at the affected member only.
+const orgMemberAddedDataSchema = baseNotificationDataSchema.extend({
+  orgName: z.string(),
+  orgRole: z.string(),
+});
+
+const orgMemberRemovedDataSchema = baseNotificationDataSchema.extend({
+  orgName: z.string(),
+});
+
+const orgMemberRoleChangedDataSchema = baseNotificationDataSchema.extend({
+  orgName: z.string(),
+  orgRole: z.string(),
+});
+
 const eventReminderDataSchema = baseNotificationDataSchema.extend({
   title: z.string(),
   // Pre-formatted wall-clock time in Europe/Zagreb (e.g. "18:00") — template var.
@@ -221,6 +236,9 @@ const notificationDataSchemaByType = {
   [NotificationType.BUILDING_PENDING_APPROVAL]: buildingPendingApprovalDataSchema,
   [NotificationType.BUILDING_APPROVED]: buildingApprovedDataSchema,
   [NotificationType.BUILDING_REJECTED]: buildingRejectedDataSchema,
+  [NotificationType.ORG_MEMBER_ADDED]: orgMemberAddedDataSchema,
+  [NotificationType.ORG_MEMBER_REMOVED]: orgMemberRemovedDataSchema,
+  [NotificationType.ORG_MEMBER_ROLE_CHANGED]: orgMemberRoleChangedDataSchema,
 
   [NotificationType.CHAT_MESSAGE]: chatMessageDataSchema,
 

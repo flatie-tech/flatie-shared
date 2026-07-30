@@ -189,6 +189,12 @@ declare const API_ROUTES: {
         readonly MEMBER_DETAIL: (orgId: string, memberId: string) => string;
         readonly INVITE: (orgId: string) => string;
         readonly INVITATIONS: (orgId: string) => string;
+        readonly INVITATION_RESEND: (orgId: string, invitationId: string) => string;
+        readonly INVITATION_BY_TOKEN: (token: string) => string;
+        readonly INVITATION_ACCEPT: (token: string) => string;
+        readonly BROADCASTS: (orgId: string) => string;
+        readonly BUILDING_CONTRACT: (orgId: string, buildingId: string) => string;
+        readonly DASHBOARD_ATTENTION: (orgId: string) => string;
         readonly BUSINESS_PARTNERS: (orgId: string) => string;
         readonly BUSINESS_PARTNER_DETAIL: (orgId: string, partnerId: string) => string;
     };
