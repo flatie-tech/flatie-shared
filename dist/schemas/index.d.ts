@@ -3790,6 +3790,7 @@ declare const pollResultsSchema: z.ZodObject<{
     }, z.core.$loose>>;
     consensusReached: z.ZodOptional<z.ZodBoolean>;
     currentConsensusPercentage: z.ZodOptional<z.ZodNumber>;
+    hasPendingSignatures: z.ZodOptional<z.ZodBoolean>;
     approved: z.ZodBoolean;
     canApprove: z.ZodBoolean;
     canEdit: z.ZodBoolean;

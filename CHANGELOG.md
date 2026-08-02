@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.90.0
+
+### Changes
+
+- feat(polls): hasPendingSignatures on poll results
+
 ## 0.89.0
 
 ### Changes

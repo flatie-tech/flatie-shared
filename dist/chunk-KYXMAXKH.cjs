@@ -2470,6 +2470,7 @@ var pollResultsSchema = zod.z.looseObject({
     "True when the ownership-weighted approval threshold has been reached. Only present for consensus polls."
   ),
   currentConsensusPercentage: zod.z.number().optional().describe("Current cumulative weight in favour, in percent. Only present for consensus polls."),
+  hasPendingSignatures: zod.z.boolean().optional().describe("True when any paper ballot on this poll is awaiting signature review."),
   approved: zod.z.boolean().describe("True when a representative has approved the poll for public visibility."),
   canApprove: zod.z.boolean().describe("True when the calling user may approve or reject the poll."),
   canEdit: zod.z.boolean().describe("True when the calling user may edit this poll."),
@@ -2912,5 +2913,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-2V6FDBDM.cjs.map
-//# sourceMappingURL=chunk-2V6FDBDM.cjs.map
+//# sourceMappingURL=chunk-KYXMAXKH.cjs.map
+//# sourceMappingURL=chunk-KYXMAXKH.cjs.map
