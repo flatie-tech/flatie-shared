@@ -39,7 +39,7 @@ pnpm add file:../flatie-shared
 import { Permission, domainPermissions, SCOPED_DOMAINS } from '@flatie/shared';
 
 // Flat permissions
-Permission.BUILDING_CREATE       // 'building:create'
+Permission.BUILDING_UPDATE       // 'building:update'
 Permission.PLATFORM_VIEW_ORGS    // 'platform:view_orgs'
 Permission.ORG_MANAGE_MEMBERS    // 'org:manage_members'
 
@@ -168,9 +168,17 @@ API_ROUTES.NOTICES('building-id')        // '/buildings/building-id/notices'
 ### Utilities
 
 ```typescript
-import { hasPermission, hasAnyPermission, hasAllPermissions } from '@flatie/shared/utils';
+import { createPermissionChecker } from '@flatie/shared/utils';
 import { formatCurrency, formatText, getDateRange } from '@flatie/shared/utils';
 import { normalizePaginatedResponse } from '@flatie/shared/utils';
+
+// The single permission-checking surface (isomorphic — same code on backend
+// guards and frontend hooks). The raw string[] helpers (hasPermission etc.)
+// were removed in v0.59.0.
+const checker = createPermissionChecker({ userId, permissions });
+checker.can(Permission.NOTICE_CREATE);
+checker.canOnResource('notice', 'update', resourceOwnerId); // resolves :own / :any
+checker.actionFlags('notice', resourceOwnerId);             // { canEdit, canDelete, canApprove, isOwner }
 ```
 
 ## Sub-path Imports
@@ -183,14 +191,14 @@ import { loginSchema } from '@flatie/shared/schemas';
 import { colors, themes } from '@flatie/shared/tokens';
 import type { Building } from '@flatie/shared/types';
 import { API_ROUTES } from '@flatie/shared/urls';
-import { hasPermission } from '@flatie/shared/utils';
+import { createPermissionChecker } from '@flatie/shared/utils';
 import { queryKeys } from '@flatie/shared/constants';
 ```
 
 Or import everything from the main entry:
 
 ```typescript
-import { Permission, BuildingRole, hasPermission } from '@flatie/shared';
+import { Permission, BuildingRole, createPermissionChecker } from '@flatie/shared';
 ```
 
 ## Development
@@ -243,7 +251,7 @@ The `prepare` script runs `tsup` automatically on `pnpm install`, so git depende
 
 - **Const objects over TypeScript enums**: Permissions and roles use `as const` objects for structural compatibility across package boundaries (TS enums create nominal types that break when consumed across separate builds).
 - **Zod 4 as peer dependency**: Backend, frontend, and shared all use Zod 4. Schemas can be imported directly by any consumer.
-- **Permission mappings in the backend**: This package defines the Permission enum and helpers. The role-to-permission mapping constants live in the backend since they're a deployment concern.
+- **Permission mappings live HERE** (since v0.7.0): the role→permission maps (`BUILDING_ROLE_PERMISSIONS`, `ORG_ROLE_PERMISSIONS`, `PLATFORM_ROLE_PERMISSIONS` in `src/constants/role-permissions.ts`) are shared so the in-app RBAC reference and clients render from the same source the backend enforces. The backend's `permission-mappings.ts` is a pure re-export. Grants remain server-authoritative — clients fetch `GET /users/me/permissions` and never derive their own.
 - **Design tokens**: Shared owns the wire contract for visual tokens (colors, themes, radii). Frontend's `@theme inline` Tailwind v4 block stays in the consumer — that's a web-specific mapping layer, not a shared token concern.
 
 ## License

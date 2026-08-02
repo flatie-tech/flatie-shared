@@ -16,6 +16,36 @@ Rules for contributing to `@flatie/shared`. Read before adding new code.
 
 Why const-object enums: TypeScript `enum` uses nominal typing that breaks across the package boundary (an `enum Role` in the shared bundle is a different type than one imported by a consumer). Const objects use structural typing and survive the bundler.
 
+## Permission format
+
+A permission string names one capability: the right to perform one **action** on one kind of
+**resource**, optionally narrowed by a **scope**. It never says *who* holds the capability —
+that is the role maps' job (`role-permissions.ts`) — and it never names a concrete instance —
+that is the guard's job (route params) or the evaluator's (`resourceOwnerId`). Because each
+string answers exactly one question ("what may be done to what"), the full catalog stays
+greppable, roles stay diffable, and moving authority between roles never requires renaming a
+permission.
+
+```
+domain[_more_domain]:action[:scope]
+```
+
+| Segment | Rules | Examples |
+|---------|-------|----------|
+| domain | lowercase `snake_case` noun — the resource | `notice`, `building_role`, `failure_report` |
+| action | lowercase verb | `create`, `read`, `update`, `delete`, `approve`, `pin`, `manage`, `vote` |
+| scope (optional) | one of two families only — see pairing rules | `own`, `any`, `representative`, `manager` |
+
+**Pairing rules** (enforced by `tests/enums/permission-shape.test.ts`):
+
+- Ownership scopes `own` / `any` pair only with `update` and `delete`. Resolution: `:any` wins unconditionally; `:own` additionally requires `resourceOwnerId === subject.userId` (see `canDoOnResource`).
+- Role scopes `representative` / `manager` pair only with `manage` (currently the FAQ domain only — a legacy wart, do not add new permissions of this shape; roles belong in the role→permission maps, never in the permission string).
+- Enum keys are `SCREAMING_SNAKE_CASE` of the value (`NOTICE_UPDATE_OWN` → `notice:update:own`); values are globally unique.
+
+**What does NOT belong in a permission string:** role names (a permission says what may be done to what — *who* may do it is the role map's job), tenant/building ids (scoping is the guard's job), and UI concepts (permissions gate capabilities, not screens).
+
+**Flat vs scoped domains:** give a domain `:own`/`:any` scoping only when members create instances of it and authors need different rights over their own items (`SCOPED_DOMAINS`: notice, event, poll, failure_report, document, maintenance_log). Domains that only managerial roles write to stay flat (`financial:*`, `unit:*`, `building:*`) — a scope suffix there would never be exercised. Use `domainPermissions(domain, level)` to generate consistent sets.
+
 ## Zod: `object` vs `looseObject`
 
 Default to `z.object()` (strict). Use `z.looseObject()` only when extra fields must pass through at runtime.
