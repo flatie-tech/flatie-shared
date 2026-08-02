@@ -224,6 +224,10 @@ export const pollResultsSchema = z.looseObject({
     .number()
     .optional()
     .describe('Current cumulative weight in favour, in percent. Only present for consensus polls.'),
+  hasPendingSignatures: z
+    .boolean()
+    .optional()
+    .describe('True when any paper ballot on this poll is awaiting signature review.'),
   approved: z
     .boolean()
     .describe('True when a representative has approved the poll for public visibility.'),
