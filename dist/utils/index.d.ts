@@ -1,9 +1,8 @@
-export { A as AddressParts, P as ParsedHouseNumber, f as formatAddress, i as isValidHouseNumber, n as normalizeHouseNumber, p as parseHouseNumber } from '../house-number-Di2u5fvq.js';
-import { P as PaginatedResponse } from '../pagination.types-BdLhL-Jg.js';
+export { A as AddressParts, P as ParsedHouseNumber, f as formatAddress, n as normalizeHouseNumber, p as parseHouseNumber } from '../house-number-HwVJ833w.js';
+import { P as PaginatedResponse } from '../pagination.types-D3A3752L.js';
 import { z } from 'zod';
 import { BackendErrorCode } from '../errors/index.js';
 import { P as Permission, c as ScopedDomain, b as ScopedAction, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-BJt94sMT.js';
-import { F as FailureStatus, P as Priority } from '../status.enum-BYlt7_Fs.js';
 
 /**
  * Minimal structural shape of a chat-target candidate.
@@ -182,8 +181,6 @@ declare function sumMoney(values: Array<string | number>): string;
 declare function addMoney(a: string | number, b: string | number): string;
 /** Exact `a - b` → canonical string. */
 declare function subtractMoney(a: string | number, b: string | number): string;
-/** True when the two money values are numerically equal. */
-declare function moneyEquals(a: string | number, b: string | number): boolean;
 /**
  * Locale-aware display of a money value. Accepts the canonical string (or a
  * number / null / undefined for tolerance during the migration). `null` /
@@ -211,29 +208,6 @@ declare function formatMoney(money: string | number | null | undefined, format: 
  * normalizePaginatedResponse([...])
  */
 declare function normalizePaginatedResponse<T>(input: unknown, fallbackLimit?: number): PaginatedResponse<T>;
-/**
- * Extract items from a paginated response, handling various formats
- *
- * @param response - The raw response
- * @param itemsKey - Optional specific key to look for items
- * @returns Array of items
- */
-declare function extractPaginatedItems<T>(response: unknown, itemsKey?: string): T[];
-/**
- * Calculate pagination metadata
- *
- * @param total - Total number of items
- * @param offset - Current offset
- * @param limit - Items per page
- */
-declare function calculatePaginationMeta(total: number, offset: number, limit: number): {
-    currentPage: number;
-    totalPages: number;
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
-    isFirstPage: boolean;
-    isLastPage: boolean;
-};
 
 /**
  * Error thrown by `parseData` when a value fails schema validation.
@@ -482,14 +456,6 @@ declare function getRoleBadge(role: string): {
  * - `neutral`: gray — inert, cancelled, default
  */
 type StatusVariant = 'success' | 'warning' | 'danger' | 'info' | 'neutral';
-/**
- * Map a failure report status to a semantic variant.
- */
-declare function failureStatusVariant(status: FailureStatus): StatusVariant;
-/**
- * Map a priority value to a semantic variant.
- */
-declare function priorityVariant(priority: Priority): StatusVariant;
 
 /**
  * Deprecated: the voting-method toggles are no longer enforced — consensus
@@ -506,18 +472,6 @@ type VotingMethodState = Record<VotingMethodSetting, boolean>;
  * to the current state for fields the patch leaves untouched.
  */
 declare function resolveVotingMethods(current: VotingMethodState, patch: Partial<VotingMethodState>): VotingMethodState;
-/**
- * True when applying `patch` on top of `current` would disable every
- * voting method — i.e. the patch violates the last-method-lock and the
- * backend will reject it.
- */
-declare function violatesVotingMethodLock(current: VotingMethodState, patch: Partial<VotingMethodState>): boolean;
-/**
- * True when `method` is the only voting method currently enabled —
- * the UI should render its toggle locked (disabling it would violate
- * the invariant).
- */
-declare function isLastEnabledVotingMethod(current: VotingMethodState, method: VotingMethodSetting): boolean;
 
 /**
  * Shared Utility Functions
@@ -538,19 +492,10 @@ declare function formatText(text: string): string;
  */
 declare function formatCurrency(amount: number, locale?: string, currency?: string): string;
 /**
- * Get date range for common filter options
- * @param filter - The filter type
- * @returns Object with fromDate and toDate in 'yyyy-MM-dd' format
- */
-declare function getDateRange(filter: 'today' | 'yesterday' | 'week' | 'month'): {
-    fromDate: string;
-    toDate: string;
-};
-/**
  * Debounce a value (for use in React effects)
  * @param value - The value to debounce
  * @param delay - Delay in milliseconds
  */
 declare function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(func: T, delay: number): (...args: Parameters<T>) => void;
 
-export { type ActionFlags, DATETIME_FORMATS, DATE_FORMATS, type DisplayableRole, type GoogleCalendarEventInput, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, type MessageableUserShape, ParseError, type ParsedApiError, type PermissionChecker, type PermissionSubject, ROLE_BADGE_COLORS, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type RestrictableActionFlags, type RoleBadgeColor, type StatusVariant, TIME_FORMATS, VOTING_METHOD_SETTINGS, type VotingMethodSetting, type VotingMethodState, addMoney, applyResidentRestriction, applyResidentRestrictionToItem, buildGoogleCalendarUrl, calculatePaginationMeta, canDo, canDoOnResource, canMessageUser, computeActionFlags, createPermissionChecker, debounce, extractPaginatedItems, failureStatusVariant, formatCurrency, formatCurrencyByLocale, formatCurrencyEUR, formatDate as formatDateByLocale, formatDateTime, formatMoney, formatText, fromCents, getContextUserId, getDateLocale, getDateRange, getInitials, getMessageableUsers, getRoleBadge, isLastEnabledVotingMethod, isManagerialRole, moneyEquals, normalizeMoney, normalizePaginatedResponse, parseApiError, parseData, priorityVariant, resolveVotingMethods, subtractMoney, sumMoney, toCents, violatesVotingMethodLock };
+export { type ActionFlags, DATETIME_FORMATS, DATE_FORMATS, type DisplayableRole, type GoogleCalendarEventInput, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, type MessageableUserShape, ParseError, type ParsedApiError, type PermissionChecker, type PermissionSubject, ROLE_BADGE_COLORS, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type RestrictableActionFlags, type RoleBadgeColor, type StatusVariant, TIME_FORMATS, VOTING_METHOD_SETTINGS, type VotingMethodSetting, type VotingMethodState, addMoney, applyResidentRestriction, applyResidentRestrictionToItem, buildGoogleCalendarUrl, canDo, canDoOnResource, canMessageUser, computeActionFlags, createPermissionChecker, debounce, formatCurrency, formatCurrencyByLocale, formatCurrencyEUR, formatDate as formatDateByLocale, formatDateTime, formatMoney, formatText, fromCents, getContextUserId, getDateLocale, getInitials, getMessageableUsers, getRoleBadge, isManagerialRole, normalizeMoney, normalizePaginatedResponse, parseApiError, parseData, resolveVotingMethods, subtractMoney, sumMoney, toCents };

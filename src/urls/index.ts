@@ -4,8 +4,6 @@
  * Centralized API endpoint definitions for use across frontend, mobile, and backend.
  */
 
-export const API_VERSION = 'v1';
-
 export const API_ROUTES = {
   // ── Auth ──────────────────────────────────────────────────────────────
   AUTH: {

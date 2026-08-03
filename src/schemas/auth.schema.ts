@@ -86,11 +86,3 @@ export const updatePasswordSchema = z
     message: 'Passwords do not match',
     path: ['confirmPassword'],
   });
-
-// Inferred types
-export type LoginSchema = z.infer<typeof loginSchema>;
-export type RegisterSchema = z.infer<typeof registerSchema>;
-export type ForgotPasswordSchema = z.infer<typeof forgotPasswordSchema>;
-export type ResetPasswordSchema = z.infer<typeof resetPasswordSchema>;
-export type VerifyOtpSchema = z.infer<typeof verifyOtpSchema>;
-export type UpdatePasswordSchema = z.infer<typeof updatePasswordSchema>;

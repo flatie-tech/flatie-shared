@@ -7,7 +7,6 @@ import { multipartArray } from '../multipart.schema';
  * Poll type options
  */
 export const POLL_TYPES = [PollType.CONSENSUS, PollType.COMMUNITY] as const;
-export type PollTypeOption = (typeof POLL_TYPES)[number];
 
 /**
  * Poll type enum schema

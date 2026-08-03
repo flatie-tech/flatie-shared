@@ -2,8 +2,6 @@
 
 // Board (Kanban) + column + card schemas
 export type {
-  BoardCardChecklistItemSchema,
-  BoardCardEventSchema,
   CreateBoardCardSchema,
   CreateBoardColumnSchema,
   CreateBoardSchema,
@@ -121,7 +119,6 @@ export {
   getAuditLogsQuerySchema,
 } from './audit-log.schema';
 export type {
-  BuildingTypeOption,
   CreateBuildingSchema,
   JoinBuildingWithOtpSchema,
   UpdateBuildingSchema,
@@ -137,11 +134,6 @@ export {
   updateUserBuildingRoleSchema,
 } from './building.schema';
 // Building quota schemas
-export type {
-  BuildingQuotaConfig,
-  BuildingQuotaEntry,
-  BuildingQuotaList,
-} from './building-quota.schema';
 export {
   buildingQuotaConfigSchema,
   buildingQuotaEntrySchema,
@@ -193,8 +185,6 @@ export {
 export type {
   CreateEntityLinkRequest,
   DeleteEntityLinkQuery,
-  DeleteEntityLinkRequest,
-  EntityLinkEndpoint,
   GetEntityLinkCountsQuery,
   GetEntityLinksQuery,
 } from './entity-link.schema';
@@ -210,14 +200,7 @@ export {
   LINKABLE_ENTITY_TYPES,
   linkableEntityTypeSchema,
 } from './entity-link.schema';
-export type {
-  CreateEventSchema,
-  EventColorOption,
-  EventTypeOption,
-  RecurrenceTypeOption,
-  TimeSchema,
-  UpdateEventSchema,
-} from './event.schema';
+export type { EventColorOption, EventTypeOption, RecurrenceTypeOption } from './event.schema';
 // Event schemas
 export {
   createEventSchema,
@@ -232,7 +215,7 @@ export {
   updateEventSchema,
 } from './event.schema';
 // Income-transaction schemas (manual funds mode income ledger)
-export type { CreateExpenseSchema, UpdateExpenseSchema } from './expense-transaction.schema';
+export type { UpdateExpenseSchema } from './expense-transaction.schema';
 export { createExpenseSchema, updateExpenseSchema } from './expense-transaction.schema';
 export type {
   ApproveFailureReportSchema,
@@ -253,7 +236,6 @@ export { createIncomeSchema, updateIncomeSchema } from './income-transaction.sch
 export type {
   CreateMaintenanceLogSchema,
   MaintenanceFinancedByOption,
-  MaintenanceLogEventSchema,
   UpdateMaintenanceLogSchema,
 } from './maintenance-log.schema';
 // Maintenance log schemas
@@ -318,7 +300,6 @@ export {
 export type {
   CreatePollSchema,
   FinalizePollSchema,
-  PollTypeOption,
   RecordOfflineVotesSchema,
   UpdatePollSchema,
   VotePollSchema,

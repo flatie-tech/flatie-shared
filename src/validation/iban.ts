@@ -14,18 +14,6 @@ import { z } from 'zod';
  */
 const IBAN_REGEX = /^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/;
 
-export const ibanSchema = z
-  .string()
-  .min(15)
-  .max(34)
-  .regex(
-    IBAN_REGEX,
-    'IBAN must start with a 2-letter country code, 2 check digits, then 11-30 alphanumeric characters (uppercase).',
-  )
-  .describe(
-    "International bank account number for the building's fund account. Format: 2-letter country code + 2 check digits + 11–30 alphanumeric BBAN characters. Stored uppercase, no spaces.",
-  );
-
 /**
  * Optional IBAN — accepts undefined/null/empty string, or a valid IBAN.
  * Used on update endpoints where the caller can clear the field by

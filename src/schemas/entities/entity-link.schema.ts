@@ -93,9 +93,7 @@ export const getEntityLinkCountsQuerySchema = z.object({
     .pipe(z.array(uuidSchema).min(1).max(200)),
 });
 
-export type EntityLinkEndpoint = z.infer<typeof entityLinkEndpointSchema>;
 export type CreateEntityLinkRequest = z.infer<typeof createEntityLinkRequestSchema>;
-export type DeleteEntityLinkRequest = z.infer<typeof deleteEntityLinkRequestSchema>;
 export type DeleteEntityLinkQuery = z.infer<typeof deleteEntityLinkQuerySchema>;
 export type GetEntityLinksQuery = z.infer<typeof getEntityLinksQuerySchema>;
 export type GetEntityLinkCountsQuery = z.infer<typeof getEntityLinkCountsQuerySchema>;

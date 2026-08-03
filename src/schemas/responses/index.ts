@@ -21,7 +21,6 @@ export {
 } from './building';
 export type {
   EmailAttachment,
-  EmailDirection,
   EmailMessage,
   EmailThread,
   EmailThreadDetail,
@@ -70,7 +69,6 @@ export type {
   DocumentFile,
   DocumentLinkedRecord,
   DocumentResponse,
-  DocumentSourceType,
   PaginatedDocumentsResponse,
 } from './documents';
 export {
@@ -143,15 +141,11 @@ export {
   pollVotersResponseSchema,
 } from './polls';
 export type {
-  PaginatedRepBuildingsResponse,
-  PaginatedRepUsersResponse,
   RepBuildingActivity,
   RepBuildingItem,
   RepDashboardSummaryResponse,
   RepRecentActivity,
-  RepRecentActivityType,
   RepUserBuilding,
-  RepUserItem,
 } from './representatives';
 export {
   paginatedRepBuildingsResponseSchema,

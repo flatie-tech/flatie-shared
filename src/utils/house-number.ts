@@ -34,13 +34,6 @@ export function normalizeHouseNumber(raw: string): string | null {
   return normalized;
 }
 
-/**
- * Check whether a raw house number string is valid after normalization.
- */
-export function isValidHouseNumber(raw: string): boolean {
-  return normalizeHouseNumber(raw) !== null;
-}
-
 export interface ParsedHouseNumber {
   number: number;
   letter?: string;

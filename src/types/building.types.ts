@@ -20,14 +20,6 @@ export interface Building extends UserCreatedEntity {
 }
 
 /**
- * Building with user's role for API responses
- */
-export interface BuildingWithRole extends Building {
-  role?: BuildingRole;
-  permissions?: string[];
-}
-
-/**
  * User's membership in a building
  */
 export interface BuildingMember extends BaseEntity {

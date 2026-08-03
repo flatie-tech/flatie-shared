@@ -1,4 +1,3 @@
-import type { z } from 'zod';
 import { uuidSchema } from '../base.schema';
 import { updateNoticeSchema as updateNoticeBodySchema } from '../entities/notice.schema';
 
@@ -15,5 +14,3 @@ import { updateNoticeSchema as updateNoticeBodySchema } from '../entities/notice
 export const updateNoticeRequestSchema = updateNoticeBodySchema.extend({
   id: uuidSchema.describe('UUID of the notice to update, taken from the URL.'),
 });
-
-export type UpdateNoticeRequestPayload = z.infer<typeof updateNoticeRequestSchema>;

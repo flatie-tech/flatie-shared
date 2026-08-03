@@ -1,16 +1,12 @@
 'use strict';
 
-var chunk5LV2OZ7O_cjs = require('../chunk-5LV2OZ7O.cjs');
+var chunkIWYHSSLW_cjs = require('../chunk-IWYHSSLW.cjs');
 
 
 
 Object.defineProperty(exports, "API_ROUTES", {
   enumerable: true,
-  get: function () { return chunk5LV2OZ7O_cjs.API_ROUTES; }
-});
-Object.defineProperty(exports, "API_VERSION", {
-  enumerable: true,
-  get: function () { return chunk5LV2OZ7O_cjs.API_VERSION; }
+  get: function () { return chunkIWYHSSLW_cjs.API_ROUTES; }
 });
 //# sourceMappingURL=index.cjs.map
 //# sourceMappingURL=index.cjs.map

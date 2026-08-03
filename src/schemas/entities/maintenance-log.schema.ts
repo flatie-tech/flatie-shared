@@ -193,6 +193,5 @@ export const updateMaintenanceLogSchema = z.object({
 });
 
 // Inferred types
-export type MaintenanceLogEventSchema = z.infer<typeof maintenanceLogEventSchema>;
 export type CreateMaintenanceLogSchema = z.infer<typeof createMaintenanceLogSchema>;
 export type UpdateMaintenanceLogSchema = z.infer<typeof updateMaintenanceLogSchema>;

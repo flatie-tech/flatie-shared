@@ -5,7 +5,6 @@ import {
   addMoney,
   formatMoney,
   fromCents,
-  moneyEquals,
   normalizeMoney,
   subtractMoney,
   sumMoney,
@@ -34,11 +33,9 @@ describe('money primitives (integer cents, exact)', () => {
     expect(subtractMoney('100.00', '250.50')).toBe('-150.50');
   });
 
-  it('normalizes + compares', () => {
+  it('normalizes', () => {
     expect(normalizeMoney('7')).toBe('7.00');
     expect(normalizeMoney(7.1)).toBe('7.10');
-    expect(moneyEquals('7.00', 7)).toBe(true);
-    expect(moneyEquals('7.00', '7.01')).toBe(false);
   });
 
   it('rejects invalid money values', () => {

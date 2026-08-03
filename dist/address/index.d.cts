@@ -1,5 +1,5 @@
 import { z } from 'zod';
-export { A as AddressParts, P as ParsedHouseNumber, f as formatAddress, i as isValidHouseNumber, n as normalizeHouseNumber, p as parseHouseNumber } from '../house-number-Di2u5fvq.cjs';
+export { A as AddressParts, P as ParsedHouseNumber, f as formatAddress, n as normalizeHouseNumber, p as parseHouseNumber } from '../house-number-HwVJ833w.cjs';
 
 /**
  * Address value-object — the canonical cross-consumer contract for
@@ -32,7 +32,6 @@ declare const existingBuildingRefSchema: z.ZodObject<{
     name: z.ZodString;
     slug: z.ZodNullable<z.ZodString>;
 }, z.core.$strip>;
-type ExistingBuildingRef = z.infer<typeof existingBuildingRefSchema>;
 /**
  * One suggestion row served by the address search endpoints.
  * Street-level rows (no house number yet) have `houseNumber: null`,
@@ -66,7 +65,6 @@ declare const structuredAddressInputSchema: z.ZodObject<{
     streetId: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     houseNumber: z.ZodNullable<z.ZodOptional<z.ZodString>>;
 }, z.core.$strip>;
-type StructuredAddressInput = z.infer<typeof structuredAddressInputSchema>;
 /**
  * A structured address as held on an entity (building / owner / user).
  * `addressId` is null when the value fell back to free text or an
@@ -124,4 +122,4 @@ declare function buildMapUrl(input: MapUrlInput): string;
  */
 declare function compareHouseNumbers(a: string, b: string): number;
 
-export { type AddressDisplayProps, type AddressSearchResult, type AddressValue, type ExistingBuildingRef, type MapUrlInput, type StructuredAddressInput, addressSearchResultSchema, buildMapUrl, compareHouseNumbers, existingBuildingRefSchema, structuredAddressInputSchema };
+export { type AddressDisplayProps, type AddressSearchResult, type AddressValue, type MapUrlInput, addressSearchResultSchema, buildMapUrl, compareHouseNumbers, existingBuildingRefSchema, structuredAddressInputSchema };

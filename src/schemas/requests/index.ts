@@ -13,17 +13,12 @@
 // Zod-inferred payload types here are the contract-of-truth going
 // forward.
 
-export type { AiChatMessagePayload, AiChatRequestPayload } from './ai-chat';
 export { aiChatMessageSchema, aiChatRequestSchema } from './ai-chat';
 export type { CreateEmailThreadRequestPayload } from './create-email-thread';
 export { createEmailThreadRequestSchema, EMAIL_LIMITS } from './create-email-thread';
 export type { ReplyEmailThreadRequestPayload } from './reply-email-thread';
 export { replyEmailThreadRequestSchema } from './reply-email-thread';
-export type { UpdateFailureReportRequestPayload } from './update-failure-report';
 export { updateFailureReportRequestSchema } from './update-failure-report';
-export type { UpdateMaintenanceLogRequestPayload } from './update-maintenance-log';
 export { updateMaintenanceLogRequestSchema } from './update-maintenance-log';
-export type { UpdateNoticeRequestPayload } from './update-notice';
 export { updateNoticeRequestSchema } from './update-notice';
-export type { UpdatePollRequestPayload } from './update-poll';
 export { updatePollRequestSchema } from './update-poll';

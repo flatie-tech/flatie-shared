@@ -15,7 +15,6 @@ export const BUILDING_TYPES = [
   BuildingType.COMMERCIAL,
   BuildingType.RESIDENTIAL_COMMERCIAL,
 ] as const;
-export type BuildingTypeOption = (typeof BUILDING_TYPES)[number];
 
 /**
  * Building type schema

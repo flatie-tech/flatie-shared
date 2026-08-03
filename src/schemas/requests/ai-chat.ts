@@ -59,6 +59,3 @@ export const aiChatRequestSchema = z.object({
     .max(AI_CHAT_LIMITS.MAX_MESSAGES)
     .describe('Full client-held conversation history, newest last; the server windows it.'),
 });
-
-export type AiChatMessagePayload = z.infer<typeof aiChatMessageSchema>;
-export type AiChatRequestPayload = z.infer<typeof aiChatRequestSchema>;

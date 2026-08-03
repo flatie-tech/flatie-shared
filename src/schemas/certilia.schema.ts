@@ -59,5 +59,3 @@ export const certiliaUserinfoSchema = z
       raw: profile as Record<string, unknown>,
     };
   });
-
-export type CertiliaUserinfo = z.infer<typeof certiliaUserinfoSchema>;

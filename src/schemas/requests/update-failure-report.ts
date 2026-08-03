@@ -1,4 +1,3 @@
-import type { z } from 'zod';
 import { uuidSchema } from '../base.schema';
 import { updateFailureReportSchema as updateFailureReportBodySchema } from '../entities/failure-report.schema';
 
@@ -15,5 +14,3 @@ import { updateFailureReportSchema as updateFailureReportBodySchema } from '../e
 export const updateFailureReportRequestSchema = updateFailureReportBodySchema.extend({
   id: uuidSchema.describe('UUID of the failure report to update, taken from the URL.'),
 });
-
-export type UpdateFailureReportRequestPayload = z.infer<typeof updateFailureReportRequestSchema>;

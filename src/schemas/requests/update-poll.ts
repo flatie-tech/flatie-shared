@@ -1,4 +1,3 @@
-import type { z } from 'zod';
 import { uuidSchema } from '../base.schema';
 import { updatePollSchema as updatePollBodySchema } from '../entities/poll.schema';
 
@@ -10,5 +9,3 @@ import { updatePollSchema as updatePollBodySchema } from '../entities/poll.schem
 export const updatePollRequestSchema = updatePollBodySchema.extend({
   id: uuidSchema.describe('UUID of the poll to update, taken from the URL.'),
 });
-
-export type UpdatePollRequestPayload = z.infer<typeof updatePollRequestSchema>;

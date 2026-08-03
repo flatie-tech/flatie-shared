@@ -3,7 +3,6 @@
  *
  * Centralized API endpoint definitions for use across frontend, mobile, and backend.
  */
-declare const API_VERSION = "v1";
 declare const API_ROUTES: {
     readonly AUTH: {
         readonly LOGIN: "/auth/login";
@@ -255,4 +254,4 @@ declare const API_ROUTES: {
     };
 };
 
-export { API_ROUTES, API_VERSION };
+export { API_ROUTES };

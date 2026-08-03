@@ -68,6 +68,3 @@ export const getRepBuildingsParamsSchema = z.object({
   sortBy: z.string().optional().default('createdAt'),
   sortOrder: sortOrderSchema.optional().default('desc'),
 });
-
-export type GetRepUsersParams = z.infer<typeof getRepUsersParamsSchema>;
-export type GetRepBuildingsParams = z.infer<typeof getRepBuildingsParamsSchema>;

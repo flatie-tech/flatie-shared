@@ -7,13 +7,7 @@ export type {
   UserCreatedEntity,
 } from './base-entity.types';
 // Building types
-export type {
-  Building,
-  BuildingMember,
-  BuildingOTPResponse,
-  BuildingUser,
-  BuildingWithRole,
-} from './building.types';
+export type { Building, BuildingMember, BuildingOTPResponse, BuildingUser } from './building.types';
 // Event types
 export type {
   CreateEventRequest,
@@ -30,7 +24,6 @@ export type {
 // Financial types
 export type {
   BuildingFund,
-  CreateTransactionRequest,
   FinancialGraphData,
   FinancialSummary,
   Transaction,
@@ -47,12 +40,7 @@ export type {
   Notice,
 } from './notice.types';
 // Pagination types
-export type {
-  CursorPaginatedResponse,
-  DateRangeParams,
-  PaginatedResponse,
-  PaginationParams,
-} from './pagination.types';
+export type { CursorPaginatedResponse, PaginatedResponse } from './pagination.types';
 export { createPaginatedResponse } from './pagination.types';
 // Permission context (used by the pure evaluator in utils)
 export type {

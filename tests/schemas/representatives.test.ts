@@ -185,7 +185,7 @@ describe('root barrel reachability', () => {
     expect(root.repDashboardSummaryResponseSchema).toBeDefined();
     expect(root.buildingSettingsResponseSchema).toBeDefined();
     expect(root.getRepUsersParamsSchema).toBeDefined();
-    expect(root.violatesVotingMethodLock).toBeDefined();
+    expect(root.resolveVotingMethods).toBeDefined();
     expect(root.incomeKeys).toBeDefined();
   });
 });

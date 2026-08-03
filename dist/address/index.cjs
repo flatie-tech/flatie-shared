@@ -1,45 +1,41 @@
 'use strict';
 
-var chunkBQDXLZYG_cjs = require('../chunk-BQDXLZYG.cjs');
-var chunk4CZ7F75B_cjs = require('../chunk-4CZ7F75B.cjs');
+var chunkVXKZ7RHS_cjs = require('../chunk-VXKZ7RHS.cjs');
+var chunk3YG7UIGR_cjs = require('../chunk-3YG7UIGR.cjs');
 
 
 
 Object.defineProperty(exports, "addressSearchResultSchema", {
   enumerable: true,
-  get: function () { return chunkBQDXLZYG_cjs.addressSearchResultSchema; }
+  get: function () { return chunkVXKZ7RHS_cjs.addressSearchResultSchema; }
 });
 Object.defineProperty(exports, "buildMapUrl", {
   enumerable: true,
-  get: function () { return chunkBQDXLZYG_cjs.buildMapUrl; }
+  get: function () { return chunkVXKZ7RHS_cjs.buildMapUrl; }
 });
 Object.defineProperty(exports, "compareHouseNumbers", {
   enumerable: true,
-  get: function () { return chunkBQDXLZYG_cjs.compareHouseNumbers; }
+  get: function () { return chunkVXKZ7RHS_cjs.compareHouseNumbers; }
 });
 Object.defineProperty(exports, "existingBuildingRefSchema", {
   enumerable: true,
-  get: function () { return chunkBQDXLZYG_cjs.existingBuildingRefSchema; }
+  get: function () { return chunkVXKZ7RHS_cjs.existingBuildingRefSchema; }
 });
 Object.defineProperty(exports, "structuredAddressInputSchema", {
   enumerable: true,
-  get: function () { return chunkBQDXLZYG_cjs.structuredAddressInputSchema; }
+  get: function () { return chunkVXKZ7RHS_cjs.structuredAddressInputSchema; }
 });
 Object.defineProperty(exports, "formatAddress", {
   enumerable: true,
-  get: function () { return chunk4CZ7F75B_cjs.formatAddress; }
-});
-Object.defineProperty(exports, "isValidHouseNumber", {
-  enumerable: true,
-  get: function () { return chunk4CZ7F75B_cjs.isValidHouseNumber; }
+  get: function () { return chunk3YG7UIGR_cjs.formatAddress; }
 });
 Object.defineProperty(exports, "normalizeHouseNumber", {
   enumerable: true,
-  get: function () { return chunk4CZ7F75B_cjs.normalizeHouseNumber; }
+  get: function () { return chunk3YG7UIGR_cjs.normalizeHouseNumber; }
 });
 Object.defineProperty(exports, "parseHouseNumber", {
   enumerable: true,
-  get: function () { return chunk4CZ7F75B_cjs.parseHouseNumber; }
+  get: function () { return chunk3YG7UIGR_cjs.parseHouseNumber; }
 });
 //# sourceMappingURL=index.cjs.map
 //# sourceMappingURL=index.cjs.map

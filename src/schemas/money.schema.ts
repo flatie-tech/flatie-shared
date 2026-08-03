@@ -33,5 +33,3 @@ export const signedMoneyStringSchema = z
       .refine((s) => Math.abs(Number(s)) <= 9_999_999_999.99, 'balance exceeds the maximum')
       .transform((s) => normalizeMoney(s)),
   );
-
-export type MoneyString = z.infer<typeof moneyStringSchema>;

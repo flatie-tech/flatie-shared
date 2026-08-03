@@ -14,12 +14,7 @@ export type { GoogleCalendarEventInput } from './google-calendar';
 export { buildGoogleCalendarUrl } from './google-calendar';
 // Croatian house number normalization and address formatting
 export type { AddressParts, ParsedHouseNumber } from './house-number';
-export {
-  formatAddress,
-  isValidHouseNumber,
-  normalizeHouseNumber,
-  parseHouseNumber,
-} from './house-number';
+export { formatAddress, normalizeHouseNumber, parseHouseNumber } from './house-number';
 // Avatar-fallback initials
 export { getInitials } from './initials';
 // Locale-aware date / currency formatting
@@ -38,18 +33,13 @@ export {
   addMoney,
   formatMoney,
   fromCents,
-  moneyEquals,
   normalizeMoney,
   subtractMoney,
   sumMoney,
   toCents,
 } from './money';
 // Pagination utilities
-export {
-  calculatePaginationMeta,
-  extractPaginatedItems,
-  normalizePaginatedResponse,
-} from './pagination';
+export { normalizePaginatedResponse } from './pagination';
 // Client-side schema validation for API responses
 export { ParseError, parseData } from './parse';
 // Error-shape parser — extract domain code + message from caught HTTP errors
@@ -83,15 +73,9 @@ export {
 } from './role-helpers';
 // Status variants (semantic design-system mappers)
 export type { StatusVariant } from './status-variants';
-export { failureStatusVariant, priorityVariant } from './status-variants';
 // Voting-method last-method-lock invariant (building settings)
 export type { VotingMethodSetting, VotingMethodState } from './voting-methods';
-export {
-  isLastEnabledVotingMethod,
-  resolveVotingMethods,
-  VOTING_METHOD_SETTINGS,
-  violatesVotingMethodLock,
-} from './voting-methods';
+export { resolveVotingMethods, VOTING_METHOD_SETTINGS } from './voting-methods';
 
 /**
  * Format a snake_case or SCREAMING_SNAKE_CASE string to Title Case
@@ -118,51 +102,6 @@ export function formatCurrency(amount: number, locale = 'en-EU', currency = 'EUR
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(amount);
-}
-
-/**
- * Get date range for common filter options
- * @param filter - The filter type
- * @returns Object with fromDate and toDate in 'yyyy-MM-dd' format
- */
-export function getDateRange(filter: 'today' | 'yesterday' | 'week' | 'month'): {
-  fromDate: string;
-  toDate: string;
-} {
-  const today = new Date();
-  const formatDate = (date: Date): string => date.toISOString().slice(0, 10);
-
-  switch (filter) {
-    case 'today':
-      return {
-        fromDate: formatDate(today),
-        toDate: formatDate(today),
-      };
-    case 'yesterday': {
-      const yesterday = new Date(today);
-      yesterday.setDate(yesterday.getDate() - 1);
-      return {
-        fromDate: formatDate(yesterday),
-        toDate: formatDate(yesterday),
-      };
-    }
-    case 'week': {
-      const weekAgo = new Date(today);
-      weekAgo.setDate(weekAgo.getDate() - 7);
-      return {
-        fromDate: formatDate(weekAgo),
-        toDate: formatDate(today),
-      };
-    }
-    case 'month': {
-      const monthAgo = new Date(today);
-      monthAgo.setMonth(monthAgo.getMonth() - 1);
-      return {
-        fromDate: formatDate(monthAgo),
-        toDate: formatDate(today),
-      };
-    }
-  }
 }
 
 /**

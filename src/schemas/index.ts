@@ -7,14 +7,6 @@ export { apiErrorSchema } from './api-error.schema';
 // Referenced by the backend's @ApiTypedErrorResponse decorator as `ApiErrorResponse`.
 export type { ApiErrorResponse } from './api-error-response.schema';
 export { apiErrorResponseSchema } from './api-error-response.schema';
-export type {
-  ForgotPasswordSchema,
-  LoginSchema,
-  RegisterSchema,
-  ResetPasswordSchema,
-  UpdatePasswordSchema,
-  VerifyOtpSchema,
-} from './auth.schema';
 export {
   emailSchema,
   forgotPasswordSchema,
@@ -27,15 +19,6 @@ export {
   verifyOtpSchema,
 } from './auth.schema';
 // Base schemas
-export type {
-  BaseEntitySchema,
-  BuildingEntitySchema,
-  BuildingUserEntitySchema,
-  DateTimeSchema,
-  PermissionFieldsSchema,
-  UserEntitySchema,
-  UuidSchema,
-} from './base.schema';
 export {
   baseEntitySchema,
   buildingEntitySchema,
@@ -47,40 +30,26 @@ export {
   uuidSchema,
 } from './base.schema';
 // Certilia OIDC userinfo
-export type { CertiliaUserinfo } from './certilia.schema';
 export { certiliaUserinfoSchema } from './certilia.schema';
 // Date range schemas
-export type { DateRangeParamsSchema, DateRangeWithValidationSchema } from './date-range.schema';
 export { dateRangeParamsSchema, dateRangeWithValidationSchema } from './date-range.schema';
 
 // Entity schemas
 export * from './entities';
 // Canonical monetary field schemas (money is a two-decimal string)
-export type { MoneyString } from './money.schema';
 export { moneyStringSchema, signedMoneyStringSchema } from './money.schema';
 // Multipart/form-data helpers (Zod preprocessors)
 export { multipartArray, multipartBoolean } from './multipart.schema';
 // Pagination schemas
-export type { PaginatedResponseSchema, PaginationParamsSchema } from './pagination.schema';
 export { paginatedResponseSchema, paginationParamsSchema } from './pagination.schema';
 // Permission schemas
 export type { PermissionsResponseSchema } from './permissions.schema';
 export { permissionsResponseSchema, roleTypeSchema } from './permissions.schema';
 // Representative list query-param contracts
-export type { GetRepBuildingsParams, GetRepUsersParams } from './rep-list-params.schema';
 export { getRepBuildingsParamsSchema, getRepUsersParamsSchema } from './rep-list-params.schema';
 
 // Request schemas (PATCH/PUT payloads: id + optional body fields)
-export type {
-  AiChatMessagePayload,
-  AiChatRequestPayload,
-  CreateEmailThreadRequestPayload,
-  ReplyEmailThreadRequestPayload,
-  UpdateFailureReportRequestPayload,
-  UpdateMaintenanceLogRequestPayload,
-  UpdateNoticeRequestPayload,
-  UpdatePollRequestPayload,
-} from './requests';
+export type { CreateEmailThreadRequestPayload, ReplyEmailThreadRequestPayload } from './requests';
 export {
   aiChatMessageSchema,
   aiChatRequestSchema,
@@ -113,9 +82,7 @@ export type {
   DocumentFile,
   DocumentLinkedRecord,
   DocumentResponse,
-  DocumentSourceType,
   EmailAttachment,
-  EmailDirection,
   EmailMessage,
   EmailThread,
   EmailThreadDetail,
@@ -143,8 +110,6 @@ export type {
   PaginatedMaintenanceLogsResponse,
   PaginatedNoticesResponse,
   PaginatedPollsResponse,
-  PaginatedRepBuildingsResponse,
-  PaginatedRepUsersResponse,
   PollEligibleVoter,
   PollEligibleVotersResponse,
   PollResponse,
@@ -154,9 +119,7 @@ export type {
   RepBuildingItem,
   RepDashboardSummaryResponse,
   RepRecentActivity,
-  RepRecentActivityType,
   RepUserBuilding,
-  RepUserItem,
   UnreadCountResponse,
 } from './responses';
 export {
@@ -227,13 +190,6 @@ export {
 } from './responses';
 
 // Status schemas
-export type {
-  ApprovalStatusSchemaType,
-  CommonStatusSchemaType,
-  FailureStatusSchemaType,
-  MaintenanceStatusSchemaType,
-  PrioritySchemaType,
-} from './status.schema';
 export {
   ApprovalStatusSchema,
   approvalStatusOptions,

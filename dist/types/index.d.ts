@@ -1,9 +1,8 @@
-import { B as BuildingType, P as PollType } from '../poll-type.enum-CGV5tBqR.js';
+import { B as BuildingType, F as FailureStatus, f as TransactionType, T as TransactionCategory, P as PollType, C as CommonStatus } from '../status.enum-CQbseeTz.js';
 import { e as BuildingRole, P as Permission, i as OrgRole, k as PlatformRole } from '../role.enum-BJt94sMT.js';
 import { z } from 'zod';
-import { g as eventTypeSchema, f as eventColorSchema, r as recurrenceTypeSchema, o as maintenanceFinancedBySchema, H as votePollSchema } from '../poll.schema-D9PAulhK.js';
-import { F as FailureStatus, e as TransactionType, T as TransactionCategory, C as CommonStatus } from '../status.enum-BYlt7_Fs.js';
-export { C as CursorPaginatedResponse, D as DateRangeParams, P as PaginatedResponse, a as PaginationParams, c as createPaginatedResponse } from '../pagination.types-BdLhL-Jg.js';
+import { g as eventTypeSchema, f as eventColorSchema, r as recurrenceTypeSchema, m as maintenanceFinancedBySchema, A as votePollSchema } from '../poll.schema-ux7gZt1q.js';
+export { C as CursorPaginatedResponse, P as PaginatedResponse, c as createPaginatedResponse } from '../pagination.types-D3A3752L.js';
 
 /**
  * Base entity with common fields for all database entities
@@ -53,13 +52,6 @@ interface Building extends UserCreatedEntity {
     coverImage?: string | null;
     type: BuildingType;
     totalUnits: number;
-}
-/**
- * Building with user's role for API responses
- */
-interface BuildingWithRole extends Building {
-    role?: BuildingRole;
-    permissions?: string[];
 }
 /**
  * User's membership in a building
@@ -230,19 +222,6 @@ interface Transaction extends BaseEntity {
     category: TransactionCategory;
     frequency?: string;
     currency?: string;
-}
-/**
- * Create transaction request
- */
-interface CreateTransactionRequest {
-    buildingId: string;
-    description: string;
-    amount: number;
-    date: string;
-    type: TransactionType;
-    category: TransactionCategory;
-    title?: string;
-    frequency?: string;
 }
 
 /**
@@ -526,4 +505,4 @@ interface UserBuildingRole {
     permissions: string[];
 }
 
-export type { BaseEntity, Building, BuildingContextFromOrg, BuildingContextFromPlatformAdmin, BuildingContextFromRole, BuildingEntity, BuildingFund, BuildingMember, BuildingMembership, BuildingOTPResponse, BuildingPermissionContext, BuildingUser, BuildingUserEntity, BuildingWithRole, CreateEventRequest, CreateFailureReportRequest, CreateMaintenanceLogRequest, CreateNoticeRequest, CreatePollRequest, CreateTransactionRequest, Event, EventColor, EventType, FailureReport, FinancialGraphData, FinancialSummary, MaintenanceFinancedBy, MaintenanceLog, Notice, PermissionContext, PermissionFields, PermissionScope, PermissionsResponse, Poll, PollOptionResult, PollVote, RecurrenceType, Session, Transaction, User, UserBuildingRole, UserCreatedEntity, UserWithBuildings, VoteRequest };
+export type { BaseEntity, Building, BuildingContextFromOrg, BuildingContextFromPlatformAdmin, BuildingContextFromRole, BuildingEntity, BuildingFund, BuildingMember, BuildingMembership, BuildingOTPResponse, BuildingPermissionContext, BuildingUser, BuildingUserEntity, CreateEventRequest, CreateFailureReportRequest, CreateMaintenanceLogRequest, CreateNoticeRequest, CreatePollRequest, Event, EventColor, EventType, FailureReport, FinancialGraphData, FinancialSummary, MaintenanceFinancedBy, MaintenanceLog, Notice, PermissionContext, PermissionFields, PermissionScope, PermissionsResponse, Poll, PollOptionResult, PollVote, RecurrenceType, Session, Transaction, User, UserBuildingRole, UserCreatedEntity, UserWithBuildings, VoteRequest };

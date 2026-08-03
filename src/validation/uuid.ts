@@ -1,5 +1,3 @@
-import { z } from 'zod';
-
 /**
  * Branded UUID string.
  *
@@ -12,15 +10,6 @@ import { z } from 'zod';
  * ordinary string with no extra properties.
  */
 export type UuidString = string & { readonly __brand: 'UuidString' };
-
-/**
- * Zod schema that parses any input into a `UuidString`. Convenient when a
- * schema field needs to carry the brand into the inferred type.
- */
-export const uuidStringSchema = z
-  .string()
-  .uuid('Must be a valid UUID')
-  .transform((value): UuidString => value as UuidString);
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -49,14 +38,5 @@ export function toUuid(value: string): UuidString {
   if (!UUID_RE.test(value)) {
     throw new Error(`Expected a valid UUID, got: ${value}`);
   }
-  return value as UuidString;
-}
-
-/**
- * Cast-without-check. Use ONLY when the source is a constant known to be a
- * valid UUID (e.g. a hard-coded fixture in tests). Never use on untrusted
- * input — that's what `toUuid` is for.
- */
-export function unsafeUuid(value: string): UuidString {
   return value as UuidString;
 }

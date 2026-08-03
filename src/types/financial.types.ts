@@ -49,17 +49,3 @@ export interface Transaction extends BaseEntity {
   frequency?: string;
   currency?: string;
 }
-
-/**
- * Create transaction request
- */
-export interface CreateTransactionRequest {
-  buildingId: string;
-  description: string;
-  amount: number;
-  date: string;
-  type: TransactionType;
-  category: TransactionCategory;
-  title?: string;
-  frequency?: string;
-}

@@ -29,7 +29,3 @@ export const buildingQuotaListSchema = z.object({
   buildingId: z.string().uuid(),
   quotas: z.array(buildingQuotaEntrySchema),
 });
-
-export type BuildingQuotaEntry = z.infer<typeof buildingQuotaEntrySchema>;
-export type BuildingQuotaConfig = z.infer<typeof buildingQuotaConfigSchema>;
-export type BuildingQuotaList = z.infer<typeof buildingQuotaListSchema>;

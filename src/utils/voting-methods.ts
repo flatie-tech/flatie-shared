@@ -29,29 +29,3 @@ export function resolveVotingMethods(
       patch.votingPrintedSignatureEnabled ?? current.votingPrintedSignatureEnabled,
   };
 }
-
-/**
- * True when applying `patch` on top of `current` would disable every
- * voting method — i.e. the patch violates the last-method-lock and the
- * backend will reject it.
- */
-export function violatesVotingMethodLock(
-  current: VotingMethodState,
-  patch: Partial<VotingMethodState>,
-): boolean {
-  const next = resolveVotingMethods(current, patch);
-  return VOTING_METHOD_SETTINGS.every((field) => !next[field]);
-}
-
-/**
- * True when `method` is the only voting method currently enabled —
- * the UI should render its toggle locked (disabling it would violate
- * the invariant).
- */
-export function isLastEnabledVotingMethod(
-  current: VotingMethodState,
-  method: VotingMethodSetting,
-): boolean {
-  if (!current[method]) return false;
-  return VOTING_METHOD_SETTINGS.every((field) => field === method || !current[field]);
-}

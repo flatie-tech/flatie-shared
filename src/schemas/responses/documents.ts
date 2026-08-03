@@ -19,7 +19,6 @@ export const DOCUMENT_SOURCE_TYPES = [
   'board_card',
   'expense_transaction',
 ] as const;
-export type DocumentSourceType = (typeof DOCUMENT_SOURCE_TYPES)[number];
 
 export const documentLinkedRecordSchema = z
   .looseObject({

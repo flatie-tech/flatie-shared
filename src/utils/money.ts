@@ -50,11 +50,6 @@ export function subtractMoney(a: string | number, b: string | number): string {
   return fromCents(toCents(a) - toCents(b));
 }
 
-/** True when the two money values are numerically equal. */
-export function moneyEquals(a: string | number, b: string | number): boolean {
-  return toCents(a) === toCents(b);
-}
-
 /**
  * Locale-aware display of a money value. Accepts the canonical string (or a
  * number / null / undefined for tolerance during the migration). `null` /

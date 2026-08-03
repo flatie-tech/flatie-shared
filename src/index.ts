@@ -7,9 +7,7 @@ export type {
   AddressDisplayProps,
   AddressSearchResult,
   AddressValue,
-  ExistingBuildingRef,
   MapUrlInput,
-  StructuredAddressInput,
 } from './address';
 export {
   addressSearchResultSchema,

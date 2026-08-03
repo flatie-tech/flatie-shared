@@ -33,13 +33,3 @@ export const OrgQuotaResourceType = {
 } as const;
 
 export type OrgQuotaResourceType = (typeof OrgQuotaResourceType)[keyof typeof OrgQuotaResourceType];
-
-export const ORG_QUOTA_RESOURCE_TYPES = Object.values(
-  OrgQuotaResourceType,
-) as readonly OrgQuotaResourceType[];
-
-export const ORG_QUOTA_DEFAULT_DAILY_LIMITS: Record<OrgQuotaResourceType, number | null> = {
-  [OrgQuotaResourceType.MEMBER_INVITE]: 30,
-  [OrgQuotaResourceType.BUILDING_CREATE]: 10,
-  [OrgQuotaResourceType.NOTIFICATION]: null,
-};

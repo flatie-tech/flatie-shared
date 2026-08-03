@@ -1,20 +1,4 @@
 /**
- * Pagination query parameters
- */
-export interface PaginationParams {
-  offset?: number;
-  limit?: number;
-}
-
-/**
- * Date range filter parameters
- */
-export interface DateRangeParams {
-  fromDate?: string;
-  toDate?: string;
-}
-
-/**
  * Cursor-based paginated response (used by chat and other infinite-scroll endpoints)
  */
 export interface CursorPaginatedResponse<T> {

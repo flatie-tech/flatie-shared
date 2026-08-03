@@ -163,8 +163,3 @@ export const updateEventSchema = z.object({
   minuteTakerId: uuidSchema.optional(),
   fileIds: z.array(uuidSchema).optional(),
 });
-
-// Inferred types
-export type TimeSchema = z.infer<typeof timeSchema>;
-export type CreateEventSchema = z.infer<typeof createEventSchema>;
-export type UpdateEventSchema = z.infer<typeof updateEventSchema>;

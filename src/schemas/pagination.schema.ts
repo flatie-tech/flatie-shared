@@ -22,17 +22,3 @@ export const paginatedResponseSchema = <T extends z.ZodTypeAny>(itemSchema: T) =
     hasNextPage: z.boolean().describe('True when another page follows the current one.'),
     hasPreviousPage: z.boolean().describe('True when a previous page exists.'),
   });
-
-// Inferred types
-export type PaginationParamsSchema = z.infer<typeof paginationParamsSchema>;
-
-// Type helper for paginated response
-export type PaginatedResponseSchema<T> = {
-  data: T[];
-  count: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-};

@@ -251,13 +251,7 @@ export const repDashboardSummaryResponseSchema = z
 // ── Inferred types ──────────────────────────────────────────────────
 
 export type RepUserBuilding = Strict<z.infer<typeof repUserBuildingSchema>>;
-export type RepUserItem = Strict<z.infer<typeof repUserItemSchema>>;
-export type PaginatedRepUsersResponse = Strict<z.infer<typeof paginatedRepUsersResponseSchema>>;
 export type RepBuildingItem = Strict<z.infer<typeof repBuildingItemSchema>>;
-export type PaginatedRepBuildingsResponse = Strict<
-  z.infer<typeof paginatedRepBuildingsResponseSchema>
->;
-export type RepRecentActivityType = z.infer<typeof repRecentActivityTypeSchema>;
 export type RepRecentActivity = Strict<z.infer<typeof repRecentActivitySchema>>;
 export type RepBuildingActivity = Strict<z.infer<typeof repBuildingActivitySchema>>;
 export type RepDashboardSummaryResponse = Strict<z.infer<typeof repDashboardSummaryResponseSchema>>;

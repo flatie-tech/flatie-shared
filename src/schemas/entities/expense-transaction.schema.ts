@@ -62,5 +62,4 @@ export const updateExpenseSchema = z
   })
   .strict();
 
-export type CreateExpenseSchema = z.infer<typeof createExpenseSchema>;
 export type UpdateExpenseSchema = z.infer<typeof updateExpenseSchema>;

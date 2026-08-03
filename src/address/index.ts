@@ -21,12 +21,7 @@ import { z } from 'zod';
 import { type ParsedHouseNumber, parseHouseNumber } from '../utils/house-number';
 
 export type { AddressParts, ParsedHouseNumber } from '../utils/house-number';
-export {
-  formatAddress,
-  isValidHouseNumber,
-  normalizeHouseNumber,
-  parseHouseNumber,
-} from '../utils/house-number';
+export { formatAddress, normalizeHouseNumber, parseHouseNumber } from '../utils/house-number';
 
 /**
  * A building already registered at an address — attached to a search result
@@ -40,8 +35,6 @@ export const existingBuildingRefSchema = z.object({
   name: z.string(),
   slug: z.string().nullable(),
 });
-
-export type ExistingBuildingRef = z.infer<typeof existingBuildingRefSchema>;
 
 /**
  * One suggestion row served by the address search endpoints.
@@ -78,8 +71,6 @@ export const structuredAddressInputSchema = z.object({
   streetId: z.string().uuid().optional().nullable(),
   houseNumber: z.string().trim().min(1).max(20).optional().nullable(),
 });
-
-export type StructuredAddressInput = z.infer<typeof structuredAddressInputSchema>;
 
 /**
  * A structured address as held on an entity (building / owner / user).

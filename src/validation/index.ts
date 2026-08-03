@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
-export { ibanSchema, optionalIbanSchema } from './iban';
+export { optionalIbanSchema } from './iban';
 // Re-export UUID brand + helpers so consumers can `import { toUuid, UuidString }
 // from '@flatie/shared/validation'` alongside OIB/phone/address validators.
-export { isUuid, toUuid, type UuidString, unsafeUuid, uuidStringSchema } from './uuid';
+export { isUuid, toUuid, type UuidString } from './uuid';
 
 /**
  * Croatian OIB (Personal Identification Number) validation.

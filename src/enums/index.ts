@@ -52,8 +52,6 @@ export { PollType } from './poll-type.enum';
 export { PollVoteStatus } from './poll-vote-status.enum';
 export { PricuvaRefMode } from './pricuva-ref-mode.enum';
 export {
-  ORG_QUOTA_DEFAULT_DAILY_LIMITS,
-  ORG_QUOTA_RESOURCE_TYPES,
   OrgQuotaResourceType,
   QUOTA_DEFAULT_DAILY_LIMITS,
   QUOTA_RESOURCE_TYPES,

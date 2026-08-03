@@ -143,7 +143,6 @@ export const emailUnreadCountResponseSchema = z
   })
   .describe('Response of `GET /buildings/:buildingId/email/unread-count`; feeds the inbox badge.');
 
-export type EmailDirection = Strict<z.infer<typeof emailDirectionSchema>>;
 export type EmailAttachment = Strict<z.infer<typeof emailAttachmentSchema>>;
 export type EmailMessage = Strict<z.infer<typeof emailMessageSchema>>;
 export type EmailThread = Strict<z.infer<typeof emailThreadSchema>>;

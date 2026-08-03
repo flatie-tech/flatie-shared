@@ -28,7 +28,3 @@ export const dateRangeWithValidationSchema = z
       path: ['fromDate'],
     },
   );
-
-// Inferred types
-export type DateRangeParamsSchema = z.infer<typeof dateRangeParamsSchema>;
-export type DateRangeWithValidationSchema = z.infer<typeof dateRangeWithValidationSchema>;

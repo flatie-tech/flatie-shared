@@ -53,12 +53,3 @@ export const permissionFieldsSchema = z.object({
   canEdit: z.boolean(),
   canDelete: z.boolean(),
 });
-
-// Inferred types
-export type UuidSchema = z.infer<typeof uuidSchema>;
-export type DateTimeSchema = z.infer<typeof dateTimeSchema>;
-export type BaseEntitySchema = z.infer<typeof baseEntitySchema>;
-export type BuildingEntitySchema = z.infer<typeof buildingEntitySchema>;
-export type UserEntitySchema = z.infer<typeof userEntitySchema>;
-export type BuildingUserEntitySchema = z.infer<typeof buildingUserEntitySchema>;
-export type PermissionFieldsSchema = z.infer<typeof permissionFieldsSchema>;
