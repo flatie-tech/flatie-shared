@@ -113,6 +113,9 @@ declare const Permission: {
     readonly PLATFORM_MANAGE_SUBSCRIPTIONS: "platform:manage_subscriptions";
     readonly PLATFORM_PURGE: "platform:purge";
     readonly PLATFORM_VIEW_ARCHIVE: "platform:view_archive";
+    readonly PLATFORM_MANAGE_STAFF: "platform:manage_staff";
+    readonly PLATFORM_VIEW_AUDIT: "platform:view_audit";
+    readonly PLATFORM_MANAGE_DSAR: "platform:manage_dsar";
 };
 type Permission = (typeof Permission)[keyof typeof Permission];
 declare const SCOPED_PERMISSIONS: Record<"document" | "failure_report" | "maintenance_log" | "notice" | "event" | "poll", Record<ScopedAction, {

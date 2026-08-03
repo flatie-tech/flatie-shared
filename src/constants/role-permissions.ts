@@ -234,6 +234,11 @@ export const PLATFORM_ROLE_PERMISSIONS: Record<PlatformRole, Permission[]> = {
     'platform:manage_subscriptions',
     'platform:purge',
     'platform:view_archive',
+    // ADMIN-only by design — see the permission enum for why each of these is
+    // separate from the MODERATOR-held platform:manage_users.
+    'platform:manage_staff',
+    'platform:view_audit',
+    'platform:manage_dsar',
     'system:delete_user',
     'system:create_organization',
   ] as Permission[],

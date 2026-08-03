@@ -1,5 +1,3 @@
-'use strict';
-
 // src/urls/index.ts
 var API_VERSION = "v1";
 var API_ROUTES = {
@@ -240,7 +238,24 @@ var API_ROUTES = {
     ARCHIVE: "/platform/archive",
     ARCHIVE_CLEANUP: "/platform/archive/cleanup/run",
     ARCHIVE_RESTORE: (type, id) => `/platform/archive/${type}/${id}/restore`,
-    ARCHIVE_PERMANENT: (type, id) => `/platform/archive/${type}/${id}/permanent`
+    ARCHIVE_PERMANENT: (type, id) => `/platform/archive/${type}/${id}/permanent`,
+    INVOICES: "/platform/invoices",
+    INVOICE_MARK_PAID: (id) => `/platform/invoices/${id}/mark-paid`,
+    INVOICE_CANCEL: (id) => `/platform/invoices/${id}/cancel`,
+    INVOICE_RESEND_ERACUN: (id) => `/platform/invoices/${id}/resend-eracun`,
+    AUDIT_LOGS: "/platform/audit-logs",
+    SUBSCRIPTIONS: "/platform/subscriptions",
+    SUBSCRIPTION_DETAIL: (id) => `/platform/subscriptions/${id}`,
+    ENTERPRISE_REQUESTS: "/platform/enterprise-requests",
+    ENTERPRISE_REQUEST_DETAIL: (id) => `/platform/enterprise-requests/${id}`,
+    DASHBOARD_REVENUE: "/platform/dashboard/revenue",
+    DSAR: "/platform/dsar",
+    DSAR_DETAIL: (id) => `/platform/dsar/${id}`,
+    DSAR_EVENTS: (id) => `/platform/dsar/${id}/events`,
+    DSAR_EXPORT: (id) => `/platform/dsar/${id}/export`,
+    DSAR_RESTRICTION: (id) => `/platform/dsar/${id}/restriction`,
+    DSAR_ERASURE: (id) => `/platform/dsar/${id}/erasure`,
+    DSAR_RECTIFICATION: (id) => `/platform/dsar/${id}/rectification`
   },
   // ── Representatives ──────────────────────────────────────────────────
   REPRESENTATIVES: {
@@ -258,12 +273,13 @@ var API_ROUTES = {
   SUBSCRIPTIONS: {
     BASE: "/subscriptions",
     PRICES: "/subscriptions/prices",
-    INVOICE: "/subscriptions/invoice",
-    MARK_PAID: (id) => `/subscriptions/invoices/${id}/mark-paid`
+    INVOICE: "/subscriptions/invoice"
+    // MARK_PAID removed in v0.92.0 — the duplicate `/subscriptions/invoices/:id/mark-paid`
+    // route had zero consumers (verified across backend/frontend/mobile) and skipped the
+    // audit log its `/platform/invoices/:id/mark-paid` twin writes. Use PLATFORM.INVOICE_MARK_PAID.
   }
 };
 
-exports.API_ROUTES = API_ROUTES;
-exports.API_VERSION = API_VERSION;
-//# sourceMappingURL=chunk-QUHVZKZ6.cjs.map
-//# sourceMappingURL=chunk-QUHVZKZ6.cjs.map
+export { API_ROUTES, API_VERSION };
+//# sourceMappingURL=chunk-GTLMEAWS.js.map
+//# sourceMappingURL=chunk-GTLMEAWS.js.map

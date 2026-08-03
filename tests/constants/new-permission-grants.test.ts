@@ -120,3 +120,49 @@ describe('rep finance/maintenance grants (T4) + org broadcast', () => {
     expect(ORG_ROLE_PERMISSIONS[OrgRole.OPERATIVE]).not.toContain(Permission.ORG_BROADCAST);
   });
 });
+
+/**
+ * Platform staff-tier permissions (2026-08 platform hardening pass).
+ *
+ * These three are the structural fix for a privilege-escalation cluster: staff
+ * management used to ride `platform:manage_users`, which PLATFORM_MODERATOR
+ * holds — so a moderator could mint, demote and remove platform admins. Each
+ * of these MUST stay ADMIN-exclusive; a widening edit is a security
+ * regression, not a product tweak.
+ */
+describe('Platform staff-tier grants — ADMIN-exclusive', () => {
+  const ADMIN_ONLY = [
+    Permission.PLATFORM_MANAGE_STAFF,
+    Permission.PLATFORM_VIEW_AUDIT,
+    Permission.PLATFORM_MANAGE_DSAR,
+  ] as const;
+
+  it('PLATFORM_ADMIN holds all three', () => {
+    for (const perm of ADMIN_ONLY) {
+      expect(PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_ADMIN]).toContain(perm);
+    }
+  });
+
+  for (const role of [
+    PlatformRole.PLATFORM_MODERATOR,
+    PlatformRole.PLATFORM_SUPPORT,
+    PlatformRole.PLATFORM_OPERATIVE,
+  ]) {
+    it(`${role} holds none of them`, () => {
+      for (const perm of ADMIN_ONLY) {
+        expect(PLATFORM_ROLE_PERMISSIONS[role]).not.toContain(perm);
+      }
+    });
+  }
+
+  it('staff management is NOT reachable via platform:manage_users', () => {
+    // The whole point of the split: MODERATOR keeps manage_users (ordinary app
+    // users) but must not thereby reach staff rows.
+    expect(PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_MODERATOR]).toContain(
+      Permission.PLATFORM_MANAGE_USERS,
+    );
+    expect(PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_MODERATOR]).not.toContain(
+      Permission.PLATFORM_MANAGE_STAFF,
+    );
+  });
+});

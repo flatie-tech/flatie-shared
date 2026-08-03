@@ -112,6 +112,14 @@ export {
 
 // Building schemas
 
+// Platform audit-log viewer (read contract)
+export {
+  AUDIT_DENIAL_TARGET_TYPE,
+  type AuditLogResponse,
+  auditLogResponseSchema,
+  type GetAuditLogsQuerySchema,
+  getAuditLogsQuerySchema,
+} from './audit-log.schema';
 export type {
   BuildingTypeOption,
   CreateBuildingSchema,
@@ -160,6 +168,27 @@ export {
   DOCUMENT_LIMITS,
   updateDocumentSchema,
 } from './document.schema';
+// GDPR DSAR console
+export {
+  type CreateDsarEventSchema,
+  type CreateDsarRequestSchema,
+  createDsarEventSchema,
+  createDsarRequestSchema,
+  type DsarErasureSchema,
+  type DsarEventResponse,
+  type DsarRequestResponse,
+  dsarErasureSchema,
+  dsarEventResponseSchema,
+  dsarRequestResponseSchema,
+  type GetDsarRequestsQuerySchema,
+  getDsarRequestsQuerySchema,
+  type RecordDsarRectificationSchema,
+  recordDsarRectificationSchema,
+  type SetDsarRestrictionSchema,
+  setDsarRestrictionSchema,
+  type UpdateDsarRequestSchema,
+  updateDsarRequestSchema,
+} from './dsar.schema';
 // Entity-link schemas (generic links API)
 export type {
   CreateEntityLinkRequest,
@@ -267,6 +296,25 @@ export {
   ownerResponseSchema,
   updateOwnerSchema,
 } from './owner.schema';
+// Platform subscription console + enterprise-request queue + revenue metrics
+export {
+  type CreatePlatformSubscriptionSchema,
+  createPlatformSubscriptionSchema,
+  type EnterpriseRequestResponse,
+  enterpriseRequestResponseSchema,
+  type GetEnterpriseRequestsQuerySchema,
+  type GetPlatformSubscriptionsQuerySchema,
+  getEnterpriseRequestsQuerySchema,
+  getPlatformSubscriptionsQuerySchema,
+  type PlatformSubscriptionResponse,
+  platformSubscriptionResponseSchema,
+  type RevenueMetricsResponse,
+  revenueMetricsResponseSchema,
+  type UpdateEnterpriseRequestSchema,
+  type UpdatePlatformSubscriptionSchema,
+  updateEnterpriseRequestSchema,
+  updatePlatformSubscriptionSchema,
+} from './platform-subscription.schema';
 export type {
   CreatePollSchema,
   FinalizePollSchema,
@@ -286,7 +334,6 @@ export {
   updatePollSchema,
   votePollSchema,
 } from './poll.schema';
-
 // Transaction category schemas
 export type {
   CopyTransactionCategoriesSchema,

@@ -12,6 +12,49 @@ var BuildingOtpExpiry = {
   NEVER: "never"
 };
 
+// src/enums/dsar.enum.ts
+var DsarRequestType = {
+  /** Art. 15 — access / copy of the data held. */
+  ACCESS: "access",
+  /** Art. 16 — correction of inaccurate data. */
+  RECTIFICATION: "rectification",
+  /** Art. 17 — erasure ("right to be forgotten"). */
+  ERASURE: "erasure",
+  /** Art. 18 — restriction of processing. */
+  RESTRICTION: "restriction",
+  /** Art. 20 — machine-readable export for transfer elsewhere. */
+  PORTABILITY: "portability",
+  /** Art. 21 — objection to processing. */
+  OBJECTION: "objection"
+};
+var DsarRequestStatus = {
+  RECEIVED: "received",
+  IN_PROGRESS: "in_progress",
+  /** Blocked on the subject — e.g. awaiting identity verification. */
+  AWAITING_SUBJECT: "awaiting_subject",
+  FULFILLED: "fulfilled",
+  /** Lawfully refused (Art. 12(5)) — the reason belongs in the resolution note. */
+  REFUSED: "refused",
+  CANCELLED: "cancelled"
+};
+var DSAR_CLOSED_STATUSES = [
+  DsarRequestStatus.FULFILLED,
+  DsarRequestStatus.REFUSED,
+  DsarRequestStatus.CANCELLED
+];
+var DSAR_SLA_DAYS = 30;
+var DSAR_MAX_EXTENSION_DAYS = 60;
+var DSAR_RETENTION_YEARS = 3;
+
+// src/enums/enterprise-request.enum.ts
+var EnterpriseRequestStatus = {
+  OPEN: "open",
+  CONTACTED: "contacted",
+  /** A negotiated subscription price has been set for the entity. */
+  FULFILLED: "fulfilled",
+  DISMISSED: "dismissed"
+};
+
 // src/enums/building-status.enum.ts
 var BuildingStatus = {
   PENDING_APPROVAL: "pending_approval",
@@ -424,7 +467,16 @@ var Permission = {
   PLATFORM_MANAGE_SETTINGS: "platform:manage_settings",
   PLATFORM_MANAGE_SUBSCRIPTIONS: "platform:manage_subscriptions",
   PLATFORM_PURGE: "platform:purge",
-  PLATFORM_VIEW_ARCHIVE: "platform:view_archive"
+  PLATFORM_VIEW_ARCHIVE: "platform:view_archive",
+  // Managing Flatie STAFF (platform_members rows) — deliberately separate from
+  // platform:manage_users, which is about ordinary app users and is held by
+  // MODERATOR. Staff management is rank-escalation territory: ADMIN only.
+  PLATFORM_MANAGE_STAFF: "platform:manage_staff",
+  // Audit rows carry IPs, user agents and cross-tenant metadata for every
+  // user — strictly more sensitive than any single existing grant.
+  PLATFORM_VIEW_AUDIT: "platform:view_audit",
+  // DSAR console: full personal-data exports and immediate erasure.
+  PLATFORM_MANAGE_DSAR: "platform:manage_dsar"
 };
 function buildScopedPermissions() {
   const result = {};
@@ -672,6 +724,6 @@ function deriveVotingStrength(user) {
   return VotingStrength.NONE;
 }
 
-export { APPROVE_PERMISSIONS, ApprovalStatus, BUILDING_ROLE_RANK, BoardVisibility, BuildingOtpExpiry, BuildingRole, BuildingStatus, BuildingType, CO_OWNER_VISIBLE_SYSTEM_TYPES, CommonStatus, DevicePlatform, EntityLinkType, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, IdentityVerificationMethod, JoinRequestStatus, LinkableEntityType, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, ORG_ROLE_RANK, OrgQuotaResourceType, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, POLL_CANNOT_VOTE_REASON_KEY, Permission, PlatformRole, PollCannotVoteReason, PollStatus, PollType, PollVoteStatus, PricuvaRefMode, Priority, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, RESIDENT_VISIBLE_SYSTEM_TYPES, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, VotingStrength, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, deriveVotingStrength, domainPermissions, methodToTier };
-//# sourceMappingURL=chunk-DX5AAWYB.js.map
-//# sourceMappingURL=chunk-DX5AAWYB.js.map
+export { APPROVE_PERMISSIONS, ApprovalStatus, BUILDING_ROLE_RANK, BoardVisibility, BuildingOtpExpiry, BuildingRole, BuildingStatus, BuildingType, CO_OWNER_VISIBLE_SYSTEM_TYPES, CommonStatus, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DevicePlatform, DsarRequestStatus, DsarRequestType, EnterpriseRequestStatus, EntityLinkType, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, IdentityVerificationMethod, JoinRequestStatus, LinkableEntityType, MaintenanceLogFinancedBy, MaintenanceStatus, MaintenanceType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, ORG_ROLE_RANK, OrgQuotaResourceType, OrgRole, OrgStatus, OrgType, PLATFORM_ROLE_RANK, POLL_CANNOT_VOTE_REASON_KEY, Permission, PlatformRole, PollCannotVoteReason, PollStatus, PollType, PollVoteStatus, PricuvaRefMode, Priority, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, RESIDENT_VISIBLE_SYSTEM_TYPES, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, VotingStrength, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, deriveVotingStrength, domainPermissions, methodToTier };
+//# sourceMappingURL=chunk-NAU5XV7Q.js.map
+//# sourceMappingURL=chunk-NAU5XV7Q.js.map

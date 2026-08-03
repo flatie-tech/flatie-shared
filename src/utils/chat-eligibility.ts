@@ -1,4 +1,4 @@
-import { BuildingRole } from '../enums';
+import type { BuildingRole } from '../enums';
 import { isManagerialRole } from './role-helpers';
 
 /**

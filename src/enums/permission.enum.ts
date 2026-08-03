@@ -191,6 +191,15 @@ export const Permission = {
   PLATFORM_MANAGE_SUBSCRIPTIONS: 'platform:manage_subscriptions',
   PLATFORM_PURGE: 'platform:purge',
   PLATFORM_VIEW_ARCHIVE: 'platform:view_archive',
+  // Managing Flatie STAFF (platform_members rows) — deliberately separate from
+  // platform:manage_users, which is about ordinary app users and is held by
+  // MODERATOR. Staff management is rank-escalation territory: ADMIN only.
+  PLATFORM_MANAGE_STAFF: 'platform:manage_staff',
+  // Audit rows carry IPs, user agents and cross-tenant metadata for every
+  // user — strictly more sensitive than any single existing grant.
+  PLATFORM_VIEW_AUDIT: 'platform:view_audit',
+  // DSAR console: full personal-data exports and immediate erasure.
+  PLATFORM_MANAGE_DSAR: 'platform:manage_dsar',
 } as const;
 
 export type Permission = (typeof Permission)[keyof typeof Permission];

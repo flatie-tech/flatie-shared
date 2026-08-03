@@ -2,6 +2,15 @@ export { BoardVisibility } from './board-card.enum';
 export { BuildingOtpExpiry } from './building-otp-expiry.enum';
 export { BuildingStatus, OrgStatus } from './building-status.enum';
 export { BuildingType } from './building-type.enum';
+export {
+  DSAR_CLOSED_STATUSES,
+  DSAR_MAX_EXTENSION_DAYS,
+  DSAR_RETENTION_YEARS,
+  DSAR_SLA_DAYS,
+  DsarRequestStatus,
+  DsarRequestType,
+} from './dsar.enum';
+export { EnterpriseRequestStatus } from './enterprise-request.enum';
 export { EntityLinkType, LinkableEntityType } from './entity-link.enum';
 export { FailureLocationType, FailureUnitType } from './failure-location.enum';
 export { FundsSource, TransactionSource } from './funds-source.enum';
