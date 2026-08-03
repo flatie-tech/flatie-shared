@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.96.0
+
+### Changes
+
+- chore: remove 73 dead exports (zero consumers across backend/web/mobile)
+
 ## 0.95.0
 
 ### Changes
