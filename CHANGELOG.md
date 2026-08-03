@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.97.1
+
+### Changes
+
+- fix(building): buildingDetailResponseSchema.createdBy nullable — DB FK is ON DELETE SET NULL
+
 ## 0.97.0
 
 ### Changes

@@ -2492,7 +2492,7 @@ declare const buildingDetailResponseSchema: z.ZodObject<{
     description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     latitude: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
     longitude: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
-    createdBy: z.ZodString;
+    createdBy: z.ZodNullable<z.ZodString>;
     createdAt: z.ZodString;
     updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     manager: z.ZodOptional<z.ZodNullable<z.ZodObject<{

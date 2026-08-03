@@ -1737,7 +1737,9 @@ var buildingDetailResponseSchema = zod.z.looseObject({
   longitude: zod.z.number().nullable().optional().describe(
     "Geographic longitude in decimal degrees (WGS 84); null when geocoding not performed."
   ),
-  createdBy: zod.z.string().describe("UUID of the user who registered the building."),
+  createdBy: zod.z.string().nullable().describe(
+    "UUID of the user who registered the building; null when that account was deleted (FK is ON DELETE SET NULL)."
+  ),
   createdAt: zod.z.string().describe("ISO-8601 timestamp when the building record was created."),
   updatedAt: zod.z.string().nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited."),
   manager: buildingManagerSchema.nullable().optional().describe(
@@ -3179,5 +3181,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-PZW6MZER.cjs.map
-//# sourceMappingURL=chunk-PZW6MZER.cjs.map
+//# sourceMappingURL=chunk-VZ3ZSTS6.cjs.map
+//# sourceMappingURL=chunk-VZ3ZSTS6.cjs.map
