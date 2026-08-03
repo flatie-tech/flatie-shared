@@ -90,10 +90,35 @@ describe('Role Hierarchies', () => {
       ).toBe(false);
     });
 
-    it('same rank returns false', () => {
+    it('same rank returns false below admin', () => {
       expect(
         canAssignPlatformRole(PlatformRole.PLATFORM_SUPPORT, PlatformRole.PLATFORM_SUPPORT),
       ).toBe(false);
+      expect(
+        canAssignPlatformRole(PlatformRole.PLATFORM_MODERATOR, PlatformRole.PLATFORM_MODERATOR),
+      ).toBe(false);
+    });
+
+    /**
+     * Peer-admin exception, matching canAssignOrgRole. Without it a platform
+     * admin could not promote a second admin (so one could only be created by a
+     * direct DB write) and could not demote or remove a fellow admin — which
+     * also made the last-admin guards unreachable.
+     */
+    it('PLATFORM_ADMIN can assign a peer PLATFORM_ADMIN', () => {
+      expect(canAssignPlatformRole(PlatformRole.PLATFORM_ADMIN, PlatformRole.PLATFORM_ADMIN)).toBe(
+        true,
+      );
+    });
+
+    it('nobody below admin can reach admin', () => {
+      for (const role of [
+        PlatformRole.PLATFORM_MODERATOR,
+        PlatformRole.PLATFORM_SUPPORT,
+        PlatformRole.PLATFORM_OPERATIVE,
+      ]) {
+        expect(canAssignPlatformRole(role, PlatformRole.PLATFORM_ADMIN)).toBe(false);
+      }
     });
   });
 });

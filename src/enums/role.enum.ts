@@ -67,9 +67,22 @@ export const PLATFORM_ROLE_RANK: Record<PlatformRole, number> = {
   [PlatformRole.PLATFORM_ADMIN]: 3,
 };
 
+/**
+ * Peer-admin rule, mirroring `canAssignOrgRole`.
+ *
+ * A strict `>` comparison would mean a PLATFORM_ADMIN can neither promote
+ * anyone to admin nor demote/remove a fellow admin — so a second admin could
+ * only ever be created by a direct DB write, and the last-admin guards would
+ * be unreachable. The org layer resolved exactly this asymmetry; platform
+ * carried the same latent bug, hidden only because the sole caller
+ * (addPlatformMember) never invoked this helper.
+ *
+ * Everyone below admin stays strictly rank-limited.
+ */
 export function canAssignPlatformRole(
   assignerRole: PlatformRole,
   targetRole: PlatformRole,
 ): boolean {
+  if (assignerRole === PlatformRole.PLATFORM_ADMIN) return true;
   return PLATFORM_ROLE_RANK[assignerRole] > PLATFORM_ROLE_RANK[targetRole];
 }
