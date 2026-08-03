@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.91.1
+
+### Changes
+
+- fix(building-email): export emailUnreadCountResponseSchema from the schemas barrel
+
 ## 0.91.0
 
 ### Changes

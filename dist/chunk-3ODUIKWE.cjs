@@ -1622,7 +1622,7 @@ var emailThreadDetailSchema = emailThreadSchema.extend({
   messages: zod.z.array(emailMessageSchema).default([]).describe("All messages in the thread, oldest first.")
 }).describe("Full thread detail including every message.");
 var paginatedEmailThreadsResponseSchema = paginatedResponseSchema(emailThreadSchema);
-zod.z.looseObject({
+var emailUnreadCountResponseSchema = zod.z.looseObject({
   unreadCount: zod.z.coerce.number().describe("Sum of unread inbound messages across the building\u2019s non-archived threads.")
 }).describe("Response of `GET /buildings/:buildingId/email/unread-count`; feeds the inbox badge.");
 var buildingFundsLedgerRowSchema = zod.z.object({
@@ -2808,6 +2808,7 @@ exports.emailMessageSchema = emailMessageSchema;
 exports.emailSchema = emailSchema;
 exports.emailThreadDetailSchema = emailThreadDetailSchema;
 exports.emailThreadSchema = emailThreadSchema;
+exports.emailUnreadCountResponseSchema = emailUnreadCountResponseSchema;
 exports.entityLinkCountsResponseSchema = entityLinkCountsResponseSchema;
 exports.entityLinkEndpointSchema = entityLinkEndpointSchema;
 exports.entityLinkMetadataSchema = entityLinkMetadataSchema;
@@ -2934,5 +2935,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-2VLY2IRC.cjs.map
-//# sourceMappingURL=chunk-2VLY2IRC.cjs.map
+//# sourceMappingURL=chunk-3ODUIKWE.cjs.map
+//# sourceMappingURL=chunk-3ODUIKWE.cjs.map
