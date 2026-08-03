@@ -188,7 +188,12 @@ export const buildingDetailResponseSchema = z.looseObject({
     .describe(
       'Geographic longitude in decimal degrees (WGS 84); null when geocoding not performed.',
     ),
-  createdBy: z.string().describe('UUID of the user who registered the building.'),
+  createdBy: z
+    .string()
+    .nullable()
+    .describe(
+      'UUID of the user who registered the building; null when that account was deleted (FK is ON DELETE SET NULL).',
+    ),
   createdAt: z.string().describe('ISO-8601 timestamp when the building record was created.'),
   updatedAt: z
     .string()
