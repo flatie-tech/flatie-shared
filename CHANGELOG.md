@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.95.0
+
+### Changes
+
+- expenses: multipart-safe failureReportIds + fileIds/removeChildFileIds request fields
+
 ## 0.94.0
 
 ### Changes

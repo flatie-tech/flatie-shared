@@ -1510,7 +1510,8 @@ declare const createExpenseSchema: z.ZodObject<{
     amount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
     description: z.ZodOptional<z.ZodString>;
     period: z.ZodOptional<z.ZodString>;
-    failureReportIds: z.ZodOptional<z.ZodArray<z.ZodString>>;
+    failureReportIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
+    fileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
 }, z.core.$strict>;
 /** Body of `PUT /buildings/:buildingId/expenses/:id` — partial patch. */
 declare const updateExpenseSchema: z.ZodObject<{
@@ -1518,7 +1519,9 @@ declare const updateExpenseSchema: z.ZodObject<{
     amount: z.ZodOptional<z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>>;
     description: z.ZodOptional<z.ZodString>;
     period: z.ZodOptional<z.ZodString>;
-    failureReportIds: z.ZodOptional<z.ZodArray<z.ZodString>>;
+    failureReportIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
+    fileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
+    removeChildFileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
 }, z.core.$strict>;
 type CreateExpenseSchema = z.infer<typeof createExpenseSchema>;
 type UpdateExpenseSchema = z.infer<typeof updateExpenseSchema>;
