@@ -2082,7 +2082,15 @@ var entityScheduleReferenceSchema = zod.z.looseObject({
   title: zod.z.string().describe("Title of the parent entity for quick reference in the calendar.")
 }).describe("Parent entity that attaches this event as its scheduled work window.");
 var eventResponseSchema = zod.z.looseObject({
-  id: zod.z.string().uuid(),
+  // Recurring events are expanded server-side into virtual instances whose
+  // id is `<parentUuid>_<occurrenceISO>` (e.g. `019f…d_2026-08-25T07:00:00.000Z`);
+  // only non-recurring events and parents carry a bare UUID. A plain
+  // `.uuid()` here rejected every recurrence instance and took down any
+  // calendar surface with a recurring event in the queried window.
+  id: zod.z.string().regex(
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(_.+)?$/i,
+    "Event id must be a UUID, optionally suffixed with `_<occurrence timestamp>` for recurrence instances"
+  ),
   title: zod.z.string().describe("Event title displayed in the calendar."),
   type: zod.z.string().describe(
     "Event type (`service`, `inspection`, `maintenance`, `meeting`, `discussion`, `planned_works`, `waste_collection`, `other`)."
@@ -3163,5 +3171,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-EP5XWJYN.cjs.map
-//# sourceMappingURL=chunk-EP5XWJYN.cjs.map
+//# sourceMappingURL=chunk-5XT2CCWZ.cjs.map
+//# sourceMappingURL=chunk-5XT2CCWZ.cjs.map

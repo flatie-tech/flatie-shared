@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.93.0
+
+### Changes
+
+- fix(schemas): accept recurrence-instance event ids
+
 ## 0.92.0
 
 ### Changes
