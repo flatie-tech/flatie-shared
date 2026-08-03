@@ -14,6 +14,15 @@ const expenseAmountSchema = moneyStringSchema.describe(
   'Expense amount in EUR as a two-decimal string (e.g. "120.00").',
 );
 
+const failureReportIdsSchema = z
+  .array(z.string().uuid())
+  .max(20)
+  .describe(
+    'Failure reports this expense pays for — synced to `entity_links` rows ' +
+      '(`expense_transaction → failure_report`, linkType `expense_for`). ' +
+      'On update the full set replaces existing expense_for links to failure reports.',
+  );
+
 /** Body of `POST /buildings/:buildingId/expenses`. */
 export const createExpenseSchema = z
   .object({
@@ -28,6 +37,7 @@ export const createExpenseSchema = z
       .max(50)
       .optional()
       .describe('Free-form billing period label (e.g. "2026-06").'),
+    failureReportIds: failureReportIdsSchema.optional(),
   })
   .strict();
 
@@ -38,6 +48,7 @@ export const updateExpenseSchema = z
     amount: expenseAmountSchema.optional(),
     description: z.string().max(500).optional(),
     period: z.string().max(50).optional(),
+    failureReportIds: failureReportIdsSchema.optional(),
   })
   .strict();
 

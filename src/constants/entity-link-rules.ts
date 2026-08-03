@@ -12,7 +12,8 @@ export interface EntityLinkRule {
 
 /**
  * Entity types the wildcard `related_to` rule spans. Deliberately excludes
- * `expense_transaction` — expenses relate to logs through `expense_for`.
+ * `expense_transaction` — expenses only link through their explicit rules
+ * (`expense_for` to maintenance logs / failure reports, `based_on` to polls).
  */
 export const RELATED_TO_LINKABLE_TYPES: readonly LinkableEntityType[] = [
   LinkableEntityType.NOTICE,
@@ -64,6 +65,16 @@ export const ALLOWED_ENTITY_LINKS: readonly EntityLinkRule[] = [
     source: LinkableEntityType.EXPENSE_TRANSACTION,
     target: LinkableEntityType.MAINTENANCE_LOG,
     linkType: EntityLinkType.EXPENSE_FOR,
+  },
+  {
+    source: LinkableEntityType.EXPENSE_TRANSACTION,
+    target: LinkableEntityType.FAILURE_REPORT,
+    linkType: EntityLinkType.EXPENSE_FOR,
+  },
+  {
+    source: LinkableEntityType.EXPENSE_TRANSACTION,
+    target: LinkableEntityType.POLL,
+    linkType: EntityLinkType.BASED_ON,
   },
   { source: '*', target: '*', linkType: EntityLinkType.RELATED_TO },
 ];
