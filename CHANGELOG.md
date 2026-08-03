@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.94.0
+
+### Changes
+
+- entity-links: expense_for to failure reports + based_on to polls; failureReportIds on expense request schemas
+
 ## 0.93.0
 
 ### Changes

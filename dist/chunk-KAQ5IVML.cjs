@@ -984,17 +984,22 @@ var signedMoneyStringSchema = zod.z.union([zod.z.string(), zod.z.number()]).tran
 var expenseAmountSchema = moneyStringSchema.describe(
   'Expense amount in EUR as a two-decimal string (e.g. "120.00").'
 );
+var failureReportIdsSchema = zod.z.array(zod.z.string().uuid()).max(20).describe(
+  "Failure reports this expense pays for \u2014 synced to `entity_links` rows (`expense_transaction \u2192 failure_report`, linkType `expense_for`). On update the full set replaces existing expense_for links to failure reports."
+);
 var createExpenseSchema = zod.z.object({
   categoryId: zod.z.string().uuid().describe("Expense transaction-category to file this entry under."),
   amount: expenseAmountSchema,
   description: zod.z.string().trim().max(500).optional(),
-  period: zod.z.string().max(50).optional().describe('Free-form billing period label (e.g. "2026-06").')
+  period: zod.z.string().max(50).optional().describe('Free-form billing period label (e.g. "2026-06").'),
+  failureReportIds: failureReportIdsSchema.optional()
 }).strict();
 var updateExpenseSchema = zod.z.object({
   categoryId: zod.z.string().uuid().optional(),
   amount: expenseAmountSchema.optional(),
   description: zod.z.string().max(500).optional(),
-  period: zod.z.string().max(50).optional()
+  period: zod.z.string().max(50).optional(),
+  failureReportIds: failureReportIdsSchema.optional()
 }).strict();
 var FAILURE_REPORT_LIMITS = {
   TITLE_MIN: 1,
@@ -3171,5 +3176,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-5XT2CCWZ.cjs.map
-//# sourceMappingURL=chunk-5XT2CCWZ.cjs.map
+//# sourceMappingURL=chunk-KAQ5IVML.cjs.map
+//# sourceMappingURL=chunk-KAQ5IVML.cjs.map

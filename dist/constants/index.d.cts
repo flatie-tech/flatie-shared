@@ -76,7 +76,8 @@ interface EntityLinkRule {
 }
 /**
  * Entity types the wildcard `related_to` rule spans. Deliberately excludes
- * `expense_transaction` — expenses relate to logs through `expense_for`.
+ * `expense_transaction` — expenses only link through their explicit rules
+ * (`expense_for` to maintenance logs / failure reports, `based_on` to polls).
  */
 declare const RELATED_TO_LINKABLE_TYPES: readonly LinkableEntityType[];
 /**
