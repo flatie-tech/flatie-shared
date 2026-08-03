@@ -1,5 +1,12 @@
 # @flatie/shared
 
+## 0.97.0
+
+### Changes
+
+- Merge peer-admin platform rule (dist rebuilt)
+- fix(rbac): peer-admin rule for canAssignPlatformRole
+
 ## 0.96.0
 
 ### Changes
