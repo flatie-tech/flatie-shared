@@ -116,15 +116,6 @@ export const failureReportKeys = {
   detail: (id: string) => [...failureReportKeys.details(), id] as const,
 };
 
-export const maintenanceLogKeys = {
-  all: ['maintenanceLog'] as const,
-  lists: () => [...maintenanceLogKeys.all, 'list'] as const,
-  list: (filters: Record<string, unknown> = {}) =>
-    [...maintenanceLogKeys.lists(), { ...filters }] as const,
-  details: () => [...maintenanceLogKeys.all, 'detail'] as const,
-  detail: (id: string) => [...maintenanceLogKeys.details(), id] as const,
-};
-
 export const documentKeys = {
   all: ['document'] as const,
   lists: () => [...documentKeys.all, 'list'] as const,
@@ -447,7 +438,6 @@ export const queryKeys = {
   poll: pollKeys,
   event: eventKeys,
   failureReport: failureReportKeys,
-  maintenanceLog: maintenanceLogKeys,
   document: documentKeys,
   funds: fundsKeys,
   permission: permissionKeys,

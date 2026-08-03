@@ -9,7 +9,6 @@ import {
   failureReportResponseSchema,
   getNotificationDataSchema,
   listArchivedResponseSchema,
-  maintenanceLogResponseSchema,
   noticeResponseSchema,
   notificationResponseSchema,
   paginatedBuildingsResponseSchema,
@@ -282,23 +281,6 @@ describe('Nested event schema (widened in v0.18.2)', () => {
     expect(() => noticeResponseSchema.parse(payload)).not.toThrow();
   });
 
-  it('maintenance logs accept an events array with the full 11-field shape', () => {
-    const payload = {
-      id: BUILDING_ID,
-      buildingId: BUILDING_ID,
-      title: 'Roof repair',
-      createdBy: USER_ID,
-      contractor: 'ACME Roofing',
-      cost: 5000,
-      events: [nestedEvent],
-      createdAt: TIMESTAMP,
-      canEdit: false,
-      canDelete: false,
-      isOwner: false,
-    };
-    expect(() => maintenanceLogResponseSchema.parse(payload)).not.toThrow();
-  });
-
   it('nested event tolerates null optionals (description, userId, updatedAt)', () => {
     const payload = {
       id: BUILDING_ID,
@@ -448,27 +430,6 @@ describe('Notification response schema', () => {
     expect(() => notificationResponseSchema.parse(payload)).not.toThrow();
   });
 
-  it('parses a MAINTENANCE_LOG_CREATED with decimal cost as string', () => {
-    const payload = {
-      ...baseNotification,
-      type: NotificationType.MAINTENANCE_LOG_CREATED,
-      title: 'New maintenance log',
-      body: 'Log added',
-      data: {
-        entityType: 'maintenance_log',
-        entityId: NOTIFICATION_ID,
-        actorName: 'Iva',
-        title: 'Elevator service',
-        description: 'Annual inspection',
-        category: 'Elevator',
-        contractor: 'KONE',
-        cost: '1250.00',
-        actionUrl: `/admin/buildings/${BUILDING_ID}`,
-      },
-    };
-    expect(() => notificationResponseSchema.parse(payload)).not.toThrow();
-  });
-
   it('accepts a null data field for unimplemented notification types', () => {
     const payload = {
       ...baseNotification,
@@ -556,9 +517,9 @@ describe('Archive response schemas', () => {
     expect(() => archivedItemSchema.parse(payload)).toThrow();
   });
 
-  it('covers all 18 types in ARCHIVE_TYPES', () => {
-    expect(ARCHIVE_TYPES).toHaveLength(18);
-    expect(new Set(ARCHIVE_TYPES).size).toBe(18);
+  it('covers all 17 types in ARCHIVE_TYPES', () => {
+    expect(ARCHIVE_TYPES).toHaveLength(17);
+    expect(new Set(ARCHIVE_TYPES).size).toBe(17);
   });
 
   it('parses the aggregator list response', () => {

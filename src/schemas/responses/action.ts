@@ -7,7 +7,7 @@ import type { Strict } from './_strict';
  * and returns a single human-readable confirmation string.
  *
  * Shape is intentionally minimal: backend controllers across notices, polls,
- * failure-reports, maintenance-logs, events, garages, storage-units, apartments,
+ * failure-reports, events, garages, storage-units, apartments,
  * transaction-categories, income-transactions, and more all return
  * `{ message: string }` with no additional fields.
  */

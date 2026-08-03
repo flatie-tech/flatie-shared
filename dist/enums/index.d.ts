@@ -1,6 +1,6 @@
-export { A as ApprovalStatus, B as BuildingType, C as CommonStatus, F as FailureStatus, a as FailureType, b as FileCategory, c as Frequency, M as MaintenanceStatus, d as MaintenanceType, P as PollType, e as Priority, T as TransactionCategory, f as TransactionType } from '../status.enum-CQbseeTz.js';
-export { E as EntityLinkType, L as LinkableEntityType } from '../entity-link.enum-BYEzMg8A.js';
-export { A as APPROVE_PERMISSIONS, B as BUILDING_ROLE_RANK, e as BuildingRole, O as ORG_ROLE_RANK, i as OrgRole, j as PLATFORM_ROLE_RANK, P as Permission, k as PlatformRole, S as SCOPED_DOMAINS, a as SCOPED_PERMISSIONS, b as ScopedAction, c as ScopedDomain, f as canAssignOrgRole, g as canAssignPlatformRole, h as canAssignRole, d as domainPermissions } from '../role.enum-B2GsU_N5.js';
+export { A as ApprovalStatus, B as BuildingType, C as CommonStatus, F as FailureStatus, a as FailureType, b as FileCategory, c as Frequency, P as PollType, d as Priority, T as TransactionCategory, e as TransactionType } from '../status.enum-POCdxmgc.js';
+export { E as EntityLinkType, L as LinkableEntityType } from '../entity-link.enum-D2At-V8D.js';
+export { A as APPROVE_PERMISSIONS, B as BUILDING_ROLE_RANK, e as BuildingRole, O as ORG_ROLE_RANK, i as OrgRole, j as PLATFORM_ROLE_RANK, P as Permission, k as PlatformRole, S as SCOPED_DOMAINS, a as SCOPED_PERMISSIONS, b as ScopedAction, c as ScopedDomain, f as canAssignOrgRole, g as canAssignPlatformRole, h as canAssignRole, d as domainPermissions } from '../role.enum-CvnkuV41.js';
 
 /**
  * Who can see a board. `building` = every member with `board_card:read`
@@ -171,13 +171,6 @@ declare const JoinRequestStatus: {
 };
 type JoinRequestStatus = (typeof JoinRequestStatus)[keyof typeof JoinRequestStatus];
 
-declare const MaintenanceLogFinancedBy: {
-    readonly BUILDING_FUNDS: "building_funds";
-    readonly INSURANCE: "insurance";
-    readonly CO_OWNER: "co_owner";
-};
-type MaintenanceLogFinancedBy = (typeof MaintenanceLogFinancedBy)[keyof typeof MaintenanceLogFinancedBy];
-
 declare const NotificationType: {
     readonly NOTICE_CREATED: "notice_created";
     readonly NOTICE_APPROVED: "notice_approved";
@@ -200,7 +193,6 @@ declare const NotificationType: {
     readonly FAILURE_REPORT_RESOLVED: "failure_report_resolved";
     readonly FAILURE_REPORT_APPROVED: "failure_report_approved";
     readonly FAILURE_REPORT_DECLINED: "failure_report_declined";
-    readonly MAINTENANCE_LOG_CREATED: "maintenance_log_created";
     readonly PAYMENT_DUE: "payment_due";
     readonly PAYMENT_RECEIVED: "payment_received";
     readonly BUILDING_JOIN_REQUEST_RECEIVED: "building_join_request_received";
@@ -359,7 +351,6 @@ type PricuvaRefMode = (typeof PricuvaRefMode)[keyof typeof PricuvaRefMode];
 
 declare const QuotaResourceType: {
     readonly COMMENT: "comment";
-    readonly MAINTENANCE_REQUEST: "maintenance_request";
     readonly INVITE: "invite";
     readonly NOTIFICATION: "notification";
 };
@@ -425,4 +416,4 @@ declare function deriveVotingStrength(user: {
     verificationTier?: number | null;
 }): VotingStrength;
 
-export { BoardVisibility, BuildingOtpExpiry, BuildingStatus, CO_OWNER_VISIBLE_SYSTEM_TYPES, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DevicePlatform, DsarRequestStatus, DsarRequestType, EnterpriseRequestStatus, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, JoinRequestStatus, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, OrgQuotaResourceType, OrgStatus, OrgType, POLL_CANNOT_VOTE_REASON_KEY, PollCannotVoteReason, PollStatus, PollVoteStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, RESIDENT_VISIBLE_SYSTEM_TYPES, TransactionSource, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, VotingStrength, WASTE_SUBTYPE_NOTIFICATION_MAP, deriveVotingStrength, methodToTier };
+export { BoardVisibility, BuildingOtpExpiry, BuildingStatus, CO_OWNER_VISIBLE_SYSTEM_TYPES, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DevicePlatform, DsarRequestStatus, DsarRequestType, EnterpriseRequestStatus, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, JoinRequestStatus, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, OrgQuotaResourceType, OrgStatus, OrgType, POLL_CANNOT_VOTE_REASON_KEY, PollCannotVoteReason, PollStatus, PollVoteStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, RESIDENT_VISIBLE_SYSTEM_TYPES, TransactionSource, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, VotingStrength, WASTE_SUBTYPE_NOTIFICATION_MAP, deriveVotingStrength, methodToTier };

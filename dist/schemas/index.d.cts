@@ -1,6 +1,6 @@
 import * as zod from 'zod';
 import { z } from 'zod';
-export { C as CreateMaintenanceLogSchema, o as CreatePollSchema, b as EVENT_COLORS, e as EVENT_TYPES, d as EVENT_TYPE_COLOR_MAP, E as EventColorOption, a as EventTypeOption, F as FinalizePollSchema, j as MAINTENANCE_FINANCED_BY, k as MAINTENANCE_LOG_LIMITS, M as MaintenanceFinancedByOption, P as POLL_LIMITS, w as POLL_TYPES, h as RECURRENCE_TYPES, p as RecordOfflineVotesSchema, R as RecurrenceTypeOption, U as UpdateMaintenanceLogSchema, q as UpdatePollSchema, V as VotePollSchema, c as createEventSchema, i as createMaintenanceLogSchema, s as createPollSchema, f as eventColorSchema, g as eventTypeSchema, v as finalizePollSchema, m as maintenanceFinancedBySchema, l as maintenanceLogEventSchema, x as pollTypeSchema, y as recordOfflineVotesSchema, r as recurrenceTypeSchema, t as timeSchema, u as updateEventSchema, n as updateMaintenanceLogSchema, z as updatePollSchema, A as votePollSchema } from '../poll.schema-ux7gZt1q.cjs';
+export { C as CreatePollSchema, b as EVENT_COLORS, e as EVENT_TYPES, d as EVENT_TYPE_COLOR_MAP, E as EventColorOption, a as EventTypeOption, F as FinalizePollSchema, P as POLL_LIMITS, l as POLL_TYPES, h as RECURRENCE_TYPES, i as RecordOfflineVotesSchema, R as RecurrenceTypeOption, U as UpdatePollSchema, V as VotePollSchema, c as createEventSchema, j as createPollSchema, f as eventColorSchema, g as eventTypeSchema, k as finalizePollSchema, p as pollTypeSchema, m as recordOfflineVotesSchema, r as recurrenceTypeSchema, t as timeSchema, u as updateEventSchema, n as updatePollSchema, v as votePollSchema } from '../poll.schema-CXKRtDas.cjs';
 import * as zod_v4_core from 'zod/v4/core';
 
 /**
@@ -883,9 +883,9 @@ declare const createBuildingSchema: z.ZodObject<{
     totalUnits: z.ZodCoercedNumber<unknown>;
     isStratified: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
     role: z.ZodOptional<z.ZodEnum<{
-        co_owner: "co_owner";
         owner_representative: "owner_representative";
         deputy_representative: "deputy_representative";
+        co_owner: "co_owner";
     }>>;
     iban: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     oib: z.ZodNullable<z.ZodOptional<z.ZodString>>;
@@ -952,9 +952,9 @@ declare const joinBuildingWithOtpSchema: z.ZodObject<{
 declare const updateUserBuildingRoleSchema: z.ZodObject<{
     userId: z.ZodString;
     roleType: z.ZodOptional<z.ZodEnum<{
-        co_owner: "co_owner";
         owner_representative: "owner_representative";
         deputy_representative: "deputy_representative";
+        co_owner: "co_owner";
         resident: "resident";
     }>>;
     buildingSurfacePercentage: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
@@ -974,7 +974,6 @@ declare const buildingQuotaEntrySchema: z.ZodObject<{
     resourceType: z.ZodEnum<{
         notification: "notification";
         comment: "comment";
-        maintenance_request: "maintenance_request";
         invite: "invite";
     }>;
     dailyLimit: z.ZodNullable<z.ZodNumber>;
@@ -989,7 +988,6 @@ declare const buildingQuotaConfigSchema: z.ZodObject<{
         resourceType: z.ZodEnum<{
             notification: "notification";
             comment: "comment";
-            maintenance_request: "maintenance_request";
             invite: "invite";
         }>;
         dailyLimit: z.ZodNullable<z.ZodNumber>;
@@ -1004,7 +1002,6 @@ declare const buildingQuotaListSchema: z.ZodObject<{
         resourceType: z.ZodEnum<{
             notification: "notification";
             comment: "comment";
-            maintenance_request: "maintenance_request";
             invite: "invite";
         }>;
         dailyLimit: z.ZodNullable<z.ZodNumber>;
@@ -1270,7 +1267,7 @@ type DsarRequestResponse = z.infer<typeof dsarRequestResponseSchema>;
 type DsarEventResponse = z.infer<typeof dsarEventResponseSchema>;
 
 declare const ENTITY_LINK_TYPES: readonly ["image", "document", "invoice", "warranty", "agenda", "schedule", "deadline", "meeting", "resolved_by", "based_on", "discussed_in", "expense_for", "related_to"];
-declare const LINKABLE_ENTITY_TYPES: readonly ["failure_report", "maintenance_log", "notice", "event", "poll", "file", "expense_transaction", "board_card"];
+declare const LINKABLE_ENTITY_TYPES: readonly ["failure_report", "notice", "event", "poll", "file", "expense_transaction", "board_card"];
 declare const entityLinkTypeSchema: z.ZodEnum<{
     image: "image";
     document: "document";
@@ -1288,7 +1285,6 @@ declare const entityLinkTypeSchema: z.ZodEnum<{
 }>;
 declare const linkableEntityTypeSchema: z.ZodEnum<{
     failure_report: "failure_report";
-    maintenance_log: "maintenance_log";
     notice: "notice";
     event: "event";
     poll: "poll";
@@ -1301,7 +1297,6 @@ declare const entityLinkEndpointSchema: z.ZodObject<{
     id: z.ZodString;
     type: z.ZodEnum<{
         failure_report: "failure_report";
-        maintenance_log: "maintenance_log";
         notice: "notice";
         event: "event";
         poll: "poll";
@@ -1320,7 +1315,6 @@ declare const createEntityLinkRequestSchema: z.ZodObject<{
         id: z.ZodString;
         type: z.ZodEnum<{
             failure_report: "failure_report";
-            maintenance_log: "maintenance_log";
             notice: "notice";
             event: "event";
             poll: "poll";
@@ -1333,7 +1327,6 @@ declare const createEntityLinkRequestSchema: z.ZodObject<{
         id: z.ZodString;
         type: z.ZodEnum<{
             failure_report: "failure_report";
-            maintenance_log: "maintenance_log";
             notice: "notice";
             event: "event";
             poll: "poll";
@@ -1364,7 +1357,6 @@ declare const deleteEntityLinkRequestSchema: z.ZodObject<{
         id: z.ZodString;
         type: z.ZodEnum<{
             failure_report: "failure_report";
-            maintenance_log: "maintenance_log";
             notice: "notice";
             event: "event";
             poll: "poll";
@@ -1377,7 +1369,6 @@ declare const deleteEntityLinkRequestSchema: z.ZodObject<{
         id: z.ZodString;
         type: z.ZodEnum<{
             failure_report: "failure_report";
-            maintenance_log: "maintenance_log";
             notice: "notice";
             event: "event";
             poll: "poll";
@@ -1410,7 +1401,6 @@ declare const deleteEntityLinkQuerySchema: z.ZodObject<{
     sourceId: z.ZodString;
     sourceType: z.ZodEnum<{
         failure_report: "failure_report";
-        maintenance_log: "maintenance_log";
         notice: "notice";
         event: "event";
         poll: "poll";
@@ -1421,7 +1411,6 @@ declare const deleteEntityLinkQuerySchema: z.ZodObject<{
     targetId: z.ZodString;
     targetType: z.ZodEnum<{
         failure_report: "failure_report";
-        maintenance_log: "maintenance_log";
         notice: "notice";
         event: "event";
         poll: "poll";
@@ -1450,7 +1439,6 @@ declare const getEntityLinksQuerySchema: z.ZodObject<{
     entityId: z.ZodString;
     entityType: z.ZodEnum<{
         failure_report: "failure_report";
-        maintenance_log: "maintenance_log";
         notice: "notice";
         event: "event";
         poll: "poll";
@@ -1467,7 +1455,6 @@ declare const getEntityLinksQuerySchema: z.ZodObject<{
 declare const getEntityLinkCountsQuerySchema: z.ZodObject<{
     entityType: z.ZodEnum<{
         failure_report: "failure_report";
-        maintenance_log: "maintenance_log";
         notice: "notice";
         event: "event";
         poll: "poll";
@@ -1548,7 +1535,6 @@ declare const createFailureReportSchema: z.ZodObject<{
     }>>;
     unitId: z.ZodOptional<z.ZodString>;
     fileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
-    maintenanceLogIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
     events: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodObject<{
         startDate: z.ZodCoercedDate<unknown>;
         endDate: z.ZodCoercedDate<unknown>;
@@ -1587,7 +1573,6 @@ declare const updateFailureReportSchema: z.ZodObject<{
     unitId: z.ZodOptional<z.ZodString>;
     fileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
     removeChildFileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
-    maintenanceLogIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
     events: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodObject<{
         startDate: z.ZodCoercedDate<unknown>;
         endDate: z.ZodCoercedDate<unknown>;
@@ -2072,9 +2057,9 @@ type PermissionsResponseSchema = z.infer<typeof permissionsResponseSchema>;
 declare const getRepUsersParamsSchema: z.ZodObject<{
     search: z.ZodOptional<z.ZodString>;
     buildingRole: z.ZodOptional<z.ZodEnum<{
-        co_owner: "co_owner";
         owner_representative: "owner_representative";
         deputy_representative: "deputy_representative";
+        co_owner: "co_owner";
         resident: "resident";
     }>>;
     fromDate: z.ZodOptional<z.ZodString>;
@@ -2215,46 +2200,12 @@ declare const updateFailureReportRequestSchema: zod.ZodObject<{
     unitId: zod.ZodOptional<zod.ZodString>;
     fileIds: zod.ZodOptional<zod.ZodPipe<zod.ZodTransform<unknown, unknown>, zod.ZodArray<zod.ZodString>>>;
     removeChildFileIds: zod.ZodOptional<zod.ZodPipe<zod.ZodTransform<unknown, unknown>, zod.ZodArray<zod.ZodString>>>;
-    maintenanceLogIds: zod.ZodOptional<zod.ZodPipe<zod.ZodTransform<unknown, unknown>, zod.ZodArray<zod.ZodString>>>;
     events: zod.ZodOptional<zod.ZodPipe<zod.ZodTransform<unknown, unknown>, zod.ZodArray<zod.ZodObject<{
         startDate: zod.ZodCoercedDate<unknown>;
         endDate: zod.ZodCoercedDate<unknown>;
         title: zod.ZodOptional<zod.ZodString>;
         description: zod.ZodOptional<zod.ZodString>;
     }, zod_v4_core.$strip>>>>;
-    id: zod.ZodString;
-}, zod_v4_core.$strip>;
-
-/**
- * Update maintenance-log request schema — the canonical PATCH request
- * shape, combining the maintenance-log `id` (from the URL) with the
- * optional body fields validated by `updateMaintenanceLogSchema` in
- * `entities/maintenance-log.schema.ts`.
- */
-declare const updateMaintenanceLogRequestSchema: zod.ZodObject<{
-    title: zod.ZodOptional<zod.ZodString>;
-    description: zod.ZodOptional<zod.ZodString>;
-    categoryId: zod.ZodOptional<zod.ZodString>;
-    contractor: zod.ZodOptional<zod.ZodString>;
-    cost: zod.ZodOptional<zod.ZodPipe<zod.ZodTransform<unknown, unknown>, zod.ZodString>>;
-    financedBy: zod.ZodOptional<zod.ZodEnum<{
-        building_funds: "building_funds";
-        insurance: "insurance";
-        co_owner: "co_owner";
-    }>>;
-    warranty: zod.ZodOptional<zod.ZodPipe<zod.ZodTransform<{}, unknown>, zod.ZodBoolean>>;
-    events: zod.ZodOptional<zod.ZodPipe<zod.ZodTransform<unknown, unknown>, zod.ZodArray<zod.ZodObject<{
-        id: zod.ZodOptional<zod.ZodString>;
-        startDate: zod.ZodCoercedDate<unknown>;
-        endDate: zod.ZodCoercedDate<unknown>;
-        title: zod.ZodOptional<zod.ZodString>;
-        description: zod.ZodOptional<zod.ZodString>;
-    }, zod_v4_core.$strip>>>>;
-    fileIds: zod.ZodOptional<zod.ZodPipe<zod.ZodTransform<unknown, unknown>, zod.ZodArray<zod.ZodString>>>;
-    removeChildFileIds: zod.ZodOptional<zod.ZodPipe<zod.ZodTransform<unknown, unknown>, zod.ZodArray<zod.ZodString>>>;
-    pollId: zod.ZodOptional<zod.ZodString>;
-    pollIds: zod.ZodOptional<zod.ZodPipe<zod.ZodTransform<unknown, unknown>, zod.ZodArray<zod.ZodString>>>;
-    expenseIds: zod.ZodOptional<zod.ZodPipe<zod.ZodTransform<unknown, unknown>, zod.ZodArray<zod.ZodString>>>;
     id: zod.ZodString;
 }, zod_v4_core.$strip>;
 
@@ -2331,7 +2282,7 @@ type Strict<T> = T extends Date | RegExp | Map<any, any> | Set<any> ? T : T exte
  * and returns a single human-readable confirmation string.
  *
  * Shape is intentionally minimal: backend controllers across notices, polls,
- * failure-reports, maintenance-logs, events, garages, storage-units, apartments,
+ * failure-reports, events, garages, storage-units, apartments,
  * transaction-categories, income-transactions, and more all return
  * `{ message: string }` with no additional fields.
  */
@@ -2351,7 +2302,7 @@ declare const aiUsageResponseSchema: z.ZodObject<{
 }, z.core.$loose>;
 type AiUsageResponse = z.infer<typeof aiUsageResponseSchema>;
 
-declare const ARCHIVE_TYPES: readonly ["apartments", "blog_posts", "building_join_requests", "buildings", "comments", "events", "failure_reports", "faqs", "files", "garages", "income_transactions", "maintenance_logs", "notices", "organizations", "polls", "recurring_templates", "storage_units", "transaction_categories"];
+declare const ARCHIVE_TYPES: readonly ["apartments", "blog_posts", "building_join_requests", "buildings", "comments", "events", "failure_reports", "faqs", "files", "garages", "income_transactions", "notices", "organizations", "polls", "recurring_templates", "storage_units", "transaction_categories"];
 type ArchiveType = (typeof ARCHIVE_TYPES)[number];
 declare const archiveTypeSchema: z.ZodEnum<{
     notices: "notices";
@@ -2367,7 +2318,6 @@ declare const archiveTypeSchema: z.ZodEnum<{
     files: "files";
     garages: "garages";
     income_transactions: "income_transactions";
-    maintenance_logs: "maintenance_logs";
     organizations: "organizations";
     recurring_templates: "recurring_templates";
     storage_units: "storage_units";
@@ -2389,7 +2339,6 @@ declare const archivedItemSchema: z.ZodObject<{
         files: "files";
         garages: "garages";
         income_transactions: "income_transactions";
-        maintenance_logs: "maintenance_logs";
         organizations: "organizations";
         recurring_templates: "recurring_templates";
         storage_units: "storage_units";
@@ -2419,7 +2368,6 @@ declare const listArchivedResponseSchema: z.ZodObject<{
             files: "files";
             garages: "garages";
             income_transactions: "income_transactions";
-            maintenance_logs: "maintenance_logs";
             organizations: "organizations";
             recurring_templates: "recurring_templates";
             storage_units: "storage_units";
@@ -2940,7 +2888,7 @@ type CommentResponse = Strict<z.infer<typeof commentResponseSchema>>;
  * adding a link source never breaks older clients' response parsing —
  * clients should render unknown types with a generic fallback.
  */
-declare const DOCUMENT_SOURCE_TYPES: readonly ["notice", "failure_report", "maintenance_log", "poll", "event", "board_card", "expense_transaction"];
+declare const DOCUMENT_SOURCE_TYPES: readonly ["notice", "failure_report", "poll", "event", "board_card", "expense_transaction"];
 declare const documentLinkedRecordSchema: z.ZodObject<{
     type: z.ZodString;
     id: z.ZodString;
@@ -2950,14 +2898,6 @@ declare const documentLinkedRecordSchema: z.ZodObject<{
         in_progress: "in_progress";
         resolved: "resolved";
     }>>>;
-    contractor: z.ZodNullable<z.ZodOptional<z.ZodString>>;
-    cost: z.ZodNullable<z.ZodOptional<z.ZodNumber>>;
-    financedBy: z.ZodNullable<z.ZodOptional<z.ZodEnum<{
-        building_funds: "building_funds";
-        insurance: "insurance";
-        co_owner: "co_owner";
-    }>>>;
-    warranty: z.ZodNullable<z.ZodOptional<z.ZodBoolean>>;
     createdAt: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     updatedAt: z.ZodNullable<z.ZodOptional<z.ZodString>>;
 }, z.core.$loose>;
@@ -3004,14 +2944,6 @@ declare const documentResponseSchema: z.ZodObject<{
             in_progress: "in_progress";
             resolved: "resolved";
         }>>>;
-        contractor: z.ZodNullable<z.ZodOptional<z.ZodString>>;
-        cost: z.ZodNullable<z.ZodOptional<z.ZodNumber>>;
-        financedBy: z.ZodNullable<z.ZodOptional<z.ZodEnum<{
-            building_funds: "building_funds";
-            insurance: "insurance";
-            co_owner: "co_owner";
-        }>>>;
-        warranty: z.ZodNullable<z.ZodOptional<z.ZodBoolean>>;
         createdAt: z.ZodNullable<z.ZodOptional<z.ZodString>>;
         updatedAt: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     }, z.core.$loose>>>>;
@@ -3056,14 +2988,6 @@ declare const paginatedDocumentsResponseSchema: z.ZodObject<{
                 in_progress: "in_progress";
                 resolved: "resolved";
             }>>>;
-            contractor: z.ZodNullable<z.ZodOptional<z.ZodString>>;
-            cost: z.ZodNullable<z.ZodOptional<z.ZodNumber>>;
-            financedBy: z.ZodNullable<z.ZodOptional<z.ZodEnum<{
-                building_funds: "building_funds";
-                insurance: "insurance";
-                co_owner: "co_owner";
-            }>>>;
-            warranty: z.ZodNullable<z.ZodOptional<z.ZodBoolean>>;
             createdAt: z.ZodNullable<z.ZodOptional<z.ZodString>>;
             updatedAt: z.ZodNullable<z.ZodOptional<z.ZodString>>;
         }, z.core.$loose>>>>;
@@ -3106,7 +3030,6 @@ declare const entityLinkReferenceSchema: z.ZodObject<{
     id: z.ZodString;
     type: z.ZodEnum<{
         failure_report: "failure_report";
-        maintenance_log: "maintenance_log";
         notice: "notice";
         event: "event";
         poll: "poll";
@@ -3146,7 +3069,6 @@ declare const entityLinksResponseSchema: z.ZodObject<{
         id: z.ZodString;
         type: z.ZodEnum<{
             failure_report: "failure_report";
-            maintenance_log: "maintenance_log";
             notice: "notice";
             event: "event";
             poll: "poll";
@@ -3330,18 +3252,6 @@ declare const failureReportResponseSchema: z.ZodObject<{
         createdAt: z.ZodOptional<z.ZodString>;
         updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     }, z.core.$loose>>>;
-    maintenanceLogs: z.ZodDefault<z.ZodArray<z.ZodObject<{
-        id: z.ZodString;
-        title: z.ZodString;
-        contractor: z.ZodString;
-        cost: z.ZodNullable<z.ZodOptional<z.ZodNumber>>;
-        financedBy: z.ZodNullable<z.ZodOptional<z.ZodEnum<{
-            building_funds: "building_funds";
-            insurance: "insurance";
-            co_owner: "co_owner";
-        }>>>;
-        warranty: z.ZodNullable<z.ZodOptional<z.ZodBoolean>>;
-    }, z.core.$loose>>>;
     polls: z.ZodDefault<z.ZodArray<z.ZodObject<{
         id: z.ZodString;
         question: z.ZodString;
@@ -3398,18 +3308,6 @@ declare const paginatedFailureReportsResponseSchema: z.ZodObject<{
             buildingId: z.ZodOptional<z.ZodString>;
             createdAt: z.ZodOptional<z.ZodString>;
             updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-        }, z.core.$loose>>>;
-        maintenanceLogs: z.ZodDefault<z.ZodArray<z.ZodObject<{
-            id: z.ZodString;
-            title: z.ZodString;
-            contractor: z.ZodString;
-            cost: z.ZodNullable<z.ZodOptional<z.ZodNumber>>;
-            financedBy: z.ZodNullable<z.ZodOptional<z.ZodEnum<{
-                building_funds: "building_funds";
-                insurance: "insurance";
-                co_owner: "co_owner";
-            }>>>;
-            warranty: z.ZodNullable<z.ZodOptional<z.ZodBoolean>>;
         }, z.core.$loose>>>;
         polls: z.ZodDefault<z.ZodArray<z.ZodObject<{
             id: z.ZodString;
@@ -3475,137 +3373,6 @@ declare const camtImportResponseSchema: z.ZodObject<{
     }, z.core.$loose>>;
 }, z.core.$loose>;
 type CamtImportResponse = Strict<z.infer<typeof camtImportResponseSchema>>;
-
-declare const maintenanceLogResponseSchema: z.ZodObject<{
-    id: z.ZodString;
-    buildingId: z.ZodString;
-    title: z.ZodString;
-    files: z.ZodDefault<z.ZodArray<z.ZodObject<{
-        id: z.ZodString;
-        title: z.ZodString;
-        documentUrl: z.ZodNullable<z.ZodOptional<z.ZodString>>;
-    }, z.core.$loose>>>;
-    createdBy: z.ZodString;
-    createdByName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-    contractor: z.ZodString;
-    cost: z.ZodNumber;
-    financedBy: z.ZodNullable<z.ZodOptional<z.ZodEnum<{
-        building_funds: "building_funds";
-        insurance: "insurance";
-        co_owner: "co_owner";
-    }>>>;
-    warranty: z.ZodNullable<z.ZodOptional<z.ZodBoolean>>;
-    categoryId: z.ZodNullable<z.ZodOptional<z.ZodString>>;
-    categoryName: z.ZodNullable<z.ZodOptional<z.ZodString>>;
-    events: z.ZodDefault<z.ZodArray<z.ZodObject<{
-        id: z.ZodString;
-        title: z.ZodString;
-        type: z.ZodOptional<z.ZodString>;
-        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-        startDate: z.ZodString;
-        endDate: z.ZodString;
-        color: z.ZodOptional<z.ZodString>;
-        userId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-        buildingId: z.ZodOptional<z.ZodString>;
-        createdAt: z.ZodOptional<z.ZodString>;
-        updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-    }, z.core.$loose>>>;
-    createdAt: z.ZodString;
-    updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-    canEdit: z.ZodBoolean;
-    canDelete: z.ZodBoolean;
-    isOwner: z.ZodBoolean;
-    polls: z.ZodDefault<z.ZodArray<z.ZodObject<{
-        id: z.ZodString;
-        question: z.ZodString;
-        pollType: z.ZodString;
-        deadline: z.ZodNullable<z.ZodOptional<z.ZodString>>;
-    }, z.core.$loose>>>;
-    failureReports: z.ZodOptional<z.ZodArray<z.ZodObject<{
-        id: z.ZodString;
-        title: z.ZodString;
-        status: z.ZodString;
-        createdAt: z.ZodString;
-    }, z.core.$loose>>>;
-    expenses: z.ZodOptional<z.ZodArray<z.ZodObject<{
-        id: z.ZodString;
-        amount: z.ZodNumber;
-        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-        period: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-        source: z.ZodString;
-        createdAt: z.ZodString;
-    }, z.core.$loose>>>;
-}, z.core.$loose>;
-declare const paginatedMaintenanceLogsResponseSchema: z.ZodObject<{
-    data: z.ZodArray<z.ZodObject<{
-        id: z.ZodString;
-        buildingId: z.ZodString;
-        title: z.ZodString;
-        files: z.ZodDefault<z.ZodArray<z.ZodObject<{
-            id: z.ZodString;
-            title: z.ZodString;
-            documentUrl: z.ZodNullable<z.ZodOptional<z.ZodString>>;
-        }, z.core.$loose>>>;
-        createdBy: z.ZodString;
-        createdByName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-        contractor: z.ZodString;
-        cost: z.ZodNumber;
-        financedBy: z.ZodNullable<z.ZodOptional<z.ZodEnum<{
-            building_funds: "building_funds";
-            insurance: "insurance";
-            co_owner: "co_owner";
-        }>>>;
-        warranty: z.ZodNullable<z.ZodOptional<z.ZodBoolean>>;
-        categoryId: z.ZodNullable<z.ZodOptional<z.ZodString>>;
-        categoryName: z.ZodNullable<z.ZodOptional<z.ZodString>>;
-        events: z.ZodDefault<z.ZodArray<z.ZodObject<{
-            id: z.ZodString;
-            title: z.ZodString;
-            type: z.ZodOptional<z.ZodString>;
-            description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-            startDate: z.ZodString;
-            endDate: z.ZodString;
-            color: z.ZodOptional<z.ZodString>;
-            userId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-            buildingId: z.ZodOptional<z.ZodString>;
-            createdAt: z.ZodOptional<z.ZodString>;
-            updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-        }, z.core.$loose>>>;
-        createdAt: z.ZodString;
-        updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-        canEdit: z.ZodBoolean;
-        canDelete: z.ZodBoolean;
-        isOwner: z.ZodBoolean;
-        polls: z.ZodDefault<z.ZodArray<z.ZodObject<{
-            id: z.ZodString;
-            question: z.ZodString;
-            pollType: z.ZodString;
-            deadline: z.ZodNullable<z.ZodOptional<z.ZodString>>;
-        }, z.core.$loose>>>;
-        failureReports: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            id: z.ZodString;
-            title: z.ZodString;
-            status: z.ZodString;
-            createdAt: z.ZodString;
-        }, z.core.$loose>>>;
-        expenses: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            id: z.ZodString;
-            amount: z.ZodNumber;
-            description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-            period: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-            source: z.ZodString;
-            createdAt: z.ZodString;
-        }, z.core.$loose>>>;
-    }, z.core.$loose>>;
-    count: z.ZodNumber;
-    page: z.ZodNumber;
-    limit: z.ZodNumber;
-    totalPages: z.ZodNumber;
-    hasNextPage: z.ZodBoolean;
-    hasPreviousPage: z.ZodBoolean;
-}, z.core.$strip>;
-type MaintenanceLogResponse = Strict<z.infer<typeof maintenanceLogResponseSchema>>;
-type PaginatedMaintenanceLogsResponse = Strict<z.infer<typeof paginatedMaintenanceLogsResponseSchema>>;
 
 declare const noticeResponseSchema: z.ZodObject<{
     id: z.ZodString;
@@ -3718,7 +3485,6 @@ declare const notificationResponseSchema: z.ZodObject<{
         failure_report_resolved: "failure_report_resolved";
         failure_report_approved: "failure_report_approved";
         failure_report_declined: "failure_report_declined";
-        maintenance_log_created: "maintenance_log_created";
         payment_due: "payment_due";
         payment_received: "payment_received";
         building_join_request_received: "building_join_request_received";
@@ -3851,17 +3617,6 @@ declare const notificationResponseSchema: z.ZodObject<{
         actorName: z.ZodOptional<z.ZodString>;
         actionUrl: z.ZodOptional<z.ZodString>;
         title: z.ZodString;
-    }, z.core.$strip>, z.ZodObject<{
-        entityType: z.ZodOptional<z.ZodString>;
-        entityId: z.ZodOptional<z.ZodString>;
-        actorId: z.ZodOptional<z.ZodString>;
-        actorName: z.ZodOptional<z.ZodString>;
-        actionUrl: z.ZodOptional<z.ZodString>;
-        title: z.ZodString;
-        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-        category: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-        contractor: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-        cost: z.ZodOptional<z.ZodNullable<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>>>;
     }, z.core.$strip>, z.ZodObject<{
         entityType: z.ZodOptional<z.ZodString>;
         entityId: z.ZodOptional<z.ZodString>;
@@ -4109,13 +3864,6 @@ declare const pollResultsSchema: z.ZodObject<{
         fullName: z.ZodString;
         userId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     }, z.core.$loose>>>;
-    maintenanceLogs: z.ZodOptional<z.ZodArray<z.ZodObject<{
-        id: z.ZodString;
-        title: z.ZodString;
-        contractor: z.ZodString;
-        cost: z.ZodNumber;
-        createdAt: z.ZodString;
-    }, z.core.$loose>>>;
     files: z.ZodOptional<z.ZodArray<z.ZodObject<{
         id: z.ZodString;
         title: z.ZodString;
@@ -4273,9 +4021,9 @@ declare const repUserBuildingSchema: z.ZodObject<{
     buildingName: z.ZodString;
     buildingAddress: z.ZodString;
     roleType: z.ZodEnum<{
-        co_owner: "co_owner";
         owner_representative: "owner_representative";
         deputy_representative: "deputy_representative";
+        co_owner: "co_owner";
         resident: "resident";
     }>;
     buildingSurfacePercentage: z.ZodString;
@@ -4294,9 +4042,9 @@ declare const repUserItemSchema: z.ZodObject<{
         buildingName: z.ZodString;
         buildingAddress: z.ZodString;
         roleType: z.ZodEnum<{
-            co_owner: "co_owner";
             owner_representative: "owner_representative";
             deputy_representative: "deputy_representative";
+            co_owner: "co_owner";
             resident: "resident";
         }>;
         buildingSurfacePercentage: z.ZodString;
@@ -4318,9 +4066,9 @@ declare const paginatedRepUsersResponseSchema: z.ZodObject<{
             buildingName: z.ZodString;
             buildingAddress: z.ZodString;
             roleType: z.ZodEnum<{
-                co_owner: "co_owner";
                 owner_representative: "owner_representative";
                 deputy_representative: "deputy_representative";
+                co_owner: "co_owner";
                 resident: "resident";
             }>;
             buildingSurfacePercentage: z.ZodString;
@@ -4391,11 +4139,10 @@ declare const paginatedRepBuildingsResponseSchema: z.ZodObject<{
     hasNextPage: z.ZodBoolean;
     hasPreviousPage: z.ZodBoolean;
 }, z.core.$strip>;
-declare const REP_RECENT_ACTIVITY_TYPES: readonly ["notice", "maintenance", "failure_report", "user_joined"];
+declare const REP_RECENT_ACTIVITY_TYPES: readonly ["notice", "failure_report", "user_joined"];
 declare const repRecentActivityTypeSchema: z.ZodEnum<{
     failure_report: "failure_report";
     notice: "notice";
-    maintenance: "maintenance";
     user_joined: "user_joined";
 }>;
 declare const repRecentActivitySchema: z.ZodObject<{
@@ -4404,7 +4151,6 @@ declare const repRecentActivitySchema: z.ZodObject<{
     activityType: z.ZodEnum<{
         failure_report: "failure_report";
         notice: "notice";
-        maintenance: "maintenance";
         user_joined: "user_joined";
     }>;
     description: z.ZodString;
@@ -4448,10 +4194,6 @@ declare const repDashboardSummaryResponseSchema: z.ZodObject<{
             pending: z.ZodNumber;
             today: z.ZodNumber;
         }, z.core.$loose>;
-        maintenanceLogs: z.ZodObject<{
-            total: z.ZodNumber;
-            today: z.ZodNumber;
-        }, z.core.$loose>;
         failureReports: z.ZodObject<{
             total: z.ZodNumber;
             open: z.ZodNumber;
@@ -4475,7 +4217,6 @@ declare const repDashboardSummaryResponseSchema: z.ZodObject<{
         activityType: z.ZodEnum<{
             failure_report: "failure_report";
             notice: "notice";
-            maintenance: "maintenance";
             user_joined: "user_joined";
         }>;
         description: z.ZodString;
@@ -4509,7 +4250,6 @@ type RepDashboardSummaryResponse = Strict<z.infer<typeof repDashboardSummaryResp
 
 declare const commonStatusOptions: readonly ["active", "completed", "cancelled"];
 declare const approvalStatusOptions: readonly ["pending", "approved", "rejected"];
-declare const maintenanceStatusOptions: readonly ["pending", "in_progress", "completed", "cancelled"];
 declare const failureStatusOptions: readonly ["pending", "in_progress", "resolved"];
 /**
  * Priority options
@@ -4525,12 +4265,6 @@ declare const ApprovalStatusSchema: z.ZodEnum<{
     rejected: "rejected";
     approved: "approved";
 }>;
-declare const MaintenanceStatusSchema: z.ZodEnum<{
-    pending: "pending";
-    in_progress: "in_progress";
-    cancelled: "cancelled";
-    completed: "completed";
-}>;
 declare const FailureStatusSchema: z.ZodEnum<{
     pending: "pending";
     in_progress: "in_progress";
@@ -4541,4 +4275,4 @@ declare const PrioritySchema: z.ZodEnum<{
     urgent: "urgent";
 }>;
 
-export { ARCHIVE_TYPES, AUDIT_DENIAL_TARGET_TYPE, type AddOrgMemberSchema, type AiUsageResponse, type ApiError, type ApiErrorResponse, ApprovalStatusSchema, type ApproveFailureReportSchema, type ApproveNoticeSchema, type ArchiveType, type ArchivedItem, type AssignOrgBuildingSchema, type AssignOrgMemberBuildingSchema, type AssignOwnerInput, type AuditLogResponse, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUILDING_LIMITS, BUILDING_TYPES, type BuildingDetailResponse, type BuildingFundsLedgerResponse, type BuildingFundsLedgerRow, type BuildingOwnerAssignment, type BuildingResponse, type BuildingSettingsResponse, type BusinessPartnerResponse, CHAT_LIMITS, type CamtImportResponse, type ChatMessageResponse, type CommentResponse, CommonStatusSchema, type ConversationLastMessage, type ConversationParticipant, type ConversationResponse, ConversationType, type ConversationsListResponse, type CopyFaqsSchema, type CopyTransactionCategoriesSchema, type CreateBoardCardSchema, type CreateBoardColumnSchema, type CreateBoardSchema, type CreateBuildingSchema, type CreateBusinessPartnerInput, type CreateConversationSchema, type CreateDocumentSchema, type CreateDsarEventSchema, type CreateDsarRequestSchema, type CreateEmailThreadRequestPayload, type CreateEntityLinkRequest, type CreateFailureReportSchema, type CreateFaqSchema, type CreateIncomeSchema, type CreateNoticeSchema, type CreateOrgBroadcastSchema, type CreateOrganizationSchema, type CreateOwnerInput, type CreatePlatformSubscriptionSchema, type CreateTransactionCategorySchema, type CreateUnitInput, type CursorQuerySchema, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, type DeleteEntityLinkQuery, type DocumentFile, type DocumentLinkedRecord, type DocumentResponse, type DsarErasureSchema, type DsarEventResponse, type DsarRequestResponse, EMAIL_LIMITS, ENTITY_LINK_TYPES, type EmailAttachment, type EmailMessage, type EmailThread, type EmailThreadDetail, type EmailUnreadCountResponse, type EnterpriseRequestResponse, type EntityLinkCountsResponse, type EntityLinkMetadata, type EntityLinkReference, type EntityLinksResponse, type EventResponse, FAILURE_REPORT_LIMITS, FAQ_LIMITS, type FailureReportEventSchema, type FailureReportResponse, FailureStatusSchema, type FaqResponse, type GetAuditLogsQuerySchema, type GetDsarRequestsQuerySchema, type GetEnterpriseRequestsQuerySchema, type GetEntityLinkCountsQuery, type GetEntityLinksQuery, type GetOrgBuildingsQuerySchema, type GetOrgMembersQuerySchema, type GetPlatformSubscriptionsQuerySchema, type GetTransactionCategoriesQuerySchema, type InviteOrgMemberSchema, type InviteOwnerInput, type JoinBuildingWithOtpSchema, LINKABLE_ENTITY_TYPES, type ListArchivedResponse, type MaintenanceLogResponse, MaintenanceStatusSchema, type MessageResponse, type MessagesListResponse, type MoveBoardCardSchema, NOTICE_LIMITS, type NoticeEventSchema, type NoticeResponse, type NotificationPreferenceCategory, type NotificationPreferenceItem, type NotificationResponse, ORGANIZATION_LIMITS, type OrgBroadcastResponse, type OrgInvitationResponse, OrgInvitationStatus, type OwnerResponse, type PaginatedBuildingsResponse, type PaginatedDocumentsResponse, type PaginatedEmailThreadsResponse, type PaginatedEventsResponse, type PaginatedFailureReportsResponse, type PaginatedMaintenanceLogsResponse, type PaginatedNoticesResponse, type PaginatedPollsResponse, type PaginatedUnitsResponse, type PermissionsResponseSchema, type PlatformSubscriptionResponse, type PollEligibleVoter, type PollEligibleVotersResponse, type PollResponse, type PollResults, type PollVotersResponse, PrioritySchema, type PublicOrgInvitation, REP_RECENT_ACTIVITY_TYPES, type RecordDsarRectificationSchema, type ReorderBoardColumnsSchema, type ReorderFaqsSchema, type RepBuildingActivity, type RepBuildingItem, type RepDashboardSummaryResponse, type RepRecentActivity, type RepUserBuilding, type ReplyEmailThreadRequestPayload, type RevenueMetricsResponse, type SearchUsersQuerySchema, type SendMessageSchema, type SetDsarRestrictionSchema, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, type Unit, type UnitKind, type UnreadCountResponse, type UpdateBoardCardSchema, type UpdateBoardColumnSchema, type UpdateBoardSchema, type UpdateBuildingSchema, type UpdateBuildingSettingsSchema, type UpdateBusinessPartnerInput, type UpdateConversationSchema, type UpdateDocumentSchema, type UpdateDsarRequestSchema, type UpdateEnterpriseRequestSchema, type UpdateExpenseSchema, type UpdateFailureReportSchema, type UpdateFaqSchema, type UpdateIncomeSchema, type UpdateNoticeSchema, type UpdateOrgBuildingContractSchema, type UpdateOrgMemberRoleSchema, type UpdateOrganizationSchema, type UpdateOwnerInput, type UpdatePlatformSubscriptionSchema, type UpdateTransactionCategorySchema, type UpdateUnitInput, type UpdateUserBuildingRoleSchema, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, auditLogResponseSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingOwnerAssignmentSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createDsarEventSchema, createDsarRequestSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createNoticeSchema, createOrgBroadcastSchema, createOrganizationSchema, createOwnerSchema, createPlatformSubscriptionSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, dsarErasureSchema, dsarEventResponseSchema, dsarRequestResponseSchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, emailUnreadCountResponseSchema, enterpriseRequestResponseSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventResponseSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, forgotPasswordSchema, getAuditLogsQuerySchema, getDsarRequestsQuerySchema, getEnterpriseRequestsQuerySchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getPlatformSubscriptionsQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, inviteOwnerSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, loginSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgBroadcastResponseSchema, orgInvitationResponseSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, platformSubscriptionResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollVotersResponseSchema, priorityOptions, publicOrgInvitationSchema, recordDsarRectificationSchema, registerSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, revenueMetricsResponseSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, setDsarRestrictionSchema, signedMoneyStringSchema, strongPasswordSchema, unitKindSchema, unitSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateDsarRequestSchema, updateEnterpriseRequestSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateMaintenanceLogRequestSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgBuildingContractSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePlatformSubscriptionSchema, updatePollRequestSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema };
+export { ARCHIVE_TYPES, AUDIT_DENIAL_TARGET_TYPE, type AddOrgMemberSchema, type AiUsageResponse, type ApiError, type ApiErrorResponse, ApprovalStatusSchema, type ApproveFailureReportSchema, type ApproveNoticeSchema, type ArchiveType, type ArchivedItem, type AssignOrgBuildingSchema, type AssignOrgMemberBuildingSchema, type AssignOwnerInput, type AuditLogResponse, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUILDING_LIMITS, BUILDING_TYPES, type BuildingDetailResponse, type BuildingFundsLedgerResponse, type BuildingFundsLedgerRow, type BuildingOwnerAssignment, type BuildingResponse, type BuildingSettingsResponse, type BusinessPartnerResponse, CHAT_LIMITS, type CamtImportResponse, type ChatMessageResponse, type CommentResponse, CommonStatusSchema, type ConversationLastMessage, type ConversationParticipant, type ConversationResponse, ConversationType, type ConversationsListResponse, type CopyFaqsSchema, type CopyTransactionCategoriesSchema, type CreateBoardCardSchema, type CreateBoardColumnSchema, type CreateBoardSchema, type CreateBuildingSchema, type CreateBusinessPartnerInput, type CreateConversationSchema, type CreateDocumentSchema, type CreateDsarEventSchema, type CreateDsarRequestSchema, type CreateEmailThreadRequestPayload, type CreateEntityLinkRequest, type CreateFailureReportSchema, type CreateFaqSchema, type CreateIncomeSchema, type CreateNoticeSchema, type CreateOrgBroadcastSchema, type CreateOrganizationSchema, type CreateOwnerInput, type CreatePlatformSubscriptionSchema, type CreateTransactionCategorySchema, type CreateUnitInput, type CursorQuerySchema, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, type DeleteEntityLinkQuery, type DocumentFile, type DocumentLinkedRecord, type DocumentResponse, type DsarErasureSchema, type DsarEventResponse, type DsarRequestResponse, EMAIL_LIMITS, ENTITY_LINK_TYPES, type EmailAttachment, type EmailMessage, type EmailThread, type EmailThreadDetail, type EmailUnreadCountResponse, type EnterpriseRequestResponse, type EntityLinkCountsResponse, type EntityLinkMetadata, type EntityLinkReference, type EntityLinksResponse, type EventResponse, FAILURE_REPORT_LIMITS, FAQ_LIMITS, type FailureReportEventSchema, type FailureReportResponse, FailureStatusSchema, type FaqResponse, type GetAuditLogsQuerySchema, type GetDsarRequestsQuerySchema, type GetEnterpriseRequestsQuerySchema, type GetEntityLinkCountsQuery, type GetEntityLinksQuery, type GetOrgBuildingsQuerySchema, type GetOrgMembersQuerySchema, type GetPlatformSubscriptionsQuerySchema, type GetTransactionCategoriesQuerySchema, type InviteOrgMemberSchema, type InviteOwnerInput, type JoinBuildingWithOtpSchema, LINKABLE_ENTITY_TYPES, type ListArchivedResponse, type MessageResponse, type MessagesListResponse, type MoveBoardCardSchema, NOTICE_LIMITS, type NoticeEventSchema, type NoticeResponse, type NotificationPreferenceCategory, type NotificationPreferenceItem, type NotificationResponse, ORGANIZATION_LIMITS, type OrgBroadcastResponse, type OrgInvitationResponse, OrgInvitationStatus, type OwnerResponse, type PaginatedBuildingsResponse, type PaginatedDocumentsResponse, type PaginatedEmailThreadsResponse, type PaginatedEventsResponse, type PaginatedFailureReportsResponse, type PaginatedNoticesResponse, type PaginatedPollsResponse, type PaginatedUnitsResponse, type PermissionsResponseSchema, type PlatformSubscriptionResponse, type PollEligibleVoter, type PollEligibleVotersResponse, type PollResponse, type PollResults, type PollVotersResponse, PrioritySchema, type PublicOrgInvitation, REP_RECENT_ACTIVITY_TYPES, type RecordDsarRectificationSchema, type ReorderBoardColumnsSchema, type ReorderFaqsSchema, type RepBuildingActivity, type RepBuildingItem, type RepDashboardSummaryResponse, type RepRecentActivity, type RepUserBuilding, type ReplyEmailThreadRequestPayload, type RevenueMetricsResponse, type SearchUsersQuerySchema, type SendMessageSchema, type SetDsarRestrictionSchema, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, type Unit, type UnitKind, type UnreadCountResponse, type UpdateBoardCardSchema, type UpdateBoardColumnSchema, type UpdateBoardSchema, type UpdateBuildingSchema, type UpdateBuildingSettingsSchema, type UpdateBusinessPartnerInput, type UpdateConversationSchema, type UpdateDocumentSchema, type UpdateDsarRequestSchema, type UpdateEnterpriseRequestSchema, type UpdateExpenseSchema, type UpdateFailureReportSchema, type UpdateFaqSchema, type UpdateIncomeSchema, type UpdateNoticeSchema, type UpdateOrgBuildingContractSchema, type UpdateOrgMemberRoleSchema, type UpdateOrganizationSchema, type UpdateOwnerInput, type UpdatePlatformSubscriptionSchema, type UpdateTransactionCategorySchema, type UpdateUnitInput, type UpdateUserBuildingRoleSchema, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, auditLogResponseSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingOwnerAssignmentSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createDsarEventSchema, createDsarRequestSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createNoticeSchema, createOrgBroadcastSchema, createOrganizationSchema, createOwnerSchema, createPlatformSubscriptionSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, dsarErasureSchema, dsarEventResponseSchema, dsarRequestResponseSchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, emailUnreadCountResponseSchema, enterpriseRequestResponseSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventResponseSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, forgotPasswordSchema, getAuditLogsQuerySchema, getDsarRequestsQuerySchema, getEnterpriseRequestsQuerySchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getPlatformSubscriptionsQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, inviteOwnerSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, loginSchema, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgBroadcastResponseSchema, orgInvitationResponseSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, platformSubscriptionResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollVotersResponseSchema, priorityOptions, publicOrgInvitationSchema, recordDsarRectificationSchema, registerSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, revenueMetricsResponseSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, setDsarRestrictionSchema, signedMoneyStringSchema, strongPasswordSchema, unitKindSchema, unitSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateDsarRequestSchema, updateEnterpriseRequestSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgBuildingContractSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePlatformSubscriptionSchema, updatePollRequestSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema };

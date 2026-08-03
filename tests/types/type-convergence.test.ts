@@ -1,11 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type {
-  EventColor,
-  EventType,
-  MaintenanceFinancedBy,
-  RecurrenceType,
-  VoteRequest,
-} from '../../src/types';
+import type { EventColor, EventType, RecurrenceType, VoteRequest } from '../../src/types';
 
 /**
  * Type-level proof that the v0.59.0 types/ ↔ schemas/ convergence did not
@@ -30,7 +24,6 @@ type HandWrittenEventType =
   | 'other';
 type HandWrittenEventColor = 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'orange' | 'gray';
 type HandWrittenRecurrenceType = 'none' | 'weekly' | 'biweekly' | 'monthly' | 'yearly';
-type HandWrittenMaintenanceFinancedBy = 'building_funds' | 'insurance' | 'co_owner';
 interface HandWrittenVoteRequest {
   selectedOptionIndex: number;
 }
@@ -38,10 +31,6 @@ interface HandWrittenVoteRequest {
 const eventTypeUnchanged: MutuallyAssignable<EventType, HandWrittenEventType> = true;
 const eventColorUnchanged: MutuallyAssignable<EventColor, HandWrittenEventColor> = true;
 const recurrenceTypeUnchanged: MutuallyAssignable<RecurrenceType, HandWrittenRecurrenceType> = true;
-const maintenanceFinancedByUnchanged: MutuallyAssignable<
-  MaintenanceFinancedBy,
-  HandWrittenMaintenanceFinancedBy
-> = true;
 const voteRequestUnchanged: MutuallyAssignable<VoteRequest, HandWrittenVoteRequest> = true;
 
 describe('types/ ↔ schemas/ convergence (v0.59.0)', () => {
@@ -49,7 +38,6 @@ describe('types/ ↔ schemas/ convergence (v0.59.0)', () => {
     expect(eventTypeUnchanged).toBe(true);
     expect(eventColorUnchanged).toBe(true);
     expect(recurrenceTypeUnchanged).toBe(true);
-    expect(maintenanceFinancedByUnchanged).toBe(true);
     expect(voteRequestUnchanged).toBe(true);
   });
 });

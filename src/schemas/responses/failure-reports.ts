@@ -1,37 +1,8 @@
 import { z } from 'zod';
-import { maintenanceFinancedBySchema } from '../entities/maintenance-log.schema';
 import { paginatedResponseSchema } from '../pagination.schema';
 import { FailureStatusSchema, PrioritySchema } from '../status.schema';
 import { nestedEventSchema, nestedFileSchema, pollReferenceSchema } from './_nested';
 import type { Strict } from './_strict';
-
-const maintenanceLogReferenceSchema = z
-  .looseObject({
-    id: z.string().uuid(),
-    title: z.string().describe('Maintenance log title for quick UI display.'),
-    contractor: z.string().describe('Contractor or vendor who performed the work.'),
-    cost: z
-      .number()
-      .optional()
-      .nullable()
-      .describe('Total cost in the building’s currency; null when the cost was not recorded.'),
-    financedBy: maintenanceFinancedBySchema
-      .optional()
-      .nullable()
-      .describe(
-        'Source of funds that covered the expense (`building_funds`, `insurance`, `co_owner`).',
-      ),
-    warranty: z
-      .boolean()
-      .optional()
-      .nullable()
-      .describe(
-        'True when the work is covered by an active warranty. Null when the warranty status was not captured.',
-      ),
-  })
-  .describe(
-    'Lightweight maintenance-log reference embedded in failure report responses (link to the follow-up work record).',
-  );
 
 export const failureReportResponseSchema = z.looseObject({
   id: z.string().uuid(),
@@ -128,10 +99,6 @@ export const failureReportResponseSchema = z.looseObject({
     .array(nestedEventSchema)
     .default([])
     .describe('Events (scheduled work or meetings) linked to this report; empty when none.'),
-  maintenanceLogs: z
-    .array(maintenanceLogReferenceSchema)
-    .default([])
-    .describe('Maintenance logs produced to resolve this report; empty when none.'),
   polls: z
     .array(pollReferenceSchema)
     .default([])

@@ -76,7 +76,6 @@ const REP_DASHBOARD_SUMMARY_FIXTURE = {
   },
   activities: {
     notices: { total: 40, pending: 3, today: 1 },
-    maintenanceLogs: { total: 12, today: 0 },
     failureReports: { total: 9, open: 2, resolved: 7, today: 0 },
   },
   polls: { active: 2, pendingApproval: 1, expiringSoon: 1 },

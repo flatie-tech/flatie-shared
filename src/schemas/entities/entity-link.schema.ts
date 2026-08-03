@@ -19,7 +19,6 @@ export const ENTITY_LINK_TYPES = [
 
 export const LINKABLE_ENTITY_TYPES = [
   'failure_report',
-  'maintenance_log',
   'notice',
   'event',
   'poll',

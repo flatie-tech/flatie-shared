@@ -161,15 +161,6 @@ export const API_ROUTES = {
       `/buildings/${buildingId}/boards/${boardId}/cards/${cardId}/restore`,
   },
 
-  // ── Maintenance Logs ─────────────────────────────────────────────────
-  MAINTENANCE_LOGS: {
-    LIST: (buildingId: string) => `/buildings/${buildingId}/maintenance-logs`,
-    DETAIL: (buildingId: string, maintenanceLogId: string) =>
-      `/buildings/${buildingId}/maintenance-logs/${maintenanceLogId}`,
-    RESTORE: (buildingId: string, maintenanceLogId: string) =>
-      `/buildings/${buildingId}/maintenance-logs/${maintenanceLogId}/restore`,
-  },
-
   // ── Entity Links ─────────────────────────────────────────────────────
   LINKS: {
     LIST: (buildingId: string) => `/buildings/${buildingId}/links`,

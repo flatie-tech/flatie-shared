@@ -29,7 +29,6 @@ export const ENTITY_LINK_TYPE_META: Record<LinkableEntityType, EntityLinkTypeMet
   notice: { section: 'notices', icon: 'bell', tint: 'orange' },
   event: { section: 'calendar', icon: 'calendar', tint: 'success' },
   poll: { section: 'polls', icon: 'chart-pie', tint: 'info' },
-  maintenance_log: { section: 'maintenance-logs', icon: 'wrench', tint: 'purple' },
   failure_report: { section: 'failure-reports', icon: 'triangle-alert', tint: 'danger' },
   file: { section: 'documents', icon: 'file-text', tint: 'neutral' },
   expense_transaction: { section: 'funds', icon: 'receipt', tint: 'amber' },

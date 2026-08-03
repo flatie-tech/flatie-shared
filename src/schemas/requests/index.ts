@@ -19,6 +19,5 @@ export { createEmailThreadRequestSchema, EMAIL_LIMITS } from './create-email-thr
 export type { ReplyEmailThreadRequestPayload } from './reply-email-thread';
 export { replyEmailThreadRequestSchema } from './reply-email-thread';
 export { updateFailureReportRequestSchema } from './update-failure-report';
-export { updateMaintenanceLogRequestSchema } from './update-maintenance-log';
 export { updateNoticeRequestSchema } from './update-notice';
 export { updatePollRequestSchema } from './update-poll';

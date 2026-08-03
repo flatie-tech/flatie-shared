@@ -1,5 +1,5 @@
-import { L as LinkableEntityType, E as EntityLinkType } from '../entity-link.enum-BYEzMg8A.cjs';
-import { P as Permission, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-B2GsU_N5.cjs';
+import { L as LinkableEntityType, E as EntityLinkType } from '../entity-link.enum-D2At-V8D.cjs';
+import { P as Permission, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-CvnkuV41.cjs';
 
 declare const AI_CHAT_LIMITS: {
     /** Hard ceiling on the messages array per request. */
@@ -77,14 +77,14 @@ interface EntityLinkRule {
 /**
  * Entity types the wildcard `related_to` rule spans. Deliberately excludes
  * `expense_transaction` — expenses only link through their explicit rules
- * (`expense_for` to maintenance logs / failure reports, `based_on` to polls).
+ * (`expense_for` to failure reports, `based_on` to polls).
  */
 declare const RELATED_TO_LINKABLE_TYPES: readonly LinkableEntityType[];
 /**
  * Every (source, target, linkType) triple the generic links API accepts.
- * The first six mirror the links the entity create/update flows already
- * write inline; `related_to` is the free-form association available
- * between any two linkable entities.
+ * The explicit rules mirror the links the entity create/update flows
+ * already write inline; `related_to` is the free-form association
+ * available between any two linkable entities.
  *
  * Note: `schedule` is reserved for inline-created events that die with
  * their parent — the generic API must not create schedule links to
@@ -211,15 +211,6 @@ declare const failureReportKeys: {
     }];
     details: () => readonly ["failureReport", "detail"];
     detail: (id: string) => readonly ["failureReport", "detail", string];
-};
-declare const maintenanceLogKeys: {
-    all: readonly ["maintenanceLog"];
-    lists: () => readonly ["maintenanceLog", "list"];
-    list: (filters?: Record<string, unknown>) => readonly ["maintenanceLog", "list", {
-        readonly [x: string]: unknown;
-    }];
-    details: () => readonly ["maintenanceLog", "detail"];
-    detail: (id: string) => readonly ["maintenanceLog", "detail", string];
 };
 declare const documentKeys: {
     all: readonly ["document"];
@@ -588,15 +579,6 @@ declare const queryKeys: {
         details: () => readonly ["failureReport", "detail"];
         detail: (id: string) => readonly ["failureReport", "detail", string];
     };
-    readonly maintenanceLog: {
-        all: readonly ["maintenanceLog"];
-        lists: () => readonly ["maintenanceLog", "list"];
-        list: (filters?: Record<string, unknown>) => readonly ["maintenanceLog", "list", {
-            readonly [x: string]: unknown;
-        }];
-        details: () => readonly ["maintenanceLog", "detail"];
-        detail: (id: string) => readonly ["maintenanceLog", "detail", string];
-    };
     readonly document: {
         all: readonly ["document"];
         lists: () => readonly ["document", "list"];
@@ -809,4 +791,4 @@ declare const ADMIN_ORG_PERMISSIONS: Permission[];
 /** Admin platform-scope permissions — same as PLATFORM_ADMIN. */
 declare const ADMIN_PLATFORM_PERMISSIONS: Permission[];
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, AI_CHAT_LIMITS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, ENTITY_LINK_TYPE_META, type EntityLinkRule, type EntityLinkTypeMeta, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, OWNERSHIP_DERIVED_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, STANDARD_UNIT_PRICE_CENTS, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, auditLogKeys, blogKeys, boardKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, dsarKeys, enterpriseRequestKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, incomeKeys, isEntityLinkAllowed, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, platformSubscriptionKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, AI_CHAT_LIMITS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, ENTITY_LINK_TYPE_META, type EntityLinkRule, type EntityLinkTypeMeta, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, OWNERSHIP_DERIVED_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, STANDARD_UNIT_PRICE_CENTS, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, auditLogKeys, blogKeys, boardKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, dsarKeys, enterpriseRequestKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, incomeKeys, isEntityLinkAllowed, layoutKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, platformSubscriptionKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };

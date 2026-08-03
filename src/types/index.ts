@@ -28,12 +28,6 @@ export type {
   FinancialSummary,
   Transaction,
 } from './financial.types';
-// Maintenance log types
-export type {
-  CreateMaintenanceLogRequest,
-  MaintenanceFinancedBy,
-  MaintenanceLog,
-} from './maintenance-log.types';
 // Notice types
 export type {
   CreateNoticeRequest,

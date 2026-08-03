@@ -117,12 +117,7 @@ export const paginatedRepBuildingsResponseSchema = paginatedResponseSchema(repBu
 
 // ── Rep dashboard summary ───────────────────────────────────────────
 
-export const REP_RECENT_ACTIVITY_TYPES = [
-  'notice',
-  'maintenance',
-  'failure_report',
-  'user_joined',
-] as const;
+export const REP_RECENT_ACTIVITY_TYPES = ['notice', 'failure_report', 'user_joined'] as const;
 
 export const repRecentActivityTypeSchema = z
   .enum(REP_RECENT_ACTIVITY_TYPES)
@@ -195,12 +190,6 @@ export const repDashboardSummaryResponseSchema = z
             today: z.number().describe('Notices created today.'),
           })
           .describe('Notice counts.'),
-        maintenanceLogs: z
-          .looseObject({
-            total: z.number().describe('All maintenance logs across the caller’s buildings.'),
-            today: z.number().describe('Maintenance logs created today.'),
-          })
-          .describe('Maintenance-log counts.'),
         failureReports: z
           .looseObject({
             total: z.number().describe('All failure reports across the caller’s buildings.'),

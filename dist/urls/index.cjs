@@ -1,12 +1,12 @@
 'use strict';
 
-var chunkIWYHSSLW_cjs = require('../chunk-IWYHSSLW.cjs');
+var chunkYYPMGVHF_cjs = require('../chunk-YYPMGVHF.cjs');
 
 
 
 Object.defineProperty(exports, "API_ROUTES", {
   enumerable: true,
-  get: function () { return chunkIWYHSSLW_cjs.API_ROUTES; }
+  get: function () { return chunkYYPMGVHF_cjs.API_ROUTES; }
 });
 //# sourceMappingURL=index.cjs.map
 //# sourceMappingURL=index.cjs.map

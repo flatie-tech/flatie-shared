@@ -1,0 +1,2730 @@
+import { normalizeMoney } from './chunk-ZD7YLRHX.js';
+import { optionalIbanSchema } from './chunk-7YKQN43X.js';
+import { AI_CHAT_LIMITS } from './chunk-BYX5R6MR.js';
+import { BoardVisibility, Priority, OrgRole, OrgType, BuildingType, BuildingRole, PricuvaRefMode, FundsSource, QUOTA_RESOURCE_TYPES, DsarRequestType, DsarRequestStatus, DSAR_MAX_EXTENSION_DAYS, FailureUnitType, FailureLocationType, FailureStatus, EnterpriseRequestStatus, PollType, TransactionType, PlatformRole, BuildingStatus, CommonStatus, ApprovalStatus, NotificationType, PollCannotVoteReason } from './chunk-AZTQMBUB.js';
+import { BACKEND_ERROR_CODES } from './chunk-CKDX3O7O.js';
+import { z } from 'zod';
+
+var apiErrorSchema = z.object({
+  statusCode: z.number(),
+  message: z.union([z.string(), z.array(z.string())]),
+  timestamp: z.string(),
+  path: z.string()
+});
+var apiErrorResponseSchema = apiErrorSchema.extend({
+  code: z.enum(Object.values(BACKEND_ERROR_CODES)).optional().describe(
+    "Canonical error code from `@flatie/shared/errors` (`BACKEND_ERROR_CODES`). Present when the backend raised a `DomainException`; absent for generic HTTP errors (network failures, unhandled exceptions, validation-pipe rejections)."
+  )
+}).describe("Standard error envelope returned by the Flatie backend on 4xx and 5xx responses.");
+var emailSchema = z.string().email();
+var passwordSchema = z.string().min(8).max(128);
+var strongPasswordSchema = passwordSchema;
+var loginSchema = z.object({
+  email: emailSchema,
+  password: passwordSchema,
+  rememberMe: z.boolean().optional().default(false)
+});
+var registerSchema = z.object({
+  name: z.string().min(3).max(50),
+  email: emailSchema,
+  password: strongPasswordSchema,
+  passwordConfirmation: z.string(),
+  agreedToTermsAndConditions: z.boolean().refine((data) => data, {
+    message: "You must accept the terms and conditions"
+  })
+}).refine((data) => data.password === data.passwordConfirmation, {
+  message: "Passwords do not match",
+  path: ["passwordConfirmation"]
+});
+var forgotPasswordSchema = z.object({
+  email: emailSchema
+});
+var resetPasswordSchema = z.object({
+  email: emailSchema,
+  token: z.string().min(1),
+  password: strongPasswordSchema,
+  passwordConfirmation: z.string()
+}).refine((data) => data.password === data.passwordConfirmation, {
+  message: "Passwords do not match",
+  path: ["passwordConfirmation"]
+});
+var verifyOtpSchema = z.object({
+  email: emailSchema,
+  otp: z.string().min(4).max(4)
+});
+var updatePasswordSchema = z.object({
+  currentPassword: passwordSchema,
+  newPassword: strongPasswordSchema,
+  confirmPassword: z.string()
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"]
+});
+var uuidSchema = z.string().uuid();
+var dateTimeSchema = z.string().datetime();
+var optionalDateTimeSchema = z.string().datetime().nullable().optional();
+var baseEntitySchema = z.object({
+  id: uuidSchema,
+  createdAt: dateTimeSchema,
+  updatedAt: optionalDateTimeSchema
+});
+var buildingEntitySchema = baseEntitySchema.extend({
+  buildingId: uuidSchema
+});
+var userEntitySchema = baseEntitySchema.extend({
+  createdBy: uuidSchema
+});
+var buildingUserEntitySchema = baseEntitySchema.extend({
+  buildingId: uuidSchema,
+  createdBy: uuidSchema
+});
+var permissionFieldsSchema = z.object({
+  canEdit: z.boolean(),
+  canDelete: z.boolean()
+});
+var oibValueSchema = z.string().trim().regex(/^\d{11}$/, "OIB must be 11 digits").optional();
+var certiliaUserinfoSchema = z.object({
+  sub: z.string().min(1),
+  email: z.string().email().optional(),
+  email_verified: z.boolean().optional(),
+  name: z.string().optional(),
+  given_name: z.string().optional(),
+  family_name: z.string().optional(),
+  phone_number: z.string().optional(),
+  address: z.union([z.string(), z.object({ formatted: z.string().optional() }).passthrough()]).optional(),
+  // Custom Croatian eID claims — Certilia exposes OIB under a couple of
+  // different names depending on tenant configuration. Accept any.
+  oib: oibValueSchema,
+  pin: oibValueSchema,
+  oib_pin: oibValueSchema
+}).passthrough().transform((profile) => {
+  const oib = profile.oib ?? profile.pin ?? profile.oib_pin ?? void 0;
+  const fullName = profile.name ?? [profile.given_name, profile.family_name].filter(Boolean).join(" ").trim() ?? void 0;
+  return {
+    sub: profile.sub,
+    email: profile.email?.toLowerCase().trim(),
+    emailVerified: profile.email_verified ?? false,
+    name: fullName || void 0,
+    givenName: profile.given_name,
+    familyName: profile.family_name,
+    phoneNumber: profile.phone_number,
+    oib,
+    raw: profile
+  };
+});
+var dateRangeParamsSchema = z.object({
+  fromDate: z.string().optional(),
+  toDate: z.string().optional()
+});
+var dateRangeWithValidationSchema = z.object({
+  fromDate: z.string().datetime().optional(),
+  toDate: z.string().datetime().optional()
+}).refine(
+  (data) => {
+    if (data.fromDate && data.toDate) {
+      return new Date(data.fromDate) <= new Date(data.toDate);
+    }
+    return true;
+  },
+  {
+    message: "fromDate must be before or equal to toDate",
+    path: ["fromDate"]
+  }
+);
+function multipartArray(itemSchema) {
+  return z.preprocess((value) => {
+    if (Array.isArray(value)) return value;
+    if (typeof value !== "string") return value;
+    const trimmed = value.trim();
+    if (trimmed === "") return [];
+    if (trimmed.startsWith("[")) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        return Array.isArray(parsed) ? parsed : [value];
+      } catch {
+        return [value];
+      }
+    }
+    return [value];
+  }, z.array(itemSchema));
+}
+function multipartBoolean() {
+  return z.preprocess((value) => {
+    if (typeof value === "boolean") return value;
+    if (value === "true") return true;
+    if (value === "false" || value === "" || value == null) return false;
+    return value;
+  }, z.boolean());
+}
+
+// src/schemas/entities/board-card.schema.ts
+var BOARD_LIMITS = {
+  NAME_MIN: 1,
+  NAME_MAX: 60,
+  DESCRIPTION_MAX: 500
+};
+var BOARD_COLUMN_LIMITS = {
+  NAME_MIN: 1,
+  NAME_MAX: 40
+};
+var boardVisibilitySchema = z.enum([BoardVisibility.BUILDING, BoardVisibility.REPRESENTATIVES]);
+var createBoardSchema = z.object({
+  name: z.string().min(BOARD_LIMITS.NAME_MIN, "Name is required").max(BOARD_LIMITS.NAME_MAX, `Name must be at most ${BOARD_LIMITS.NAME_MAX} characters`).describe("Board name, 1\u201360 chars."),
+  description: z.string().max(BOARD_LIMITS.DESCRIPTION_MAX).optional().describe("Optional board description, up to 500 chars."),
+  visibility: boardVisibilitySchema.optional().describe(
+    "`building` (default) \u2014 visible to every member with board read access; `representatives` \u2014 a private board only representatives can see."
+  )
+});
+var updateBoardSchema = z.object({
+  name: z.string().min(BOARD_LIMITS.NAME_MIN).max(BOARD_LIMITS.NAME_MAX).optional().describe("Revised board name, 1\u201360 chars."),
+  description: z.string().max(BOARD_LIMITS.DESCRIPTION_MAX).nullable().optional().describe("Revised description; null clears it."),
+  visibility: boardVisibilitySchema.optional().describe("Revised visibility.")
+});
+var createBoardColumnSchema = z.object({
+  name: z.string().min(BOARD_COLUMN_LIMITS.NAME_MIN, "Name is required").max(
+    BOARD_COLUMN_LIMITS.NAME_MAX,
+    `Name must be at most ${BOARD_COLUMN_LIMITS.NAME_MAX} characters`
+  ).describe("Column name, 1\u201340 chars.")
+});
+var updateBoardColumnSchema = z.object({
+  name: z.string().min(BOARD_COLUMN_LIMITS.NAME_MIN).max(BOARD_COLUMN_LIMITS.NAME_MAX).describe("Revised column name, 1\u201340 chars.")
+});
+var reorderBoardColumnsSchema = z.object({
+  orderedIds: z.array(uuidSchema).min(1).describe("Every column id of the board in the desired display order.")
+});
+var BOARD_CARD_LIMITS = {
+  TITLE_MIN: 1,
+  TITLE_MAX: 100,
+  DESCRIPTION_MAX: 5e3,
+  CHECKLIST_MAX_ITEMS: 50,
+  CHECKLIST_ITEM_MIN: 1,
+  CHECKLIST_ITEM_MAX: 200
+};
+var prioritySchema = z.enum([Priority.NORMAL, Priority.URGENT]);
+var boardCardEventSchema = z.object({
+  startDate: z.coerce.date().describe("Event start \u2014 accepts an ISO-8601 string or Date."),
+  endDate: z.coerce.date().describe("Event end \u2014 accepts an ISO-8601 string or Date; must not precede `startDate`."),
+  title: z.string().max(100).optional().describe("Event title; defaults to the card title when omitted.")
+});
+var boardCardChecklistItemSchema = z.object({
+  id: uuidSchema.optional().describe("Stable item id; the server assigns one when omitted."),
+  text: z.string().min(BOARD_CARD_LIMITS.CHECKLIST_ITEM_MIN).max(BOARD_CARD_LIMITS.CHECKLIST_ITEM_MAX).describe("Checklist item label."),
+  done: z.boolean().default(false).describe("Whether the item is checked off.")
+});
+var createBoardCardSchema = z.object({
+  title: z.string().min(BOARD_CARD_LIMITS.TITLE_MIN, "Title is required").max(
+    BOARD_CARD_LIMITS.TITLE_MAX,
+    `Title must be at most ${BOARD_CARD_LIMITS.TITLE_MAX} characters`
+  ).describe("Short summary of the card, 1\u2013100 chars."),
+  description: z.string().max(BOARD_CARD_LIMITS.DESCRIPTION_MAX).optional().describe("Optional details as markdown, up to 5000 chars."),
+  columnId: uuidSchema.optional().describe("Target column; defaults to the board\u2019s first column when omitted."),
+  priority: prioritySchema.optional().describe("`normal` for standard cards, `urgent` to flag immediate attention."),
+  assignedTo: uuidSchema.nullable().optional().describe("UUID of the representative responsible for the card."),
+  checklist: multipartArray(boardCardChecklistItemSchema).optional().describe("Optional subtasks (e.g. documents to collect from co-owners)."),
+  // multipartBoolean, NOT z.boolean(): card create/update is multipart/form-data,
+  // so this arrives as the string "true"/"false" — bare z.boolean() rejected every
+  // UI create/edit (same bug notices had and fixed).
+  allowComments: multipartBoolean().optional().describe("Whether members may comment on this card. Defaults to true."),
+  fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-uploaded files to attach to this card."),
+  events: multipartArray(boardCardEventSchema).optional().describe("Calendar events to create alongside the card (deadlines, site visits).")
+});
+var updateBoardCardSchema = z.object({
+  title: z.string().min(BOARD_CARD_LIMITS.TITLE_MIN).max(BOARD_CARD_LIMITS.TITLE_MAX).optional().describe("Revised card title, 1\u2013100 chars."),
+  description: z.string().max(BOARD_CARD_LIMITS.DESCRIPTION_MAX).nullable().optional().describe("Revised markdown details; null clears them."),
+  columnId: uuidSchema.optional().describe("Revised column (card is appended to it)."),
+  priority: prioritySchema.optional().describe("Revised priority: `normal` or `urgent`."),
+  assignedTo: uuidSchema.nullable().optional().describe("Revised assignee; null unassigns."),
+  checklist: multipartArray(boardCardChecklistItemSchema).optional().describe("Full replacement checklist \u2014 replaces the existing items."),
+  // multipart string-boolean — see createBoardCardSchema note.
+  allowComments: multipartBoolean().optional().describe("Whether members may comment on this card."),
+  fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of newly-uploaded files to add to the card."),
+  removeChildFileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-attached files to detach from the card."),
+  events: multipartArray(boardCardEventSchema).optional().describe("Full list of events for the card \u2014 replaces the existing event set.")
+});
+var moveBoardCardSchema = z.object({
+  columnId: uuidSchema.describe("Target column."),
+  position: z.number().finite().nonnegative().describe("Fractional index within the target column (midpoint between neighbours).")
+});
+var CHAT_LIMITS = {
+  MESSAGE_MIN: 1,
+  MESSAGE_MAX: 5e3,
+  GROUP_NAME_MAX: 100,
+  PARTICIPANTS_MIN: 1,
+  PARTICIPANTS_MAX: 50
+};
+var ConversationType = {
+  DIRECT: "direct",
+  GROUP: "group"
+};
+var sendMessageSchema = z.object({
+  content: z.string().min(CHAT_LIMITS.MESSAGE_MIN, "Message is required").max(CHAT_LIMITS.MESSAGE_MAX, `Message must be at most ${CHAT_LIMITS.MESSAGE_MAX} characters`).describe("Plain-text message body, 1\u20135000 characters. Trimmed and stored verbatim.")
+});
+var createConversationSchema = z.object({
+  type: z.enum([ConversationType.DIRECT, ConversationType.GROUP]).describe("`direct` for a one-to-one thread, `group` for a named multi-user conversation."),
+  participantIds: z.array(uuidSchema).min(CHAT_LIMITS.PARTICIPANTS_MIN, "At least one participant is required").max(CHAT_LIMITS.PARTICIPANTS_MAX, `Maximum ${CHAT_LIMITS.PARTICIPANTS_MAX} participants`).describe(
+    "UUIDs of the other participants. The caller is added automatically; direct conversations must have exactly one other participant."
+  ),
+  name: z.string().max(CHAT_LIMITS.GROUP_NAME_MAX).optional().describe("Group display name, max 100 chars. Ignored for direct conversations.")
+});
+var updateConversationSchema = z.object({
+  name: z.string().max(CHAT_LIMITS.GROUP_NAME_MAX).optional().describe("New group name, max 100 chars. Omit to leave the name unchanged."),
+  addParticipantIds: z.array(uuidSchema).max(CHAT_LIMITS.PARTICIPANTS_MAX).optional().describe("UUIDs of users to add to the conversation. Omit or pass [] to add no one."),
+  removeParticipantIds: z.array(uuidSchema).max(CHAT_LIMITS.PARTICIPANTS_MAX).optional().describe("UUIDs of users to remove from the conversation. Omit or pass [] to remove no one.")
+});
+var cursorQuerySchema = z.object({
+  cursor: z.string().optional().describe(
+    "Opaque pagination cursor returned by a previous response. Omit to fetch the first page."
+  )
+});
+var FAQ_LIMITS = {
+  QUESTION_MIN: 1,
+  QUESTION_MAX: 500,
+  ANSWER_MIN: 1,
+  ANSWER_MAX: 2e3
+};
+var createFaqSchema = z.object({
+  question: z.string().min(FAQ_LIMITS.QUESTION_MIN, "Question is required").max(FAQ_LIMITS.QUESTION_MAX, `Question must be at most ${FAQ_LIMITS.QUESTION_MAX} characters`).describe("FAQ question displayed to residents, 1\u2013500 chars."),
+  answer: z.string().min(FAQ_LIMITS.ANSWER_MIN, "Answer is required").max(FAQ_LIMITS.ANSWER_MAX, `Answer must be at most ${FAQ_LIMITS.ANSWER_MAX} characters`).describe("FAQ answer body, up to 2000 chars.")
+});
+var updateFaqSchema = z.object({
+  question: z.string().min(FAQ_LIMITS.QUESTION_MIN).max(FAQ_LIMITS.QUESTION_MAX).optional().describe("Revised question, 1\u2013500 chars."),
+  answer: z.string().min(FAQ_LIMITS.ANSWER_MIN).max(FAQ_LIMITS.ANSWER_MAX).optional().describe("Revised answer, up to 2000 chars.")
+});
+var reorderFaqsSchema = z.object({
+  orderedIds: z.array(uuidSchema).min(1, "At least one FAQ ID is required").describe(
+    "Full list of FAQ UUIDs in their new display order. Must include every FAQ in the target building."
+  )
+});
+var copyFaqsSchema = z.object({
+  sourceBuildingId: uuidSchema.describe(
+    "UUID of the building whose FAQs should be copied into the target building."
+  )
+});
+var NOTICE_LIMITS = {
+  TITLE_MIN: 1,
+  TITLE_MAX: 100,
+  CONTENT_MIN: 1,
+  CONTENT_MAX: 2e3,
+  EVENT_TITLE_MAX: 100
+};
+var noticeEventSchema = z.object({
+  id: uuidSchema.optional().describe(
+    "UUID of an existing event to update in place. Omit to create a new event. Events absent from the update request are deleted."
+  ),
+  startDate: z.coerce.date().describe("Event start \u2014 accepts an ISO-8601 string or Date."),
+  endDate: z.coerce.date().describe("Event end \u2014 accepts an ISO-8601 string or Date; must not precede `startDate`."),
+  title: z.string().max(NOTICE_LIMITS.EVENT_TITLE_MAX, "Event title must be at most 100 characters").optional().describe("Event title, max 100 chars; defaults to the notice title when omitted."),
+  description: z.string().optional().describe("Event description; defaults to the notice content when omitted.")
+});
+var noticeEventWithDateOrderSchema = noticeEventSchema.refine(
+  (event) => event.endDate >= event.startDate,
+  { message: "Event end must not precede its start", path: ["endDate"] }
+);
+var createNoticeSchema = z.object({
+  title: z.string().min(NOTICE_LIMITS.TITLE_MIN, "Title is required").max(NOTICE_LIMITS.TITLE_MAX, `Title must be at most ${NOTICE_LIMITS.TITLE_MAX} characters`).describe("Notice headline shown in listings, 1\u2013100 chars."),
+  content: z.string().min(NOTICE_LIMITS.CONTENT_MIN, "Content is required").max(
+    NOTICE_LIMITS.CONTENT_MAX,
+    `Content must be at most ${NOTICE_LIMITS.CONTENT_MAX} characters`
+  ).describe("Rich-text or plain-text body of the notice, up to 2000 chars."),
+  isAnonymous: multipartBoolean().optional().describe("When true, hides the author\u2019s identity from other residents. Defaults to false."),
+  pinned: multipartBoolean().optional().describe("When true, pins the notice to the top of the building feed."),
+  allowComments: multipartBoolean().optional().describe(
+    "When false, disables the comment thread on this notice. Defaults to true; also subject to the building-level comments setting."
+  ),
+  events: multipartArray(noticeEventWithDateOrderSchema).optional().default([]).describe("Calendar events to create alongside the notice (e.g. meeting on a given date)."),
+  fileIds: multipartArray(uuidSchema).optional().default([]).describe("UUIDs of previously-uploaded files to attach to the notice.")
+}).refine(
+  (data) => {
+    if (data.events && data.events.length > 0) {
+      return data.events.every((event) => event.startDate && event.endDate);
+    }
+    return true;
+  },
+  {
+    message: "Each event must have both start and end dates",
+    path: ["events"]
+  }
+);
+var updateNoticeSchema = z.object({
+  title: z.string().min(NOTICE_LIMITS.TITLE_MIN).max(NOTICE_LIMITS.TITLE_MAX).optional().describe("Revised notice headline, 1\u2013100 chars."),
+  content: z.string().min(NOTICE_LIMITS.CONTENT_MIN).max(NOTICE_LIMITS.CONTENT_MAX).optional().describe("Revised notice body, up to 2000 chars."),
+  pinned: multipartBoolean().optional().describe("Toggles whether the notice is pinned to the top of the feed."),
+  allowComments: multipartBoolean().optional().describe("Toggles the comment thread on this notice."),
+  events: multipartArray(noticeEventWithDateOrderSchema).optional().describe(
+    "Replacement event set: events with an `id` are updated, new events are inserted, and existing events omitted from the list are deleted."
+  ),
+  fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of newly-uploaded files to attach."),
+  removeChildFileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-attached files to detach from the notice.")
+});
+var approveNoticeSchema = z.object({
+  approved: z.boolean().describe("True to approve the notice for public visibility, false to reject.")
+});
+
+// src/schemas/entities/organization.schema.ts
+var ORGANIZATION_LIMITS = {
+  NAME_MIN: 1,
+  NAME_MAX: 200,
+  OIB_LENGTH: 11
+};
+var orgRoleSchema = z.enum([OrgRole.ORG_ADMIN, OrgRole.SUPERVISOR, OrgRole.REFERENT, OrgRole.OPERATIVE]).describe(
+  "Organization role, from highest to lowest authority: `ORG_ADMIN` (manages the org), `SUPERVISOR` (oversees operations), `REFERENT` (day-to-day member interactions), `OPERATIVE` (field work)."
+);
+var createOrganizationSchema = z.object({
+  name: z.string().min(ORGANIZATION_LIMITS.NAME_MIN, "Name is required").max(
+    ORGANIZATION_LIMITS.NAME_MAX,
+    `Name must be at most ${ORGANIZATION_LIMITS.NAME_MAX} characters`
+  ).describe("Legal or display name of the organization, 1\u2013200 chars."),
+  type: z.enum([OrgType.MANAGEMENT_FIRM, OrgType.PLATFORM]).describe(
+    "`MANAGEMENT_FIRM` for external building-management firms, `PLATFORM` for the Flatie platform organization itself."
+  ),
+  oib: z.string().max(ORGANIZATION_LIMITS.OIB_LENGTH, `OIB must be ${ORGANIZATION_LIMITS.OIB_LENGTH} characters`).optional().describe(
+    "Croatian OIB (tax identification number), 11 digits. Required for firms but optional at creation."
+  ),
+  contactEmail: z.string().email("Invalid email").optional().describe("Public contact email for the organization."),
+  contactPhone: z.string().optional().describe("Public contact phone number.")
+});
+var updateOrganizationSchema = z.object({
+  name: z.string().min(ORGANIZATION_LIMITS.NAME_MIN).max(ORGANIZATION_LIMITS.NAME_MAX).optional().describe("Revised organization name, 1\u2013200 chars."),
+  contactEmail: z.string().email("Invalid email").optional().describe("Revised contact email."),
+  contactPhone: z.string().optional().describe("Revised contact phone number."),
+  oib: z.string().max(ORGANIZATION_LIMITS.OIB_LENGTH).optional().describe("Revised Croatian OIB (tax identification number), 11 digits.")
+});
+var addOrgMemberSchema = z.object({
+  userId: uuidSchema.describe("UUID of the existing user to add to the organization."),
+  orgRole: orgRoleSchema.describe("Organization role to assign to the new member.")
+});
+var updateOrgMemberRoleSchema = z.object({
+  orgRole: orgRoleSchema.describe("New organization role for the member.")
+});
+var inviteOrgMemberSchema = z.object({
+  email: z.string().email("Invalid email").describe("Email address of the invitee; a signup/join link is sent here."),
+  orgRole: orgRoleSchema.describe("Organization role the invitee will receive when they accept."),
+  message: z.string().optional().describe("Optional custom message included in the invitation email.")
+});
+var assignOrgBuildingSchema = z.object({
+  buildingId: uuidSchema.describe("UUID of the building to assign to this organization."),
+  contractStart: z.string().optional().describe("Contract start date (ISO-8601 date, `YYYY-MM-DD`). Omit for open-ended contracts."),
+  contractEnd: z.string().optional().describe("Contract end date (ISO-8601 date, `YYYY-MM-DD`). Omit for open-ended contracts.")
+});
+var assignOrgMemberBuildingSchema = z.object({
+  buildingId: uuidSchema.describe("UUID of the building the member should be assigned to work on.")
+});
+var searchUsersQuerySchema = z.object({
+  search: z.string().optional().describe("Substring to match against user name or email. Omit to return unfiltered results.")
+});
+var getOrgBuildingsQuerySchema = z.object({
+  offset: z.coerce.number().min(0).optional().default(0).describe("Zero-based offset into the result set. Defaults to 0."),
+  limit: z.coerce.number().min(1).optional().default(10).describe("Maximum number of items to return per page. Defaults to 10."),
+  search: z.string().optional().describe("Substring matched against building name or address."),
+  sortBy: z.enum(["name", "address", "createdAt", "contractEnd"]).optional().describe("Column to sort results by."),
+  sortOrder: z.enum(["asc", "desc"]).optional().describe("Sort direction: `asc` for ascending, `desc` for descending."),
+  expiringWithinDays: z.coerce.number().int().min(1).max(365).optional().describe(
+    "Only buildings whose management contract ends within this many days from now (and has not already ended). Omit to return all buildings."
+  )
+});
+var getOrgMembersQuerySchema = z.object({
+  offset: z.coerce.number().min(0).optional().default(0).describe("Zero-based offset into the result set. Defaults to 0."),
+  limit: z.coerce.number().min(1).optional().default(10).describe("Maximum number of items to return per page. Defaults to 10."),
+  search: z.string().optional().describe("Substring matched against member name or email."),
+  sortBy: z.enum(["userName", "orgRole", "createdAt"]).optional().describe("Column to sort results by."),
+  sortOrder: z.enum(["asc", "desc"]).optional().describe("Sort direction: `asc` for ascending, `desc` for descending.")
+});
+var updateOrgBuildingContractSchema = z.object({
+  contractStart: z.string().nullable().optional().describe("New contract start date (ISO-8601 `YYYY-MM-DD`); null clears it."),
+  contractEnd: z.string().nullable().optional().describe("New contract end date (ISO-8601 `YYYY-MM-DD`); null clears it.")
+});
+var OrgInvitationStatus = {
+  PENDING: "PENDING",
+  ACCEPTED: "ACCEPTED"
+};
+var orgInvitationResponseSchema = z.looseObject({
+  id: uuidSchema.describe("Invitation id."),
+  email: z.string().describe("Invitee email address."),
+  orgRole: orgRoleSchema.describe("Role the invitee receives on accept."),
+  status: z.enum([OrgInvitationStatus.PENDING, OrgInvitationStatus.ACCEPTED]).describe("Lifecycle state; expired invitations stay PENDING but are past expiresAt."),
+  createdAt: z.string().describe("ISO-8601 timestamp the invitation was created."),
+  expiresAt: z.string().nullable().describe("ISO-8601 expiry; a PENDING invitation past this moment cannot be accepted."),
+  acceptedAt: z.string().nullable().optional().describe("ISO-8601 acceptance timestamp.")
+});
+var publicOrgInvitationSchema = z.looseObject({
+  orgName: z.string().describe("Name of the inviting organization."),
+  email: z.string().describe("Email address the invitation was issued to."),
+  orgRole: orgRoleSchema.describe("Role granted on accept."),
+  status: z.enum([OrgInvitationStatus.PENDING, OrgInvitationStatus.ACCEPTED]).describe("Lifecycle state of the invitation."),
+  expiresAt: z.string().nullable().describe("ISO-8601 expiry of the invitation."),
+  inviterName: z.string().nullable().describe("Display name of the inviting member, if known.")
+});
+var createOrgBroadcastSchema = z.object({
+  title: z.string().min(NOTICE_LIMITS.TITLE_MIN, "Title is required").max(NOTICE_LIMITS.TITLE_MAX).describe("Notice title, shared by every created notice (same limits as a single notice)."),
+  content: z.string().min(1, "Content is required").max(NOTICE_LIMITS.CONTENT_MAX).describe("Notice body, shared by every created notice."),
+  buildingIds: z.array(uuidSchema).min(1).max(200).optional().describe(
+    "Target buildings; every id must belong to the organization. Omit to broadcast to ALL managed buildings."
+  ),
+  allowComments: z.boolean().optional().describe("Whether residents may comment on the created notices. Defaults to true.")
+});
+var orgBroadcastResponseSchema = z.looseObject({
+  id: uuidSchema.describe("Broadcast id grouping the created notices."),
+  title: z.string().describe("Broadcast (and notice) title."),
+  noticeCount: z.number().describe("Number of per-building notices created."),
+  createdAt: z.string().describe("ISO-8601 creation timestamp.")
+});
+var paginationParamsSchema = z.object({
+  offset: z.coerce.number().min(0).optional().default(0),
+  limit: z.coerce.number().min(1).max(100).optional().default(10)
+});
+var paginatedResponseSchema = (itemSchema) => z.object({
+  data: z.array(itemSchema).describe("Items for the current page."),
+  count: z.number().describe("Total number of matching items across all pages."),
+  page: z.number().describe("1-based current page index."),
+  limit: z.number().describe("Page size (items per page, max 100)."),
+  totalPages: z.number().describe("Total number of pages available for this query."),
+  hasNextPage: z.boolean().describe("True when another page follows the current one."),
+  hasPreviousPage: z.boolean().describe("True when a previous page exists.")
+});
+
+// src/schemas/entities/unit.schema.ts
+var UNIT_KINDS = ["apartment", "garage", "storage_unit"];
+var unitKindSchema = z.enum(UNIT_KINDS).describe("What the unit physically is: `apartment`, `garage`, or `storage_unit`.");
+var unitSchema = z.looseObject({
+  id: z.string(),
+  buildingId: z.string(),
+  kind: unitKindSchema,
+  label: z.string().describe(
+    'Unit identifier as used by residents and the land registry (e.g. "ST 3448", "GR 364", "12A").'
+  ),
+  floor: z.string().nullable().optional().describe('Floor label (e.g. "1", "PR", "POD", "POT"); null when not recorded.'),
+  area: z.number().nullable().optional().describe("Floor area in square metres; null when not recorded."),
+  type: z.enum(["residential", "commercial"]).optional().describe("Usage classification \u2014 drives the pri\u010Duva rate coefficient."),
+  paymentRefCode: z.string().nullable().optional().describe(
+    "Code used as the middle segment of the HR01 poziv-na-broj in unit ref mode. Auto-assigned on create for apartments; null elsewhere."
+  ),
+  surnameOnDoor: z.string().nullable().optional().describe("Surname shown on the door plate; apartments only, null otherwise."),
+  surnameOnIntercom: z.string().nullable().optional().describe("Surname shown on the intercom; apartments only, null otherwise."),
+  canEdit: z.boolean().optional().describe("True when the calling user may edit this unit (management gate)."),
+  canDelete: z.boolean().optional().describe("True when the calling user may archive this unit (management gate)."),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().nullable().optional()
+});
+var paginatedUnitsResponseSchema = paginatedResponseSchema(unitSchema);
+var createUnitSchema = z.object({
+  kind: unitKindSchema,
+  label: z.string().trim().min(1).max(50),
+  floor: z.string().trim().max(50).optional().nullable(),
+  area: z.coerce.number().positive().max(1e5).optional().nullable(),
+  type: z.enum(["residential", "commercial"]).optional(),
+  paymentRefCode: z.string().trim().max(22).optional().nullable(),
+  surnameOnDoor: z.string().trim().max(100).optional().nullable(),
+  surnameOnIntercom: z.string().trim().max(100).optional().nullable()
+});
+var updateUnitSchema = createUnitSchema.omit({ kind: true }).partial();
+var AUDIT_DENIAL_TARGET_TYPE = "permission_denial";
+var getAuditLogsQuerySchema = z.object({
+  userId: z.string().uuid().optional().describe("Filter by actor."),
+  search: z.string().trim().max(255).optional().describe("Matches actor name or email."),
+  action: z.string().trim().max(120).optional(),
+  targetType: z.string().trim().max(64).optional(),
+  targetId: z.string().uuid().optional(),
+  fromDate: z.string().optional(),
+  toDate: z.string().optional(),
+  includeDenials: z.coerce.boolean().optional().describe("Defaults to false."),
+  denialsOnly: z.coerce.boolean().optional().describe("Security view: only 403 denials."),
+  limit: z.coerce.number().int().min(1).max(100).optional(),
+  offset: z.coerce.number().int().min(0).max(1e4).optional().describe("Capped \u2014 deep paging into an append-only log is a scan, not a workflow."),
+  sortOrder: z.enum(["asc", "desc"]).optional()
+});
+var auditLogResponseSchema = z.looseObject({
+  id: z.string().uuid(),
+  createdAt: z.string(),
+  userId: z.string().uuid().nullable(),
+  actorName: z.string().nullable(),
+  actorEmail: z.string().nullable(),
+  action: z.string(),
+  targetType: z.string(),
+  targetId: z.string().uuid().nullable(),
+  /** Credential-ish keys are redacted server-side before this is returned. */
+  metadata: z.unknown().nullable(),
+  ipAddress: z.string().nullable(),
+  userAgent: z.string().nullable()
+}).meta({ id: "AuditLogResponse" });
+var BUILDING_TYPES = [
+  BuildingType.RESIDENTIAL,
+  BuildingType.COMMERCIAL,
+  BuildingType.RESIDENTIAL_COMMERCIAL
+];
+var buildingTypeSchema = z.enum(BUILDING_TYPES).describe(
+  "Usage of the building: `residential` (homes only), `commercial` (business only), or `residential_commercial` (mixed use)."
+);
+var BUILDING_LIMITS = {
+  NAME_MIN: 1,
+  NAME_MAX: 100,
+  ADDRESS_MIN: 1,
+  ADDRESS_MAX: 200,
+  HOUSE_NUMBER_MIN: 1,
+  HOUSE_NUMBER_MAX: 20,
+  OTP_LENGTH: 6,
+  UNITS_MIN: 1,
+  UNITS_MAX: 1e4
+};
+var createBuildingSchema = z.object({
+  name: z.string().min(BUILDING_LIMITS.NAME_MIN, "Name is required").max(BUILDING_LIMITS.NAME_MAX, `Name must be at most ${BUILDING_LIMITS.NAME_MAX} characters`).describe("Display name of the building shown throughout the UI."),
+  addressId: uuidSchema.optional().describe(
+    "UUID of an existing address record. When provided, streetId/houseNumber are ignored."
+  ),
+  streetId: uuidSchema.optional().describe(
+    "UUID of the street record. Required when addressId is not provided (address will be resolved or created)."
+  ),
+  houseNumber: z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN, "House number is required").max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).optional().describe('Street/house number (e.g. "12A", "16/1"). Required when addressId is not provided.'),
+  type: buildingTypeSchema,
+  totalUnits: z.coerce.number().int().min(BUILDING_LIMITS.UNITS_MIN, "Building must have at least 1 unit").max(
+    BUILDING_LIMITS.UNITS_MAX,
+    `Building cannot have more than ${BUILDING_LIMITS.UNITS_MAX} units`
+  ).describe("Total number of individual units (apartments, garages, storage)."),
+  isStratified: multipartBoolean().optional().describe(
+    "True when the building is stratified (each unit has its own title deed). Defaults to false when omitted."
+  ),
+  role: z.enum([
+    BuildingRole.OWNER_REPRESENTATIVE,
+    BuildingRole.DEPUTY_REPRESENTATIVE,
+    BuildingRole.CO_OWNER
+  ]).optional().describe(
+    "Role the creating user should claim for themselves in the new building; omitted creates the building without assigning the caller a role."
+  ),
+  iban: optionalIbanSchema,
+  oib: z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").optional().nullable().describe(
+    "Croatian tax ID (OIB) of the building (Zajednica suvlasnika). Used as the payee OIB on generated uplatnicas."
+  ),
+  monthlyFeePerSqm: z.coerce.number().nonnegative().optional().describe(
+    "Monthly fund contribution rate in EUR per m\xB2 for RESIDENTIAL units. Multiplied by each co-owner\u2019s owned residential area (apartments/garages/storage of type `residential`) to derive their expected pri\u010Duva."
+  ),
+  monthlyFeeCommercialPerSqm: z.coerce.number().nonnegative().optional().describe(
+    "Monthly fund contribution rate in EUR per m\xB2 for COMMERCIAL units. Applied to owned area of any unit with `type = commercial`. Leave unset when the building has no commercial units."
+  ),
+  apartmentResidentialCoef: z.coerce.number().nonnegative().optional(),
+  apartmentCommercialCoef: z.coerce.number().nonnegative().optional(),
+  garageResidentialCoef: z.coerce.number().nonnegative().optional(),
+  garageCommercialCoef: z.coerce.number().nonnegative().optional(),
+  storageResidentialCoef: z.coerce.number().nonnegative().optional(),
+  storageCommercialCoef: z.coerce.number().nonnegative().optional(),
+  billingBuildingCode: z.string().trim().min(1).max(22).optional().describe(
+    "Short code identifying this building in HR01 poziv-na-broj references. Forms the first segment of `{billingBuildingCode}-{paymentRefCode}-{YYYYMM}`. Independent of the street house number."
+  )
+});
+var updateBuildingSchema = z.object({
+  name: z.string().min(BUILDING_LIMITS.NAME_MIN).max(BUILDING_LIMITS.NAME_MAX).optional().describe("New display name of the building."),
+  addressId: uuidSchema.optional().describe("UUID of the new address record to assign to this building."),
+  streetId: uuidSchema.optional().describe("UUID of the street record. Used with houseNumber to resolve or create an address."),
+  houseNumber: z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN).max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).optional().describe(
+    'Street/house number (e.g. "12A", "16/1"). Used with streetId to resolve an address.'
+  ),
+  type: buildingTypeSchema.optional(),
+  totalUnits: z.coerce.number().int().min(BUILDING_LIMITS.UNITS_MIN).max(BUILDING_LIMITS.UNITS_MAX).optional().describe("Revised total unit count."),
+  isStratified: multipartBoolean().optional().describe("Toggles whether the building is stratified (per-unit title deeds)."),
+  removeHouseRulesFile: multipartBoolean().optional().describe(
+    "When true, clears the existing house-rules attachment. Submit independently of `houseRulesFile` uploads."
+  ),
+  iban: optionalIbanSchema,
+  oib: z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").optional().nullable().describe("Croatian tax ID (OIB) of the building. Pass null to clear."),
+  monthlyFeePerSqm: z.coerce.number().nonnegative().optional().describe(
+    "New monthly residential fund contribution rate in EUR per m\xB2. Pass a value to update, omit to leave unchanged."
+  ),
+  monthlyFeeCommercialPerSqm: z.coerce.number().nonnegative().optional().nullable().describe(
+    "New monthly commercial fund contribution rate in EUR per m\xB2. Pass null to clear; omit to leave unchanged."
+  ),
+  apartmentResidentialCoef: z.coerce.number().nonnegative().optional(),
+  apartmentCommercialCoef: z.coerce.number().nonnegative().optional(),
+  garageResidentialCoef: z.coerce.number().nonnegative().optional(),
+  garageCommercialCoef: z.coerce.number().nonnegative().optional(),
+  storageResidentialCoef: z.coerce.number().nonnegative().optional(),
+  storageCommercialCoef: z.coerce.number().nonnegative().optional(),
+  billingBuildingCode: z.string().trim().min(1).max(22).optional().nullable().describe(
+    "New poziv-na-broj building identifier. Pass null to clear; omit to leave unchanged."
+  ),
+  fundsSource: z.enum([FundsSource.MANUAL, FundsSource.CAMT]).optional().describe(
+    "Switches how the building's fund transactions are populated. `manual` (default) keeps the representative-facing add/edit flow; `camt` locks manual writes and only a platform admin can ingest CAMT.053 XML statements."
+  ),
+  pricuvaRefMode: z.enum([PricuvaRefMode.APARTMENT, PricuvaRefMode.OWNER]).optional().describe(
+    "Selects whether the HR01 poziv-na-broj middle segment identifies the apartment (`apartment`, default) or the individual co-owner (`owner`). Changes how CAMT imports match payments to units/users."
+  )
+});
+var joinBuildingWithOtpSchema = z.object({
+  code: z.string().length(
+    BUILDING_LIMITS.OTP_LENGTH,
+    `OTP must be a ${BUILDING_LIMITS.OTP_LENGTH}-character code`
+  ).regex(/^[A-Z0-9]{6}$/, "OTP must be a 6-character alphanumeric code").describe("Six-character alphanumeric invite code shared by a building representative.")
+});
+var updateUserBuildingRoleSchema = z.object({
+  userId: uuidSchema.describe("UUID of the user whose building role is being updated."),
+  roleType: z.enum([
+    BuildingRole.OWNER_REPRESENTATIVE,
+    BuildingRole.DEPUTY_REPRESENTATIVE,
+    BuildingRole.CO_OWNER,
+    // RESIDENT was unassignable through any endpoint until 2026-07-23
+    // (the role existed but the wire schema accepted only the other
+    // three). The backend hierarchy check (canAssignRole) covers it.
+    BuildingRole.RESIDENT
+  ]).optional().describe(
+    "New building role for the user; omit to leave the role unchanged while updating other fields."
+  ),
+  buildingSurfacePercentage: z.coerce.number().min(0).max(100).optional().describe(
+    "User\u2019s weighted share of the building surface, 0\u2013100. Used to compute vote weight for consensus polls."
+  ),
+  chatVisibleToCoOwners: z.boolean().optional().describe("Controls whether this user appears in chat directories visible to co-owners.")
+});
+var buildingQuotaEntrySchema = z.object({
+  resourceType: z.enum(
+    QUOTA_RESOURCE_TYPES
+  ),
+  dailyLimit: z.number().int().min(0).max(1e4).nullable()
+});
+var buildingQuotaConfigSchema = z.object({
+  quotas: z.array(buildingQuotaEntrySchema).max(QUOTA_RESOURCE_TYPES.length)
+});
+var buildingQuotaListSchema = z.object({
+  buildingId: z.string().uuid(),
+  quotas: z.array(buildingQuotaEntrySchema)
+});
+var updateBuildingSettingsSchema = z.object({
+  ownershipPercentageSource: z.enum(["units", "users"]).nullable().optional().describe("Ownership-percentage source for consensus polls; null resets to auto-detect."),
+  requireApprovalForNotices: z.boolean().optional(),
+  requireApprovalForFailureReports: z.boolean().optional(),
+  requireApprovalForPolls: z.boolean().optional(),
+  requireApprovalForEvents: z.boolean().optional(),
+  allowAnonymousPosting: z.boolean().optional(),
+  faqEnabled: z.boolean().optional(),
+  houseRulesEnabled: z.boolean().optional(),
+  chatEnabled: z.boolean().optional(),
+  commentsEnabled: z.boolean().optional(),
+  votingCertiliaEnabled: z.boolean().optional().describe("Deprecated: no longer enforced; accepted for old clients and ignored."),
+  votingPrintedSignatureEnabled: z.boolean().optional().describe("Deprecated: no longer enforced; accepted for old clients and ignored."),
+  minVerificationTierForConsensus: z.number().int().min(0).max(3).optional().describe(
+    "Deprecated: superseded by minVotingStrengthForConsensus. Accepted from old clients and translated by the backend (3 \u2192 EID, else EMAIL)."
+  ),
+  minVotingStrengthForConsensus: z.number().int().min(0).max(100).optional().describe(
+    "Minimum VotingStrength rung (EMAIL=10, PHONE=20, EID=30) an ONLINE consensus ballot must carry. Paper votes recorded by the representative are never gated by it."
+  ),
+  addonAiEnabled: z.boolean().optional(),
+  addonStorage5gbEnabled: z.boolean().optional()
+});
+var businessPartnerResponseSchema = z.object({
+  id: z.string().uuid(),
+  organizationId: z.string().uuid(),
+  name: z.string(),
+  code: z.string().nullable().optional(),
+  city: z.string().nullable().optional(),
+  email: z.string().nullable().optional(),
+  address: z.string().nullable().optional(),
+  postalCode: z.string().nullable().optional(),
+  phone: z.string().nullable().optional(),
+  mobile: z.string().nullable().optional(),
+  contactPerson: z.string().nullable().optional(),
+  iban: z.string().nullable().optional(),
+  bankAccount: z.string().nullable().optional(),
+  taxNumber: z.string().nullable().optional(),
+  oib: z.string().nullable().optional(),
+  isVatPayer: z.boolean(),
+  isActive: z.boolean(),
+  createdAt: z.union([z.string(), z.date()]),
+  updatedAt: z.union([z.string(), z.date()]).nullable().optional()
+}).meta({ id: "BusinessPartnerResponse" });
+var createBusinessPartnerSchema = z.object({
+  name: z.string().trim().min(1).max(200),
+  code: z.string().trim().max(50).optional().nullable(),
+  city: z.string().trim().max(100).optional().nullable(),
+  email: z.string().trim().email().optional().nullable(),
+  address: z.string().trim().max(500).optional().nullable(),
+  postalCode: z.string().trim().max(20).optional().nullable(),
+  phone: z.string().trim().max(50).optional().nullable(),
+  mobile: z.string().trim().max(50).optional().nullable(),
+  contactPerson: z.string().trim().max(200).optional().nullable(),
+  iban: z.string().trim().max(50).optional().nullable(),
+  bankAccount: z.string().trim().max(50).optional().nullable(),
+  taxNumber: z.string().trim().max(50).optional().nullable(),
+  oib: z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").optional().nullable(),
+  isVatPayer: z.boolean().optional(),
+  isActive: z.boolean().optional()
+}).meta({ id: "CreateBusinessPartner" });
+var updateBusinessPartnerSchema = createBusinessPartnerSchema.partial().meta({ id: "UpdateBusinessPartner" });
+var DOCUMENT_LIMITS = {
+  TITLE_MIN: 1,
+  TITLE_MAX: 100,
+  DESCRIPTION_MAX: 500,
+  FILE_NAME_MAX: 255
+};
+var createDocumentSchema = z.object({
+  title: z.string().min(DOCUMENT_LIMITS.TITLE_MIN, "title must not be empty").max(DOCUMENT_LIMITS.TITLE_MAX).describe("Document title, 1\u2013100 chars."),
+  description: z.string().max(DOCUMENT_LIMITS.DESCRIPTION_MAX).optional().describe("Optional markdown description, up to 500 chars."),
+  isPrivate: multipartBoolean().optional().describe("When true, visible only to the uploader and holders of DOCUMENT_READ_PRIVATE.")
+}).meta({ id: "CreateDocument" });
+var updateDocumentSchema = z.object({
+  title: z.string().max(DOCUMENT_LIMITS.TITLE_MAX).optional().describe("Revised title."),
+  description: z.string().max(DOCUMENT_LIMITS.DESCRIPTION_MAX).optional().describe("Revised description."),
+  isPrivate: multipartBoolean().optional().describe("Toggle private visibility."),
+  removeFileIds: multipartArray(uuidSchema).optional().describe("UUIDs of child files to detach from the document."),
+  renameFiles: multipartArray(
+    z.object({
+      id: uuidSchema,
+      fileName: z.string().min(1).max(DOCUMENT_LIMITS.FILE_NAME_MAX)
+    })
+  ).optional().describe(
+    "Rename individual child files by id (metadata only; R2 key + extension preserved)."
+  )
+}).meta({ id: "UpdateDocument" });
+var dsarTypeSchema = z.enum(
+  Object.values(DsarRequestType)
+);
+var dsarStatusSchema = z.enum(
+  Object.values(DsarRequestStatus)
+);
+var createDsarRequestSchema = z.object({
+  subjectEmail: z.string().trim().email().max(255).describe("Email the request arrived from; auto-links to an account when one matches."),
+  type: dsarTypeSchema.describe("Which GDPR right the subject is exercising."),
+  receivedAt: z.string().optional().describe("ISO-8601. Defaults to now; settable because email may predate data entry."),
+  note: z.string().trim().max(2e3).optional().describe("Opening note for the case timeline.")
+}).meta({ id: "CreateDsarRequest" });
+var updateDsarRequestSchema = z.object({
+  status: dsarStatusSchema.optional(),
+  assigneeUserId: z.string().uuid().nullable().optional(),
+  resolutionNote: z.string().trim().max(2e3).nullable().optional().describe("Keep minimal \u2014 never paste the subject\u2019s personal data here."),
+  identityVerifiedAt: z.string().nullable().optional(),
+  /** Art. 12(3) extension. Requires a reason and is capped. */
+  extendByDays: z.number().int().min(1).max(DSAR_MAX_EXTENSION_DAYS).optional(),
+  extensionReason: z.string().trim().min(1).max(500).optional()
+}).refine((v) => v.extendByDays == null || (v.extensionReason?.length ?? 0) > 0, {
+  message: "An extension reason is required when extending the deadline",
+  path: ["extensionReason"]
+}).meta({ id: "UpdateDsarRequest" });
+var createDsarEventSchema = z.object({
+  note: z.string().trim().min(1).max(2e3)
+}).meta({ id: "CreateDsarEvent" });
+var setDsarRestrictionSchema = z.object({
+  restricted: z.boolean(),
+  reason: z.string().trim().max(500).optional()
+}).meta({ id: "SetDsarRestriction" });
+var dsarErasureSchema = z.object({
+  /**
+   * `schedule` runs the normal soft-delete + grace period (session
+   * revocation included); `immediate` is the irreversible hard delete.
+   */
+  mode: z.enum(["schedule", "immediate"])
+}).meta({ id: "DsarErasure" });
+var recordDsarRectificationSchema = z.object({
+  /** Field NAMES only — values must never be written to the case record. */
+  fields: z.array(z.string().trim().min(1).max(64)).min(1).max(30),
+  note: z.string().trim().max(2e3).optional()
+}).meta({ id: "RecordDsarRectification" });
+var getDsarRequestsQuerySchema = z.object({
+  status: dsarStatusSchema.optional(),
+  type: dsarTypeSchema.optional(),
+  assigneeUserId: z.string().uuid().optional(),
+  overdue: z.coerce.boolean().optional().describe("Only open requests past their due date."),
+  search: z.string().trim().max(255).optional(),
+  limit: z.coerce.number().int().min(1).max(100).optional(),
+  offset: z.coerce.number().int().min(0).optional()
+});
+var dsarRequestResponseSchema = z.looseObject({
+  id: z.string().uuid(),
+  subjectUserId: z.string().uuid().nullable(),
+  subjectEmail: z.string(),
+  subjectName: z.string().nullable().optional(),
+  type: dsarTypeSchema,
+  status: dsarStatusSchema,
+  receivedAt: z.string(),
+  dueAt: z.string(),
+  isOverdue: z.boolean().describe("Computed: past due and not yet closed."),
+  identityVerifiedAt: z.string().nullable(),
+  assigneeUserId: z.string().uuid().nullable(),
+  assigneeName: z.string().nullable().optional(),
+  resolutionNote: z.string().nullable(),
+  closedAt: z.string().nullable(),
+  createdAt: z.string()
+}).meta({ id: "DsarRequestResponse" });
+var dsarEventResponseSchema = z.looseObject({
+  id: z.string().uuid(),
+  requestId: z.string().uuid(),
+  actorUserId: z.string().uuid().nullable(),
+  actorName: z.string().nullable().optional(),
+  eventType: z.string(),
+  note: z.string().nullable(),
+  metadata: z.unknown().nullable().optional(),
+  createdAt: z.string()
+}).meta({ id: "DsarEventResponse" });
+var ENTITY_LINK_TYPES = [
+  "image",
+  "document",
+  "invoice",
+  "warranty",
+  "agenda",
+  "schedule",
+  "deadline",
+  "meeting",
+  "resolved_by",
+  "based_on",
+  "discussed_in",
+  "expense_for",
+  "related_to"
+];
+var LINKABLE_ENTITY_TYPES = [
+  "failure_report",
+  "notice",
+  "event",
+  "poll",
+  "file",
+  "expense_transaction",
+  "board_card"
+];
+var entityLinkTypeSchema = z.enum(ENTITY_LINK_TYPES).describe("Semantic type of the link, e.g. `related_to`, `resolved_by`, `schedule`.");
+var linkableEntityTypeSchema = z.enum(LINKABLE_ENTITY_TYPES).describe("Kind of entity on one end of a link.");
+var entityLinkEndpointSchema = z.object({
+  id: uuidSchema.describe("UUID of the entity."),
+  type: linkableEntityTypeSchema
+});
+var createEntityLinkRequestSchema = z.object({
+  source: entityLinkEndpointSchema.describe("Owning end of the link."),
+  target: entityLinkEndpointSchema.describe("Referenced end of the link."),
+  linkType: entityLinkTypeSchema
+});
+var deleteEntityLinkRequestSchema = createEntityLinkRequestSchema;
+var deleteEntityLinkQuerySchema = z.object({
+  sourceId: uuidSchema.describe("UUID of the source entity."),
+  sourceType: linkableEntityTypeSchema,
+  targetId: uuidSchema.describe("UUID of the target entity."),
+  targetType: linkableEntityTypeSchema,
+  linkType: entityLinkTypeSchema
+});
+var getEntityLinksQuerySchema = z.object({
+  entityId: uuidSchema.describe("UUID of the anchor entity."),
+  entityType: linkableEntityTypeSchema
+});
+var getEntityLinkCountsQuerySchema = z.object({
+  entityType: linkableEntityTypeSchema,
+  ids: z.string().describe("Comma-separated list of entity UUIDs to count links for.").transform(
+    (value) => value.split(",").map((part) => part.trim()).filter(Boolean)
+  ).pipe(z.array(uuidSchema).min(1).max(200))
+});
+var EVENT_TYPES = [
+  "service",
+  "inspection",
+  "maintenance",
+  "meeting",
+  "discussion",
+  "planned_works",
+  "waste_collection",
+  "other"
+];
+var EVENT_COLORS = ["blue", "green", "red", "yellow", "purple", "orange", "gray"];
+var RECURRENCE_TYPES = ["none", "weekly", "biweekly", "monthly", "yearly"];
+var EVENT_TYPE_COLOR_MAP = {
+  service: "blue",
+  inspection: "purple",
+  maintenance: "orange",
+  meeting: "green",
+  discussion: "yellow",
+  planned_works: "red",
+  waste_collection: "green",
+  other: "gray"
+};
+var eventTypeSchema = z.enum(EVENT_TYPES).describe(
+  "Kind of calendar event: `service` (routine service call), `inspection` (regulatory/safety check), `maintenance` (contractor work), `meeting` (residents gathering), `discussion` (informal), `planned_works` (scheduled project), `waste_collection` (waste pickup, uses `subtype`), `other` (miscellaneous)."
+);
+var eventColorSchema = z.enum(EVENT_COLORS).describe("Display colour used when rendering the event on the calendar.");
+var recurrenceTypeSchema = z.enum(RECURRENCE_TYPES).describe("Recurrence cadence; `none` for one-off events.");
+var timeSchema = z.object({
+  hour: z.number().min(0).max(23).describe("Hour component in 24-hour format, 0\u201323."),
+  minute: z.number().min(0).max(59).describe("Minute component, 0\u201359.")
+});
+var createEventSchema = z.object({
+  buildingId: uuidSchema.describe("UUID of the building the event belongs to."),
+  type: eventTypeSchema,
+  title: z.string().min(1, "Title is required").max(100, "Title must be at most 100 characters").describe("Short event title shown on the calendar, 1\u2013100 chars."),
+  description: z.string().max(500, "Description must be at most 500 characters").optional().describe("Free-text details about the event; omitted when the event is self-explanatory."),
+  startDate: z.coerce.date({ error: "Start date is required" }).describe("Event start \u2014 accepts an ISO-8601 string or Date, stored as a timestamp."),
+  endDate: z.coerce.date({ error: "End date is required" }).describe("Event end \u2014 accepts an ISO-8601 string or Date; must not precede `startDate`."),
+  color: eventColorSchema,
+  isAnonymous: multipartBoolean().optional().describe("True hides the creator's identity from other residents."),
+  allowComments: multipartBoolean().optional().describe("False disables the comment thread on this event."),
+  recurrenceType: recurrenceTypeSchema.optional(),
+  recurrenceEndDate: z.coerce.date().optional().describe("Date after which the recurrence stops; omitted for open-ended recurrence."),
+  subtype: z.string().optional().describe("Free-form subtype qualifier (waste-collection types like `mixed`, `bio`)."),
+  onlineMeetingUrl: z.string().url().max(500).optional().or(z.literal("")).describe("Join URL for online meetings; empty or omitted for in-person events."),
+  meetingMinutes: z.string().max(1e4).optional().describe("Rich-text minutes captured during the meeting."),
+  minuteTakerId: uuidSchema.optional().describe("UUID of the user assigned to record meeting minutes."),
+  fileIds: z.array(uuidSchema).optional().describe("UUIDs of previously uploaded files to attach to the event.")
+}).refine((data) => data.endDate >= data.startDate, {
+  message: "endDate must not precede startDate",
+  path: ["endDate"]
+});
+var updateEventSchema = z.object({
+  type: eventTypeSchema.optional(),
+  title: z.string().min(1).max(100).optional().describe("Revised title, 1\u2013100 chars."),
+  description: z.string().max(500).optional().describe("Revised description, max 500 chars."),
+  startDate: z.coerce.date().optional().describe("Revised start \u2014 accepts an ISO-8601 string or Date."),
+  endDate: z.coerce.date().optional().describe("Revised end \u2014 accepts an ISO-8601 string or Date."),
+  color: eventColorSchema.optional(),
+  isAnonymous: multipartBoolean().optional(),
+  allowComments: multipartBoolean().optional(),
+  recurrenceType: recurrenceTypeSchema.optional(),
+  recurrenceEndDate: z.coerce.date().optional(),
+  subtype: z.string().optional(),
+  onlineMeetingUrl: z.string().url().max(500).optional().or(z.literal("")),
+  meetingMinutes: z.string().max(1e4).optional(),
+  minuteTakerId: uuidSchema.optional(),
+  fileIds: z.array(uuidSchema).optional()
+});
+var moneyStringSchema = z.union([z.string(), z.number()]).transform((v) => typeof v === "number" ? v.toString() : v.trim()).pipe(
+  z.string().regex(/^\d+(\.\d{1,2})?$/, "must be a non-negative amount with at most 2 decimals").refine((s) => Number(s) <= 9999999999e-2, "amount exceeds the maximum of 99,999,999.99").transform((s) => normalizeMoney(s))
+);
+var signedMoneyStringSchema = z.union([z.string(), z.number()]).transform((v) => typeof v === "number" ? v.toString() : v.trim()).pipe(
+  z.string().regex(/^-?\d+(\.\d{1,2})?$/, "must be an amount with at most 2 decimals").refine((s) => Math.abs(Number(s)) <= 999999999999e-2, "balance exceeds the maximum").transform((s) => normalizeMoney(s))
+);
+
+// src/schemas/entities/expense-transaction.schema.ts
+var expenseAmountSchema = moneyStringSchema.describe(
+  'Expense amount in EUR as a two-decimal string (e.g. "120.00").'
+);
+var failureReportIdsSchema = multipartArray(uuidSchema).describe(
+  "Failure reports this expense pays for \u2014 synced to `entity_links` rows (`expense_transaction \u2192 failure_report`, linkType `expense_for`). On update the full set replaces existing expense_for links to failure reports."
+);
+var createExpenseSchema = z.object({
+  categoryId: z.string().uuid().describe("Expense transaction-category to file this entry under."),
+  amount: expenseAmountSchema,
+  description: z.string().trim().max(500).optional(),
+  period: z.string().max(50).optional().describe('Free-form billing period label (e.g. "2026-06").'),
+  failureReportIds: failureReportIdsSchema.optional(),
+  fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-uploaded files (receipts, invoices) to attach.")
+}).strict();
+var updateExpenseSchema = z.object({
+  categoryId: z.string().uuid().optional(),
+  amount: expenseAmountSchema.optional(),
+  description: z.string().max(500).optional(),
+  period: z.string().max(50).optional(),
+  failureReportIds: failureReportIdsSchema.optional(),
+  fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of newly-uploaded files to attach."),
+  removeChildFileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-attached files to detach from the expense.")
+}).strict();
+var FAILURE_REPORT_LIMITS = {
+  TITLE_MIN: 1,
+  TITLE_MAX: 100,
+  DESCRIPTION_MAX: 2e3,
+  COMMON_AREA_DESCRIPTION_MAX: 500
+};
+var failureReportEventSchema = z.object({
+  startDate: z.coerce.date().describe("Event start \u2014 accepts an ISO-8601 string or Date."),
+  endDate: z.coerce.date().describe("Event end \u2014 accepts an ISO-8601 string or Date; must not precede `startDate`."),
+  title: z.string().optional().describe("Event title; defaults to the failure report title when omitted."),
+  description: z.string().optional().describe("Event description; defaults to the failure report description when omitted.")
+});
+var failureReportEventWithDateOrderSchema = failureReportEventSchema.refine(
+  (event) => event.endDate >= event.startDate,
+  { message: "Event end must not precede its start", path: ["endDate"] }
+);
+function refineLocation(schema) {
+  return schema.superRefine((data, ctx) => {
+    if (data.locationType === FailureLocationType.COMMON_AREA) {
+      if (!data.commonAreaDescription || data.commonAreaDescription.trim() === "") {
+        ctx.addIssue({
+          code: "custom",
+          message: "commonAreaDescription is required when locationType is common_area",
+          path: ["commonAreaDescription"]
+        });
+      }
+    }
+    if (data.locationType === FailureLocationType.OWN_UNIT) {
+      if (!data.unitType) {
+        ctx.addIssue({
+          code: "custom",
+          message: "unitType is required when locationType is own_unit",
+          path: ["unitType"]
+        });
+      }
+      if (!data.unitId) {
+        ctx.addIssue({
+          code: "custom",
+          message: "unitId is required when locationType is own_unit",
+          path: ["unitId"]
+        });
+      }
+    }
+  });
+}
+var createFailureReportSchema = refineLocation(
+  z.object({
+    title: z.string().min(FAILURE_REPORT_LIMITS.TITLE_MIN, "Title is required").max(
+      FAILURE_REPORT_LIMITS.TITLE_MAX,
+      `Title must be at most ${FAILURE_REPORT_LIMITS.TITLE_MAX} characters`
+    ).describe("Short summary of the failure, 1\u2013100 chars."),
+    description: z.string().min(1, "Description is required").max(
+      FAILURE_REPORT_LIMITS.DESCRIPTION_MAX,
+      `Description must be at most ${FAILURE_REPORT_LIMITS.DESCRIPTION_MAX} characters`
+    ).describe("Detailed description of the failure, up to 2000 chars."),
+    isAnonymous: multipartBoolean().optional().describe(
+      "When true, hides the reporter\u2019s identity from other residents. Defaults to false."
+    ),
+    allowComments: multipartBoolean().optional().describe(
+      "When false, disables the comment thread on this report. Defaults to true; also subject to the building-level comments setting."
+    ),
+    priority: z.enum([Priority.NORMAL, Priority.URGENT]).optional().describe("`normal` for standard reports, `urgent` to flag immediate attention."),
+    locationType: z.enum([FailureLocationType.COMMON_AREA, FailureLocationType.OWN_UNIT]).optional().describe(
+      "`common_area` for shared spaces (hallway, roof, etc.) or `own_unit` for a specific apartment/garage/storage unit."
+    ),
+    commonAreaDescription: z.string().max(FAILURE_REPORT_LIMITS.COMMON_AREA_DESCRIPTION_MAX).optional().describe("Free-text location description. Required when `locationType` is `common_area`."),
+    unitType: z.enum([FailureUnitType.APARTMENT, FailureUnitType.GARAGE, FailureUnitType.STORAGE_UNIT]).optional().describe("Kind of unit when `locationType` is `own_unit`. Required in that case."),
+    unitId: uuidSchema.optional().describe("UUID of the specific unit. Required when `locationType` is `own_unit`."),
+    fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-uploaded files to attach to this report."),
+    events: multipartArray(failureReportEventWithDateOrderSchema).optional().describe("Calendar events to create alongside the report (inspections, scheduled fixes).")
+  })
+);
+var updateFailureReportSchema = refineLocation(
+  z.object({
+    title: z.string().min(FAILURE_REPORT_LIMITS.TITLE_MIN).max(FAILURE_REPORT_LIMITS.TITLE_MAX).optional().describe("Revised report title, 1\u2013100 chars."),
+    description: z.string().min(1).max(FAILURE_REPORT_LIMITS.DESCRIPTION_MAX).optional().describe("Revised description, up to 2000 chars."),
+    status: z.enum([FailureStatus.PENDING, FailureStatus.IN_PROGRESS, FailureStatus.RESOLVED]).optional().describe(
+      "Lifecycle status: `pending` (newly filed), `in_progress` (assigned work), `resolved` (closed out)."
+    ),
+    allowComments: multipartBoolean().optional().describe("Toggles the comment thread on this report."),
+    priority: z.enum([Priority.NORMAL, Priority.URGENT]).optional().describe("Revised priority: `normal` or `urgent`."),
+    locationType: z.enum([FailureLocationType.COMMON_AREA, FailureLocationType.OWN_UNIT]).optional().describe("Revised location classification: `common_area` or `own_unit`."),
+    commonAreaDescription: z.string().max(FAILURE_REPORT_LIMITS.COMMON_AREA_DESCRIPTION_MAX).optional().describe("Revised common-area description. Required when `locationType` is `common_area`."),
+    unitType: z.enum([FailureUnitType.APARTMENT, FailureUnitType.GARAGE, FailureUnitType.STORAGE_UNIT]).optional().describe("Revised unit kind. Required when `locationType` is `own_unit`."),
+    unitId: uuidSchema.optional().describe("Revised unit UUID. Required when `locationType` is `own_unit`."),
+    fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of newly-uploaded files to add to the report."),
+    removeChildFileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-attached files to detach from the report."),
+    events: multipartArray(failureReportEventWithDateOrderSchema).optional().describe("Full list of events for the report \u2014 replaces the existing event set.")
+  })
+);
+var approveFailureReportSchema = z.object({
+  approved: z.boolean().describe("True to approve the report for public visibility, false to reject.")
+});
+var incomeAmountSchema = moneyStringSchema.describe(
+  'Income amount in EUR as a two-decimal string (e.g. "250.50").'
+);
+var createIncomeSchema = z.object({
+  categoryId: z.string().uuid().optional().describe("Income transaction-category to file this entry under."),
+  amount: incomeAmountSchema,
+  description: z.string().max(500).optional(),
+  period: z.string().max(50).optional().describe('Free-form billing period label (e.g. "2026-06").')
+}).strict();
+var updateIncomeSchema = z.object({
+  categoryId: z.string().uuid().optional(),
+  amount: incomeAmountSchema.optional(),
+  description: z.string().max(500).optional(),
+  period: z.string().max(50).optional()
+}).strict();
+var ownerResponseSchema = z.object({
+  id: z.string().uuid(),
+  buildingId: z.string().uuid(),
+  userId: z.string().uuid().nullable().optional(),
+  fullName: z.string(),
+  email: z.string().nullable().optional(),
+  phone: z.string().nullable().optional(),
+  oib: z.string().nullable().optional(),
+  address: z.string().nullable().optional(),
+  /** FK into the DGU-backed `addresses` table; null for legacy free-text rows. */
+  addressId: z.string().uuid().nullable().optional(),
+  paymentRefCode: z.string().nullable().optional(),
+  /** When a representative last sent this owner a building invite; null when never invited. */
+  lastInvitedAt: z.union([z.string(), z.date()]).nullable().optional(),
+  /**
+   * The owner's share of the whole building in percent. For stratified
+   * buildings this is DERIVED live from unit holdings (area × unit share)
+   * and `isBuildingShareDerived` is true; for non-stratified buildings it is
+   * the manually-entered value stored on the owner. Null until set/derivable.
+   */
+  buildingSharePercentage: z.number().nullable().optional(),
+  /** True when `buildingSharePercentage` is derived (stratified) and read-only. */
+  isBuildingShareDerived: z.boolean().optional(),
+  createdAt: z.union([z.string(), z.date()]),
+  updatedAt: z.union([z.string(), z.date()]).nullable().optional()
+}).meta({ id: "OwnerResponse" });
+var createOwnerSchema = z.object({
+  fullName: z.string().trim().min(1).max(200),
+  email: z.string().trim().email().optional().nullable(),
+  phone: z.string().trim().max(50).optional().nullable(),
+  oib: z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").optional().nullable(),
+  address: z.string().trim().max(500).optional().nullable(),
+  // Structured address (DGU reference model). Either send `addressId`
+  // directly, or `streetId` + `houseNumber` for the backend to resolve
+  // (mirrors the building create/update contract). Free-text `address`
+  // alone remains valid as the unstructured fallback.
+  addressId: z.string().uuid().optional().nullable(),
+  streetId: z.string().uuid().optional().nullable(),
+  houseNumber: z.string().trim().min(1).max(20).optional().nullable(),
+  paymentRefCode: z.string().trim().max(22).optional().nullable(),
+  userId: z.string().uuid().optional().nullable(),
+  /**
+   * Manual building-ownership share (percent) — accepted only for
+   * NON-stratified buildings; ignored for stratified ones, where the share
+   * is derived from unit holdings. See ownerResponseSchema.buildingSharePercentage.
+   */
+  buildingSharePercentage: z.number().min(0).max(100).optional().nullable()
+}).meta({ id: "CreateOwner" });
+var updateOwnerSchema = createOwnerSchema.partial().meta({ id: "UpdateOwner" });
+var assignOwnerSchema = z.object({
+  ownerId: z.string().uuid(),
+  ownershipPercentage: z.number().min(0).max(100).nullable().optional()
+}).meta({ id: "AssignOwner" });
+var buildingOwnerAssignmentSchema = z.object({
+  unitId: z.string().uuid(),
+  ownerId: z.string().uuid(),
+  ownershipPercentage: z.number().nullable().optional()
+}).meta({ id: "BuildingOwnerAssignment" });
+var inviteOwnerSchema = z.object({
+  message: z.string().trim().max(500).optional().describe("Optional personal message included in the invite email.")
+}).meta({ id: "InviteOwner" });
+var tierSchema = z.enum(["standard", "enterprise"]);
+var entityTypeSchema = z.enum(["building", "organization"]);
+function priceMatchesTier(v) {
+  if (v.tier === "enterprise") return typeof v.pricePerUnitCents === "number";
+  if (v.tier === "standard") return v.pricePerUnitCents == null;
+  return true;
+}
+var PRICE_RULE = {
+  message: "Enterprise subscriptions require pricePerUnitCents; standard subscriptions use the catalog price and must omit it",
+  path: ["pricePerUnitCents"]
+};
+var createPlatformSubscriptionSchema = z.object({
+  entityType: entityTypeSchema,
+  entityId: z.string().uuid(),
+  tier: tierSchema,
+  quantity: z.number().int().min(1).max(1e4).describe("Billable units (apartments)."),
+  pricePerUnitCents: z.number().int().min(1).max(1e6).nullable().optional().describe("Negotiated monthly price per unit, in euro cents. Enterprise only."),
+  trialEndsAt: z.string().nullable().optional()
+}).refine(priceMatchesTier, PRICE_RULE).meta({ id: "CreatePlatformSubscription" });
+var updatePlatformSubscriptionSchema = z.object({
+  tier: tierSchema.optional(),
+  quantity: z.number().int().min(1).max(1e4).optional(),
+  pricePerUnitCents: z.number().int().min(1).max(1e6).nullable().optional(),
+  trialEndsAt: z.string().nullable().optional(),
+  status: z.enum(["active", "past_due", "cancelled"]).optional()
+}).meta({ id: "UpdatePlatformSubscription" });
+var getPlatformSubscriptionsQuerySchema = z.object({
+  status: z.string().trim().max(32).optional(),
+  tier: tierSchema.optional(),
+  entityType: entityTypeSchema.optional(),
+  trialing: z.coerce.boolean().optional().describe("Only subscriptions still inside a trial."),
+  search: z.string().trim().max(255).optional(),
+  sortBy: z.string().trim().max(32).optional(),
+  sortOrder: z.enum(["asc", "desc"]).optional(),
+  limit: z.coerce.number().int().min(1).max(100).optional(),
+  offset: z.coerce.number().int().min(0).optional()
+});
+var platformSubscriptionResponseSchema = z.looseObject({
+  id: z.string().uuid(),
+  entityType: entityTypeSchema,
+  entityId: z.string().uuid(),
+  entityName: z.string().nullable(),
+  tier: tierSchema,
+  status: z.string(),
+  quantity: z.number(),
+  pricePerUnitCents: z.number().nullable(),
+  /** Computed: quantity × (negotiated price or the catalog price). */
+  monthlyTotalCents: z.number(),
+  trialEndsAt: z.string().nullable(),
+  trialEndedAt: z.string().nullable().optional(),
+  currentPeriodEnd: z.string().nullable(),
+  priceSetAt: z.string().nullable().optional(),
+  priceSetByName: z.string().nullable().optional(),
+  createdAt: z.string()
+}).meta({ id: "PlatformSubscriptionResponse" });
+var enterpriseStatusSchema = z.enum(
+  Object.values(EnterpriseRequestStatus)
+);
+var updateEnterpriseRequestSchema = z.object({
+  status: enterpriseStatusSchema,
+  notes: z.string().trim().max(2e3).nullable().optional()
+}).meta({ id: "UpdateEnterpriseRequest" });
+var getEnterpriseRequestsQuerySchema = z.object({
+  status: enterpriseStatusSchema.optional(),
+  limit: z.coerce.number().int().min(1).max(100).optional(),
+  offset: z.coerce.number().int().min(0).optional()
+});
+var enterpriseRequestResponseSchema = z.looseObject({
+  id: z.string().uuid(),
+  entityType: entityTypeSchema,
+  entityId: z.string().uuid().nullable(),
+  entityName: z.string().nullable(),
+  requestedByName: z.string().nullable(),
+  requestedByEmail: z.string().nullable(),
+  unitCount: z.number().nullable(),
+  status: enterpriseStatusSchema,
+  notes: z.string().nullable(),
+  handledByName: z.string().nullable().optional(),
+  createdAt: z.string()
+}).meta({ id: "EnterpriseRequestResponse" });
+var revenueMetricsResponseSchema = z.looseObject({
+  /** Booked monthly recurring revenue in cents; excludes trialing entities. */
+  mrrCents: z.number(),
+  payingEntities: z.number(),
+  billableUnits: z.number(),
+  arpuCents: z.number(),
+  /**
+   * Rolling 90-day trial→paid conversion, 0–1. Null until enough history
+   * accrues — trial end dates were being erased before this pass, so the
+   * series starts at deploy rather than being backfilled.
+   */
+  trialConversionRate: z.number().nullable(),
+  unpaidAging: z.array(
+    z.object({
+      bucket: z.enum(["0_30", "31_60", "61_90", "90_plus"]),
+      count: z.number(),
+      amountCents: z.number()
+    })
+  )
+}).meta({ id: "RevenueMetricsResponse" });
+var POLL_TYPES = [PollType.CONSENSUS, PollType.COMMUNITY];
+var pollTypeSchema = z.enum(POLL_TYPES).describe(
+  "`community` polls pass by simple majority of votes cast; `consensus` polls require an ownership-weighted approval threshold."
+);
+var POLL_LIMITS = {
+  QUESTION_MIN: 5,
+  QUESTION_MAX: 250,
+  OPTION_MAX: 100,
+  COMMUNITY_OPTIONS_MIN: 2,
+  COMMUNITY_OPTIONS_MAX: 4,
+  CONSENSUS_OPTIONS: 1,
+  CONSENSUS_PERCENTAGE_MIN: 10,
+  CONSENSUS_PERCENTAGE_MAX: 100
+};
+var createPollSchema = z.object({
+  question: z.string().min(POLL_LIMITS.QUESTION_MIN, "Question must be at least 5 characters").max(
+    POLL_LIMITS.QUESTION_MAX,
+    `Question must be at most ${POLL_LIMITS.QUESTION_MAX} characters`
+  ).describe("Poll question presented to voters, 5\u2013250 chars."),
+  options: multipartArray(z.string().max(POLL_LIMITS.OPTION_MAX)).pipe(z.array(z.string().min(1).max(POLL_LIMITS.OPTION_MAX))).describe(
+    "Answer options in display order. Community polls: 2\u20134 options. Consensus polls: exactly 1 option (voters approve or abstain)."
+  ),
+  pollType: pollTypeSchema,
+  deadline: z.coerce.date().optional().describe(
+    "Cutoff date/time after which votes are rejected. Accepts an ISO-8601 string or Date. Omit for open-ended consensus polls."
+  ),
+  requiredConsensusPercentage: z.coerce.number().min(POLL_LIMITS.CONSENSUS_PERCENTAGE_MIN).max(POLL_LIMITS.CONSENSUS_PERCENTAGE_MAX).optional().describe(
+    "Ownership-weighted approval threshold (10\u2013100) required for consensus polls to pass. Ignored for community polls."
+  ),
+  consensusCategory: z.string().max(100).optional().describe(
+    'Classification of the consensus decision (e.g. "fundUsage", "houseRules"); used to group and filter related polls.'
+  ),
+  legalBasis: z.string().max(100).optional().describe(
+    "Reference to the legal article or statute that authorises the vote; shown alongside consensus results for audit."
+  ),
+  scopedUnitIds: multipartArray(uuidSchema).optional().describe(
+    "UUIDs of units whose owners/tenants are eligible to vote. Omit for building-wide polls."
+  ),
+  scopedOwnerIds: multipartArray(uuidSchema).optional().describe(
+    "UUIDs of owner records explicitly added to the eligible-voter list. Owners need no user account. Omit when not used."
+  ),
+  fileIds: multipartArray(uuidSchema).optional().default([]).describe("UUIDs of previously-uploaded supporting documents (proposals, receipts, specs).")
+}).refine(
+  (data) => {
+    if (data.pollType === PollType.COMMUNITY) {
+      return data.options.length >= POLL_LIMITS.COMMUNITY_OPTIONS_MIN && data.options.length <= POLL_LIMITS.COMMUNITY_OPTIONS_MAX;
+    }
+    if (data.pollType === PollType.CONSENSUS) {
+      return data.options.length === POLL_LIMITS.CONSENSUS_OPTIONS;
+    }
+    return true;
+  },
+  {
+    message: "Invalid number of options for poll type",
+    path: ["options"]
+  }
+).refine(
+  (data) => {
+    if (data.pollType === PollType.CONSENSUS) {
+      return data.requiredConsensusPercentage !== void 0 && data.requiredConsensusPercentage >= POLL_LIMITS.CONSENSUS_PERCENTAGE_MIN && data.requiredConsensusPercentage <= POLL_LIMITS.CONSENSUS_PERCENTAGE_MAX;
+    }
+    return true;
+  },
+  {
+    message: "Consensus percentage must be between 10 and 100 for consensus polls",
+    path: ["requiredConsensusPercentage"]
+  }
+);
+var updatePollSchema = z.object({
+  question: z.string().min(1).max(POLL_LIMITS.QUESTION_MAX).optional().describe("Revised poll question, up to 250 chars."),
+  options: multipartArray(z.string().max(POLL_LIMITS.OPTION_MAX)).optional().describe("Replacement option list. Must still respect the community/consensus option counts."),
+  pollType: pollTypeSchema.optional(),
+  deadline: z.coerce.date().optional().describe("Revised deadline. Accepts an ISO-8601 string or Date."),
+  requiredConsensusPercentage: z.coerce.number().min(POLL_LIMITS.CONSENSUS_PERCENTAGE_MIN).max(POLL_LIMITS.CONSENSUS_PERCENTAGE_MAX).optional().describe("Revised ownership-weighted approval threshold (10\u2013100) for consensus polls."),
+  consensusCategory: z.string().max(100).optional().describe('Revised classification of the consensus decision (e.g. "fundUsage", "houseRules").'),
+  legalBasis: z.string().max(100).optional().describe("Revised reference to the legal article or statute that authorises the vote."),
+  status: z.enum(["active", "inactive", "ended"]).optional().describe(
+    "Lifecycle override: `active` accepts votes, `inactive` pauses the poll, `ended` seals it."
+  ),
+  scopedUnitIds: multipartArray(uuidSchema).optional().describe("Replacement list of scoped unit UUIDs. Empty array clears scoping."),
+  scopedOwnerIds: multipartArray(uuidSchema).optional().describe("Replacement list of scoped owner UUIDs. Empty array clears explicit-owner scoping."),
+  fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of newly-uploaded supporting documents to attach."),
+  removeChildFileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-attached files to detach from the poll.")
+});
+var votePollSchema = z.object({
+  selectedOptionIndex: z.number().int().min(0).describe("Zero-based index into the poll\u2019s `options` array identifying the chosen option.")
+});
+var recordOfflineVotesSchema = z.object({
+  ownerIds: z.array(uuidSchema).min(1).describe("UUIDs of owner records whose signed approvals are being recorded."),
+  proofFileId: uuidSchema.optional().describe("UUID of an uploaded scan of the signed sheet, stored as evidence.")
+});
+var finalizePollSchema = z.object({
+  finalize: z.boolean().describe(
+    "True to seal the poll and freeze its results; false is accepted as a no-op for legacy compatibility."
+  )
+});
+var TRANSACTION_CATEGORY_LIMITS = {
+  NAME_MIN: 1,
+  NAME_MAX: 100,
+  SEARCH_MAX: 200
+};
+var createTransactionCategorySchema = z.object({
+  name: z.string().min(TRANSACTION_CATEGORY_LIMITS.NAME_MIN, "Name is required").max(
+    TRANSACTION_CATEGORY_LIMITS.NAME_MAX,
+    `Name must be at most ${TRANSACTION_CATEGORY_LIMITS.NAME_MAX} characters`
+  ).describe('Human-readable category name (e.g. "Cleaning", "Water utility"), 1\u2013100 chars.'),
+  type: z.enum([TransactionType.INCOME, TransactionType.EXPENSE]).describe(
+    "`INCOME` for categories that receive money into the fund; `EXPENSE` for categories that spend from it."
+  )
+});
+var updateTransactionCategorySchema = z.object({
+  name: z.string().min(TRANSACTION_CATEGORY_LIMITS.NAME_MIN).max(TRANSACTION_CATEGORY_LIMITS.NAME_MAX).optional().describe("Revised category name, 1\u2013100 chars.")
+});
+var getTransactionCategoriesQuerySchema = z.object({
+  type: z.enum([TransactionType.INCOME, TransactionType.EXPENSE]).optional().describe(
+    "Filter results by category type. Omit to return both income and expense categories."
+  ),
+  search: z.string().max(TRANSACTION_CATEGORY_LIMITS.SEARCH_MAX).optional().describe("Case-insensitive substring matched against the category name.")
+});
+var copyTransactionCategoriesSchema = z.object({
+  sourceBuildingId: uuidSchema.describe(
+    "UUID of the building whose categories should be copied into the target building."
+  )
+});
+var roleTypeSchema = z.enum([
+  ...Object.values(BuildingRole),
+  ...Object.values(OrgRole),
+  ...Object.values(PlatformRole)
+]);
+var permissionsResponseSchema = z.object({
+  scope: z.enum(["building", "organization", "platform"]),
+  permissions: z.array(z.string()),
+  roleType: roleTypeSchema.optional(),
+  /**
+   * Building scope only: the user's actual building_roles membership, when one
+   * exists. `roleType` reports the PERMISSION source, which for dual-role users
+   * (a co-owner who is also org staff / platform admin) is the broader admin
+   * context — this field preserves their member identity so clients can route
+   * them to the tree where they vote.
+   */
+  memberRoleType: z.enum(Object.values(BuildingRole)).optional(),
+  buildingId: z.string().uuid().optional(),
+  orgId: z.string().uuid().optional(),
+  chatVisibleToCoOwners: z.boolean().optional(),
+  /**
+   * Building scope only: whether the user has an active (non-archived)
+   * owners-ledger record in this building. Ownership is a ledger fact, not
+   * a role — clients gate owner-visible UI (e.g. owner notification types)
+   * on this, never on a role value.
+   */
+  isOwner: z.boolean().optional()
+});
+var sortOrderSchema = z.enum(["asc", "desc"]).describe("Sort direction applied to `sortBy`.");
+var getRepUsersParamsSchema = z.object({
+  search: z.string().optional().describe("Free-text filter matched against user name and email."),
+  buildingRole: z.enum([
+    BuildingRole.OWNER_REPRESENTATIVE,
+    BuildingRole.DEPUTY_REPRESENTATIVE,
+    // CO_OWNER kept for old clients; post-deprecation rows are RESIDENT.
+    BuildingRole.CO_OWNER,
+    BuildingRole.RESIDENT
+  ]).optional().describe("Restrict to users holding this role in at least one of the caller\u2019s buildings."),
+  fromDate: z.string().optional().describe("Inclusive lower bound (ISO date) on the user\u2019s earliest building-join date."),
+  toDate: z.string().optional().describe("Inclusive upper bound (ISO date) on the user\u2019s earliest building-join date."),
+  limit: z.coerce.number().min(1).max(100).optional().default(50),
+  offset: z.coerce.number().min(0).optional().default(0),
+  sortBy: z.string().optional().default("createdAt"),
+  sortOrder: sortOrderSchema.optional().default("desc")
+});
+var getRepBuildingsParamsSchema = z.object({
+  search: z.string().optional().describe("Free-text filter matched against building name and address."),
+  type: z.enum([BuildingType.RESIDENTIAL, BuildingType.COMMERCIAL, BuildingType.RESIDENTIAL_COMMERCIAL]).optional().describe("Restrict to a single building usage type."),
+  status: z.string().optional().describe("Restrict to a building lifecycle status (`pending`, `active`, `rejected`)."),
+  fromDate: z.string().optional().describe("Inclusive lower bound (ISO date) on the building creation date."),
+  toDate: z.string().optional().describe("Inclusive upper bound (ISO date) on the building creation date."),
+  limit: z.coerce.number().min(1).max(100).optional().default(20),
+  offset: z.coerce.number().min(0).optional().default(0),
+  sortBy: z.string().optional().default("createdAt"),
+  sortOrder: sortOrderSchema.optional().default("desc")
+});
+var aiChatMessageSchema = z.object({
+  id: z.string().optional().describe("Client-generated message id (AI SDK UIMessage id)."),
+  role: z.enum(["user", "assistant", "system"]).describe("Author of the message in the conversation history."),
+  content: z.string().max(AI_CHAT_LIMITS.MAX_MESSAGE_CHARS).optional().describe("Plain-text body; legacy shape, superseded by parts."),
+  parts: z.array(z.any()).optional().refine(
+    (parts) => parts === void 0 || parts.every(
+      (part) => typeof part?.text !== "string" || part.text.length <= AI_CHAT_LIMITS.MAX_MESSAGE_CHARS
+    ),
+    { message: `Text part exceeds ${AI_CHAT_LIMITS.MAX_MESSAGE_CHARS} characters` }
+  ).describe(
+    "AI SDK UIMessage parts (text, tool invocations, ...). Text parts are capped at MAX_MESSAGE_CHARS."
+  )
+});
+var aiChatRequestSchema = z.object({
+  id: z.string().optional().describe("AI SDK chat/session id."),
+  trigger: z.string().optional().describe("AI SDK submit trigger metadata; ignored by the API."),
+  buildingId: z.string().optional().describe(
+    "Building context for the turn. When present, building-data tools are attached and the building AI budget applies; without it the assistant answers from general knowledge only."
+  ),
+  locale: z.enum(["hr", "en", "de"]).optional().describe(
+    "The user\u2019s active UI locale, sent per request so the assistant locks its reply language without relying on content inference (unreliable on small models). Defaults to hr."
+  ),
+  messages: z.array(aiChatMessageSchema).min(1).max(AI_CHAT_LIMITS.MAX_MESSAGES).describe("Full client-held conversation history, newest last; the server windows it.")
+});
+var EMAIL_LIMITS = {
+  SUBJECT_MAX: 200,
+  BODY_MAX: 5e4,
+  RECIPIENT_NAME_MAX: 100,
+  CC_MAX: 10,
+  /** Per-message attachment cap; individual files obey the shared 10MB/type rules. */
+  ATTACHMENTS_MAX: 10
+};
+var createEmailThreadRequestSchema = z.object({
+  recipientEmail: z.string().email().describe("Primary To address of the first outbound message."),
+  recipientName: z.string().max(EMAIL_LIMITS.RECIPIENT_NAME_MAX).optional().describe(
+    'Display name to include in the To header (renders as "Name <email>" on the manager side).'
+  ),
+  // multipartArray: with attachments the endpoints are multipart — accepts a
+  // real array, repeated form fields, or a JSON-encoded array string.
+  ccEmails: multipartArray(z.string().email()).pipe(z.array(z.string().email()).max(EMAIL_LIMITS.CC_MAX)).optional().describe("Optional list of Cc addresses for the first message (max 10)."),
+  subject: z.string().min(1).max(EMAIL_LIMITS.SUBJECT_MAX).describe("Subject line; used for both the first message and the thread summary."),
+  body: z.string().min(1).max(EMAIL_LIMITS.BODY_MAX).describe(
+    "Markdown body of the first outbound message, up to 50k chars. The backend renders it to sanitized HTML for the outgoing mail (multipart/alternative) and stores the markdown source as the message bodyText."
+  )
+}).strict();
+var replyEmailThreadRequestSchema = z.object({
+  body: z.string().min(1).max(EMAIL_LIMITS.BODY_MAX).describe(
+    "Markdown body of the reply, up to 50k chars. Rendered to sanitized HTML server-side for the outgoing mail; the markdown source is stored as the message bodyText."
+  ),
+  // multipartArray: with attachments the endpoints are multipart — accepts a
+  // real array, repeated form fields, or a JSON-encoded array string.
+  ccEmails: multipartArray(z.string().email()).pipe(z.array(z.string().email()).max(EMAIL_LIMITS.CC_MAX)).optional().describe("Optional Cc addresses for this reply; do not persist beyond this message.")
+}).strict();
+
+// src/schemas/requests/update-failure-report.ts
+var updateFailureReportRequestSchema = updateFailureReportSchema.extend({
+  id: uuidSchema.describe("UUID of the failure report to update, taken from the URL.")
+});
+
+// src/schemas/requests/update-notice.ts
+var updateNoticeRequestSchema = updateNoticeSchema.extend({
+  id: uuidSchema.describe("UUID of the notice to update, taken from the URL.")
+});
+
+// src/schemas/requests/update-poll.ts
+var updatePollRequestSchema = updatePollSchema.extend({
+  id: uuidSchema.describe("UUID of the poll to update, taken from the URL.")
+});
+var messageResponseSchema = z.object({
+  message: z.string().describe(
+    'Human-readable confirmation that the action completed successfully (e.g., "Notice approved").'
+  )
+});
+var aiUsageResponseSchema = z.looseObject({
+  buildingId: z.string().describe("UUID of the building this usage row belongs to."),
+  period: z.string().describe("Billing period key in YYYY-MM (UTC calendar month); resets implicitly."),
+  spentMicroUsd: z.number().describe("Estimated AI spend accumulated by the whole building this period, in micro-USD."),
+  messageCount: z.number().describe("Number of AI chat replies the building has consumed this period."),
+  capMicroUsd: z.number().describe("Monthly building cap in micro-USD ($1 base, $6 with the AI add-on)."),
+  userSpentMicroUsd: z.number().optional().describe(
+    "Requesting user\u2019s own spend this period, in micro-USD. Omitted when the per-user tracker (Redis) is unavailable."
+  ),
+  userCapMicroUsd: z.number().optional().describe(
+    "Requesting user\u2019s personal share of the building cap, in micro-USD (fairness limit so one member cannot drain the building budget). Omitted with userSpentMicroUsd."
+  )
+}).describe("AI chat budget usage for one building in the current monthly period.");
+var ARCHIVE_TYPES = [
+  "apartments",
+  "blog_posts",
+  "building_join_requests",
+  "buildings",
+  "comments",
+  "events",
+  "failure_reports",
+  "faqs",
+  "files",
+  "garages",
+  "income_transactions",
+  "notices",
+  "organizations",
+  "polls",
+  "recurring_templates",
+  "storage_units",
+  "transaction_categories"
+];
+var archiveTypeSchema = z.enum(ARCHIVE_TYPES).describe("Name of the archived entity kind; must match a key in the backend archive registry.");
+var archivedItemSchema = z.looseObject({
+  id: z.string().uuid().describe("UUID of the archived row within its source table."),
+  type: archiveTypeSchema,
+  label: z.string().describe("Human-readable label for the archived row (e.g. apartment number, notice title)."),
+  buildingId: z.string().uuid().nullable().describe(
+    "UUID of the building the row belongs to; null for global entities like organizations."
+  ),
+  archivedAt: z.string().describe("ISO-8601 timestamp when the row was archived."),
+  archivedBy: z.string().uuid().nullable().describe(
+    "UUID of the user who archived the row; null when the original actor has been deleted."
+  ),
+  archivedByName: z.string().nullable().describe("Display name of the archiving user; null when unavailable."),
+  daysUntilPurge: z.number().int().describe(
+    "Remaining days before the automated 30-day purge removes the row; 0 means the TTL has elapsed."
+  )
+});
+var listArchivedResponseSchema = z.object({
+  items: z.array(archivedItemSchema).describe("Archived rows across all registered archive types, sorted by archivedAt desc.")
+});
+var buildingStatusSchema = z.enum(Object.values(BuildingStatus)).describe(
+  "Building lifecycle status \u2014 reflects where the building is in the platform onboarding pipeline (pending approval, active, rejected, etc.)."
+);
+var buildingManagerSchema = z.looseObject({
+  name: z.string().describe("Display name of the assigned management-firm contact."),
+  email: z.string().describe("Contact email for the assigned manager.")
+}).describe("Summary of the building\u2019s assigned management-firm contact.");
+var buildingRepresentativeSchema = z.looseObject({
+  id: z.string().describe("UUID of the user who holds the representative role."),
+  name: z.string().describe("Representative display name."),
+  email: z.string().describe("Representative contact email."),
+  phone: z.string().optional().nullable().describe("Contact phone in E.164 format, or null when the representative has not set one.")
+}).describe("Building representative (owner or deputy) nested inside building detail responses.");
+var buildingFundsSchema = z.looseObject({
+  currentBalance: z.string().describe(
+    'Current building-fund balance, serialized as a decimal string (e.g. "27820.54") to preserve precision from the numeric column.'
+  ),
+  currency: z.string().describe('ISO-4217-ish currency symbol or code displayed alongside the balance (e.g. "\u20AC").')
+}).describe("Summary of the building\u2019s current fund balance and currency.");
+var buildingResponseSchema = z.looseObject({
+  id: z.string().uuid(),
+  slug: z.string().nullable().optional().describe("URL-friendly slug derived from the building address."),
+  name: z.string().describe("Building display name."),
+  address: z.string().describe("Full postal address of the building."),
+  coverImage: z.string().optional().nullable().describe("Absolute URL of the cover photo, or null when no cover image is set."),
+  type: buildingTypeSchema.describe(
+    "Usage type: `RESIDENTIAL`, `COMMERCIAL`, or `RESIDENTIAL_COMMERCIAL`."
+  ),
+  status: buildingStatusSchema.optional().describe(
+    "Platform onboarding status (`pending`, `active`, `rejected`). Optional on list responses where all buildings returned are known-active."
+  ),
+  totalUnits: z.number().describe("Declared number of individual units (apartments, garages, storage units)."),
+  isStratified: z.boolean().describe(
+    "True when the building is stratified (each unit has its own title deed), affecting voting weight calculations."
+  ),
+  houseRulesFileUrl: z.string().nullable().optional().describe("Absolute URL to the uploaded house-rules PDF, or null if none has been uploaded."),
+  createdBy: z.string().uuid().optional().nullable().describe("UUID of the user who registered the building on the platform."),
+  iban: z.string().nullable().optional().describe("IBAN of the building fund bank account, or null when unset."),
+  oib: z.string().nullable().optional().describe("Croatian tax ID (OIB) of the building, or null when unset."),
+  houseNumber: z.string().nullable().optional().describe("Street/house number, or null when not set."),
+  billingBuildingCode: z.string().nullable().optional().describe("Building identifier used in HR01 poziv-na-broj references, or null until assigned."),
+  monthlyFeePerSqm: z.number().nullable().optional().describe("Monthly residential pri\u010Duva rate in EUR per m\xB2, or null when not configured."),
+  monthlyFeeCommercialPerSqm: z.number().nullable().optional().describe("Monthly commercial pri\u010Duva rate in EUR per m\xB2, or null when not configured."),
+  createdAt: z.string().describe("ISO-8601 timestamp when the building record was created."),
+  updatedAt: z.string().nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited.")
+});
+var buildingDetailResponseSchema = z.looseObject({
+  id: z.string().uuid(),
+  status: buildingStatusSchema.optional().describe("Platform onboarding status (`pending`, `active`, `rejected`)."),
+  slug: z.string().nullable().optional().describe("URL-friendly slug derived from the building address."),
+  name: z.string().describe("Building display name."),
+  address: z.string().describe("Full postal address of the building."),
+  coverImage: z.string().nullable().optional().describe("Absolute URL of the cover photo, or null when no cover image is set."),
+  type: buildingTypeSchema.describe(
+    "Usage type: `RESIDENTIAL`, `COMMERCIAL`, or `RESIDENTIAL_COMMERCIAL`."
+  ),
+  totalUnits: z.number().describe("Declared number of individual units in the building."),
+  isStratified: z.boolean().describe(
+    "True when the building is stratified (per-unit title deeds), affecting voting weight."
+  ),
+  houseRulesFileUrl: z.string().nullable().optional().describe("Absolute URL to the uploaded house-rules PDF, or null when none has been uploaded."),
+  numberOfFloors: z.number().nullable().optional().describe("Floor count above ground, or null when the information is not set."),
+  description: z.string().nullable().optional().describe("Free-form description shown on the building page; null when not provided."),
+  latitude: z.number().nullable().optional().describe(
+    "Geographic latitude in decimal degrees (WGS 84); null when geocoding not performed."
+  ),
+  longitude: z.number().nullable().optional().describe(
+    "Geographic longitude in decimal degrees (WGS 84); null when geocoding not performed."
+  ),
+  createdBy: z.string().nullable().describe(
+    "UUID of the user who registered the building; null when that account was deleted (FK is ON DELETE SET NULL)."
+  ),
+  createdAt: z.string().describe("ISO-8601 timestamp when the building record was created."),
+  updatedAt: z.string().nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited."),
+  manager: buildingManagerSchema.nullable().optional().describe(
+    "Assigned management-firm contact, or null when the building has no manager assigned."
+  ),
+  funds: buildingFundsSchema.nullable().optional().describe("Current fund balance summary, or null when funds have not been initialised."),
+  iban: z.string().nullable().optional().describe(
+    "IBAN of the building fund bank account, or null when unset. Required on the building before a CAMT.053 import can match statements to this building."
+  ),
+  oib: z.string().nullable().optional().describe(
+    "Croatian tax ID (OIB) of the building (Zajednica suvlasnika), or null when unset. Used as the payee OIB on generated uplatnicas."
+  ),
+  houseNumber: z.string().nullable().optional().describe(
+    "Street/house number as stored on the building row. Address data only \u2014 the HR01 reference uses `billingBuildingCode`."
+  ),
+  fundsSource: z.enum([FundsSource.MANUAL, FundsSource.CAMT]).optional().describe(
+    "Current funding-entry mode for this building. `manual` = representatives add income/expense through the UI; `camt` = platform admin ingests CAMT.053 XML statements and manual writes are blocked."
+  ),
+  monthlyFeePerSqm: z.number().nullable().optional().describe(
+    "Monthly RESIDENTIAL pri\u010Duva rate in EUR per m\xB2 of owned residential area. Null when not yet configured."
+  ),
+  monthlyFeeCommercialPerSqm: z.number().nullable().optional().describe(
+    "Monthly COMMERCIAL pri\u010Duva rate in EUR per m\xB2 of owned commercial area. Null when the building has no commercial units or the rate has not been configured."
+  ),
+  hasResidentialUnits: z.boolean().optional().describe(
+    "True when the building has at least one unit (apartment/garage/storage) with `type = residential`. Lets the UI decide whether to show the residential rate input."
+  ),
+  hasCommercialUnits: z.boolean().optional().describe(
+    "True when the building has at least one unit (apartment/garage/storage) with `type = commercial`. Lets the UI decide whether to show the commercial rate input."
+  ),
+  apartmentResidentialCoef: z.number().optional().describe("Multiplier on the residential rate for apartment areas. Defaults to 1."),
+  apartmentCommercialCoef: z.number().optional().describe("Multiplier on the commercial rate for apartment areas. Defaults to 1."),
+  garageResidentialCoef: z.number().optional().describe("Multiplier on the residential rate for garage areas. Defaults to 1."),
+  garageCommercialCoef: z.number().optional().describe("Multiplier on the commercial rate for garage areas. Defaults to 1."),
+  storageResidentialCoef: z.number().optional().describe("Multiplier on the residential rate for storage areas. Defaults to 1."),
+  storageCommercialCoef: z.number().optional().describe("Multiplier on the commercial rate for storage areas. Defaults to 1."),
+  billingBuildingCode: z.string().nullable().optional().describe(
+    "Building identifier used as the first segment of HR01 poziv-na-broj references. Null until the managing org assigns one."
+  ),
+  pricuvaRefMode: z.enum([PricuvaRefMode.APARTMENT, PricuvaRefMode.OWNER]).optional().describe(
+    "Which middle-segment identifier the HR01 poziv-na-broj uses: `apartment` (per-apartment code) or `owner` (per-co-owner code)."
+  ),
+  ownerRepresentatives: z.array(buildingRepresentativeSchema).default([]).describe("Users with the owner-representative role for this building."),
+  deputyRepresentatives: z.array(buildingRepresentativeSchema).default([]).describe("Users with the deputy-representative role, if any.")
+});
+var paginatedBuildingsResponseSchema = paginatedResponseSchema(buildingResponseSchema);
+var emailDirectionSchema = z.enum(["outbound", "inbound"]).describe(
+  "`outbound` when a representative sent the message through the app; `inbound` when Flatie received the message from an external party via the inbound-mail webhook."
+);
+var emailAttachmentSchema = z.looseObject({
+  id: z.string().uuid().describe("UUID of the stored attachment file."),
+  fileName: z.string().describe("Original file name as sent/received."),
+  mimeType: z.string().nullable().optional().describe("MIME type when known."),
+  fileSize: z.coerce.number().nullable().optional().describe("Size in bytes when known."),
+  url: z.string().describe("Time-limited download URL for the attachment (presigned/HMAC-signed).")
+}).describe("A file attached to an email message (inbound or outbound).");
+var emailMessageSchema = z.looseObject({
+  id: z.string().uuid().describe("UUID of the stored email message."),
+  threadId: z.string().uuid().describe("UUID of the thread this message belongs to."),
+  direction: emailDirectionSchema,
+  fromAddress: z.string().describe("Envelope/From address of this message."),
+  fromName: z.string().nullable().optional().describe("Display name parsed from the From header, or null when missing."),
+  toAddresses: z.array(z.string()).default([]).describe("Primary recipients parsed from the To header."),
+  ccAddresses: z.array(z.string()).default([]).describe("Carbon-copy recipients parsed from the Cc header."),
+  subject: z.string().describe("Subject line as stored (inherited from the thread for replies)."),
+  bodyText: z.string().nullable().optional().describe(
+    "Text body. For outbound this is the markdown source the representative wrote (clients render it as markdown); for inbound it is the plain-text MIME part and may be null."
+  ),
+  bodyHtml: z.string().nullable().optional().describe("Rendered HTML body when the original message included one; null otherwise."),
+  messageId: z.string().nullable().optional().describe(
+    "RFC 5322 Message-ID header value. Used for inbound idempotency and References-chain threading when a reply does not match the To-address route."
+  ),
+  sentByUserId: z.string().uuid().nullable().optional().describe("UUID of the representative who triggered the outbound send; null for inbound."),
+  sentByUserName: z.string().nullable().optional().describe("Display name of the sending representative; null for inbound."),
+  createdAt: z.string().describe("ISO-8601 timestamp when the message was persisted server-side."),
+  receivedAt: z.string().nullable().optional().describe(
+    "ISO-8601 timestamp the provider reported receiving the message (inbound only); null/absent for outbound or when the provider omitted it. Clients display `receivedAt ?? createdAt`."
+  ),
+  attachments: z.array(emailAttachmentSchema).default([]).describe("Files attached to this message; empty when none.")
+}).describe("A single email message within a building thread.");
+var emailThreadSchema = z.looseObject({
+  id: z.string().uuid().describe("UUID of the thread."),
+  buildingId: z.string().uuid().describe("UUID of the building that owns the thread."),
+  subject: z.string().describe("Subject line at thread creation; not rewritten on reply."),
+  externalParticipants: z.array(z.string()).default([]).describe(
+    "Unique external email addresses seen on this thread (recipients of outbound + senders of inbound)."
+  ),
+  inboxAddress: z.string().describe("The building\u2019s inbox address at the time the thread was routed."),
+  lastMessageAt: z.string().describe("ISO-8601 timestamp of the most recent message."),
+  lastMessagePreview: z.string().nullable().optional().describe("First ~140 characters of the most recent message body, for list previews."),
+  lastMessageDirection: emailDirectionSchema.nullable().optional().describe("Direction of the most recent message; null when the thread has no messages yet."),
+  messageCount: z.coerce.number().default(0).describe("Total messages currently in the thread."),
+  unreadCount: z.coerce.number().default(0).describe("Count of inbound messages not yet marked as read."),
+  archived: z.boolean().default(false).describe("True when the thread has been archived."),
+  hasAttachments: z.boolean().default(false).describe("True when at least one message in the thread carries attachments.")
+}).describe("Summary row for the thread list view.");
+var emailThreadDetailSchema = emailThreadSchema.extend({
+  messages: z.array(emailMessageSchema).default([]).describe("All messages in the thread, oldest first.")
+}).describe("Full thread detail including every message.");
+var paginatedEmailThreadsResponseSchema = paginatedResponseSchema(emailThreadSchema);
+var emailUnreadCountResponseSchema = z.looseObject({
+  unreadCount: z.coerce.number().describe("Sum of unread inbound messages across the building\u2019s non-archived threads.")
+}).describe("Response of `GET /buildings/:buildingId/email/unread-count`; feeds the inbox badge.");
+var buildingFundsLedgerRowSchema = z.object({
+  ownerId: z.string().uuid().describe("ID of the owner record this row attributes to."),
+  ownerName: z.string().describe("Full name of the owner this row attributes to."),
+  linkedUserId: z.string().uuid().nullable().optional().describe("Registered user ID linked to this owner, when one exists."),
+  ownedApartmentArea: z.number().describe("\u03A3 apartment.area \xD7 ownershipPercentage / 100, in m\xB2."),
+  ownedGarageArea: z.number().describe("\u03A3 garage.area \xD7 ownershipPercentage / 100, in m\xB2."),
+  ownedStorageArea: z.number().describe("\u03A3 storage_unit.area \xD7 ownershipPercentage / 100, in m\xB2."),
+  totalOwnedArea: z.number().describe("Sum of the three area fields, for convenience."),
+  residentialArea: z.number().describe("\u03A3 owned-share-weighted area of RESIDENTIAL-typed units, in m\xB2."),
+  commercialArea: z.number().describe("\u03A3 owned-share-weighted area of COMMERCIAL-typed units, in m\xB2."),
+  expected: z.number().describe("\u03A3 area \xD7 kindTypeCoef \xD7 rate[type] across the user\u2019s units, in EUR."),
+  paid: z.number().describe(
+    "Attributed apartment income for the period, in EUR. Does not include garage/storage."
+  ),
+  diff: z.number().describe("paid \u2212 expected, in EUR.")
+}).meta({ id: "BuildingFundsLedgerRow" });
+var buildingFundsLedgerResponseSchema = z.object({
+  buildingId: z.string().uuid(),
+  period: z.string().regex(/^\d{4}-\d{2}$/).describe("Reporting month, `YYYY-MM`."),
+  monthlyFeePerSqm: z.number().nullable().describe(
+    "Residential rate in EUR per m\xB2 used for this report; null when the building has none set."
+  ),
+  monthlyFeeCommercialPerSqm: z.number().nullable().describe(
+    "Commercial rate in EUR per m\xB2 used for this report; null when the building has no commercial rate."
+  ),
+  rows: z.array(buildingFundsLedgerRowSchema).describe("One entry per co-owner with any owned area on the building.")
+}).meta({ id: "BuildingFundsLedgerResponse" });
+var buildingSettingsResponseSchema = z.looseObject({
+  id: z.string().uuid().optional(),
+  buildingId: z.string().uuid().optional(),
+  ownershipPercentageSource: z.enum(["units", "users"]).nullable().optional().describe(
+    "Which ownership-percentage source consensus polls use: `units` (unit surface areas) or `users` (per-user shares). Null = auto-detect (units when the building has units, users otherwise)."
+  ),
+  requireApprovalForNotices: z.boolean().describe("When true, co-owner notices need representative approval before publishing."),
+  requireApprovalForFailureReports: z.boolean().describe("When true, failure reports need representative approval before publishing."),
+  requireApprovalForPolls: z.boolean().describe("When true, co-owner polls need representative approval before opening."),
+  requireApprovalForEvents: z.boolean().describe("When true, co-owner events need representative approval before publishing."),
+  allowAnonymousPosting: z.boolean().describe("When true, co-owners may post notices/reports without their name shown."),
+  faqEnabled: z.boolean().describe("Whether the FAQ section is available in this building."),
+  houseRulesEnabled: z.boolean().describe("Whether the house-rules section is available in this building."),
+  chatEnabled: z.boolean().describe("Whether building chat is available in this building."),
+  commentsEnabled: z.boolean().describe("Whether commenting on notices/reports is available in this building."),
+  votingCertiliaEnabled: z.boolean().describe("Deprecated: emitted for old clients, no longer enforced."),
+  votingPrintedSignatureEnabled: z.boolean().describe("Deprecated: emitted for old clients, no longer enforced."),
+  minVerificationTierForConsensus: z.number().int().describe(
+    "Deprecated: derived from minVotingStrengthForConsensus for old clients (EID \u2192 3, else 2)."
+  ),
+  minVotingStrengthForConsensus: z.number().int().optional().describe(
+    "Minimum VotingStrength rung (EMAIL=10, PHONE=20, EID=30) an ONLINE consensus ballot must carry. Rep-recorded paper votes are never gated by it."
+  ),
+  addonAiEnabled: z.boolean().optional().describe("Whether the AI add-on is enabled (billed on the next HUB-3 invoice)."),
+  addonStorage5gbEnabled: z.boolean().optional().describe("Whether the 5 GB storage add-on is enabled."),
+  createdAt: z.string().nullable().optional(),
+  updatedAt: z.string().nullable().optional()
+}).describe("Payload of `GET /buildings/:buildingId/settings`.");
+var conversationParticipantSchema = z.looseObject({
+  id: z.string().describe("Participation record ID."),
+  userId: z.string().describe("UUID of the participant user."),
+  name: z.string().describe("Participant display name."),
+  image: z.string().nullable().optional().describe("Avatar URL; null when the user has no profile image."),
+  roleType: z.string().nullable().optional().describe(
+    "Participant role within the conversation's scope \u2014 a building role for building chats, an org role for org chats; null when not applicable."
+  ),
+  lastReadAt: z.string().describe("ISO-8601 timestamp of the last message this participant has read.")
+}).describe("A participant in a chat conversation.");
+var conversationLastMessageSchema = z.looseObject({
+  id: z.string().describe("UUID of the message."),
+  content: z.string().describe("Plain-text message body (may be truncated for preview)."),
+  senderId: z.string().nullable().describe("UUID of the sender; null when the account was deleted (anonymized)."),
+  senderName: z.string().nullable().describe("Display name of the sender; null when the account was deleted."),
+  createdAt: z.string().describe("ISO-8601 timestamp when the message was sent.")
+}).describe("Last message preview embedded in conversation list responses.");
+var conversationResponseSchema = z.looseObject({
+  id: z.string().describe("UUID of the conversation."),
+  buildingId: z.string().nullable().describe("UUID of the building this conversation belongs to; null for org-scoped chats."),
+  orgId: z.string().nullable().optional().describe(
+    "UUID of the organization this conversation belongs to; null/absent for building-scoped chats. Exactly one of buildingId/orgId is set."
+  ),
+  type: z.enum([ConversationType.DIRECT, ConversationType.GROUP]).describe("`direct` for 1:1 threads, `group` for named multi-user conversations."),
+  name: z.string().nullable().optional().describe("Group name; null for direct conversations."),
+  participants: z.array(conversationParticipantSchema).describe("All participants in the conversation."),
+  lastMessage: conversationLastMessageSchema.nullable().optional().describe("Most recent message; null when no messages have been sent."),
+  unreadCount: z.number().describe("Number of unread messages for the calling user in this conversation."),
+  lastMessageAt: z.string().describe("ISO-8601 timestamp of the most recent message."),
+  createdAt: z.string().describe("ISO-8601 timestamp when the conversation was created.")
+}).describe("Conversation response from list and detail endpoints.");
+var chatMessageResponseSchema = z.looseObject({
+  id: z.string().describe("UUID of the message."),
+  conversationId: z.string().describe("UUID of the parent conversation."),
+  senderId: z.string().nullable().describe("UUID of the sender; null when the account was deleted (anonymized)."),
+  senderName: z.string().nullable().describe("Display name of the sender; null when the account was deleted."),
+  senderImage: z.string().nullable().optional().describe("Avatar URL of the sender; null when no profile image is set."),
+  senderRoleType: z.string().nullable().optional().describe(
+    "Sender role within the conversation's scope \u2014 a building role for building chats, an org role for org chats; null when not applicable."
+  ),
+  content: z.string().describe("Plain-text message body."),
+  createdAt: z.string().describe("ISO-8601 timestamp when the message was sent.")
+}).describe("Chat message response from message list endpoints.");
+var conversationsListResponseSchema = z.looseObject({
+  data: z.array(conversationResponseSchema).describe("Page of conversations."),
+  nextCursor: z.string().nullable().optional().describe("Opaque cursor for the next page; null when there are no more results.")
+}).describe("Cursor-paginated list of conversations.");
+var messagesListResponseSchema = z.looseObject({
+  data: z.array(chatMessageResponseSchema).describe("Page of messages."),
+  nextCursor: z.string().nullable().optional().describe("Opaque cursor for the next page; null when there are no more results.")
+}).describe("Cursor-paginated list of chat messages.");
+var unreadCountResponseSchema = z.looseObject({
+  unreadCount: z.number().describe("Total number of unread messages across all conversations.")
+}).describe("Unread message count for a chat scope (building or organization).");
+var commentResponseSchema = z.looseObject({
+  id: z.string().uuid(),
+  entityType: z.string().describe(
+    "Type of entity this comment is attached to. One of `notice`, `failure_report`, `event`, `board_card`."
+  ),
+  entityId: z.string().describe(
+    "UUID of the entity (notice, failure report, event, or board card) this comment belongs to."
+  ),
+  userId: z.string().describe("UUID of the user who authored the comment."),
+  userName: z.string().nullable().describe("Author display name. Null when the authoring user was deleted."),
+  userImage: z.string().nullable().describe("Absolute URL of the author avatar, or null if the user has no profile image."),
+  content: z.string().describe("Comment body text as entered by the user."),
+  createdAt: z.string().describe("ISO-8601 timestamp when the comment was created."),
+  updatedAt: z.string().describe("ISO-8601 timestamp of the last edit; equal to createdAt if never edited."),
+  canEdit: z.boolean().describe("True when the calling user is allowed to edit this comment (author only)."),
+  canDelete: z.boolean().describe(
+    "True when the calling user is allowed to delete this comment (author or moderator)."
+  )
+});
+var commonStatusOptions = [
+  CommonStatus.ACTIVE,
+  CommonStatus.COMPLETED,
+  CommonStatus.CANCELLED
+];
+var approvalStatusOptions = [
+  ApprovalStatus.PENDING,
+  ApprovalStatus.APPROVED,
+  ApprovalStatus.REJECTED
+];
+var failureStatusOptions = [
+  FailureStatus.PENDING,
+  FailureStatus.IN_PROGRESS,
+  FailureStatus.RESOLVED
+];
+var priorityOptions = ["normal", "urgent"];
+var CommonStatusSchema = z.enum(commonStatusOptions);
+var ApprovalStatusSchema = z.enum(approvalStatusOptions);
+var FailureStatusSchema = z.enum(failureStatusOptions);
+var PrioritySchema = z.enum(priorityOptions);
+
+// src/schemas/responses/documents.ts
+var DOCUMENT_SOURCE_TYPES = [
+  "notice",
+  "failure_report",
+  "poll",
+  "event",
+  "board_card",
+  "expense_transaction"
+];
+var documentLinkedRecordSchema = z.looseObject({
+  type: z.string().describe(
+    "Kind of entity this document is linked to. Known values are listed in DOCUMENT_SOURCE_TYPES; accepts future entity types so new link sources never break parsing."
+  ),
+  id: z.string().describe("UUID of the linked entity."),
+  title: z.string().optional().nullable().describe("Title of the linked entity."),
+  status: FailureStatusSchema.optional().nullable().describe("Status of the linked failure report; null for other entity types."),
+  createdAt: z.string().optional().nullable().describe("ISO-8601 creation timestamp."),
+  updatedAt: z.string().optional().nullable().describe("ISO-8601 last-edit timestamp.")
+}).describe("Reference to an entity linked to a document.");
+var documentFileSchema = z.looseObject({
+  id: z.string().describe("UUID of the file record."),
+  fileUrl: z.string().describe("URL to download or preview the file."),
+  fileName: z.string().describe("Original file name as uploaded."),
+  mimeType: z.string().optional().nullable().describe("MIME type of the file; null when not detected."),
+  fileSize: z.number().optional().nullable().describe("File size in bytes; null when not recorded."),
+  createdAt: z.union([z.string(), z.date()]).describe("Timestamp when the file was uploaded.")
+}).describe("Individual file within a document container.");
+var documentResponseSchema = z.looseObject({
+  id: z.string().uuid().describe("UUID of the document."),
+  containerId: z.string().uuid().optional().describe("UUID of the parent container; absent for standalone documents."),
+  buildingId: z.string().uuid().describe("UUID of the building this document belongs to."),
+  title: z.string().describe("Document title displayed in the UI."),
+  description: z.string().optional().nullable().describe("Optional description; null when not provided."),
+  documentUrl: z.string().optional().nullable().describe("Legacy single-file URL; null for multi-file documents."),
+  files: z.array(documentFileSchema).optional().default([]).describe("File attachments; empty array when no files are attached."),
+  uploadedBy: z.string().uuid().describe("UUID of the user who uploaded the document."),
+  uploadedByName: z.string().describe("Display name of the uploader."),
+  createdAt: z.union([z.string(), z.date()]).describe("ISO-8601 timestamp when the document was created."),
+  updatedAt: z.union([z.string(), z.date()]).nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited."),
+  canEdit: z.boolean().describe("True when the calling user may edit this document."),
+  canDelete: z.boolean().describe("True when the calling user may delete this document."),
+  isOwner: z.boolean().describe("True when the calling user is the creator of this document."),
+  isPrivate: z.boolean().optional().default(false).describe("True when the document is visible only to managers."),
+  type: z.string().optional().describe(
+    "Source entity type ('document' for standalone uploads; otherwise an entity type from DOCUMENT_SOURCE_TYPES). Accepts future entity types so new link sources never break parsing."
+  ),
+  sourceId: z.string().optional().describe("UUID of the source entity when type is set; absent for standalone documents."),
+  sourceTitle: z.string().optional().describe("Title of the source entity for quick display; absent for standalone documents."),
+  linkedRecords: z.array(documentLinkedRecordSchema).optional().default([]).describe("Entities linked to this document; empty when none."),
+  visibility: z.enum(["public", "private"]).optional().describe("Document visibility level; absent when the building uses default visibility.")
+}).describe("Document response from list and detail endpoints.");
+var paginatedDocumentsResponseSchema = paginatedResponseSchema(documentResponseSchema);
+var entityLinkMetadataSchema = z.looseObject({
+  status: z.string().nullable().optional().describe("Raw status enum value (e.g. failure-report status); the client localizes it."),
+  date: z.string().nullable().optional().describe("Primary ISO date for the entity (created/start); the client formats per locale."),
+  amount: z.number().nullable().optional().describe("Monetary amount (e.g. expense cost); the client formats as currency."),
+  secondary: z.string().nullable().optional().describe("Already-human supplementary text such as a contractor name or accounting period.")
+}).describe("Per-type display metadata for a linked entity; all fields optional and raw.");
+var entityLinkReferenceSchema = z.looseObject({
+  id: z.string().uuid().describe("UUID of the entity on the far end of the link."),
+  type: linkableEntityTypeSchema.describe("Kind of entity on the far end."),
+  linkType: entityLinkTypeSchema,
+  direction: z.enum(["outgoing", "incoming"]).describe(
+    "Whether the anchor entity is the source (`outgoing`) or the target (`incoming`) of the stored link row."
+  ),
+  title: z.string().nullable().optional().describe("Display title of the far entity; null when it has none."),
+  metadata: entityLinkMetadataSchema.nullable().optional().describe("Optional per-type display metadata (status, date, amount, secondary text).")
+}).describe("A link from the anchor entity to another entity, with display enrichment.");
+var entityLinksResponseSchema = z.looseObject({
+  links: z.array(entityLinkReferenceSchema).describe("Every link touching the anchor entity, outgoing and incoming.")
+}).describe("All links touching the anchor entity, in both directions.");
+var entityLinkCountsResponseSchema = z.looseObject({
+  counts: z.record(z.string(), z.number()).describe("Map of entity id \u2192 number of entity links touching it.")
+}).describe("Batch link counts keyed by entity id.");
+var eventUserSchema = z.looseObject({
+  id: z.string().describe("UUID of the user."),
+  name: z.string().describe("User display name.")
+}).describe("Minimal user reference embedded in event responses.");
+var entityScheduleReferenceSchema = z.looseObject({
+  id: z.string().describe("UUID of the parent entity (failure report, notice)."),
+  // One of 'failure_report' | 'notice' — left as a free string to
+  // tolerate new entity types added backend-side.
+  type: z.string().describe(
+    "Kind of entity using this event as its schedule. One of `failure_report`, `notice`."
+  ),
+  title: z.string().describe("Title of the parent entity for quick reference in the calendar.")
+}).describe("Parent entity that attaches this event as its scheduled work window.");
+var eventResponseSchema = z.looseObject({
+  // Recurring events are expanded server-side into virtual instances whose
+  // id is `<parentUuid>_<occurrenceISO>` (e.g. `019f…d_2026-08-25T07:00:00.000Z`);
+  // only non-recurring events and parents carry a bare UUID. A plain
+  // `.uuid()` here rejected every recurrence instance and took down any
+  // calendar surface with a recurring event in the queried window.
+  id: z.string().regex(
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(_.+)?$/i,
+    "Event id must be a UUID, optionally suffixed with `_<occurrence timestamp>` for recurrence instances"
+  ),
+  title: z.string().describe("Event title displayed in the calendar."),
+  type: z.string().describe(
+    "Event type (`service`, `inspection`, `maintenance`, `meeting`, `discussion`, `planned_works`, `waste_collection`, `other`)."
+  ),
+  description: z.string().optional().nullable().describe("Free-form event description; null or absent when not provided."),
+  startDate: z.string().describe("ISO-8601 timestamp when the event starts."),
+  endDate: z.string().describe("ISO-8601 timestamp when the event ends."),
+  color: z.string().describe(
+    "Display color \u2014 one of `blue`, `green`, `red`, `yellow`, `purple`, `orange`, `gray`."
+  ),
+  buildingId: z.string().uuid().describe("UUID of the building this event is scheduled in."),
+  recurrenceType: z.string().describe("Recurrence cadence (`none`, `weekly`, `biweekly`, `monthly`, `yearly`)."),
+  subtype: z.string().nullable().optional().describe(
+    "Free-form subtype qualifier (used for waste-collection subtypes like `mixed`, `bio`, `paper_cardboard`)."
+  ),
+  recurrenceEndDate: z.string().nullable().optional().describe(
+    "ISO-8601 date after which the recurrence stops. Null for open-ended recurring events."
+  ),
+  isRecurrenceInstance: z.boolean().optional().describe(
+    "True when this payload represents an expanded instance of a recurring parent (rather than the parent itself)."
+  ),
+  originalEventId: z.string().optional().describe(
+    "For recurrence instances, the UUID of the recurring parent event; absent on standalone events."
+  ),
+  user: eventUserSchema.optional().describe("Creator of the event; omitted when the event is anonymous or seeded by the system."),
+  isAnonymous: z.boolean().describe("True when the creator chose to hide their identity from other residents."),
+  approved: z.boolean().describe("True when the event has been approved by a representative and is publicly visible."),
+  allowComments: z.boolean().optional().default(true).describe("True when comments are enabled on this event."),
+  canEdit: z.boolean().describe("True when the calling user is allowed to edit this event."),
+  canDelete: z.boolean().describe("True when the calling user is allowed to delete this event."),
+  canApprove: z.boolean().describe("True when the calling user is allowed to approve or reject this event."),
+  isOwner: z.boolean().describe("True when the calling user is the creator of this event."),
+  onlineMeetingUrl: z.string().nullable().optional().describe("Optional join URL for online meetings; null for in-person events."),
+  meetingMinutes: z.string().nullable().optional().describe(
+    "Rich-text minutes captured during the meeting; null until the minute-taker submits them."
+  ),
+  minuteTakerId: z.string().nullable().optional().describe(
+    "UUID of the user assigned to record minutes; null for events that do not require one."
+  ),
+  usedAsScheduleBy: z.array(entityScheduleReferenceSchema).optional().describe(
+    "Entities (failure reports, notices) that reference this event as their schedule; empty when none do."
+  ),
+  createdAt: z.string().optional().describe(
+    "ISO-8601 timestamp when the event was created; absent on synthesized recurrence instances."
+  )
+});
+var paginatedEventsResponseSchema = paginatedResponseSchema(eventResponseSchema);
+var nestedFileSchema = z.looseObject({
+  id: z.string().uuid(),
+  title: z.string().describe("Human-readable file name displayed in the UI."),
+  documentUrl: z.string().optional().nullable().describe(
+    "Absolute URL to download or preview the file. Null/absent when the underlying object has been removed from storage."
+  )
+}).describe("Lightweight reference to a file attached to a parent entity (notice, report, etc.).");
+var nestedEventSchema = z.looseObject({
+  id: z.string(),
+  title: z.string().describe("Event title as it appears in the calendar."),
+  type: z.string().optional().describe(
+    "Event type (`service`, `inspection`, `maintenance`, `meeting`, `discussion`, `planned_works`, `waste_collection`, `other`)."
+  ),
+  description: z.string().nullable().optional().describe("Free-form event description; null when no description was provided."),
+  startDate: z.string().describe("ISO-8601 timestamp when the event starts."),
+  endDate: z.string().describe("ISO-8601 timestamp when the event ends."),
+  color: z.string().optional().describe(
+    "Calendar display color \u2014 one of `blue`, `green`, `red`, `yellow`, `purple`, `orange`, `gray`."
+  ),
+  userId: z.string().nullable().optional().describe("UUID of the user who created the event; null for system-scheduled events."),
+  buildingId: z.string().optional().describe("UUID of the building the event belongs to."),
+  createdAt: z.string().optional().describe("ISO-8601 timestamp when the event was created."),
+  updatedAt: z.string().nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited.")
+}).describe("Nested event reference embedded inside notices and failure reports.");
+var pollReferenceSchema = z.looseObject({
+  id: z.string().uuid(),
+  question: z.string().describe("Poll question text shown to voters."),
+  pollType: z.string().describe("`COMMUNITY` for majority polls, `CONSENSUS` for ownership-weighted polls."),
+  deadline: z.string().optional().nullable().describe(
+    "ISO-8601 datetime after which votes are rejected. Null for open-ended consensus polls."
+  )
+}).describe("Lightweight poll reference embedded in other entities (failure reports, logs).");
+
+// src/schemas/responses/failure-reports.ts
+var failureReportResponseSchema = z.looseObject({
+  id: z.string().uuid(),
+  buildingId: z.string().uuid().describe("UUID of the building the report was filed against."),
+  title: z.string().describe("Short summary of the reported failure."),
+  description: z.string().optional().nullable().describe("Detailed description of the failure; null when the reporter left it blank."),
+  files: z.array(nestedFileSchema).default([]).describe("Attached photos or documents supporting the report; empty array when none."),
+  submittedBy: z.string().uuid().nullable().describe(
+    "UUID of the reporting user. Null when the reporting user has been deleted from the platform."
+  ),
+  submittedByName: z.string().optional().nullable().describe(
+    "Reporter display name. Null when `isAnonymous` is true or the user has been deleted."
+  ),
+  status: FailureStatusSchema.describe(
+    "Lifecycle status: `pending` (newly filed), `in_progress` (assigned work), `resolved` (closed out)."
+  ),
+  approved: z.boolean().describe("True when a representative has approved the report for public visibility."),
+  isAnonymous: z.boolean().optional().default(false).describe("True when the reporter opted to hide their identity from other residents."),
+  priority: PrioritySchema.optional().nullable().describe(
+    "`normal` for standard reports, `urgent` to flag immediate attention. Null when unset."
+  ),
+  createdAt: z.string().describe("ISO-8601 timestamp when the report was filed."),
+  updatedAt: z.string().nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited."),
+  allowComments: z.boolean().optional().default(true).describe("True when comments are enabled on this failure report."),
+  canEdit: z.boolean().describe("True when the calling user is allowed to edit this report."),
+  canDelete: z.boolean().describe("True when the calling user is allowed to delete this report."),
+  canApprove: z.boolean().describe("True when the calling user may approve or reject the report."),
+  isOwner: z.boolean().describe("True when the calling user is the creator of this report."),
+  canStatus: z.boolean().describe(
+    "True when the calling user may change the lifecycle status (e.g. mark as in progress or resolved)."
+  ),
+  locationType: z.string().optional().nullable().describe("`common_area` or `own_unit`. Null when the location has not been classified."),
+  commonAreaDescription: z.string().optional().nullable().describe("Free-text location when `locationType` is `common_area`; null otherwise."),
+  unitType: z.string().optional().nullable().describe(
+    "Kind of unit when `locationType` is `own_unit` (`apartment`, `garage`, `storage_unit`); null otherwise."
+  ),
+  unitId: z.string().uuid().optional().nullable().describe("UUID of the specific unit when `locationType` is `own_unit`; null otherwise."),
+  unitName: z.string().optional().nullable().describe('Resolved human-readable label of the unit (e.g. "Apartment 4B"); null when unset.'),
+  events: z.array(nestedEventSchema).default([]).describe("Events (scheduled work or meetings) linked to this report; empty when none."),
+  polls: z.array(pollReferenceSchema).default([]).describe("Polls created to gather resident input on this report; empty when none.")
+});
+var paginatedFailureReportsResponseSchema = paginatedResponseSchema(
+  failureReportResponseSchema
+);
+var faqResponseSchema = z.looseObject({
+  id: z.string().uuid(),
+  buildingId: z.string().uuid().describe("UUID of the building this FAQ entry belongs to."),
+  question: z.string().describe("FAQ question text as displayed to residents."),
+  answer: z.string().describe("FAQ answer text in plain markdown."),
+  category: z.enum(["representative", "manager"]).describe(
+    "Target audience. `representative` entries are visible to building representatives; `manager` entries are visible to management-firm staff."
+  ),
+  orderIndex: z.number().describe("Zero-based display order within the building; lower values appear first."),
+  createdBy: z.string().uuid().nullable().describe("UUID of the user who created the FAQ; null if the original author was removed."),
+  createdAt: z.string().describe("ISO-8601 timestamp when the FAQ was created."),
+  updatedAt: z.string().nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited.")
+});
+var camtImportedEntrySchema = z.looseObject({
+  transactionId: z.string().uuid().describe("UUID of the newly inserted income_transactions or expense_transactions row."),
+  type: z.enum([TransactionType.INCOME, TransactionType.EXPENSE]).describe(
+    "`INCOME` when the CAMT entry was a credit (money into the fund); `EXPENSE` when it was a debit."
+  ),
+  bankRef: z.string().describe(
+    "Bank-assigned unique reference (`AcctSvcrRef` from CAMT.053) used as the idempotency key. Re-importing the same file will skip rows that already have this ref."
+  ),
+  amount: z.string().describe('Entry amount serialized as a decimal string (e.g. "1234.56").'),
+  bookingDate: z.string().describe("ISO-8601 date (YYYY-MM-DD) the entry was booked, taken from `BookgDt`."),
+  description: z.string().nullable().describe(
+    "Unstructured remittance info (`RmtInf/Ustrd`) concatenated into a single string, or null when the entry carried none."
+  )
+}).describe("One imported CAMT entry persisted to the building's fund transactions.");
+var camtImportErrorSchema = z.looseObject({
+  bankRef: z.string().nullable().describe(
+    "`AcctSvcrRef` of the offending entry, or null when the entry lacked one (which itself is an error)."
+  ),
+  reason: z.string().describe(
+    "Human-readable explanation of why this entry was rejected. Surfaced directly in the upload-result toast."
+  )
+}).describe("A CAMT entry that failed to import, with the reason.");
+var camtImportResponseSchema = z.looseObject({
+  statementId: z.string().describe(
+    "Statement identifier from the CAMT `<Stmt><Id>` field, echoed back so the admin can correlate with the source file."
+  ),
+  statementIban: z.string().describe(
+    "IBAN of the account the statement was issued against. Validated to match `building.iban` before any row is persisted."
+  ),
+  periodFrom: z.string().nullable().describe(
+    "ISO-8601 timestamp of the statement start (`FrToDt/FrDtTm`), or null when the bank omitted the period block."
+  ),
+  periodTo: z.string().nullable().describe("ISO-8601 timestamp of the statement end (`FrToDt/ToDtTm`), or null."),
+  importedCount: z.number().int().nonnegative().describe("Number of CAMT entries that produced a new transaction row in this call."),
+  skippedCount: z.number().int().nonnegative().describe(
+    "Number of CAMT entries whose `bankRef` already existed for this building (idempotent re-import)."
+  ),
+  errorCount: z.number().int().nonnegative().describe("Number of CAMT entries that were rejected for the reasons listed in `errors`."),
+  imported: z.array(camtImportedEntrySchema).describe("Detail rows for each newly persisted transaction."),
+  errors: z.array(camtImportErrorSchema).describe("Detail rows for each rejected entry, matched 1:1 against `errorCount`.")
+}).describe("Outcome summary for a CAMT.053 statement import.");
+var noticeResponseSchema = z.looseObject({
+  id: z.string().uuid(),
+  buildingId: z.string().uuid().describe("UUID of the building this notice was posted in."),
+  title: z.string().describe("Notice title shown in lists and the notice detail view."),
+  content: z.string().describe("Notice body text (rich-text / HTML allowed)."),
+  files: z.array(nestedFileSchema).default([]).describe("Attached documents or images; empty array when none are uploaded."),
+  createdBy: z.string().uuid().nullable().describe("UUID of the notice author; null when the authoring user has been deleted."),
+  approved: z.boolean().describe("True once a representative has approved the notice for public visibility."),
+  isAnonymous: z.boolean().optional().default(false).describe("True when the author opted to hide their identity from other residents."),
+  pinned: z.boolean().optional().default(false).describe("True when the notice is pinned to the top of the notice board."),
+  createdAt: z.string().describe("ISO-8601 timestamp when the notice was created."),
+  updatedAt: z.string().nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited."),
+  createdByName: z.string().nullable().optional().describe(
+    "Author display name. Null when `isAnonymous` is true or the author has been deleted."
+  ),
+  allowComments: z.boolean().optional().default(true).describe("True when comments are enabled on this notice."),
+  commentsCount: z.number().int().default(0).describe("Number of non-archived comments on this notice."),
+  canApprove: z.boolean().describe("True when the calling user may approve or reject the notice."),
+  canEdit: z.boolean().describe("True when the calling user may edit the notice."),
+  canDelete: z.boolean().describe("True when the calling user may delete the notice."),
+  isOwner: z.boolean().describe("True when the calling user is the creator of this notice."),
+  events: z.array(nestedEventSchema).default([]).describe("Calendar events linked to the notice (e.g. planned works window); empty when none.")
+});
+var paginatedNoticesResponseSchema = paginatedResponseSchema(noticeResponseSchema);
+var baseNotificationDataSchema = z.object({
+  entityType: z.string().optional(),
+  entityId: z.string().optional(),
+  actorId: z.string().uuid().optional(),
+  actorName: z.string().optional(),
+  actionUrl: z.string().optional()
+});
+var noticeCreatedDataSchema = baseNotificationDataSchema.extend({
+  title: z.string(),
+  content: z.string(),
+  createdAt: z.string().or(z.date()),
+  isPinned: z.boolean().optional()
+});
+var noticeApprovedDataSchema = baseNotificationDataSchema.extend({
+  title: z.string()
+});
+var noticeRejectedDataSchema = baseNotificationDataSchema.extend({
+  title: z.string()
+});
+var pollCreatedDataSchema = baseNotificationDataSchema.extend({
+  question: z.string(),
+  pollType: z.string(),
+  deadline: z.string().or(z.date()).nullable().optional(),
+  options: z.array(z.string())
+});
+var pollFinalizedDataSchema = baseNotificationDataSchema.extend({
+  question: z.string(),
+  pollType: z.string(),
+  options: z.array(z.string())
+});
+var eventCreatedOrUpdatedDataSchema = baseNotificationDataSchema.extend({
+  title: z.string(),
+  description: z.string().nullable().optional(),
+  eventType: z.string().nullable().optional(),
+  subtype: z.string().nullable().optional(),
+  startDate: z.string().or(z.date()),
+  endDate: z.string().or(z.date()).nullable().optional(),
+  color: z.string().nullable().optional()
+});
+var eventCancelledDataSchema = baseNotificationDataSchema.extend({
+  title: z.string(),
+  description: z.string().nullable().optional(),
+  eventType: z.string().nullable().optional(),
+  startDate: z.string().or(z.date()),
+  endDate: z.string().or(z.date()).nullable().optional()
+});
+var wasteReminderDataSchema = baseNotificationDataSchema.extend({
+  title: z.string(),
+  /**
+   * @deprecated The backend no longer sends a pre-rendered label — derive it
+   * from `subtype` in the client's locale. Present only on pre-2026-07 rows.
+   */
+  wasteTypeLabel: z.string().optional(),
+  subtype: z.string(),
+  startDate: z.string().or(z.date())
+});
+var failureReportCreatedDataSchema = baseNotificationDataSchema.extend({
+  title: z.string(),
+  description: z.string().nullable().optional(),
+  location: z.string().nullable().optional()
+});
+var failureReportStatusDataSchema = baseNotificationDataSchema.extend({
+  title: z.string(),
+  status: z.string(),
+  description: z.string().nullable().optional()
+});
+var failureReportApprovedDataSchema = baseNotificationDataSchema.extend({
+  title: z.string()
+});
+var failureReportDeclinedDataSchema = baseNotificationDataSchema.extend({
+  title: z.string()
+});
+var buildingJoinRequestReceivedDataSchema = baseNotificationDataSchema.extend({
+  userName: z.string(),
+  userEmail: z.string(),
+  message: z.string().nullable().optional()
+});
+var buildingJoinRequestDecidedDataSchema = baseNotificationDataSchema.extend({
+  rejectionReason: z.string().nullable().optional()
+});
+var buildingMemberJoinedDataSchema = baseNotificationDataSchema;
+var buildingRoleChangedDataSchema = baseNotificationDataSchema.extend({
+  role: z.string()
+});
+var ownerRecordLinkedDataSchema = baseNotificationDataSchema.extend({
+  buildingName: z.string()
+});
+var buildingPendingApprovalDataSchema = baseNotificationDataSchema.extend({
+  buildingName: z.string()
+});
+var buildingApprovedDataSchema = baseNotificationDataSchema.extend({
+  buildingName: z.string()
+});
+var buildingRejectedDataSchema = baseNotificationDataSchema.extend({
+  buildingName: z.string(),
+  rejectionReason: z.string()
+});
+var chatMessageDataSchema = baseNotificationDataSchema.extend({
+  senderName: z.string(),
+  messagePreview: z.string(),
+  conversationId: z.string().uuid()
+});
+var emailReceivedDataSchema = baseNotificationDataSchema.extend({
+  threadId: z.string().uuid(),
+  subject: z.string(),
+  fromAddress: z.string(),
+  preview: z.string().nullable().optional()
+});
+var orgMemberAddedDataSchema = baseNotificationDataSchema.extend({
+  orgName: z.string(),
+  orgRole: z.string()
+});
+var orgMemberRemovedDataSchema = baseNotificationDataSchema.extend({
+  orgName: z.string()
+});
+var orgMemberRoleChangedDataSchema = baseNotificationDataSchema.extend({
+  orgName: z.string(),
+  orgRole: z.string()
+});
+var eventReminderDataSchema = baseNotificationDataSchema.extend({
+  title: z.string(),
+  // Pre-formatted wall-clock time in Europe/Zagreb (e.g. "18:00") — template var.
+  startTime: z.string().optional(),
+  // Occurrence start (not the parent event's) — feeds the calendar deep-link `date` param.
+  startDate: z.string().or(z.date())
+});
+var pollVoteSignatureDataSchema = baseNotificationDataSchema.extend({
+  question: z.string()
+});
+var pollVoteSignatureRejectedDataSchema = pollVoteSignatureDataSchema.extend({
+  reason: z.string().nullable().optional()
+});
+var unimplementedDataSchema = baseNotificationDataSchema;
+({
+  [NotificationType.NOTICE_CREATED]: noticeCreatedDataSchema,
+  [NotificationType.NOTICE_APPROVED]: noticeApprovedDataSchema,
+  [NotificationType.NOTICE_REJECTED]: noticeRejectedDataSchema,
+  [NotificationType.POLL_CREATED]: pollCreatedDataSchema,
+  [NotificationType.POLL_DEADLINE_24H]: unimplementedDataSchema,
+  [NotificationType.POLL_DEADLINE_1H]: unimplementedDataSchema,
+  [NotificationType.POLL_FINALIZED]: pollFinalizedDataSchema,
+  [NotificationType.EVENT_CREATED]: eventCreatedOrUpdatedDataSchema,
+  [NotificationType.EVENT_UPDATED]: eventCreatedOrUpdatedDataSchema,
+  [NotificationType.EVENT_CANCELLED]: eventCancelledDataSchema,
+  [NotificationType.EVENT_REMINDER_24H]: eventReminderDataSchema,
+  [NotificationType.EVENT_REMINDER_1H]: eventReminderDataSchema,
+  [NotificationType.WASTE_REMINDER_MIXED]: wasteReminderDataSchema,
+  [NotificationType.WASTE_REMINDER_BIO]: wasteReminderDataSchema,
+  [NotificationType.WASTE_REMINDER_PLASTIC_METAL]: wasteReminderDataSchema,
+  [NotificationType.WASTE_REMINDER_PAPER_CARDBOARD]: wasteReminderDataSchema,
+  [NotificationType.FAILURE_REPORT_CREATED]: failureReportCreatedDataSchema,
+  [NotificationType.FAILURE_REPORT_STATUS_CHANGED]: failureReportStatusDataSchema,
+  [NotificationType.FAILURE_REPORT_RESOLVED]: failureReportStatusDataSchema,
+  [NotificationType.FAILURE_REPORT_APPROVED]: failureReportApprovedDataSchema,
+  [NotificationType.FAILURE_REPORT_DECLINED]: failureReportDeclinedDataSchema,
+  [NotificationType.PAYMENT_DUE]: unimplementedDataSchema,
+  [NotificationType.PAYMENT_RECEIVED]: unimplementedDataSchema,
+  [NotificationType.BUILDING_JOIN_REQUEST_RECEIVED]: buildingJoinRequestReceivedDataSchema,
+  [NotificationType.BUILDING_JOIN_REQUEST_APPROVED]: buildingJoinRequestDecidedDataSchema,
+  [NotificationType.BUILDING_JOIN_REQUEST_REJECTED]: buildingJoinRequestDecidedDataSchema,
+  [NotificationType.BUILDING_MEMBER_JOINED]: buildingMemberJoinedDataSchema,
+  [NotificationType.BUILDING_ROLE_CHANGED]: buildingRoleChangedDataSchema,
+  [NotificationType.OWNER_RECORD_LINKED]: ownerRecordLinkedDataSchema,
+  [NotificationType.BUILDING_PENDING_APPROVAL]: buildingPendingApprovalDataSchema,
+  [NotificationType.BUILDING_APPROVED]: buildingApprovedDataSchema,
+  [NotificationType.BUILDING_REJECTED]: buildingRejectedDataSchema,
+  [NotificationType.ORG_MEMBER_ADDED]: orgMemberAddedDataSchema,
+  [NotificationType.ORG_MEMBER_REMOVED]: orgMemberRemovedDataSchema,
+  [NotificationType.ORG_MEMBER_ROLE_CHANGED]: orgMemberRoleChangedDataSchema,
+  [NotificationType.CHAT_MESSAGE]: chatMessageDataSchema,
+  [NotificationType.EMAIL_RECEIVED]: emailReceivedDataSchema,
+  [NotificationType.POLL_VOTE_SIGNATURE_PENDING]: pollVoteSignatureDataSchema,
+  [NotificationType.POLL_VOTE_SIGNATURE_APPROVED]: pollVoteSignatureDataSchema,
+  [NotificationType.POLL_VOTE_SIGNATURE_REJECTED]: pollVoteSignatureRejectedDataSchema,
+  [NotificationType.SYSTEM_ANNOUNCEMENT]: unimplementedDataSchema
+});
+var notificationDataSchema = z.union([
+  noticeCreatedDataSchema,
+  noticeApprovedDataSchema,
+  noticeRejectedDataSchema,
+  pollCreatedDataSchema,
+  pollFinalizedDataSchema,
+  eventCreatedOrUpdatedDataSchema,
+  eventCancelledDataSchema,
+  wasteReminderDataSchema,
+  failureReportCreatedDataSchema,
+  failureReportStatusDataSchema,
+  failureReportApprovedDataSchema,
+  failureReportDeclinedDataSchema,
+  buildingJoinRequestReceivedDataSchema,
+  buildingJoinRequestDecidedDataSchema,
+  buildingMemberJoinedDataSchema,
+  buildingRoleChangedDataSchema,
+  ownerRecordLinkedDataSchema,
+  buildingPendingApprovalDataSchema,
+  buildingApprovedDataSchema,
+  buildingRejectedDataSchema,
+  chatMessageDataSchema,
+  emailReceivedDataSchema,
+  eventReminderDataSchema,
+  pollVoteSignatureDataSchema,
+  pollVoteSignatureRejectedDataSchema,
+  unimplementedDataSchema
+]);
+var notificationTypeValues = Object.values(NotificationType);
+var notificationResponseSchema = z.looseObject({
+  id: z.string().uuid(),
+  title: z.string().describe("Localized notification title shown in the UI list and push notification."),
+  body: z.string().describe("Localized notification body \u2014 one or two short sentences."),
+  type: z.enum(notificationTypeValues).describe(
+    "Discriminator for the notification subtype. Determines which per-type schema governs `data` \u2014 see `getNotificationDataSchema(type)`."
+  ),
+  buildingId: z.string().uuid().nullable().optional().describe(
+    "UUID of the related building. Null for cross-building notifications (system announcements, chat DMs)."
+  ),
+  buildingName: z.string().nullable().optional().describe(
+    "Denormalized building display name for convenience. Null when `buildingId` is null."
+  ),
+  data: notificationDataSchema.nullable().optional().describe(
+    "Per-type payload. Shape depends on the `type` field; use `getNotificationDataSchema(type).parse(data)` to narrow."
+  ),
+  read: z.boolean().describe("True once the user has opened this notification."),
+  readAt: z.string().nullable().optional().describe("ISO-8601 timestamp of the first read. Null while unread."),
+  createdAt: z.string()
+});
+var notificationPreferenceItemSchema = z.looseObject({
+  type: z.string().describe("Notification type identifier (maps to a value in `NotificationType`)."),
+  description: z.string().describe("Human-readable description of what this notification signals."),
+  enabled: z.boolean().describe("Whether the user has this notification type turned on."),
+  channels: z.array(z.string()).describe("Enabled delivery channels for this type: subset of `push`, `email`, `in_app`.")
+});
+var notificationPreferenceCategorySchema = z.looseObject({
+  category: z.string().describe("Category grouping (e.g. `building`, `financial`, `social`)."),
+  notifications: z.array(notificationPreferenceItemSchema).describe(
+    "Items belonging to this category; each represents one toggleable notification type."
+  )
+});
+var pollStatusSchema = z.enum(["active", "completed", "cancelled"]).describe(
+  "Poll lifecycle: `active` while accepting votes, `completed` once finalised, `cancelled` when archived before completion."
+);
+var pollDocumentReferenceSchema = z.looseObject({
+  id: z.string().uuid(),
+  title: z.string().describe("Document title displayed in the file list."),
+  description: z.string().nullable().optional().describe("Optional short description; null when none was provided."),
+  documentUrl: z.string().describe("Absolute URL to download or preview the file."),
+  fileType: z.enum(["image", "document"]).describe("Coarse file category used to pick the viewer (image preview vs document reader)."),
+  uploadedBy: z.string().describe("Display name or UUID of the uploader, depending on the endpoint."),
+  createdAt: z.string().describe("ISO-8601 timestamp when the file was attached to the poll."),
+  updatedAt: z.string().nullable().optional().describe("ISO-8601 timestamp of the last file update; null when never updated.")
+}).describe("Supporting document attached to a poll (proposal, receipt, spec, etc.).");
+var pollScopedUnitSchema = z.looseObject({
+  unitType: z.string().describe("Kind of unit eligible to vote (`apartment`, `garage`, `storage_unit`)."),
+  unitId: z.string().describe("UUID of the scoped unit."),
+  label: z.string().describe('Human-readable unit label (e.g. "Apartment 4B").'),
+  floor: z.string().optional().describe("Floor label where the unit is located; absent when not recorded.")
+}).describe("Unit whose owners/tenants are eligible to participate in a scoped poll.");
+var pollScopedOwnerSchema = z.looseObject({
+  ownerId: z.string().describe("UUID of the explicitly-eligible owner record."),
+  fullName: z.string().describe("Display name of the scoped owner."),
+  userId: z.string().nullable().optional().describe("UUID of the linked user account; null for placeholder owners without an account.")
+}).describe("Owner record explicitly added to the poll\u2019s eligible-voter list.");
+var pollResponseSchema = z.looseObject({
+  id: z.string().uuid(),
+  buildingId: z.string().uuid().describe("UUID of the building this poll belongs to."),
+  question: z.string().describe("Poll question displayed to voters."),
+  options: z.array(z.string()).describe(
+    "Answer options in display order. Community polls: 2\u20134 options. Consensus polls: always a single option (voters approve or abstain)."
+  ),
+  createdBy: z.string().describe("UUID of the user who created the poll; preserved even after user deletion."),
+  createdAt: z.string().describe("ISO-8601 timestamp when the poll was created."),
+  updatedAt: z.string().describe("ISO-8601 timestamp of the last poll mutation."),
+  deadline: z.string().optional().describe(
+    "ISO-8601 datetime after which votes are rejected. Absent for open-ended consensus polls."
+  ),
+  pollType: pollTypeSchema.describe(
+    "`COMMUNITY` polls pass by simple majority; `CONSENSUS` polls require an ownership-weighted threshold."
+  ),
+  status: pollStatusSchema,
+  requiredConsensusPercentage: z.number().optional().describe(
+    "Ownership-weighted approval threshold (10\u2013100) required for consensus polls; absent for community polls."
+  ),
+  totalVotes: z.number().describe("Number of distinct voters who have voted so far."),
+  totalWeight: z.number().describe(
+    "Sum of vote weights cast so far. Equal to `totalVotes` for community polls; varies by ownership for consensus polls."
+  ),
+  winningOptionIndex: z.number().nullable().optional().describe(
+    "Zero-based index of the winning option once the poll is finalised; null while still active or if no option won."
+  ),
+  isResultsFinalized: z.boolean().describe("True once results have been sealed and no further votes are accepted."),
+  finalizedAt: z.string().nullable().optional().describe("ISO-8601 timestamp when the poll was finalised; null while active."),
+  finalizedBy: z.string().nullable().optional().describe("UUID of the user who finalised the poll; null while active."),
+  hasVoted: z.boolean().optional().describe("True when the calling user has already cast a vote on this poll."),
+  userVote: z.number().optional().describe(
+    "Zero-based index of the option the calling user voted for; absent when the user has not voted."
+  ),
+  files: z.array(pollDocumentReferenceSchema).optional().describe("Supporting documents uploaded with the poll; absent when none.")
+});
+var pollOptionResultSchema = z.looseObject({
+  optionIndex: z.number().describe("Zero-based index into the poll `options` array."),
+  optionText: z.string().describe("Text of the option (denormalised for convenience)."),
+  voteCount: z.number().describe("Number of distinct voters that chose this option."),
+  totalWeight: z.number().describe("Sum of vote weights for this option (ownership-weighted for consensus polls)."),
+  percentage: z.number().describe("Share of `totalVotes` that chose this option, in percent (0\u2013100)."),
+  weightPercentage: z.number().describe("Share of `totalWeight` that chose this option, in percent (0\u2013100).")
+}).describe("Per-option tally produced after finalising a poll.");
+var pollResultsSchema = z.looseObject({
+  id: z.string().uuid(),
+  buildingId: z.string().uuid().describe("UUID of the building this poll belongs to."),
+  question: z.string().describe("Poll question displayed to voters."),
+  options: z.array(z.string()).describe("Answer options in display order."),
+  createdBy: z.string().describe("UUID of the user who created the poll."),
+  createdAt: z.string().describe("ISO-8601 timestamp when the poll was created."),
+  deadline: z.string().optional().describe("ISO-8601 datetime after which votes are rejected. Absent for open-ended polls."),
+  pollType: pollTypeSchema.describe("`COMMUNITY` for majority polls, `CONSENSUS` for weighted."),
+  status: pollStatusSchema,
+  requiredConsensusPercentage: z.number().optional().describe("Consensus approval threshold in percent (10\u2013100) for consensus polls."),
+  totalVotes: z.number().describe("Number of distinct voters who have voted so far."),
+  totalWeight: z.number().describe("Sum of vote weights cast so far (ownership-weighted for consensus polls)."),
+  totalEligibleVoters: z.number().describe("Number of distinct users eligible to vote on this poll (based on scope)."),
+  winningOptionIndex: z.number().nullable().optional().describe(
+    "Zero-based index of the winning option once finalised; null while active or if no option won."
+  ),
+  isResultsFinalized: z.boolean().describe("True once results are sealed and no further votes are accepted."),
+  finalizedAt: z.string().nullable().optional().describe("ISO-8601 timestamp when the poll was finalised; null while active."),
+  finalizedBy: z.string().nullable().optional().describe("UUID of the user who finalised the poll; null while active."),
+  optionResults: z.array(pollOptionResultSchema).describe("Per-option vote tallies."),
+  consensusReached: z.boolean().optional().describe(
+    "True when the ownership-weighted approval threshold has been reached. Only present for consensus polls."
+  ),
+  currentConsensusPercentage: z.number().optional().describe("Current cumulative weight in favour, in percent. Only present for consensus polls."),
+  hasPendingSignatures: z.boolean().optional().describe("True when any paper ballot on this poll is awaiting signature review."),
+  approved: z.boolean().describe("True when a representative has approved the poll for public visibility."),
+  canApprove: z.boolean().describe("True when the calling user may approve or reject the poll."),
+  canEdit: z.boolean().describe("True when the calling user may edit this poll."),
+  canDelete: z.boolean().describe("True when the calling user may delete this poll."),
+  isOwner: z.boolean().describe("True when the calling user is the creator of this poll."),
+  canVote: z.boolean().describe(
+    "True when the calling user is eligible to vote and has not yet voted (and the poll is still active)."
+  ),
+  cannotVoteReason: z.enum(Object.values(PollCannotVoteReason)).optional().describe("Machine-readable reason the caller cannot vote (present when canVote is false)."),
+  hasUserVoted: z.boolean().describe("True when the calling user has already voted on this poll."),
+  userVotedOptionIndex: z.number().nullable().optional().describe(
+    "Zero-based index of the option the calling user voted for; null when they have not voted."
+  ),
+  scopedUnits: z.array(pollScopedUnitSchema).optional().describe("Units scoped into eligibility; absent when the poll is building-wide."),
+  eligibleTotalWeight: z.number().optional().describe(
+    "Cached sum of eligible voters\u2019 ownership percentages captured at poll creation. Used to normalise `totalWeight` against the full eligible weight."
+  ),
+  scopedOwners: z.array(pollScopedOwnerSchema).optional().describe("Owners scoped into eligibility by explicit selection; absent when not used."),
+  files: z.array(pollDocumentReferenceSchema).optional().describe("Supporting documents uploaded with the poll; absent when none.")
+});
+var pollVoterSchema = z.looseObject({
+  userId: z.string().nullable().describe(
+    "UUID of the voting user; null for paper votes recorded for owners without accounts."
+  ),
+  ownerId: z.string().nullable().optional().describe("UUID of the owner record the vote is attributed to; null for non-owner voters."),
+  name: z.string().describe("Voter display name (owner full name for owner-attributed votes)."),
+  email: z.string().nullable().optional().describe("Voter contact email; null when unknown."),
+  selectedOptionIndex: z.number().describe("Zero-based index of the option the voter chose."),
+  selectedOptionText: z.string().describe("Text of the chosen option (denormalised)."),
+  voteWeight: z.number().describe(
+    "Weight contributed by this vote. 1.00 for community polls; the voter\u2019s derived building ownership share (5-decimal precision) for consensus polls."
+  ),
+  votedAt: z.string().describe("ISO-8601 timestamp when the vote was recorded."),
+  isOffline: z.boolean().optional().describe("True when the vote was recorded by a representative from a paper signature."),
+  hasAccount: z.boolean().optional().describe("True when the voter has a registered user account.")
+}).describe("Individual voter entry returned by the poll voters endpoint.");
+var pollEligibleVoterSchema = z.looseObject({
+  ownerId: z.string().uuid().describe("UUID of the owner record."),
+  userId: z.string().nullable().describe("UUID of the linked user account; null for placeholder owners."),
+  fullName: z.string().describe("Owner full name (person, joint couple, or legal entity)."),
+  email: z.string().nullable().describe("Owner contact email; null when not recorded."),
+  oib: z.string().nullable().describe("Croatian OIB of the owner; null when not recorded."),
+  weightPct: z.string().describe(
+    'Derived ownership weight in percent as an exact decimal string (5-decimal precision), e.g. "12.20000".'
+  ),
+  holdings: z.array(
+    z.looseObject({
+      unitType: z.string().describe("Kind of unit held (`apartment`, `garage`, `storage_unit`)."),
+      unitId: z.string().describe("UUID of the unit."),
+      label: z.string().describe('Human-readable unit label (e.g. "ST 3448").'),
+      floor: z.string().nullable().optional().describe("Floor label; null when not recorded."),
+      areaM2: z.string().nullable().describe("Unit area in m\xB2 as a decimal string; null when not recorded."),
+      unitSharePct: z.string().describe("Owner\u2019s share of this unit in percent as a decimal string.")
+    })
+  ).describe("Units this owner currently holds, with per-unit shares."),
+  voteStatus: z.enum(["not_voted", "accepted", "pending_signature_review", "rejected"]).optional().describe("The owner\u2019s vote state on the poll in question, when requested per-poll.")
+}).describe("Aggregated per-owner roster row for a poll\u2019s electorate.");
+var pollEligibleVotersResponseSchema = z.looseObject({
+  pollId: z.string().uuid().describe("UUID of the poll this electorate belongs to."),
+  voters: z.array(pollEligibleVoterSchema).describe("One entry per eligible owner."),
+  totalWeightPct: z.string().describe("Sum of eligible owners\u2019 derived weights as an exact decimal string."),
+  warnings: z.looseObject({
+    unitsWithoutArea: z.array(z.string()).describe("Labels of units with no recorded area (excluded from weight math)."),
+    unitsWithoutOwners: z.array(z.string()).describe("Labels of units with no active owner (weight unassigned).")
+  }).describe("Data-quality warnings surfaced by the roster derivation.")
+});
+var pollVotersResponseSchema = z.looseObject({
+  pollId: z.string().uuid().describe("UUID of the poll these voters belong to."),
+  question: z.string().describe("Poll question, repeated for convenience."),
+  options: z.array(z.string()).describe("Poll options in display order."),
+  totalVotes: z.number().describe("Total number of distinct voters represented in `voters`."),
+  voters: z.array(pollVoterSchema).describe("Individual voter entries with their chosen option.")
+});
+var paginatedPollsResponseSchema = paginatedResponseSchema(pollResponseSchema);
+var repUserRoleSchema = z.enum([
+  BuildingRole.OWNER_REPRESENTATIVE,
+  BuildingRole.DEPUTY_REPRESENTATIVE,
+  BuildingRole.CO_OWNER,
+  BuildingRole.RESIDENT
+]).describe("Role the user holds within the specific building association.");
+var repUserBuildingSchema = z.looseObject({
+  buildingId: z.string().uuid(),
+  buildingName: z.string().describe("Display name of the associated building."),
+  buildingAddress: z.string().describe("Full postal address of the associated building."),
+  roleType: repUserRoleSchema,
+  buildingSurfacePercentage: z.string().describe(
+    'The user\u2019s ownership share of the building surface, serialized as a decimal string (e.g. "12.50").'
+  ),
+  createdAt: z.string().describe("ISO-8601 timestamp when the user joined this building."),
+  canEdit: z.boolean().describe("True when the caller may edit this association (role, surface share)."),
+  canKick: z.boolean().describe("True when the caller may remove the user from this building.")
+}).describe("One building association of a user visible to the calling representative.");
+var repUserItemSchema = z.looseObject({
+  id: z.string().uuid(),
+  name: z.string().describe("User display name."),
+  email: z.string().describe("User contact email."),
+  phone: z.string().nullable().optional().describe("Contact phone, or null when the user has not set one."),
+  address: z.string().nullable().optional().describe("User postal address, or null when not provided."),
+  buildings: z.array(repUserBuildingSchema).describe("All of the user\u2019s associations within the caller\u2019s buildings."),
+  isYou: z.boolean().describe("True when this row is the calling user.")
+}).describe("A user visible to the calling representative, flattened across buildings.");
+var paginatedRepUsersResponseSchema = paginatedResponseSchema(repUserItemSchema);
+var repBuildingManagerSchema = z.looseObject({
+  name: z.string().describe("Display name of the assigned management-firm contact."),
+  email: z.string().describe("Contact email for the assigned manager.")
+}).describe("Summary of the building\u2019s assigned management-firm contact.");
+var repBuildingFundsSchema = z.looseObject({
+  currentBalance: z.string().describe('Current fund balance as a decimal string (e.g. "27820.54").'),
+  currency: z.string().describe("Currency symbol or code displayed alongside the balance.")
+}).describe("Summary of the building\u2019s current fund balance.");
+var repBuildingItemSchema = z.looseObject({
+  id: z.string().uuid(),
+  name: z.string().describe("Building display name."),
+  address: z.string().describe("Full postal address of the building."),
+  type: buildingTypeSchema,
+  status: z.string().describe("Building lifecycle status (`pending`, `active`, `rejected`)."),
+  totalUnits: z.number().describe("Declared number of individual units."),
+  manager: repBuildingManagerSchema,
+  funds: repBuildingFundsSchema,
+  createdAt: z.string().describe("ISO-8601 timestamp when the building record was created."),
+  updatedAt: z.string().nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited."),
+  coverImage: z.string().nullable().optional().describe("Absolute URL of the cover photo, or null when no cover image is set.")
+}).describe(
+  "A building managed by the calling representative, as listed in the rep buildings table."
+);
+var paginatedRepBuildingsResponseSchema = paginatedResponseSchema(repBuildingItemSchema);
+var REP_RECENT_ACTIVITY_TYPES = ["notice", "failure_report", "user_joined"];
+var repRecentActivityTypeSchema = z.enum(REP_RECENT_ACTIVITY_TYPES).describe("Kind of event surfaced in the recent-activity feed.");
+var repRecentActivitySchema = z.looseObject({
+  buildingId: z.string().describe("UUID of the building the activity happened in."),
+  buildingName: z.string().describe("Display name of the building."),
+  activityType: repRecentActivityTypeSchema,
+  description: z.string().describe("Human-readable one-line summary of the activity."),
+  timestamp: z.string().describe("ISO-8601 timestamp of the activity."),
+  userId: z.string().nullable().optional().describe("UUID of the acting user, when the activity has an actor."),
+  userName: z.string().nullable().optional().describe("Display name of the acting user, when the activity has an actor.")
+}).describe("One row of the representative dashboard recent-activity feed.");
+var repBuildingActivitySchema = z.looseObject({
+  buildingId: z.string().describe("UUID of the building."),
+  buildingName: z.string().describe("Display name of the building."),
+  buildingAddress: z.string().describe("Full postal address of the building."),
+  buildingType: buildingTypeSchema,
+  lastActivityAt: z.string().describe("ISO-8601 timestamp of the most recent activity.")
+}).describe('A building with activity in the last 24 hours ("buildings updated" list).');
+var repDashboardSummaryResponseSchema = z.looseObject({
+  buildings: z.looseObject({
+    total: z.number().describe("Total buildings managed by the caller."),
+    addedThisMonth: z.number().describe("Buildings added this calendar month."),
+    byType: z.looseObject({
+      residential: z.number().describe("Residential buildings managed by the caller."),
+      commercial: z.number().describe("Commercial buildings managed by the caller.")
+    }).describe("Building counts split by usage type.")
+  }).describe("Building statistics for the caller\u2019s portfolio."),
+  users: z.looseObject({
+    total: z.number().describe("Total users across the caller\u2019s buildings."),
+    managers: z.number().describe("Users holding a managerial role."),
+    newThisMonth: z.number().describe("Users who joined this calendar month."),
+    byRole: z.looseObject({
+      admin: z.number().describe("Users counted under the admin bucket."),
+      manager: z.number().describe("Users counted under the manager bucket."),
+      tenant: z.number().describe("Users counted under the tenant bucket.")
+    }).describe("User counts split by coarse role bucket.")
+  }).describe("User statistics across the caller\u2019s buildings."),
+  activities: z.looseObject({
+    notices: z.looseObject({
+      total: z.number().describe("All notices across the caller\u2019s buildings."),
+      pending: z.number().describe("Notices awaiting representative approval."),
+      today: z.number().describe("Notices created today.")
+    }).describe("Notice counts."),
+    failureReports: z.looseObject({
+      total: z.number().describe("All failure reports across the caller\u2019s buildings."),
+      open: z.number().describe("Reports not yet resolved."),
+      resolved: z.number().describe("Reports already resolved."),
+      today: z.number().describe("Reports submitted today.")
+    }).describe("Failure-report counts.")
+  }).describe("Activity statistics per content type."),
+  polls: z.looseObject({
+    active: z.number().describe("Approved polls currently open for voting."),
+    pendingApproval: z.number().describe("Polls awaiting representative approval."),
+    expiringSoon: z.number().describe("Active polls with a deadline within 48 hours.")
+  }).nullable().optional().describe("Poll statistics; absent when the caller has no poll access."),
+  funds: z.looseObject({
+    totalBalance: z.string().describe("Sum of all building fund balances as a decimal string."),
+    buildingsWithFunds: z.number().describe("Buildings that have a fund record."),
+    negativeBalanceCount: z.number().describe("Buildings with a negative fund balance.")
+  }).nullable().optional().describe("Fund-balance statistics; absent when the caller has no financial access."),
+  recentActivity: z.array(repRecentActivitySchema).describe("Most recent activities across the caller\u2019s buildings, newest first."),
+  buildingsWithActivity: z.array(repBuildingActivitySchema).describe("Buildings with activity in the last 24 hours."),
+  totalUsers: z.number().describe("Total unique users across all of the caller\u2019s buildings."),
+  totalManagers: z.number().describe("Total unique building managers."),
+  newManagersThisMonth: z.number().describe("Managers who joined this calendar month."),
+  newUsersThisMonth: z.number().describe("Users who joined this calendar month."),
+  activitiesLast24Hours: z.number().describe("Total activities in the last 24 hours."),
+  pendingSignatureVotes: z.number().nullable().optional().describe("Printed-signature votes awaiting representative review (rep scope only).")
+}).describe("Payload of `GET /representatives/dashboard/summary`.");
+
+export { ARCHIVE_TYPES, AUDIT_DENIAL_TARGET_TYPE, ApprovalStatusSchema, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, EMAIL_LIMITS, ENTITY_LINK_TYPES, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, LINKABLE_ENTITY_TYPES, NOTICE_LIMITS, ORGANIZATION_LIMITS, OrgInvitationStatus, POLL_LIMITS, POLL_TYPES, PrioritySchema, RECURRENCE_TYPES, REP_RECENT_ACTIVITY_TYPES, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, auditLogResponseSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingOwnerAssignmentSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createDsarEventSchema, createDsarRequestSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createEventSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createNoticeSchema, createOrgBroadcastSchema, createOrganizationSchema, createOwnerSchema, createPlatformSubscriptionSchema, createPollSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, dsarErasureSchema, dsarEventResponseSchema, dsarRequestResponseSchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, emailUnreadCountResponseSchema, enterpriseRequestResponseSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, getAuditLogsQuerySchema, getDsarRequestsQuerySchema, getEnterpriseRequestsQuerySchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getPlatformSubscriptionsQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, inviteOwnerSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, loginSchema, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgBroadcastResponseSchema, orgInvitationResponseSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, platformSubscriptionResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, publicOrgInvitationSchema, recordDsarRectificationSchema, recordOfflineVotesSchema, recurrenceTypeSchema, registerSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, revenueMetricsResponseSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, setDsarRestrictionSchema, signedMoneyStringSchema, strongPasswordSchema, timeSchema, unitKindSchema, unitSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateDsarRequestSchema, updateEnterpriseRequestSchema, updateEventSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgBuildingContractSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePlatformSubscriptionSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
+//# sourceMappingURL=chunk-M47OISGG.js.map
+//# sourceMappingURL=chunk-M47OISGG.js.map

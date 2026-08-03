@@ -136,11 +136,6 @@ export const createFailureReportSchema = refineLocation(
     fileIds: multipartArray(uuidSchema)
       .optional()
       .describe('UUIDs of previously-uploaded files to attach to this report.'),
-    maintenanceLogIds: multipartArray(uuidSchema)
-      .optional()
-      .describe(
-        'UUIDs of maintenance logs to associate with this report (e.g. related past work).',
-      ),
     events: multipartArray(failureReportEventWithDateOrderSchema)
       .optional()
       .describe('Calendar events to create alongside the report (inspections, scheduled fixes).'),
@@ -201,11 +196,6 @@ export const updateFailureReportSchema = refineLocation(
     removeChildFileIds: multipartArray(uuidSchema)
       .optional()
       .describe('UUIDs of previously-attached files to detach from the report.'),
-    maintenanceLogIds: multipartArray(uuidSchema)
-      .optional()
-      .describe(
-        'Full list of maintenance-log UUIDs to associate with the report (replaces existing links).',
-      ),
     events: multipartArray(failureReportEventWithDateOrderSchema)
       .optional()
       .describe('Full list of events for the report — replaces the existing event set.'),

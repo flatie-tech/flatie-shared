@@ -27,7 +27,6 @@ export type EntityLinkType = (typeof EntityLinkType)[keyof typeof EntityLinkType
  */
 export const LinkableEntityType = {
   FAILURE_REPORT: 'failure_report',
-  MAINTENANCE_LOG: 'maintenance_log',
   NOTICE: 'notice',
   EVENT: 'event',
   POLL: 'poll',

@@ -13,13 +13,12 @@ export interface EntityLinkRule {
 /**
  * Entity types the wildcard `related_to` rule spans. Deliberately excludes
  * `expense_transaction` — expenses only link through their explicit rules
- * (`expense_for` to maintenance logs / failure reports, `based_on` to polls).
+ * (`expense_for` to failure reports, `based_on` to polls).
  */
 export const RELATED_TO_LINKABLE_TYPES: readonly LinkableEntityType[] = [
   LinkableEntityType.NOTICE,
   LinkableEntityType.EVENT,
   LinkableEntityType.POLL,
-  LinkableEntityType.MAINTENANCE_LOG,
   LinkableEntityType.FAILURE_REPORT,
   LinkableEntityType.FILE,
   LinkableEntityType.BOARD_CARD,
@@ -27,9 +26,9 @@ export const RELATED_TO_LINKABLE_TYPES: readonly LinkableEntityType[] = [
 
 /**
  * Every (source, target, linkType) triple the generic links API accepts.
- * The first six mirror the links the entity create/update flows already
- * write inline; `related_to` is the free-form association available
- * between any two linkable entities.
+ * The explicit rules mirror the links the entity create/update flows
+ * already write inline; `related_to` is the free-form association
+ * available between any two linkable entities.
  *
  * Note: `schedule` is reserved for inline-created events that die with
  * their parent — the generic API must not create schedule links to
@@ -42,29 +41,9 @@ export const ALLOWED_ENTITY_LINKS: readonly EntityLinkRule[] = [
     linkType: EntityLinkType.SCHEDULE,
   },
   {
-    source: LinkableEntityType.MAINTENANCE_LOG,
-    target: LinkableEntityType.EVENT,
-    linkType: EntityLinkType.SCHEDULE,
-  },
-  {
     source: LinkableEntityType.FAILURE_REPORT,
     target: LinkableEntityType.EVENT,
     linkType: EntityLinkType.SCHEDULE,
-  },
-  {
-    source: LinkableEntityType.FAILURE_REPORT,
-    target: LinkableEntityType.MAINTENANCE_LOG,
-    linkType: EntityLinkType.RESOLVED_BY,
-  },
-  {
-    source: LinkableEntityType.MAINTENANCE_LOG,
-    target: LinkableEntityType.POLL,
-    linkType: EntityLinkType.BASED_ON,
-  },
-  {
-    source: LinkableEntityType.EXPENSE_TRANSACTION,
-    target: LinkableEntityType.MAINTENANCE_LOG,
-    linkType: EntityLinkType.EXPENSE_FOR,
   },
   {
     source: LinkableEntityType.EXPENSE_TRANSACTION,

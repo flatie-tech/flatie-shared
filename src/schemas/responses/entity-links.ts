@@ -25,7 +25,7 @@ export const entityLinkMetadataSchema = z
       .number()
       .nullable()
       .optional()
-      .describe('Monetary amount (e.g. expense/maintenance cost); the client formats as currency.'),
+      .describe('Monetary amount (e.g. expense cost); the client formats as currency.'),
     secondary: z
       .string()
       .nullable()

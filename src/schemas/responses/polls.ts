@@ -35,16 +35,6 @@ const pollDocumentReferenceSchema = z
   })
   .describe('Supporting document attached to a poll (proposal, receipt, spec, etc.).');
 
-const pollMaintenanceLogReferenceSchema = z
-  .looseObject({
-    id: z.string().uuid(),
-    title: z.string().describe('Linked maintenance-log title.'),
-    contractor: z.string().describe('Contractor who performed the underlying work.'),
-    cost: z.number().describe('Total cost of the underlying work.'),
-    createdAt: z.string().describe('ISO-8601 timestamp when the maintenance log was created.'),
-  })
-  .describe('Maintenance log linked to this poll (e.g. a quote being voted on).');
-
 const pollScopedUnitSchema = z
   .looseObject({
     unitType: z
@@ -266,10 +256,6 @@ export const pollResultsSchema = z.looseObject({
     .array(pollScopedOwnerSchema)
     .optional()
     .describe('Owners scoped into eligibility by explicit selection; absent when not used.'),
-  maintenanceLogs: z
-    .array(pollMaintenanceLogReferenceSchema)
-    .optional()
-    .describe('Maintenance logs linked to the poll (for context); absent when none.'),
   files: z
     .array(pollDocumentReferenceSchema)
     .optional()

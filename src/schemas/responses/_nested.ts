@@ -50,9 +50,7 @@ export const nestedEventSchema = z
       .optional()
       .describe('ISO-8601 timestamp of the last edit; null when never edited.'),
   })
-  .describe(
-    'Nested event reference embedded inside notices, failure reports and maintenance logs.',
-  );
+  .describe('Nested event reference embedded inside notices and failure reports.');
 
 export const pollReferenceSchema = z
   .looseObject({

@@ -101,15 +101,6 @@ const failureReportDeclinedDataSchema = baseNotificationDataSchema.extend({
   title: z.string(),
 });
 
-const maintenanceLogCreatedDataSchema = baseNotificationDataSchema.extend({
-  title: z.string(),
-  description: z.string().nullable().optional(),
-  category: z.string().nullable().optional(),
-  contractor: z.string().nullable().optional(),
-  // `cost` comes from a Postgres DECIMAL, which drizzle serializes as string.
-  cost: z.union([z.string(), z.number()]).nullable().optional(),
-});
-
 const buildingJoinRequestReceivedDataSchema = baseNotificationDataSchema.extend({
   userName: z.string(),
   userEmail: z.string(),
@@ -230,7 +221,6 @@ const notificationDataSchemaByType = {
   [NotificationType.FAILURE_REPORT_RESOLVED]: failureReportStatusDataSchema,
   [NotificationType.FAILURE_REPORT_APPROVED]: failureReportApprovedDataSchema,
   [NotificationType.FAILURE_REPORT_DECLINED]: failureReportDeclinedDataSchema,
-  [NotificationType.MAINTENANCE_LOG_CREATED]: maintenanceLogCreatedDataSchema,
 
   [NotificationType.PAYMENT_DUE]: unimplementedDataSchema,
   [NotificationType.PAYMENT_RECEIVED]: unimplementedDataSchema,
@@ -280,7 +270,6 @@ export const notificationDataSchema = z.union([
   failureReportStatusDataSchema,
   failureReportApprovedDataSchema,
   failureReportDeclinedDataSchema,
-  maintenanceLogCreatedDataSchema,
   buildingJoinRequestReceivedDataSchema,
   buildingJoinRequestDecidedDataSchema,
   buildingMemberJoinedDataSchema,

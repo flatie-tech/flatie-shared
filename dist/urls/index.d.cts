@@ -107,11 +107,6 @@ declare const API_ROUTES: {
         readonly CARD_MOVE: (buildingId: string, boardId: string, cardId: string) => string;
         readonly CARD_RESTORE: (buildingId: string, boardId: string, cardId: string) => string;
     };
-    readonly MAINTENANCE_LOGS: {
-        readonly LIST: (buildingId: string) => string;
-        readonly DETAIL: (buildingId: string, maintenanceLogId: string) => string;
-        readonly RESTORE: (buildingId: string, maintenanceLogId: string) => string;
-    };
     readonly LINKS: {
         readonly LIST: (buildingId: string) => string;
         readonly CREATE: (buildingId: string) => string;

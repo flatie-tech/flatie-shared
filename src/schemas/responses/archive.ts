@@ -13,7 +13,6 @@ export const ARCHIVE_TYPES = [
   'files',
   'garages',
   'income_transactions',
-  'maintenance_logs',
   'notices',
   'organizations',
   'polls',

@@ -234,20 +234,6 @@ export {
 export type { CreateIncomeSchema, UpdateIncomeSchema } from './income-transaction.schema';
 export { createIncomeSchema, updateIncomeSchema } from './income-transaction.schema';
 export type {
-  CreateMaintenanceLogSchema,
-  MaintenanceFinancedByOption,
-  UpdateMaintenanceLogSchema,
-} from './maintenance-log.schema';
-// Maintenance log schemas
-export {
-  createMaintenanceLogSchema,
-  MAINTENANCE_FINANCED_BY,
-  MAINTENANCE_LOG_LIMITS,
-  maintenanceFinancedBySchema,
-  maintenanceLogEventSchema,
-  updateMaintenanceLogSchema,
-} from './maintenance-log.schema';
-export type {
   ApproveNoticeSchema,
   CreateNoticeSchema,
   NoticeEventSchema,

@@ -9,7 +9,6 @@ export * from './calendar';
 export * from './documents';
 export * from './failure-reports';
 export * from './funds';
-export * from './maintenance-logs';
 export * from './notice-board';
 export * from './onboarding';
 export * from './polls';

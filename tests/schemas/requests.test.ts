@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
   updateFailureReportRequestSchema,
-  updateMaintenanceLogRequestSchema,
   updateNoticeRequestSchema,
   updatePollRequestSchema,
 } from '../../src/schemas/requests';
@@ -52,18 +51,6 @@ describe('updateFailureReportRequestSchema', () => {
 
   it('rejects a payload missing the id', () => {
     const result = updateFailureReportRequestSchema.safeParse({ status: 'pending' });
-    expect(result.success).toBe(false);
-  });
-});
-
-describe('updateMaintenanceLogRequestSchema', () => {
-  it('accepts id plus a partial body', () => {
-    const result = updateMaintenanceLogRequestSchema.safeParse({ id: UUID, title: 'Updated' });
-    expect(result.success).toBe(true);
-  });
-
-  it('rejects a payload missing the id', () => {
-    const result = updateMaintenanceLogRequestSchema.safeParse({ title: 'Updated' });
     expect(result.success).toBe(false);
   });
 });

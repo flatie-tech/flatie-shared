@@ -14,15 +14,6 @@ export const ApprovalStatus = {
 
 export type ApprovalStatus = (typeof ApprovalStatus)[keyof typeof ApprovalStatus];
 
-export const MaintenanceStatus = {
-  PENDING: 'pending',
-  IN_PROGRESS: 'in_progress',
-  COMPLETED: 'completed',
-  CANCELLED: 'cancelled',
-} as const;
-
-export type MaintenanceStatus = (typeof MaintenanceStatus)[keyof typeof MaintenanceStatus];
-
 export const FailureStatus = {
   PENDING: 'pending',
   IN_PROGRESS: 'in_progress',
@@ -30,14 +21,6 @@ export const FailureStatus = {
 } as const;
 
 export type FailureStatus = (typeof FailureStatus)[keyof typeof FailureStatus];
-
-export const MaintenanceType = {
-  PREVENTIVE: 'preventive',
-  CORRECTIVE: 'corrective',
-  EMERGENCY: 'emergency',
-} as const;
-
-export type MaintenanceType = (typeof MaintenanceType)[keyof typeof MaintenanceType];
 
 export const FailureType = {
   EQUIPMENT: 'equipment',

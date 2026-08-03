@@ -2,7 +2,6 @@
 
 export const QuotaResourceType = {
   COMMENT: 'comment',
-  MAINTENANCE_REQUEST: 'maintenance_request',
   INVITE: 'invite',
   NOTIFICATION: 'notification',
 } as const;
@@ -15,7 +14,6 @@ export const QUOTA_RESOURCE_TYPES = Object.values(
 
 export const QUOTA_DEFAULT_DAILY_LIMITS: Record<QuotaResourceType, number | null> = {
   [QuotaResourceType.COMMENT]: 50,
-  [QuotaResourceType.MAINTENANCE_REQUEST]: 10,
   [QuotaResourceType.INVITE]: 20,
   [QuotaResourceType.NOTIFICATION]: null,
 };

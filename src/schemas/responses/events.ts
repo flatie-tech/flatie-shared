@@ -11,13 +11,13 @@ const eventUserSchema = z
 
 const entityScheduleReferenceSchema = z
   .looseObject({
-    id: z.string().describe('UUID of the parent entity (failure report, maintenance log, notice).'),
-    // One of 'failure_report' | 'maintenance_log' | 'notice' — left as
-    // a free string to tolerate new entity types added backend-side.
+    id: z.string().describe('UUID of the parent entity (failure report, notice).'),
+    // One of 'failure_report' | 'notice' — left as a free string to
+    // tolerate new entity types added backend-side.
     type: z
       .string()
       .describe(
-        'Kind of entity using this event as its schedule. One of `failure_report`, `maintenance_log`, `notice`.',
+        'Kind of entity using this event as its schedule. One of `failure_report`, `notice`.',
       ),
     title: z.string().describe('Title of the parent entity for quick reference in the calendar.'),
   })
@@ -131,7 +131,7 @@ export const eventResponseSchema = z.looseObject({
     .array(entityScheduleReferenceSchema)
     .optional()
     .describe(
-      'Entities (failure reports, maintenance logs, notices) that reference this event as their schedule; empty when none do.',
+      'Entities (failure reports, notices) that reference this event as their schedule; empty when none do.',
     ),
   createdAt: z
     .string()

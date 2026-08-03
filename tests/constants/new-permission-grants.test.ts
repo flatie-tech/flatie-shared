@@ -87,20 +87,19 @@ describe('New permission grants — unified can() migration', () => {
 
 /**
  * T4 (2026-07-30): representatives run self-managed buildings, so they hold
- * the pričuva/maintenance writes that were previously org-role-only. Residents
+ * the pričuva writes that were previously org-role-only. Residents
  * must never gain them. ORG_BROADCAST is the portfolio fan-out gate —
  * management roles only.
  */
-describe('rep finance/maintenance grants (T4) + org broadcast', () => {
+describe('rep finance grants (T4) + org broadcast', () => {
   const T4_GRANTS = [
     Permission.FINANCIAL_CREATE,
     Permission.FINANCIAL_UPDATE,
     Permission.FINANCIAL_DELETE,
-    Permission.MAINTENANCE_LOG_CREATE,
   ] as const;
 
   for (const role of [BuildingRole.OWNER_REPRESENTATIVE, BuildingRole.DEPUTY_REPRESENTATIVE]) {
-    it(`${role} holds the finance/maintenance writes`, () => {
+    it(`${role} holds the finance writes`, () => {
       for (const perm of T4_GRANTS) {
         expect(BUILDING_ROLE_PERMISSIONS[role]).toContain(perm);
       }

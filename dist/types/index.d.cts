@@ -1,7 +1,7 @@
-import { B as BuildingType, F as FailureStatus, f as TransactionType, T as TransactionCategory, P as PollType, C as CommonStatus } from '../status.enum-CQbseeTz.cjs';
-import { e as BuildingRole, P as Permission, i as OrgRole, k as PlatformRole } from '../role.enum-B2GsU_N5.cjs';
+import { B as BuildingType, F as FailureStatus, e as TransactionType, T as TransactionCategory, P as PollType, C as CommonStatus } from '../status.enum-POCdxmgc.cjs';
+import { e as BuildingRole, P as Permission, i as OrgRole, k as PlatformRole } from '../role.enum-CvnkuV41.cjs';
 import { z } from 'zod';
-import { g as eventTypeSchema, f as eventColorSchema, r as recurrenceTypeSchema, m as maintenanceFinancedBySchema, A as votePollSchema } from '../poll.schema-ux7gZt1q.cjs';
+import { g as eventTypeSchema, f as eventColorSchema, r as recurrenceTypeSchema, v as votePollSchema } from '../poll.schema-CXKRtDas.cjs';
 export { C as CursorPaginatedResponse, P as PaginatedResponse, c as createPaginatedResponse } from '../pagination.types-D3A3752L.cjs';
 
 /**
@@ -222,44 +222,6 @@ interface Transaction extends BaseEntity {
     category: TransactionCategory;
     frequency?: string;
     currency?: string;
-}
-
-/**
- * How maintenance was financed — derived from `maintenanceFinancedBySchema`
- * so the type union and the Zod validator can never drift apart. Same
- * exported name and shape as the previously hand-written union.
- */
-type MaintenanceFinancedBy = z.infer<typeof maintenanceFinancedBySchema>;
-/**
- * Maintenance log entity.
- *
- * Kept hand-written: persisted-entity shape (`Date | string` timestamps via
- * `BuildingUserEntity`, `cost` as a plain string) — deliberately diverges
- * from `maintenanceLogResponseSchema` (wire shape) and
- * `createMaintenanceLogSchema` (request shape with required `events`).
- */
-interface MaintenanceLog extends BuildingUserEntity {
-    title: string;
-    description?: string | null;
-    contractor: string;
-    cost: string;
-    financedBy?: MaintenanceFinancedBy | null;
-    warranty: boolean;
-}
-/**
- * Create maintenance log request.
- *
- * Kept hand-written: legacy JSON payload shape. Diverges from
- * `createMaintenanceLogSchema` (multipart request), which additionally
- * requires `events` (min 1) and models `cost` via string/number coercion.
- */
-interface CreateMaintenanceLogRequest {
-    title: string;
-    description?: string;
-    contractor: string;
-    cost: string;
-    financedBy?: MaintenanceFinancedBy;
-    warranty?: boolean;
 }
 
 /**
@@ -505,4 +467,4 @@ interface UserBuildingRole {
     permissions: string[];
 }
 
-export type { BaseEntity, Building, BuildingContextFromOrg, BuildingContextFromPlatformAdmin, BuildingContextFromRole, BuildingEntity, BuildingFund, BuildingMember, BuildingMembership, BuildingOTPResponse, BuildingPermissionContext, BuildingUser, BuildingUserEntity, CreateEventRequest, CreateFailureReportRequest, CreateMaintenanceLogRequest, CreateNoticeRequest, CreatePollRequest, Event, EventColor, EventType, FailureReport, FinancialGraphData, FinancialSummary, MaintenanceFinancedBy, MaintenanceLog, Notice, PermissionContext, PermissionFields, PermissionScope, PermissionsResponse, Poll, PollOptionResult, PollVote, RecurrenceType, Session, Transaction, User, UserBuildingRole, UserCreatedEntity, UserWithBuildings, VoteRequest };
+export type { BaseEntity, Building, BuildingContextFromOrg, BuildingContextFromPlatformAdmin, BuildingContextFromRole, BuildingEntity, BuildingFund, BuildingMember, BuildingMembership, BuildingOTPResponse, BuildingPermissionContext, BuildingUser, BuildingUserEntity, CreateEventRequest, CreateFailureReportRequest, CreateNoticeRequest, CreatePollRequest, Event, EventColor, EventType, FailureReport, FinancialGraphData, FinancialSummary, Notice, PermissionContext, PermissionFields, PermissionScope, PermissionsResponse, Poll, PollOptionResult, PollVote, RecurrenceType, Session, Transaction, User, UserBuildingRole, UserCreatedEntity, UserWithBuildings, VoteRequest };

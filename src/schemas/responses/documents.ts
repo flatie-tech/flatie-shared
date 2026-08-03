@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { maintenanceFinancedBySchema } from '../entities/maintenance-log.schema';
 import { paginatedResponseSchema } from '../pagination.schema';
 import { FailureStatusSchema } from '../status.schema';
 
@@ -13,7 +12,6 @@ import { FailureStatusSchema } from '../status.schema';
 export const DOCUMENT_SOURCE_TYPES = [
   'notice',
   'failure_report',
-  'maintenance_log',
   'poll',
   'event',
   'board_card',
@@ -32,25 +30,6 @@ export const documentLinkedRecordSchema = z
     status: FailureStatusSchema.optional()
       .nullable()
       .describe('Status of the linked failure report; null for other entity types.'),
-    contractor: z
-      .string()
-      .optional()
-      .nullable()
-      .describe('Contractor name from linked maintenance log; null for other entity types.'),
-    cost: z
-      .number()
-      .optional()
-      .nullable()
-      .describe('Cost from linked maintenance log; null when not recorded.'),
-    financedBy: maintenanceFinancedBySchema
-      .optional()
-      .nullable()
-      .describe('Funding source from linked maintenance log; null for other entity types.'),
-    warranty: z
-      .boolean()
-      .optional()
-      .nullable()
-      .describe('Whether the linked maintenance work is under warranty.'),
     createdAt: z.string().optional().nullable().describe('ISO-8601 creation timestamp.'),
     updatedAt: z.string().optional().nullable().describe('ISO-8601 last-edit timestamp.'),
   })

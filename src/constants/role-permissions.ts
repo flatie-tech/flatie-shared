@@ -19,7 +19,6 @@ const ALL_READS = [
   ...domainPermissions('event', 'read'),
   ...domainPermissions('poll', 'read'),
   ...domainPermissions('failure_report', 'read'),
-  ...domainPermissions('maintenance_log', 'read'),
   ...domainPermissions('financial', 'read'),
   ...domainPermissions('document', 'read'),
   ...domainPermissions('unit', 'read'),
@@ -119,13 +118,12 @@ const REPRESENTATIVE_PERMISSIONS = [
   'building_role:remove',
   'building_settings:manage',
   // Self-managed buildings (no upravitelj org) are run by their predstavnik:
-  // ToS §7.4 promises them the pričuva ledger and maintenance records, so
-  // reps hold the finance/maintenance writes too (T4 decision, 2026-07-30).
-  // Org-managed buildings are unaffected — org roles already held these.
+  // ToS §7.4 promises them the pričuva ledger, so reps hold the finance
+  // writes too (T4 decision, 2026-07-30). Org-managed buildings are
+  // unaffected — org roles already held these.
   'financial:create',
   'financial:update',
   'financial:delete',
-  ...domainPermissions('maintenance_log', 'manage'),
   // Mailbox is management-only: reps get BOTH the read gate (view) and the
   // mutate gate (manage). view moved here from CO_OWNER_PERMISSIONS 2026-07-21.
   'building_email:view',
@@ -140,7 +138,6 @@ const REPRESENTATIVE_PERMISSIONS = [
 
 const ORG_ADMIN_BUILDING_PERMISSIONS = [
   ...REPRESENTATIVE_PERMISSIONS,
-  ...domainPermissions('maintenance_log', 'manage'),
   'financial:create',
   'financial:update',
   'financial:delete',
@@ -174,11 +171,7 @@ const REFERENT_BUILDING_PERMISSIONS = [
   ...domainPermissions('document', 'own'),
 ];
 
-const OPERATIVE_BUILDING_PERMISSIONS = [
-  ...ALL_READS,
-  'failure_report:update:own',
-  'maintenance_log:update:own',
-];
+const OPERATIVE_BUILDING_PERMISSIONS = [...ALL_READS, 'failure_report:update:own'];
 
 // ─── Org-Level Permission Mappings ──────────────────────────────────
 

@@ -1,13 +1,6 @@
 // ─── Scoped Domain Definitions ──────────────────────────────────────
 
-export const SCOPED_DOMAINS = [
-  'notice',
-  'event',
-  'poll',
-  'failure_report',
-  'document',
-  'maintenance_log',
-] as const;
+export const SCOPED_DOMAINS = ['notice', 'event', 'poll', 'failure_report', 'document'] as const;
 
 export type ScopedDomain = (typeof SCOPED_DOMAINS)[number];
 export type ScopedAction = 'update' | 'delete';
@@ -96,14 +89,6 @@ export const Permission = {
   FAILURE_REPORT_DELETE_OWN: 'failure_report:delete:own',
   FAILURE_REPORT_DELETE_ANY: 'failure_report:delete:any',
   FAILURE_REPORT_APPROVE: 'failure_report:approve',
-
-  // Maintenance Log
-  MAINTENANCE_LOG_CREATE: 'maintenance_log:create',
-  MAINTENANCE_LOG_READ: 'maintenance_log:read',
-  MAINTENANCE_LOG_UPDATE_OWN: 'maintenance_log:update:own',
-  MAINTENANCE_LOG_UPDATE_ANY: 'maintenance_log:update:any',
-  MAINTENANCE_LOG_DELETE_OWN: 'maintenance_log:delete:own',
-  MAINTENANCE_LOG_DELETE_ANY: 'maintenance_log:delete:any',
 
   // Financial (flat, no :own/:any)
   FINANCIAL_CREATE: 'financial:create',
