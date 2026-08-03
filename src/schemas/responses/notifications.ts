@@ -151,6 +151,14 @@ const chatMessageDataSchema = baseNotificationDataSchema.extend({
   conversationId: z.string().uuid(),
 });
 
+// Building mailbox: inbound mail landed in a building's inbox (rep/deputy audience).
+const emailReceivedDataSchema = baseNotificationDataSchema.extend({
+  threadId: z.string().uuid(),
+  subject: z.string(),
+  fromAddress: z.string(),
+  preview: z.string().nullable().optional(),
+});
+
 // Org-membership events, fired at the affected member only.
 const orgMemberAddedDataSchema = baseNotificationDataSchema.extend({
   orgName: z.string(),
@@ -242,6 +250,8 @@ const notificationDataSchemaByType = {
 
   [NotificationType.CHAT_MESSAGE]: chatMessageDataSchema,
 
+  [NotificationType.EMAIL_RECEIVED]: emailReceivedDataSchema,
+
   [NotificationType.POLL_VOTE_SIGNATURE_PENDING]: pollVoteSignatureDataSchema,
   [NotificationType.POLL_VOTE_SIGNATURE_APPROVED]: pollVoteSignatureDataSchema,
   [NotificationType.POLL_VOTE_SIGNATURE_REJECTED]: pollVoteSignatureRejectedDataSchema,
@@ -280,6 +290,7 @@ export const notificationDataSchema = z.union([
   buildingApprovedDataSchema,
   buildingRejectedDataSchema,
   chatMessageDataSchema,
+  emailReceivedDataSchema,
   eventReminderDataSchema,
   pollVoteSignatureDataSchema,
   pollVoteSignatureRejectedDataSchema,

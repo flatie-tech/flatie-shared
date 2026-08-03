@@ -41,6 +41,8 @@ export const NotificationType = {
 
   CHAT_MESSAGE: 'chat_message',
 
+  EMAIL_RECEIVED: 'email_received',
+
   POLL_VOTE_SIGNATURE_PENDING: 'poll_vote_signature_pending',
   POLL_VOTE_SIGNATURE_APPROVED: 'poll_vote_signature_approved',
   POLL_VOTE_SIGNATURE_REJECTED: 'poll_vote_signature_rejected',
@@ -62,6 +64,9 @@ export const NotificationCategory = {
   MAINTENANCE: 'maintenance',
   FINANCIAL: 'financial',
   CHAT: 'chat',
+  // Building mailbox (Korisnički pretinac). Named building_email — not `email` —
+  // so it can never be confused with NotificationChannel.EMAIL ('email').
+  BUILDING_EMAIL: 'building_email',
   SYSTEM: 'system',
 } as const;
 
@@ -131,6 +136,8 @@ export const NOTIFICATION_TYPE_CATEGORY: Record<NotificationType, NotificationCa
   [NotificationType.PAYMENT_RECEIVED]: NotificationCategory.FINANCIAL,
 
   [NotificationType.CHAT_MESSAGE]: NotificationCategory.CHAT,
+
+  [NotificationType.EMAIL_RECEIVED]: NotificationCategory.BUILDING_EMAIL,
 
   [NotificationType.BUILDING_JOIN_REQUEST_RECEIVED]: NotificationCategory.SYSTEM,
   [NotificationType.BUILDING_JOIN_REQUEST_APPROVED]: NotificationCategory.SYSTEM,

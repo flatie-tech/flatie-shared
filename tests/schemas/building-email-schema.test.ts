@@ -72,6 +72,40 @@ describe('building-email schemas (v0.73.0)', () => {
     expect(withAtt.attachments[0]?.fileName).toBe('racun.pdf');
   });
 
+  it('email-overhaul additions: receivedAt, hasAttachments default, unread-count, EMAIL_RECEIVED', async () => {
+    const msg = emailMessageSchema.parse({
+      id: '11111111-1111-4111-8111-111111111111',
+      threadId: '22222222-2222-4222-8222-222222222222',
+      direction: 'inbound',
+      fromAddress: 'a@b.com',
+      subject: 'S',
+      createdAt: '2026-08-03T00:00:00Z',
+      receivedAt: '2026-08-02T23:59:00Z',
+    });
+    expect(msg.receivedAt).toBe('2026-08-02T23:59:00Z');
+
+    const { emailThreadSchema, emailUnreadCountResponseSchema } = await import(
+      '../../src/schemas/responses'
+    );
+    const thread = emailThreadSchema.parse({
+      id: '11111111-1111-4111-8111-111111111111',
+      buildingId: '22222222-2222-4222-8222-222222222222',
+      subject: 'S',
+      inboxAddress: 'zgrada@mail.flatie.hr',
+      lastMessageAt: '2026-08-03T00:00:00Z',
+    });
+    expect(thread.hasAttachments).toBe(false);
+
+    expect(emailUnreadCountResponseSchema.parse({ unreadCount: '3' }).unreadCount).toBe(3);
+
+    const { NotificationType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory } = await import(
+      '../../src/enums'
+    );
+    expect(NOTIFICATION_TYPE_CATEGORY[NotificationType.EMAIL_RECEIVED]).toBe(
+      NotificationCategory.BUILDING_EMAIL,
+    );
+  });
+
   it('mailbox is management-only: co-owner lacks view, representative has view+manage', () => {
     const coOwner = BUILDING_ROLE_PERMISSIONS[BuildingRole.CO_OWNER];
     const rep = BUILDING_ROLE_PERMISSIONS[BuildingRole.OWNER_REPRESENTATIVE];

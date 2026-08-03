@@ -44,7 +44,9 @@ export const emailMessageSchema = z
       .string()
       .nullable()
       .optional()
-      .describe('Plain-text body. Always populated for outbound; may be null for inbound.'),
+      .describe(
+        'Text body. For outbound this is the markdown source the representative wrote (clients render it as markdown); for inbound it is the plain-text MIME part and may be null.',
+      ),
     bodyHtml: z
       .string()
       .nullable()
@@ -55,7 +57,7 @@ export const emailMessageSchema = z
       .nullable()
       .optional()
       .describe(
-        'RFC 5322 Message-ID header value. Stable identifier used as a threading fallback when plus-addressing routing fails.',
+        'RFC 5322 Message-ID header value. Used for inbound idempotency and References-chain threading when a reply does not match the To-address route.',
       ),
     sentByUserId: z
       .string()
@@ -71,6 +73,13 @@ export const emailMessageSchema = z
     createdAt: z
       .string()
       .describe('ISO-8601 timestamp when the message was persisted server-side.'),
+    receivedAt: z
+      .string()
+      .nullable()
+      .optional()
+      .describe(
+        'ISO-8601 timestamp the provider reported receiving the message (inbound only); null/absent for outbound or when the provider omitted it. Clients display `receivedAt ?? createdAt`.',
+      ),
     attachments: z
       .array(emailAttachmentSchema)
       .default([])
@@ -108,6 +117,10 @@ export const emailThreadSchema = z
       .default(0)
       .describe('Count of inbound messages not yet marked as read.'),
     archived: z.boolean().default(false).describe('True when the thread has been archived.'),
+    hasAttachments: z
+      .boolean()
+      .default(false)
+      .describe('True when at least one message in the thread carries attachments.'),
   })
   .describe('Summary row for the thread list view.');
 
@@ -122,6 +135,14 @@ export const emailThreadDetailSchema = emailThreadSchema
 
 export const paginatedEmailThreadsResponseSchema = paginatedResponseSchema(emailThreadSchema);
 
+export const emailUnreadCountResponseSchema = z
+  .looseObject({
+    unreadCount: z.coerce
+      .number()
+      .describe('Sum of unread inbound messages across the building’s non-archived threads.'),
+  })
+  .describe('Response of `GET /buildings/:buildingId/email/unread-count`; feeds the inbox badge.');
+
 export type EmailDirection = Strict<z.infer<typeof emailDirectionSchema>>;
 export type EmailAttachment = Strict<z.infer<typeof emailAttachmentSchema>>;
 export type EmailMessage = Strict<z.infer<typeof emailMessageSchema>>;
@@ -130,3 +151,4 @@ export type EmailThreadDetail = Strict<z.infer<typeof emailThreadDetailSchema>>;
 export type PaginatedEmailThreadsResponse = Strict<
   z.infer<typeof paginatedEmailThreadsResponseSchema>
 >;
+export type EmailUnreadCountResponse = Strict<z.infer<typeof emailUnreadCountResponseSchema>>;

@@ -77,6 +77,8 @@ export const buildingEmailKeys = {
     [...buildingEmailKeys.threads(buildingId), { ...filters }] as const,
   thread: (buildingId: string, threadId: string) =>
     [...buildingEmailKeys.threads(buildingId), threadId] as const,
+  unreadCount: (buildingId: string) =>
+    [...buildingEmailKeys.all, 'unreadCount', buildingId] as const,
 };
 
 export const pollKeys = {

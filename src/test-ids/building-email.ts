@@ -11,4 +11,20 @@ export const BuildingEmailTestIds = {
   searchInput: 'building-email-search-input',
   tabActive: 'building-email-tab-active',
   tabArchived: 'building-email-tab-archived',
+  /** Floating inbox launcher button (web widget). */
+  fab: 'building-email-fab',
+  /** Unread badge rendered on the FAB. */
+  fabUnreadBadge: 'building-email-fab-unread-badge',
+  /** Corner-panel widget container. */
+  widgetPanel: 'building-email-widget-panel',
+  /** Back button shown in thread view on mobile / in the widget. */
+  mobileBackButton: 'building-email-mobile-back-button',
+  /** Toggle that expands collapsed quoted history inside a message. */
+  quoteToggle: 'building-email-quote-toggle',
+  /** Sanitized HTML body container of an inbound message. */
+  htmlBody: 'building-email-html-body',
+  /** Unread-count chip on a thread list row. */
+  unreadBadge: 'building-email-unread-badge',
+  /** Direction (inbound/outbound) icon on a thread list row. */
+  directionIcon: 'building-email-direction-icon',
 } as const;

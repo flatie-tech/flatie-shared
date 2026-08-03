@@ -13,7 +13,9 @@ export const replyEmailThreadRequestSchema = z
       .string()
       .min(1)
       .max(EMAIL_LIMITS.BODY_MAX)
-      .describe('Plain-text body of the reply, up to 50k chars.'),
+      .describe(
+        'Markdown body of the reply, up to 50k chars. Rendered to sanitized HTML server-side for the outgoing mail; the markdown source is stored as the message bodyText.',
+      ),
     // multipartArray: with attachments the endpoints are multipart — accepts a
     // real array, repeated form fields, or a JSON-encoded array string.
     ccEmails: multipartArray(z.string().email())

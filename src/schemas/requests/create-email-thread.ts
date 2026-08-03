@@ -51,7 +51,9 @@ export const createEmailThreadRequestSchema = z
       .string()
       .min(1)
       .max(EMAIL_LIMITS.BODY_MAX)
-      .describe('Plain-text body of the first outbound message, up to 50k chars.'),
+      .describe(
+        'Markdown body of the first outbound message, up to 50k chars. The backend renders it to sanitized HTML for the outgoing mail (multipart/alternative) and stores the markdown source as the message bodyText.',
+      ),
   })
   .strict();
 

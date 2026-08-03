@@ -25,6 +25,7 @@ export type {
   EmailMessage,
   EmailThread,
   EmailThreadDetail,
+  EmailUnreadCountResponse,
   PaginatedEmailThreadsResponse,
 } from './building-email';
 export {
@@ -32,6 +33,7 @@ export {
   emailMessageSchema,
   emailThreadDetailSchema,
   emailThreadSchema,
+  emailUnreadCountResponseSchema,
   paginatedEmailThreadsResponseSchema,
 } from './building-email';
 export type {
