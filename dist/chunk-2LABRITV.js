@@ -1,4 +1,4 @@
-import { BuildingRole, PlatformRole, OrgRole, SCOPED_PERMISSIONS, APPROVE_PERMISSIONS } from './chunk-M5YUXFML.js';
+import { BuildingRole, PlatformRole, OrgRole, SCOPED_PERMISSIONS, APPROVE_PERMISSIONS } from './chunk-NRMZQVYU.js';
 import { isBackendErrorCode } from './chunk-FUPWTG6T.js';
 import { createPaginatedResponse } from './chunk-K2CKX6IH.js';
 
@@ -349,5 +349,5 @@ function debounce(func, delay) {
 }
 
 export { DATETIME_FORMATS, DATE_FORMATS, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, ROLE_BADGE_COLORS, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, TIME_FORMATS, VOTING_METHOD_SETTINGS, applyResidentRestriction, applyResidentRestrictionToItem, buildGoogleCalendarUrl, canDo, canDoOnResource, canMessageUser, computeActionFlags, createPermissionChecker, debounce, formatCurrency, formatCurrencyByLocale, formatCurrencyEUR, formatDate, formatDateTime, formatText, getContextUserId, getDateLocale, getInitials, getMessageableUsers, getRoleBadge, isManagerialRole, normalizePaginatedResponse, parseApiError, parseData, resolveVotingMethods };
-//# sourceMappingURL=chunk-IEZYOQPB.js.map
-//# sourceMappingURL=chunk-IEZYOQPB.js.map
+//# sourceMappingURL=chunk-2LABRITV.js.map
+//# sourceMappingURL=chunk-2LABRITV.js.map

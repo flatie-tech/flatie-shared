@@ -157,6 +157,18 @@ declare const PlatformRole: {
 };
 type PlatformRole = (typeof PlatformRole)[keyof typeof PlatformRole];
 declare const PLATFORM_ROLE_RANK: Record<PlatformRole, number>;
+/**
+ * Peer-admin rule, mirroring `canAssignOrgRole`.
+ *
+ * A strict `>` comparison would mean a PLATFORM_ADMIN can neither promote
+ * anyone to admin nor demote/remove a fellow admin — so a second admin could
+ * only ever be created by a direct DB write, and the last-admin guards would
+ * be unreachable. The org layer resolved exactly this asymmetry; platform
+ * carried the same latent bug, hidden only because the sole caller
+ * (addPlatformMember) never invoked this helper.
+ *
+ * Everyone below admin stays strictly rank-limited.
+ */
 declare function canAssignPlatformRole(assignerRole: PlatformRole, targetRole: PlatformRole): boolean;
 
 export { APPROVE_PERMISSIONS as A, BUILDING_ROLE_RANK as B, ORG_ROLE_RANK as O, Permission as P, SCOPED_DOMAINS as S, SCOPED_PERMISSIONS as a, type ScopedAction as b, type ScopedDomain as c, domainPermissions as d, BuildingRole as e, canAssignOrgRole as f, canAssignPlatformRole as g, canAssignRole as h, OrgRole as i, PLATFORM_ROLE_RANK as j, PlatformRole as k };

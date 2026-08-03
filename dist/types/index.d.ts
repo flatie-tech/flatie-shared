@@ -1,5 +1,5 @@
 import { B as BuildingType, F as FailureStatus, f as TransactionType, T as TransactionCategory, P as PollType, C as CommonStatus } from '../status.enum-CQbseeTz.js';
-import { e as BuildingRole, P as Permission, i as OrgRole, k as PlatformRole } from '../role.enum-BJt94sMT.js';
+import { e as BuildingRole, P as Permission, i as OrgRole, k as PlatformRole } from '../role.enum-B2GsU_N5.js';
 import { z } from 'zod';
 import { g as eventTypeSchema, f as eventColorSchema, r as recurrenceTypeSchema, m as maintenanceFinancedBySchema, A as votePollSchema } from '../poll.schema-ux7gZt1q.js';
 export { C as CursorPaginatedResponse, P as PaginatedResponse, c as createPaginatedResponse } from '../pagination.types-D3A3752L.js';

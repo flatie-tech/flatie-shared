@@ -1,5 +1,5 @@
 import { L as LinkableEntityType, E as EntityLinkType } from '../entity-link.enum-BYEzMg8A.js';
-import { P as Permission, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-BJt94sMT.js';
+import { P as Permission, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-B2GsU_N5.js';
 
 declare const AI_CHAT_LIMITS: {
     /** Hard ceiling on the messages array per request. */
