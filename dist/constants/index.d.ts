@@ -1,5 +1,5 @@
 import { L as LinkableEntityType, E as EntityLinkType } from '../entity-link.enum-BYEzMg8A.js';
-import { P as Permission, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-Mqqm0r27.js';
+import { P as Permission, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-BJt94sMT.js';
 
 declare const AI_CHAT_LIMITS: {
     /** Hard ceiling on the messages array per request. */
@@ -28,6 +28,16 @@ declare const MAX_PAGINATION_LIMIT = 100;
  * two clients can't drift (mobile shipped 10s against web's 15s once).
  */
 declare const CHAT_CONVERSATIONS_POLL_MS = 15000;
+/**
+ * Catalog price for the `standard` subscription tier, in euro cents per unit
+ * per month. The `enterprise` tier has NO catalog price — it carries a
+ * negotiated `pricePerUnitCents` on the subscription row instead.
+ *
+ * Lives here because the backend needs it twice (price endpoint + invoice
+ * generation) and the revenue metrics need it a third time; three copies of a
+ * billing number is how pricing bugs happen.
+ */
+declare const STANDARD_UNIT_PRICE_CENTS = 99;
 
 /**
  * Platform-neutral display metadata for a linkable entity type.
@@ -359,6 +369,46 @@ declare const platformBuildingKeys: {
     }];
     details: () => readonly ["platformBuilding", "detail"];
     detail: (id: string) => readonly ["platformBuilding", "detail", string];
+};
+/**
+ * Hierarchical factories for the platform staff surfaces. Note the shape: an
+ * `all` root that every parameterized key extends, so `invalidateQueries({
+ * queryKey: xKeys.all })` actually prefix-matches. (The frontend's older flat
+ * `['platform-x', params]` factories could not — calling them with no
+ * argument yields `['platform-x', undefined]`, which matches nothing.)
+ */
+declare const auditLogKeys: {
+    all: readonly ["auditLog"];
+    lists: () => readonly ["auditLog", "list"];
+    list: (filters?: Record<string, unknown>) => readonly ["auditLog", "list", {
+        readonly [x: string]: unknown;
+    }];
+};
+declare const platformSubscriptionKeys: {
+    all: readonly ["platformSubscription"];
+    lists: () => readonly ["platformSubscription", "list"];
+    list: (filters?: Record<string, unknown>) => readonly ["platformSubscription", "list", {
+        readonly [x: string]: unknown;
+    }];
+    details: () => readonly ["platformSubscription", "detail"];
+    detail: (id: string) => readonly ["platformSubscription", "detail", string];
+    revenue: () => readonly ["platformSubscription", "revenue"];
+};
+declare const enterpriseRequestKeys: {
+    all: readonly ["enterpriseRequest"];
+    lists: () => readonly ["enterpriseRequest", "list"];
+    list: (filters?: Record<string, unknown>) => readonly ["enterpriseRequest", "list", {
+        readonly [x: string]: unknown;
+    }];
+};
+declare const dsarKeys: {
+    all: readonly ["dsar"];
+    lists: () => readonly ["dsar", "list"];
+    list: (filters?: Record<string, unknown>) => readonly ["dsar", "list", {
+        readonly [x: string]: unknown;
+    }];
+    details: () => readonly ["dsar", "detail"];
+    detail: (id: string) => readonly ["dsar", "detail", string];
 };
 declare const recurringTemplateKeys: {
     all: readonly ["recurringTemplate"];
@@ -758,4 +808,4 @@ declare const ADMIN_ORG_PERMISSIONS: Permission[];
 /** Admin platform-scope permissions — same as PLATFORM_ADMIN. */
 declare const ADMIN_PLATFORM_PERMISSIONS: Permission[];
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, AI_CHAT_LIMITS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, ENTITY_LINK_TYPE_META, type EntityLinkRule, type EntityLinkTypeMeta, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, OWNERSHIP_DERIVED_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, blogKeys, boardKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, incomeKeys, isEntityLinkAllowed, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, AI_CHAT_LIMITS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, ENTITY_LINK_TYPE_META, type EntityLinkRule, type EntityLinkTypeMeta, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, OWNERSHIP_DERIVED_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, STANDARD_UNIT_PRICE_CENTS, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, auditLogKeys, blogKeys, boardKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, dsarKeys, enterpriseRequestKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, fundsKeys, garageKeys, incomeKeys, isEntityLinkAllowed, layoutKeys, maintenanceLogKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, platformSubscriptionKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };

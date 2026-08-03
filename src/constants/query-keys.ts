@@ -293,6 +293,45 @@ export const platformBuildingKeys = {
   detail: (id: string) => [...platformBuildingKeys.details(), id] as const,
 };
 
+/**
+ * Hierarchical factories for the platform staff surfaces. Note the shape: an
+ * `all` root that every parameterized key extends, so `invalidateQueries({
+ * queryKey: xKeys.all })` actually prefix-matches. (The frontend's older flat
+ * `['platform-x', params]` factories could not — calling them with no
+ * argument yields `['platform-x', undefined]`, which matches nothing.)
+ */
+export const auditLogKeys = {
+  all: ['auditLog'] as const,
+  lists: () => [...auditLogKeys.all, 'list'] as const,
+  list: (filters: Record<string, unknown> = {}) =>
+    [...auditLogKeys.lists(), { ...filters }] as const,
+};
+
+export const platformSubscriptionKeys = {
+  all: ['platformSubscription'] as const,
+  lists: () => [...platformSubscriptionKeys.all, 'list'] as const,
+  list: (filters: Record<string, unknown> = {}) =>
+    [...platformSubscriptionKeys.lists(), { ...filters }] as const,
+  details: () => [...platformSubscriptionKeys.all, 'detail'] as const,
+  detail: (id: string) => [...platformSubscriptionKeys.details(), id] as const,
+  revenue: () => [...platformSubscriptionKeys.all, 'revenue'] as const,
+};
+
+export const enterpriseRequestKeys = {
+  all: ['enterpriseRequest'] as const,
+  lists: () => [...enterpriseRequestKeys.all, 'list'] as const,
+  list: (filters: Record<string, unknown> = {}) =>
+    [...enterpriseRequestKeys.lists(), { ...filters }] as const,
+};
+
+export const dsarKeys = {
+  all: ['dsar'] as const,
+  lists: () => [...dsarKeys.all, 'list'] as const,
+  list: (filters: Record<string, unknown> = {}) => [...dsarKeys.lists(), { ...filters }] as const,
+  details: () => [...dsarKeys.all, 'detail'] as const,
+  detail: (id: string) => [...dsarKeys.details(), id] as const,
+};
+
 export const recurringTemplateKeys = {
   all: ['recurringTemplate'] as const,
   lists: () => [...recurringTemplateKeys.all, 'list'] as const,

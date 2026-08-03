@@ -33,6 +33,49 @@ var BuildingType = {
   RESIDENTIAL_COMMERCIAL: "residential_commercial"
 };
 
+// src/enums/dsar.enum.ts
+var DsarRequestType = {
+  /** Art. 15 — access / copy of the data held. */
+  ACCESS: "access",
+  /** Art. 16 — correction of inaccurate data. */
+  RECTIFICATION: "rectification",
+  /** Art. 17 — erasure ("right to be forgotten"). */
+  ERASURE: "erasure",
+  /** Art. 18 — restriction of processing. */
+  RESTRICTION: "restriction",
+  /** Art. 20 — machine-readable export for transfer elsewhere. */
+  PORTABILITY: "portability",
+  /** Art. 21 — objection to processing. */
+  OBJECTION: "objection"
+};
+var DsarRequestStatus = {
+  RECEIVED: "received",
+  IN_PROGRESS: "in_progress",
+  /** Blocked on the subject — e.g. awaiting identity verification. */
+  AWAITING_SUBJECT: "awaiting_subject",
+  FULFILLED: "fulfilled",
+  /** Lawfully refused (Art. 12(5)) — the reason belongs in the resolution note. */
+  REFUSED: "refused",
+  CANCELLED: "cancelled"
+};
+var DSAR_CLOSED_STATUSES = [
+  DsarRequestStatus.FULFILLED,
+  DsarRequestStatus.REFUSED,
+  DsarRequestStatus.CANCELLED
+];
+var DSAR_SLA_DAYS = 30;
+var DSAR_MAX_EXTENSION_DAYS = 60;
+var DSAR_RETENTION_YEARS = 3;
+
+// src/enums/enterprise-request.enum.ts
+var EnterpriseRequestStatus = {
+  OPEN: "open",
+  CONTACTED: "contacted",
+  /** A negotiated subscription price has been set for the entity. */
+  FULFILLED: "fulfilled",
+  DISMISSED: "dismissed"
+};
+
 // src/enums/entity-link.enum.ts
 var EntityLinkType = {
   IMAGE: "image",
@@ -426,7 +469,16 @@ var Permission = {
   PLATFORM_MANAGE_SETTINGS: "platform:manage_settings",
   PLATFORM_MANAGE_SUBSCRIPTIONS: "platform:manage_subscriptions",
   PLATFORM_PURGE: "platform:purge",
-  PLATFORM_VIEW_ARCHIVE: "platform:view_archive"
+  PLATFORM_VIEW_ARCHIVE: "platform:view_archive",
+  // Managing Flatie STAFF (platform_members rows) — deliberately separate from
+  // platform:manage_users, which is about ordinary app users and is held by
+  // MODERATOR. Staff management is rank-escalation territory: ADMIN only.
+  PLATFORM_MANAGE_STAFF: "platform:manage_staff",
+  // Audit rows carry IPs, user agents and cross-tenant metadata for every
+  // user — strictly more sensitive than any single existing grant.
+  PLATFORM_VIEW_AUDIT: "platform:view_audit",
+  // DSAR console: full personal-data exports and immediate erasure.
+  PLATFORM_MANAGE_DSAR: "platform:manage_dsar"
 };
 function buildScopedPermissions() {
   const result = {};
@@ -684,7 +736,14 @@ exports.BuildingStatus = BuildingStatus;
 exports.BuildingType = BuildingType;
 exports.CO_OWNER_VISIBLE_SYSTEM_TYPES = CO_OWNER_VISIBLE_SYSTEM_TYPES;
 exports.CommonStatus = CommonStatus;
+exports.DSAR_CLOSED_STATUSES = DSAR_CLOSED_STATUSES;
+exports.DSAR_MAX_EXTENSION_DAYS = DSAR_MAX_EXTENSION_DAYS;
+exports.DSAR_RETENTION_YEARS = DSAR_RETENTION_YEARS;
+exports.DSAR_SLA_DAYS = DSAR_SLA_DAYS;
 exports.DevicePlatform = DevicePlatform;
+exports.DsarRequestStatus = DsarRequestStatus;
+exports.DsarRequestType = DsarRequestType;
+exports.EnterpriseRequestStatus = EnterpriseRequestStatus;
 exports.EntityLinkType = EntityLinkType;
 exports.FailureLocationType = FailureLocationType;
 exports.FailureStatus = FailureStatus;
@@ -741,5 +800,5 @@ exports.canAssignRole = canAssignRole;
 exports.deriveVotingStrength = deriveVotingStrength;
 exports.domainPermissions = domainPermissions;
 exports.methodToTier = methodToTier;
-//# sourceMappingURL=chunk-CHR4FQS6.cjs.map
-//# sourceMappingURL=chunk-CHR4FQS6.cjs.map
+//# sourceMappingURL=chunk-K6LAEP7U.cjs.map
+//# sourceMappingURL=chunk-K6LAEP7U.cjs.map

@@ -1,6 +1,6 @@
 export { B as BuildingType, P as PollType } from '../poll-type.enum-CGV5tBqR.js';
 export { E as EntityLinkType, L as LinkableEntityType } from '../entity-link.enum-BYEzMg8A.js';
-export { A as APPROVE_PERMISSIONS, B as BUILDING_ROLE_RANK, e as BuildingRole, O as ORG_ROLE_RANK, i as OrgRole, j as PLATFORM_ROLE_RANK, P as Permission, k as PlatformRole, S as SCOPED_DOMAINS, a as SCOPED_PERMISSIONS, b as ScopedAction, c as ScopedDomain, f as canAssignOrgRole, g as canAssignPlatformRole, h as canAssignRole, d as domainPermissions } from '../role.enum-Mqqm0r27.js';
+export { A as APPROVE_PERMISSIONS, B as BUILDING_ROLE_RANK, e as BuildingRole, O as ORG_ROLE_RANK, i as OrgRole, j as PLATFORM_ROLE_RANK, P as Permission, k as PlatformRole, S as SCOPED_DOMAINS, a as SCOPED_PERMISSIONS, b as ScopedAction, c as ScopedDomain, f as canAssignOrgRole, g as canAssignPlatformRole, h as canAssignRole, d as domainPermissions } from '../role.enum-BJt94sMT.js';
 export { A as ApprovalStatus, C as CommonStatus, F as FailureStatus, a as FailureType, b as FileCategory, c as Frequency, M as MaintenanceStatus, d as MaintenanceType, P as Priority, T as TransactionCategory, e as TransactionType } from '../status.enum-BYlt7_Fs.js';
 
 /**
@@ -34,6 +34,67 @@ declare const OrgStatus: {
     readonly REJECTED: "rejected";
 };
 type OrgStatus = (typeof OrgStatus)[keyof typeof OrgStatus];
+
+/**
+ * GDPR data-subject-access-request (DSAR) handling.
+ *
+ * Flatie's DPO works these from the platform console; before that they lived
+ * as uncommitted markdown files (see flatie-backend/docs/runbooks/dsar.md).
+ */
+/** The right the data subject is exercising (GDPR Arts. 15–21). */
+declare const DsarRequestType: {
+    /** Art. 15 — access / copy of the data held. */
+    readonly ACCESS: "access";
+    /** Art. 16 — correction of inaccurate data. */
+    readonly RECTIFICATION: "rectification";
+    /** Art. 17 — erasure ("right to be forgotten"). */
+    readonly ERASURE: "erasure";
+    /** Art. 18 — restriction of processing. */
+    readonly RESTRICTION: "restriction";
+    /** Art. 20 — machine-readable export for transfer elsewhere. */
+    readonly PORTABILITY: "portability";
+    /** Art. 21 — objection to processing. */
+    readonly OBJECTION: "objection";
+};
+type DsarRequestType = (typeof DsarRequestType)[keyof typeof DsarRequestType];
+declare const DsarRequestStatus: {
+    readonly RECEIVED: "received";
+    readonly IN_PROGRESS: "in_progress";
+    /** Blocked on the subject — e.g. awaiting identity verification. */
+    readonly AWAITING_SUBJECT: "awaiting_subject";
+    readonly FULFILLED: "fulfilled";
+    /** Lawfully refused (Art. 12(5)) — the reason belongs in the resolution note. */
+    readonly REFUSED: "refused";
+    readonly CANCELLED: "cancelled";
+};
+type DsarRequestStatus = (typeof DsarRequestStatus)[keyof typeof DsarRequestStatus];
+/** Statuses that close a request and stop the SLA clock. */
+declare const DSAR_CLOSED_STATUSES: readonly DsarRequestStatus[];
+/** Art. 12(3) — one month to respond. */
+declare const DSAR_SLA_DAYS = 30;
+/** Art. 12(3) allows a further two months for complex requests. */
+declare const DSAR_MAX_EXTENSION_DAYS = 60;
+/**
+ * How long a CLOSED request is retained before the nightly sweep purges it.
+ * Basis: Art. 5(2) accountability + the limitation period for legal claims.
+ */
+declare const DSAR_RETENTION_YEARS = 3;
+
+/**
+ * Lifecycle of an inbound "request enterprise pricing" lead.
+ *
+ * Before this existed the request was only an email to info@flatie.hr, so
+ * there was no queue, no dedupe and no way to tell a fulfilled request from a
+ * forgotten one.
+ */
+declare const EnterpriseRequestStatus: {
+    readonly OPEN: "open";
+    readonly CONTACTED: "contacted";
+    /** A negotiated subscription price has been set for the entity. */
+    readonly FULFILLED: "fulfilled";
+    readonly DISMISSED: "dismissed";
+};
+type EnterpriseRequestStatus = (typeof EnterpriseRequestStatus)[keyof typeof EnterpriseRequestStatus];
 
 declare const FailureLocationType: {
     readonly COMMON_AREA: "common_area";
@@ -367,4 +428,4 @@ declare function deriveVotingStrength(user: {
     verificationTier?: number | null;
 }): VotingStrength;
 
-export { BoardVisibility, BuildingOtpExpiry, BuildingStatus, CO_OWNER_VISIBLE_SYSTEM_TYPES, DevicePlatform, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, JoinRequestStatus, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, OrgQuotaResourceType, OrgStatus, OrgType, POLL_CANNOT_VOTE_REASON_KEY, PollCannotVoteReason, PollStatus, PollVoteStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, RESIDENT_VISIBLE_SYSTEM_TYPES, TransactionSource, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, VotingStrength, WASTE_SUBTYPE_NOTIFICATION_MAP, deriveVotingStrength, methodToTier };
+export { BoardVisibility, BuildingOtpExpiry, BuildingStatus, CO_OWNER_VISIBLE_SYSTEM_TYPES, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DevicePlatform, DsarRequestStatus, DsarRequestType, EnterpriseRequestStatus, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, JoinRequestStatus, MaintenanceLogFinancedBy, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_QUOTA_DEFAULT_DAILY_LIMITS, ORG_QUOTA_RESOURCE_TYPES, OrgQuotaResourceType, OrgStatus, OrgType, POLL_CANNOT_VOTE_REASON_KEY, PollCannotVoteReason, PollStatus, PollVoteStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, RESIDENT_VISIBLE_SYSTEM_TYPES, TransactionSource, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, VotingStrength, WASTE_SUBTYPE_NOTIFICATION_MAP, deriveVotingStrength, methodToTier };

@@ -322,6 +322,23 @@ export const API_ROUTES = {
     ARCHIVE_CLEANUP: '/platform/archive/cleanup/run',
     ARCHIVE_RESTORE: (type: string, id: string) => `/platform/archive/${type}/${id}/restore`,
     ARCHIVE_PERMANENT: (type: string, id: string) => `/platform/archive/${type}/${id}/permanent`,
+    INVOICES: '/platform/invoices',
+    INVOICE_MARK_PAID: (id: string) => `/platform/invoices/${id}/mark-paid`,
+    INVOICE_CANCEL: (id: string) => `/platform/invoices/${id}/cancel`,
+    INVOICE_RESEND_ERACUN: (id: string) => `/platform/invoices/${id}/resend-eracun`,
+    AUDIT_LOGS: '/platform/audit-logs',
+    SUBSCRIPTIONS: '/platform/subscriptions',
+    SUBSCRIPTION_DETAIL: (id: string) => `/platform/subscriptions/${id}`,
+    ENTERPRISE_REQUESTS: '/platform/enterprise-requests',
+    ENTERPRISE_REQUEST_DETAIL: (id: string) => `/platform/enterprise-requests/${id}`,
+    DASHBOARD_REVENUE: '/platform/dashboard/revenue',
+    DSAR: '/platform/dsar',
+    DSAR_DETAIL: (id: string) => `/platform/dsar/${id}`,
+    DSAR_EVENTS: (id: string) => `/platform/dsar/${id}/events`,
+    DSAR_EXPORT: (id: string) => `/platform/dsar/${id}/export`,
+    DSAR_RESTRICTION: (id: string) => `/platform/dsar/${id}/restriction`,
+    DSAR_ERASURE: (id: string) => `/platform/dsar/${id}/erasure`,
+    DSAR_RECTIFICATION: (id: string) => `/platform/dsar/${id}/rectification`,
   },
 
   // ── Representatives ──────────────────────────────────────────────────
@@ -343,6 +360,8 @@ export const API_ROUTES = {
     BASE: '/subscriptions',
     PRICES: '/subscriptions/prices',
     INVOICE: '/subscriptions/invoice',
-    MARK_PAID: (id: string) => `/subscriptions/invoices/${id}/mark-paid`,
+    // MARK_PAID removed in v0.92.0 — the duplicate `/subscriptions/invoices/:id/mark-paid`
+    // route had zero consumers (verified across backend/frontend/mobile) and skipped the
+    // audit log its `/platform/invoices/:id/mark-paid` twin writes. Use PLATFORM.INVOICE_MARK_PAID.
   },
 } as const;

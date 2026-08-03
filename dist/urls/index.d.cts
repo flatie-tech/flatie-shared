@@ -220,6 +220,23 @@ declare const API_ROUTES: {
         readonly ARCHIVE_CLEANUP: "/platform/archive/cleanup/run";
         readonly ARCHIVE_RESTORE: (type: string, id: string) => string;
         readonly ARCHIVE_PERMANENT: (type: string, id: string) => string;
+        readonly INVOICES: "/platform/invoices";
+        readonly INVOICE_MARK_PAID: (id: string) => string;
+        readonly INVOICE_CANCEL: (id: string) => string;
+        readonly INVOICE_RESEND_ERACUN: (id: string) => string;
+        readonly AUDIT_LOGS: "/platform/audit-logs";
+        readonly SUBSCRIPTIONS: "/platform/subscriptions";
+        readonly SUBSCRIPTION_DETAIL: (id: string) => string;
+        readonly ENTERPRISE_REQUESTS: "/platform/enterprise-requests";
+        readonly ENTERPRISE_REQUEST_DETAIL: (id: string) => string;
+        readonly DASHBOARD_REVENUE: "/platform/dashboard/revenue";
+        readonly DSAR: "/platform/dsar";
+        readonly DSAR_DETAIL: (id: string) => string;
+        readonly DSAR_EVENTS: (id: string) => string;
+        readonly DSAR_EXPORT: (id: string) => string;
+        readonly DSAR_RESTRICTION: (id: string) => string;
+        readonly DSAR_ERASURE: (id: string) => string;
+        readonly DSAR_RECTIFICATION: (id: string) => string;
     };
     readonly REPRESENTATIVES: {
         readonly DASHBOARD_SUMMARY: "/representatives/dashboard/summary";
@@ -235,7 +252,6 @@ declare const API_ROUTES: {
         readonly BASE: "/subscriptions";
         readonly PRICES: "/subscriptions/prices";
         readonly INVOICE: "/subscriptions/invoice";
-        readonly MARK_PAID: (id: string) => string;
     };
 };
 

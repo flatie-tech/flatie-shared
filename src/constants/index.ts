@@ -5,6 +5,7 @@ export {
   CHAT_CONVERSATIONS_POLL_MS,
   DEFAULT_PAGINATION_LIMIT,
   MAX_PAGINATION_LIMIT,
+  STANDARD_UNIT_PRICE_CENTS,
 } from './defaults';
 // Entity-link display metadata (entity type → section/icon/tint for linked-records UI)
 export { ENTITY_LINK_TYPE_META, type EntityLinkTypeMeta } from './entity-link-meta';
@@ -21,6 +22,7 @@ export {
   adminKeys,
   aiUsageKeys,
   apartmentKeys,
+  auditLogKeys,
   blogKeys,
   boardKeys,
   buildingEmailKeys,
@@ -29,6 +31,8 @@ export {
   chatKeys,
   dashboardSummaryKeys,
   documentKeys,
+  dsarKeys,
+  enterpriseRequestKeys,
   entityLinkKeys,
   eventKeys,
   failureReportKeys,
@@ -44,6 +48,7 @@ export {
   ownerKeys,
   permissionKeys,
   platformBuildingKeys,
+  platformSubscriptionKeys,
   pollKeys,
   queryKeys,
   recentKeys,

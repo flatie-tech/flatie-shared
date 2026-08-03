@@ -14,3 +14,14 @@ export const MAX_PAGINATION_LIMIT = 100;
  * two clients can't drift (mobile shipped 10s against web's 15s once).
  */
 export const CHAT_CONVERSATIONS_POLL_MS = 15_000;
+
+/**
+ * Catalog price for the `standard` subscription tier, in euro cents per unit
+ * per month. The `enterprise` tier has NO catalog price — it carries a
+ * negotiated `pricePerUnitCents` on the subscription row instead.
+ *
+ * Lives here because the backend needs it twice (price endpoint + invoice
+ * generation) and the revenue metrics need it a third time; three copies of a
+ * billing number is how pricing bugs happen.
+ */
+export const STANDARD_UNIT_PRICE_CENTS = 99;
