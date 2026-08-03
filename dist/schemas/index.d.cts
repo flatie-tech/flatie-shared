@@ -2332,6 +2332,7 @@ declare const emailMessageSchema: z.ZodObject<{
     sentByUserId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     sentByUserName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     createdAt: z.ZodString;
+    receivedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     attachments: z.ZodDefault<z.ZodArray<z.ZodObject<{
         id: z.ZodString;
         fileName: z.ZodString;
@@ -2355,6 +2356,7 @@ declare const emailThreadSchema: z.ZodObject<{
     messageCount: z.ZodDefault<z.ZodCoercedNumber<unknown>>;
     unreadCount: z.ZodDefault<z.ZodCoercedNumber<unknown>>;
     archived: z.ZodDefault<z.ZodBoolean>;
+    hasAttachments: z.ZodDefault<z.ZodBoolean>;
 }, z.core.$loose>;
 declare const emailThreadDetailSchema: z.ZodObject<{
     id: z.ZodString;
@@ -2371,6 +2373,7 @@ declare const emailThreadDetailSchema: z.ZodObject<{
     messageCount: z.ZodDefault<z.ZodCoercedNumber<unknown>>;
     unreadCount: z.ZodDefault<z.ZodCoercedNumber<unknown>>;
     archived: z.ZodDefault<z.ZodBoolean>;
+    hasAttachments: z.ZodDefault<z.ZodBoolean>;
     messages: z.ZodDefault<z.ZodArray<z.ZodObject<{
         id: z.ZodString;
         threadId: z.ZodString;
@@ -2389,6 +2392,7 @@ declare const emailThreadDetailSchema: z.ZodObject<{
         sentByUserId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         sentByUserName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         createdAt: z.ZodString;
+        receivedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         attachments: z.ZodDefault<z.ZodArray<z.ZodObject<{
             id: z.ZodString;
             fileName: z.ZodString;
@@ -2414,6 +2418,7 @@ declare const paginatedEmailThreadsResponseSchema: z.ZodObject<{
         messageCount: z.ZodDefault<z.ZodCoercedNumber<unknown>>;
         unreadCount: z.ZodDefault<z.ZodCoercedNumber<unknown>>;
         archived: z.ZodDefault<z.ZodBoolean>;
+        hasAttachments: z.ZodDefault<z.ZodBoolean>;
     }, z.core.$loose>>;
     count: z.ZodNumber;
     page: z.ZodNumber;
@@ -3454,6 +3459,7 @@ declare const notificationResponseSchema: z.ZodObject<{
         building_approved: "building_approved";
         building_rejected: "building_rejected";
         chat_message: "chat_message";
+        email_received: "email_received";
         poll_vote_signature_pending: "poll_vote_signature_pending";
         poll_vote_signature_approved: "poll_vote_signature_approved";
         poll_vote_signature_rejected: "poll_vote_signature_rejected";
@@ -3651,6 +3657,16 @@ declare const notificationResponseSchema: z.ZodObject<{
         senderName: z.ZodString;
         messagePreview: z.ZodString;
         conversationId: z.ZodString;
+    }, z.core.$strip>, z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        threadId: z.ZodString;
+        subject: z.ZodString;
+        fromAddress: z.ZodString;
+        preview: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     }, z.core.$strip>, z.ZodObject<{
         entityType: z.ZodOptional<z.ZodString>;
         entityId: z.ZodOptional<z.ZodString>;

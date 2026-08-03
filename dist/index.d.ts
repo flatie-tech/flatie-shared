@@ -61,6 +61,22 @@ declare const BuildingEmailTestIds: {
     readonly searchInput: "building-email-search-input";
     readonly tabActive: "building-email-tab-active";
     readonly tabArchived: "building-email-tab-archived";
+    /** Floating inbox launcher button (web widget). */
+    readonly fab: "building-email-fab";
+    /** Unread badge rendered on the FAB. */
+    readonly fabUnreadBadge: "building-email-fab-unread-badge";
+    /** Corner-panel widget container. */
+    readonly widgetPanel: "building-email-widget-panel";
+    /** Back button shown in thread view on mobile / in the widget. */
+    readonly mobileBackButton: "building-email-mobile-back-button";
+    /** Toggle that expands collapsed quoted history inside a message. */
+    readonly quoteToggle: "building-email-quote-toggle";
+    /** Sanitized HTML body container of an inbound message. */
+    readonly htmlBody: "building-email-html-body";
+    /** Unread-count chip on a thread list row. */
+    readonly unreadBadge: "building-email-unread-badge";
+    /** Direction (inbound/outbound) icon on a thread list row. */
+    readonly directionIcon: "building-email-direction-icon";
 };
 
 declare const BuildingInfoTestIds: {

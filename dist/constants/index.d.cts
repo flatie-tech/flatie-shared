@@ -165,6 +165,7 @@ declare const buildingEmailKeys: {
         readonly [x: string]: unknown;
     }];
     thread: (buildingId: string, threadId: string) => readonly ["buildingEmail", "threads", string, string];
+    unreadCount: (buildingId: string) => readonly ["buildingEmail", "unreadCount", string];
 };
 declare const pollKeys: {
     all: readonly ["poll"];
@@ -496,6 +497,7 @@ declare const queryKeys: {
             readonly [x: string]: unknown;
         }];
         thread: (buildingId: string, threadId: string) => readonly ["buildingEmail", "threads", string, string];
+        unreadCount: (buildingId: string) => readonly ["buildingEmail", "unreadCount", string];
     };
     readonly notice: {
         all: readonly ["notice"];

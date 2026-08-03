@@ -153,6 +153,7 @@ declare const NotificationType: {
     readonly BUILDING_APPROVED: "building_approved";
     readonly BUILDING_REJECTED: "building_rejected";
     readonly CHAT_MESSAGE: "chat_message";
+    readonly EMAIL_RECEIVED: "email_received";
     readonly POLL_VOTE_SIGNATURE_PENDING: "poll_vote_signature_pending";
     readonly POLL_VOTE_SIGNATURE_APPROVED: "poll_vote_signature_approved";
     readonly POLL_VOTE_SIGNATURE_REJECTED: "poll_vote_signature_rejected";
@@ -170,6 +171,7 @@ declare const NotificationCategory: {
     readonly MAINTENANCE: "maintenance";
     readonly FINANCIAL: "financial";
     readonly CHAT: "chat";
+    readonly BUILDING_EMAIL: "building_email";
     readonly SYSTEM: "system";
 };
 type NotificationCategory = (typeof NotificationCategory)[keyof typeof NotificationCategory];

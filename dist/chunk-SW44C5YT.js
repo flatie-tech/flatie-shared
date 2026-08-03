@@ -1,7 +1,7 @@
 import { normalizeMoney } from './chunk-2VRMXLEK.js';
 import { optionalIbanSchema } from './chunk-WK7VOCOE.js';
 import { AI_CHAT_LIMITS } from './chunk-BYX5R6MR.js';
-import { BoardVisibility, Priority, OrgRole, OrgType, BuildingType, BuildingRole, PricuvaRefMode, FundsSource, QUOTA_RESOURCE_TYPES, FailureUnitType, FailureLocationType, FailureStatus, PollType, TransactionType, PlatformRole, BuildingStatus, CommonStatus, ApprovalStatus, MaintenanceStatus, NotificationType, PollCannotVoteReason } from './chunk-M4WV2S4O.js';
+import { BoardVisibility, Priority, OrgRole, OrgType, BuildingType, BuildingRole, PricuvaRefMode, FundsSource, QUOTA_RESOURCE_TYPES, FailureUnitType, FailureLocationType, FailureStatus, PollType, TransactionType, PlatformRole, BuildingStatus, CommonStatus, ApprovalStatus, MaintenanceStatus, NotificationType, PollCannotVoteReason } from './chunk-DX5AAWYB.js';
 import { BACKEND_ERROR_CODES } from './chunk-DFRASS5X.js';
 import { z } from 'zod';
 
@@ -1360,10 +1360,14 @@ var createEmailThreadRequestSchema = z.object({
   // real array, repeated form fields, or a JSON-encoded array string.
   ccEmails: multipartArray(z.string().email()).pipe(z.array(z.string().email()).max(EMAIL_LIMITS.CC_MAX)).optional().describe("Optional list of Cc addresses for the first message (max 10)."),
   subject: z.string().min(1).max(EMAIL_LIMITS.SUBJECT_MAX).describe("Subject line; used for both the first message and the thread summary."),
-  body: z.string().min(1).max(EMAIL_LIMITS.BODY_MAX).describe("Plain-text body of the first outbound message, up to 50k chars.")
+  body: z.string().min(1).max(EMAIL_LIMITS.BODY_MAX).describe(
+    "Markdown body of the first outbound message, up to 50k chars. The backend renders it to sanitized HTML for the outgoing mail (multipart/alternative) and stores the markdown source as the message bodyText."
+  )
 }).strict();
 var replyEmailThreadRequestSchema = z.object({
-  body: z.string().min(1).max(EMAIL_LIMITS.BODY_MAX).describe("Plain-text body of the reply, up to 50k chars."),
+  body: z.string().min(1).max(EMAIL_LIMITS.BODY_MAX).describe(
+    "Markdown body of the reply, up to 50k chars. Rendered to sanitized HTML server-side for the outgoing mail; the markdown source is stored as the message bodyText."
+  ),
   // multipartArray: with attachments the endpoints are multipart — accepts a
   // real array, repeated form fields, or a JSON-encoded array string.
   ccEmails: multipartArray(z.string().email()).pipe(z.array(z.string().email()).max(EMAIL_LIMITS.CC_MAX)).optional().describe("Optional Cc addresses for this reply; do not persist beyond this message.")
@@ -1581,14 +1585,19 @@ var emailMessageSchema = z.looseObject({
   toAddresses: z.array(z.string()).default([]).describe("Primary recipients parsed from the To header."),
   ccAddresses: z.array(z.string()).default([]).describe("Carbon-copy recipients parsed from the Cc header."),
   subject: z.string().describe("Subject line as stored (inherited from the thread for replies)."),
-  bodyText: z.string().nullable().optional().describe("Plain-text body. Always populated for outbound; may be null for inbound."),
+  bodyText: z.string().nullable().optional().describe(
+    "Text body. For outbound this is the markdown source the representative wrote (clients render it as markdown); for inbound it is the plain-text MIME part and may be null."
+  ),
   bodyHtml: z.string().nullable().optional().describe("Rendered HTML body when the original message included one; null otherwise."),
   messageId: z.string().nullable().optional().describe(
-    "RFC 5322 Message-ID header value. Stable identifier used as a threading fallback when plus-addressing routing fails."
+    "RFC 5322 Message-ID header value. Used for inbound idempotency and References-chain threading when a reply does not match the To-address route."
   ),
   sentByUserId: z.string().uuid().nullable().optional().describe("UUID of the representative who triggered the outbound send; null for inbound."),
   sentByUserName: z.string().nullable().optional().describe("Display name of the sending representative; null for inbound."),
   createdAt: z.string().describe("ISO-8601 timestamp when the message was persisted server-side."),
+  receivedAt: z.string().nullable().optional().describe(
+    "ISO-8601 timestamp the provider reported receiving the message (inbound only); null/absent for outbound or when the provider omitted it. Clients display `receivedAt ?? createdAt`."
+  ),
   attachments: z.array(emailAttachmentSchema).default([]).describe("Files attached to this message; empty when none.")
 }).describe("A single email message within a building thread.");
 var emailThreadSchema = z.looseObject({
@@ -1604,12 +1613,16 @@ var emailThreadSchema = z.looseObject({
   lastMessageDirection: emailDirectionSchema.nullable().optional().describe("Direction of the most recent message; null when the thread has no messages yet."),
   messageCount: z.coerce.number().default(0).describe("Total messages currently in the thread."),
   unreadCount: z.coerce.number().default(0).describe("Count of inbound messages not yet marked as read."),
-  archived: z.boolean().default(false).describe("True when the thread has been archived.")
+  archived: z.boolean().default(false).describe("True when the thread has been archived."),
+  hasAttachments: z.boolean().default(false).describe("True when at least one message in the thread carries attachments.")
 }).describe("Summary row for the thread list view.");
 var emailThreadDetailSchema = emailThreadSchema.extend({
   messages: z.array(emailMessageSchema).default([]).describe("All messages in the thread, oldest first.")
 }).describe("Full thread detail including every message.");
 var paginatedEmailThreadsResponseSchema = paginatedResponseSchema(emailThreadSchema);
+z.looseObject({
+  unreadCount: z.coerce.number().describe("Sum of unread inbound messages across the building\u2019s non-archived threads.")
+}).describe("Response of `GET /buildings/:buildingId/email/unread-count`; feeds the inbox badge.");
 var buildingFundsLedgerRowSchema = z.object({
   ownerId: z.string().uuid().describe("ID of the owner record this row attributes to."),
   ownerName: z.string().describe("Full name of the owner this row attributes to."),
@@ -2239,6 +2252,12 @@ var chatMessageDataSchema = baseNotificationDataSchema.extend({
   messagePreview: z.string(),
   conversationId: z.string().uuid()
 });
+var emailReceivedDataSchema = baseNotificationDataSchema.extend({
+  threadId: z.string().uuid(),
+  subject: z.string(),
+  fromAddress: z.string(),
+  preview: z.string().nullable().optional()
+});
 var orgMemberAddedDataSchema = baseNotificationDataSchema.extend({
   orgName: z.string(),
   orgRole: z.string()
@@ -2302,6 +2321,7 @@ var unimplementedDataSchema = baseNotificationDataSchema;
   [NotificationType.ORG_MEMBER_REMOVED]: orgMemberRemovedDataSchema,
   [NotificationType.ORG_MEMBER_ROLE_CHANGED]: orgMemberRoleChangedDataSchema,
   [NotificationType.CHAT_MESSAGE]: chatMessageDataSchema,
+  [NotificationType.EMAIL_RECEIVED]: emailReceivedDataSchema,
   [NotificationType.POLL_VOTE_SIGNATURE_PENDING]: pollVoteSignatureDataSchema,
   [NotificationType.POLL_VOTE_SIGNATURE_APPROVED]: pollVoteSignatureDataSchema,
   [NotificationType.POLL_VOTE_SIGNATURE_REJECTED]: pollVoteSignatureRejectedDataSchema,
@@ -2330,6 +2350,7 @@ var notificationDataSchema = z.union([
   buildingApprovedDataSchema,
   buildingRejectedDataSchema,
   chatMessageDataSchema,
+  emailReceivedDataSchema,
   eventReminderDataSchema,
   pollVoteSignatureDataSchema,
   pollVoteSignatureRejectedDataSchema,
@@ -2676,5 +2697,5 @@ var repDashboardSummaryResponseSchema = z.looseObject({
 }).describe("Payload of `GET /representatives/dashboard/summary`.");
 
 export { ARCHIVE_TYPES, ApprovalStatusSchema, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, EMAIL_LIMITS, ENTITY_LINK_TYPES, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, LINKABLE_ENTITY_TYPES, MAINTENANCE_FINANCED_BY, MAINTENANCE_LOG_LIMITS, MaintenanceStatusSchema, NOTICE_LIMITS, ORGANIZATION_LIMITS, OrgInvitationStatus, POLL_LIMITS, POLL_TYPES, PrioritySchema, RECURRENCE_TYPES, REP_RECENT_ACTIVITY_TYPES, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingOwnerAssignmentSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createEventSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createMaintenanceLogSchema, createNoticeSchema, createOrgBroadcastSchema, createOrganizationSchema, createOwnerSchema, createPollSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, finalizePollSchema, forgotPasswordSchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, inviteOwnerSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, loginSchema, maintenanceFinancedBySchema, maintenanceLogEventSchema, maintenanceLogResponseSchema, maintenanceStatusOptions, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgBroadcastResponseSchema, orgInvitationResponseSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedMaintenanceLogsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, publicOrgInvitationSchema, recordOfflineVotesSchema, recurrenceTypeSchema, registerSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, signedMoneyStringSchema, strongPasswordSchema, timeSchema, unitKindSchema, unitSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateEventSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateMaintenanceLogRequestSchema, updateMaintenanceLogSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgBuildingContractSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema };
-//# sourceMappingURL=chunk-ESXFSKWL.js.map
-//# sourceMappingURL=chunk-ESXFSKWL.js.map
+//# sourceMappingURL=chunk-SW44C5YT.js.map
+//# sourceMappingURL=chunk-SW44C5YT.js.map

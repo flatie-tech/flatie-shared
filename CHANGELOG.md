@@ -1,5 +1,12 @@
 # @flatie/shared
 
+## 0.91.0
+
+### Changes
+
+- feat(building-email): overhaul contracts — receivedAt, hasAttachments, unread-count, widget test-ids, EMAIL_RECEIVED notification
+- docs: permission-format spec in conventions; fix stale README; align PermissionsResponse type
+
 ## 0.90.0
 
 ### Changes
