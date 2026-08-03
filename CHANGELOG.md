@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.98.0
+
+### Changes
+
+- BREAKING-ish: maintenance-log surface removed (merged into funds/expenses)
+
 ## 0.97.1
 
 ### Changes
