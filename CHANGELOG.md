@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.92.0
+
+### Changes
+
+- feat(platform): staff-tier permissions, DSAR/subscription contracts, audit read contract
+
 ## 0.91.1
 
 ### Changes
