@@ -20,4 +20,6 @@ export type { ReplyEmailThreadRequestPayload } from './reply-email-thread';
 export { replyEmailThreadRequestSchema } from './reply-email-thread';
 export { updateFailureReportRequestSchema } from './update-failure-report';
 export { updateNoticeRequestSchema } from './update-notice';
+export type { UpdatePlatformFeatureRequestPayload } from './update-platform-feature';
+export { updatePlatformFeatureRequestSchema } from './update-platform-feature';
 export { updatePollRequestSchema } from './update-poll';

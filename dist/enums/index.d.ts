@@ -1,6 +1,8 @@
 export { A as ApprovalStatus, B as BuildingType, C as CommonStatus, F as FailureStatus, a as FailureType, b as FileCategory, c as Frequency, P as PollType, d as Priority, T as TransactionCategory, e as TransactionType } from '../status.enum-POCdxmgc.js';
 export { E as EntityLinkType, L as LinkableEntityType } from '../entity-link.enum-D2At-V8D.js';
+export { C as CO_OWNER_VISIBLE_SYSTEM_TYPES, D as DevicePlatform, N as NOTIFICATION_TYPE_CATEGORY, a as NotificationCategory, b as NotificationChannel, c as NotificationDeliveryStatus, d as NotificationType, R as RESIDENT_VISIBLE_SYSTEM_TYPES, U as UNIMPLEMENTED_NOTIFICATION_TYPES, W as WASTE_SUBTYPE_NOTIFICATION_MAP } from '../notification.enum-BVc4nk2E.js';
 export { A as APPROVE_PERMISSIONS, B as BUILDING_ROLE_RANK, e as BuildingRole, O as ORG_ROLE_RANK, i as OrgRole, j as PLATFORM_ROLE_RANK, P as Permission, k as PlatformRole, S as SCOPED_DOMAINS, a as SCOPED_PERMISSIONS, b as ScopedAction, c as ScopedDomain, f as canAssignOrgRole, g as canAssignPlatformRole, h as canAssignRole, d as domainPermissions } from '../role.enum-CvnkuV41.js';
+export { B as BuildingFeatureSettingKey, b as PLATFORM_FEATURES, a as PLATFORM_FEATURE_META, c as PlatformFeature, P as PlatformFeatureMeta } from '../platform-feature.enum-CNEyVm2C.js';
 
 /**
  * Who can see a board. `building` = every member with `board_card:read`
@@ -171,109 +173,6 @@ declare const JoinRequestStatus: {
 };
 type JoinRequestStatus = (typeof JoinRequestStatus)[keyof typeof JoinRequestStatus];
 
-declare const NotificationType: {
-    readonly NOTICE_CREATED: "notice_created";
-    readonly NOTICE_APPROVED: "notice_approved";
-    readonly NOTICE_REJECTED: "notice_rejected";
-    readonly POLL_CREATED: "poll_created";
-    readonly POLL_DEADLINE_24H: "poll_deadline_24h";
-    readonly POLL_DEADLINE_1H: "poll_deadline_1h";
-    readonly POLL_FINALIZED: "poll_finalized";
-    readonly EVENT_CREATED: "event_created";
-    readonly EVENT_REMINDER_24H: "event_reminder_24h";
-    readonly EVENT_REMINDER_1H: "event_reminder_1h";
-    readonly EVENT_UPDATED: "event_updated";
-    readonly EVENT_CANCELLED: "event_cancelled";
-    readonly WASTE_REMINDER_MIXED: "waste_reminder_mixed";
-    readonly WASTE_REMINDER_BIO: "waste_reminder_bio";
-    readonly WASTE_REMINDER_PLASTIC_METAL: "waste_reminder_plastic_metal";
-    readonly WASTE_REMINDER_PAPER_CARDBOARD: "waste_reminder_paper_cardboard";
-    readonly FAILURE_REPORT_CREATED: "failure_report_created";
-    readonly FAILURE_REPORT_STATUS_CHANGED: "failure_report_status_changed";
-    readonly FAILURE_REPORT_RESOLVED: "failure_report_resolved";
-    readonly FAILURE_REPORT_APPROVED: "failure_report_approved";
-    readonly FAILURE_REPORT_DECLINED: "failure_report_declined";
-    readonly PAYMENT_DUE: "payment_due";
-    readonly PAYMENT_RECEIVED: "payment_received";
-    readonly BUILDING_JOIN_REQUEST_RECEIVED: "building_join_request_received";
-    readonly BUILDING_JOIN_REQUEST_APPROVED: "building_join_request_approved";
-    readonly BUILDING_JOIN_REQUEST_REJECTED: "building_join_request_rejected";
-    readonly BUILDING_MEMBER_JOINED: "building_member_joined";
-    readonly BUILDING_ROLE_CHANGED: "building_role_changed";
-    readonly OWNER_RECORD_LINKED: "owner_record_linked";
-    readonly BUILDING_PENDING_APPROVAL: "building_pending_approval";
-    readonly BUILDING_APPROVED: "building_approved";
-    readonly BUILDING_REJECTED: "building_rejected";
-    readonly CHAT_MESSAGE: "chat_message";
-    readonly EMAIL_RECEIVED: "email_received";
-    readonly POLL_VOTE_SIGNATURE_PENDING: "poll_vote_signature_pending";
-    readonly POLL_VOTE_SIGNATURE_APPROVED: "poll_vote_signature_approved";
-    readonly POLL_VOTE_SIGNATURE_REJECTED: "poll_vote_signature_rejected";
-    readonly ORG_MEMBER_ADDED: "org_member_added";
-    readonly ORG_MEMBER_REMOVED: "org_member_removed";
-    readonly ORG_MEMBER_ROLE_CHANGED: "org_member_role_changed";
-    readonly SYSTEM_ANNOUNCEMENT: "system_announcement";
-};
-type NotificationType = (typeof NotificationType)[keyof typeof NotificationType];
-declare const NotificationCategory: {
-    readonly NOTICES: "notices";
-    readonly POLLS: "polls";
-    readonly EVENTS: "events";
-    readonly WASTE: "waste";
-    readonly MAINTENANCE: "maintenance";
-    readonly FINANCIAL: "financial";
-    readonly CHAT: "chat";
-    readonly BUILDING_EMAIL: "building_email";
-    readonly SYSTEM: "system";
-};
-type NotificationCategory = (typeof NotificationCategory)[keyof typeof NotificationCategory];
-declare const NotificationChannel: {
-    readonly IN_APP: "in_app";
-    readonly PUSH: "push";
-    readonly EMAIL: "email";
-};
-type NotificationChannel = (typeof NotificationChannel)[keyof typeof NotificationChannel];
-declare const NotificationDeliveryStatus: {
-    readonly PENDING: "pending";
-    readonly SENT: "sent";
-    readonly DELIVERED: "delivered";
-    readonly FAILED: "failed";
-};
-type NotificationDeliveryStatus = (typeof NotificationDeliveryStatus)[keyof typeof NotificationDeliveryStatus];
-declare const DevicePlatform: {
-    readonly IOS: "ios";
-    readonly ANDROID: "android";
-    readonly WEB: "web";
-};
-type DevicePlatform = (typeof DevicePlatform)[keyof typeof DevicePlatform];
-/**
- * Maps each notification type to its category.
- *
- * Used by client UIs to group notification preferences and by the backend to
- * route notifications to the right delivery channels per category.
- */
-declare const NOTIFICATION_TYPE_CATEGORY: Record<NotificationType, NotificationCategory>;
-/**
- * Notification types not yet implemented (no emit calls in the codebase).
- * UI layers hide these from user preferences until their triggers are built.
- */
-declare const UNIMPLEMENTED_NOTIFICATION_TYPES: ReadonlySet<NotificationType>;
-/**
- * System-category types visible to non-managerial building members
- * (residents; legacy co_owner/tenant rows included) in notification
- * preferences. The rest of the system category (join requests, building
- * approval flow, role changes) is managerial and hidden for those roles.
- */
-declare const RESIDENT_VISIBLE_SYSTEM_TYPES: ReadonlySet<NotificationType>;
-/** @deprecated Renamed after the CO_OWNER deprecation — use RESIDENT_VISIBLE_SYSTEM_TYPES. */
-declare const CO_OWNER_VISIBLE_SYSTEM_TYPES: ReadonlySet<NotificationType>;
-/**
- * Maps waste-collection subtype keys to the corresponding notification type.
- * Used by the backend scheduler; exposed here so clients can match
- * incoming events to UI strings.
- */
-declare const WASTE_SUBTYPE_NOTIFICATION_MAP: Record<string, NotificationType>;
-
 declare const OrgType: {
     readonly MANAGEMENT_FIRM: "management_firm";
     readonly PLATFORM: "platform";
@@ -416,4 +315,4 @@ declare function deriveVotingStrength(user: {
     verificationTier?: number | null;
 }): VotingStrength;
 
-export { BoardVisibility, BuildingOtpExpiry, BuildingStatus, CO_OWNER_VISIBLE_SYSTEM_TYPES, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DevicePlatform, DsarRequestStatus, DsarRequestType, EnterpriseRequestStatus, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, JoinRequestStatus, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, OrgQuotaResourceType, OrgStatus, OrgType, POLL_CANNOT_VOTE_REASON_KEY, PollCannotVoteReason, PollStatus, PollVoteStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, RESIDENT_VISIBLE_SYSTEM_TYPES, TransactionSource, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, VotingStrength, WASTE_SUBTYPE_NOTIFICATION_MAP, deriveVotingStrength, methodToTier };
+export { BoardVisibility, BuildingOtpExpiry, BuildingStatus, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DsarRequestStatus, DsarRequestType, EnterpriseRequestStatus, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, JoinRequestStatus, OrgQuotaResourceType, OrgStatus, OrgType, POLL_CANNOT_VOTE_REASON_KEY, PollCannotVoteReason, PollStatus, PollVoteStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, TransactionSource, UnitType, VerificationTier, VotingStrength, deriveVotingStrength, methodToTier };

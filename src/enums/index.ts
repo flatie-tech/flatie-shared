@@ -42,6 +42,12 @@ export {
   type ScopedAction,
   type ScopedDomain,
 } from './permission.enum';
+export type { BuildingFeatureSettingKey, PlatformFeatureMeta } from './platform-feature.enum';
+export {
+  PLATFORM_FEATURE_META,
+  PLATFORM_FEATURES,
+  PlatformFeature,
+} from './platform-feature.enum';
 export {
   POLL_CANNOT_VOTE_REASON_KEY,
   PollCannotVoteReason,

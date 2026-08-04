@@ -49,7 +49,11 @@ export { permissionsResponseSchema, roleTypeSchema } from './permissions.schema'
 export { getRepBuildingsParamsSchema, getRepUsersParamsSchema } from './rep-list-params.schema';
 
 // Request schemas (PATCH/PUT payloads: id + optional body fields)
-export type { CreateEmailThreadRequestPayload, ReplyEmailThreadRequestPayload } from './requests';
+export type {
+  CreateEmailThreadRequestPayload,
+  ReplyEmailThreadRequestPayload,
+  UpdatePlatformFeatureRequestPayload,
+} from './requests';
 export {
   aiChatMessageSchema,
   aiChatRequestSchema,
@@ -58,6 +62,7 @@ export {
   replyEmailThreadRequestSchema,
   updateFailureReportRequestSchema,
   updateNoticeRequestSchema,
+  updatePlatformFeatureRequestSchema,
   updatePollRequestSchema,
 } from './requests';
 
@@ -93,6 +98,7 @@ export type {
   EventResponse,
   FailureReportResponse,
   FaqResponse,
+  FeatureFlagsResponse,
   ListArchivedResponse,
   MessageResponse,
   MessagesListResponse,
@@ -107,6 +113,8 @@ export type {
   PaginatedFailureReportsResponse,
   PaginatedNoticesResponse,
   PaginatedPollsResponse,
+  PlatformFeatureFlag,
+  PlatformFeatureFlagsResponse,
   PollEligibleVoter,
   PollEligibleVotersResponse,
   PollResponse,
@@ -152,10 +160,13 @@ export {
   eventResponseSchema,
   failureReportResponseSchema,
   faqResponseSchema,
+  featureFlagsResponseSchema,
+  getNotificationDataSchema,
   listArchivedResponseSchema,
   messageResponseSchema,
   messagesListResponseSchema,
   noticeResponseSchema,
+  notificationDataSchema,
   notificationPreferenceCategorySchema,
   notificationPreferenceItemSchema,
   notificationResponseSchema,
@@ -168,6 +179,8 @@ export {
   paginatedPollsResponseSchema,
   paginatedRepBuildingsResponseSchema,
   paginatedRepUsersResponseSchema,
+  platformFeatureFlagSchema,
+  platformFeatureFlagsResponseSchema,
   pollEligibleVoterSchema,
   pollEligibleVotersResponseSchema,
   pollResponseSchema,

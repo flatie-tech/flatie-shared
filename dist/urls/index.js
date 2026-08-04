@@ -1,3 +1,3 @@
-export { API_ROUTES } from '../chunk-Y3KRDIQ7.js';
+export { API_ROUTES } from '../chunk-MJ66VNCW.js';
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

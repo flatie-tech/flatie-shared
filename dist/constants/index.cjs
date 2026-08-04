@@ -1,230 +1,238 @@
 'use strict';
 
-var chunk7PO67UJR_cjs = require('../chunk-7PO67UJR.cjs');
+var chunkU4RLXDQI_cjs = require('../chunk-U4RLXDQI.cjs');
 var chunkNQLL5CZO_cjs = require('../chunk-NQLL5CZO.cjs');
-require('../chunk-FG6HUO75.cjs');
+require('../chunk-XNJC5IQ5.cjs');
 
 
 
 Object.defineProperty(exports, "ADMIN_ORG_PERMISSIONS", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.ADMIN_ORG_PERMISSIONS; }
+  get: function () { return chunkU4RLXDQI_cjs.ADMIN_ORG_PERMISSIONS; }
 });
 Object.defineProperty(exports, "ADMIN_PLATFORM_PERMISSIONS", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.ADMIN_PLATFORM_PERMISSIONS; }
+  get: function () { return chunkU4RLXDQI_cjs.ADMIN_PLATFORM_PERMISSIONS; }
 });
 Object.defineProperty(exports, "ALLOWED_ENTITY_LINKS", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.ALLOWED_ENTITY_LINKS; }
+  get: function () { return chunkU4RLXDQI_cjs.ALLOWED_ENTITY_LINKS; }
 });
 Object.defineProperty(exports, "ALL_PERMISSIONS", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.ALL_PERMISSIONS; }
+  get: function () { return chunkU4RLXDQI_cjs.ALL_PERMISSIONS; }
 });
 Object.defineProperty(exports, "BUILDING_ROLE_PERMISSIONS", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.BUILDING_ROLE_PERMISSIONS; }
+  get: function () { return chunkU4RLXDQI_cjs.BUILDING_ROLE_PERMISSIONS; }
 });
 Object.defineProperty(exports, "CHAT_CONVERSATIONS_POLL_MS", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.CHAT_CONVERSATIONS_POLL_MS; }
+  get: function () { return chunkU4RLXDQI_cjs.CHAT_CONVERSATIONS_POLL_MS; }
 });
 Object.defineProperty(exports, "DEFAULT_PAGINATION_LIMIT", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.DEFAULT_PAGINATION_LIMIT; }
+  get: function () { return chunkU4RLXDQI_cjs.DEFAULT_PAGINATION_LIMIT; }
 });
 Object.defineProperty(exports, "ENTITY_LINK_TYPE_META", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.ENTITY_LINK_TYPE_META; }
+  get: function () { return chunkU4RLXDQI_cjs.ENTITY_LINK_TYPE_META; }
 });
 Object.defineProperty(exports, "MAX_PAGINATION_LIMIT", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.MAX_PAGINATION_LIMIT; }
+  get: function () { return chunkU4RLXDQI_cjs.MAX_PAGINATION_LIMIT; }
 });
 Object.defineProperty(exports, "ORG_ROLE_PERMISSIONS", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.ORG_ROLE_PERMISSIONS; }
+  get: function () { return chunkU4RLXDQI_cjs.ORG_ROLE_PERMISSIONS; }
 });
 Object.defineProperty(exports, "OWNERSHIP_DERIVED_PERMISSIONS", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.OWNERSHIP_DERIVED_PERMISSIONS; }
+  get: function () { return chunkU4RLXDQI_cjs.OWNERSHIP_DERIVED_PERMISSIONS; }
 });
 Object.defineProperty(exports, "PLATFORM_ROLE_PERMISSIONS", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.PLATFORM_ROLE_PERMISSIONS; }
+  get: function () { return chunkU4RLXDQI_cjs.PLATFORM_ROLE_PERMISSIONS; }
 });
 Object.defineProperty(exports, "RELATED_TO_LINKABLE_TYPES", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.RELATED_TO_LINKABLE_TYPES; }
+  get: function () { return chunkU4RLXDQI_cjs.RELATED_TO_LINKABLE_TYPES; }
 });
 Object.defineProperty(exports, "STANDARD_UNIT_PRICE_CENTS", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.STANDARD_UNIT_PRICE_CENTS; }
+  get: function () { return chunkU4RLXDQI_cjs.STANDARD_UNIT_PRICE_CENTS; }
 });
 Object.defineProperty(exports, "adminBuildingKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.adminBuildingKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.adminBuildingKeys; }
 });
 Object.defineProperty(exports, "adminKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.adminKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.adminKeys; }
 });
 Object.defineProperty(exports, "aiUsageKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.aiUsageKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.aiUsageKeys; }
 });
 Object.defineProperty(exports, "apartmentKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.apartmentKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.apartmentKeys; }
 });
 Object.defineProperty(exports, "auditLogKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.auditLogKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.auditLogKeys; }
 });
 Object.defineProperty(exports, "blogKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.blogKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.blogKeys; }
 });
 Object.defineProperty(exports, "boardKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.boardKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.boardKeys; }
 });
 Object.defineProperty(exports, "buildingEmailKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.buildingEmailKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.buildingEmailKeys; }
 });
 Object.defineProperty(exports, "buildingKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.buildingKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.buildingKeys; }
 });
 Object.defineProperty(exports, "businessPartnerKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.businessPartnerKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.businessPartnerKeys; }
 });
 Object.defineProperty(exports, "chatKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.chatKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.chatKeys; }
 });
 Object.defineProperty(exports, "dashboardSummaryKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.dashboardSummaryKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.dashboardSummaryKeys; }
 });
 Object.defineProperty(exports, "documentKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.documentKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.documentKeys; }
 });
 Object.defineProperty(exports, "dsarKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.dsarKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.dsarKeys; }
 });
 Object.defineProperty(exports, "enterpriseRequestKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.enterpriseRequestKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.enterpriseRequestKeys; }
 });
 Object.defineProperty(exports, "entityLinkKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.entityLinkKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.entityLinkKeys; }
 });
 Object.defineProperty(exports, "eventKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.eventKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.eventKeys; }
 });
 Object.defineProperty(exports, "failureReportKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.failureReportKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.failureReportKeys; }
 });
 Object.defineProperty(exports, "faqKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.faqKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.faqKeys; }
+});
+Object.defineProperty(exports, "featureFlagKeys", {
+  enumerable: true,
+  get: function () { return chunkU4RLXDQI_cjs.featureFlagKeys; }
 });
 Object.defineProperty(exports, "fundsKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.fundsKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.fundsKeys; }
 });
 Object.defineProperty(exports, "garageKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.garageKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.garageKeys; }
 });
 Object.defineProperty(exports, "incomeKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.incomeKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.incomeKeys; }
 });
 Object.defineProperty(exports, "isEntityLinkAllowed", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.isEntityLinkAllowed; }
+  get: function () { return chunkU4RLXDQI_cjs.isEntityLinkAllowed; }
 });
 Object.defineProperty(exports, "layoutKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.layoutKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.layoutKeys; }
 });
 Object.defineProperty(exports, "noticeKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.noticeKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.noticeKeys; }
 });
 Object.defineProperty(exports, "notificationKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.notificationKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.notificationKeys; }
 });
 Object.defineProperty(exports, "organizationKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.organizationKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.organizationKeys; }
 });
 Object.defineProperty(exports, "ownerKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.ownerKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.ownerKeys; }
 });
 Object.defineProperty(exports, "permissionKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.permissionKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.permissionKeys; }
 });
 Object.defineProperty(exports, "platformBuildingKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.platformBuildingKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.platformBuildingKeys; }
+});
+Object.defineProperty(exports, "platformFeatureKeys", {
+  enumerable: true,
+  get: function () { return chunkU4RLXDQI_cjs.platformFeatureKeys; }
 });
 Object.defineProperty(exports, "platformSubscriptionKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.platformSubscriptionKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.platformSubscriptionKeys; }
 });
 Object.defineProperty(exports, "pollKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.pollKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.pollKeys; }
 });
 Object.defineProperty(exports, "queryKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.queryKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.queryKeys; }
 });
 Object.defineProperty(exports, "recentKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.recentKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.recentKeys; }
 });
 Object.defineProperty(exports, "recurringTemplateKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.recurringTemplateKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.recurringTemplateKeys; }
 });
 Object.defineProperty(exports, "spotlightKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.spotlightKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.spotlightKeys; }
 });
 Object.defineProperty(exports, "storageUnitKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.storageUnitKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.storageUnitKeys; }
 });
 Object.defineProperty(exports, "transactionCategoryKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.transactionCategoryKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.transactionCategoryKeys; }
 });
 Object.defineProperty(exports, "unitSearchKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.unitSearchKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.unitSearchKeys; }
 });
 Object.defineProperty(exports, "userKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.userKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.userKeys; }
 });
 Object.defineProperty(exports, "widgetKeys", {
   enumerable: true,
-  get: function () { return chunk7PO67UJR_cjs.widgetKeys; }
+  get: function () { return chunkU4RLXDQI_cjs.widgetKeys; }
 });
 Object.defineProperty(exports, "AI_CHAT_LIMITS", {
   enumerable: true,

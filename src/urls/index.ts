@@ -289,6 +289,9 @@ export const API_ROUTES = {
   },
 
   // ── Platform (admin) ─────────────────────────────────────────────────
+  /** Lightweight platform feature-flag map for clients (nav/widget visibility). */
+  FEATURE_FLAGS: '/feature-flags',
+
   PLATFORM: {
     DASHBOARD_SUMMARY: '/platform/dashboard/summary',
     BUILDINGS: '/platform/buildings',
@@ -307,6 +310,8 @@ export const API_ROUTES = {
     BLOG_RESTORE: (id: string) => `/platform/blog/${id}/restore`,
     BLOG_COVER_IMAGE: (id: string) => `/platform/blog/${id}/cover-image`,
     BLOG_CATEGORIES: '/platform/blog/categories',
+    FEATURES: '/platform/features',
+    FEATURE_DETAIL: (key: string) => `/platform/features/${key}`,
     ARCHIVE: '/platform/archive',
     ARCHIVE_CLEANUP: '/platform/archive/cleanup/run',
     ARCHIVE_RESTORE: (type: string, id: string) => `/platform/archive/${type}/${id}/restore`,

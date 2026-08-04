@@ -1,3 +1,5 @@
+'use strict';
+
 // src/urls/index.ts
 var API_ROUTES = {
   // ── Auth ──────────────────────────────────────────────────────────────
@@ -210,6 +212,8 @@ var API_ROUTES = {
     BUSINESS_PARTNER_DETAIL: (orgId, partnerId) => `/organizations/${orgId}/business-partners/${partnerId}`
   },
   // ── Platform (admin) ─────────────────────────────────────────────────
+  /** Lightweight platform feature-flag map for clients (nav/widget visibility). */
+  FEATURE_FLAGS: "/feature-flags",
   PLATFORM: {
     DASHBOARD_SUMMARY: "/platform/dashboard/summary",
     BUILDINGS: "/platform/buildings",
@@ -228,6 +232,8 @@ var API_ROUTES = {
     BLOG_RESTORE: (id) => `/platform/blog/${id}/restore`,
     BLOG_COVER_IMAGE: (id) => `/platform/blog/${id}/cover-image`,
     BLOG_CATEGORIES: "/platform/blog/categories",
+    FEATURES: "/platform/features",
+    FEATURE_DETAIL: (key) => `/platform/features/${key}`,
     ARCHIVE: "/platform/archive",
     ARCHIVE_CLEANUP: "/platform/archive/cleanup/run",
     ARCHIVE_RESTORE: (type, id) => `/platform/archive/${type}/${id}/restore`,
@@ -273,6 +279,6 @@ var API_ROUTES = {
   }
 };
 
-export { API_ROUTES };
-//# sourceMappingURL=chunk-Y3KRDIQ7.js.map
-//# sourceMappingURL=chunk-Y3KRDIQ7.js.map
+exports.API_ROUTES = API_ROUTES;
+//# sourceMappingURL=chunk-2KIXABFV.cjs.map
+//# sourceMappingURL=chunk-2KIXABFV.cjs.map

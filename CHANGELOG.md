@@ -1,5 +1,36 @@
 # @flatie/shared
 
+## 0.100.3
+
+### Changes
+
+- docs(platform-features): buildingOverrideCount counts opt-ins, not defaults
+
+## 0.100.2
+
+### Changes
+
+- fix(constants): export featureFlagKeys + platformFeatureKeys from the barrel
+
+## 0.100.1
+
+### Changes
+
+- fix(building-settings): default emailEnabled to false in the response schema
+
+## 0.100.0
+
+### Changes
+
+- feat(platform): platform feature-flag contracts + the single availability resolver
+- feat(platform): platform feature-flag contracts + the single availability resolver
+
+## 0.99.0
+
+### Changes
+
+- feat(building-settings): emailEnabled toggle — parks the building mailbox (defaults false)
+
 ## 0.98.0
 
 ### Changes

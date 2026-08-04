@@ -9,6 +9,9 @@ export type { MessageableUserShape } from './chat-eligibility';
 export { canMessageUser, getMessageableUsers } from './chat-eligibility';
 // Locale-aware currency formatting with €→EUR + cent-rounding normalization
 export { formatCurrencyEUR } from './currency';
+// Single resolver for platform-feature availability (flags + per-building narrowing)
+export type { FeatureAvailabilityInput } from './feature-availability';
+export { isFeatureAvailable } from './feature-availability';
 // Google Calendar "add event" template-URL builder
 export type { GoogleCalendarEventInput } from './google-calendar';
 export { buildGoogleCalendarUrl } from './google-calendar';

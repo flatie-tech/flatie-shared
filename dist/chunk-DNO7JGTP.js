@@ -1,4 +1,4 @@
-import { BuildingRole, PlatformRole, OrgRole, SCOPED_PERMISSIONS, APPROVE_PERMISSIONS } from './chunk-AZTQMBUB.js';
+import { BuildingRole, PlatformRole, OrgRole, PLATFORM_FEATURE_META, SCOPED_PERMISSIONS, APPROVE_PERMISSIONS } from './chunk-3X6RUA7A.js';
 import { isBackendErrorCode } from './chunk-CKDX3O7O.js';
 import { createPaginatedResponse } from './chunk-K2CKX6IH.js';
 
@@ -164,6 +164,27 @@ function formatCurrencyEUR(amount, locale, currency = "EUR") {
   const normalizedCurrency = currency === "\u20AC" ? "EUR" : currency;
   const rounded = Math.round(amount * 100) / 100;
   return formatCurrencyByLocale(rounded, locale, normalizedCurrency);
+}
+
+// src/utils/feature-availability.ts
+function isFeatureAvailable({
+  feature,
+  platformFlags,
+  buildingSettings,
+  loading = false
+}) {
+  const meta = PLATFORM_FEATURE_META[feature];
+  if (!meta) return false;
+  const platformState = platformFlags?.[feature];
+  if (loading || platformState === void 0) {
+    if (!meta.defaultEnabled) return false;
+  } else if (!platformState) {
+    return false;
+  }
+  if (!meta.buildingSettingKey) return true;
+  if (buildingSettings === void 0) return true;
+  if (buildingSettings === null) return false;
+  return buildingSettings[meta.buildingSettingKey] === true;
 }
 
 // src/utils/google-calendar.ts
@@ -348,6 +369,6 @@ function debounce(func, delay) {
   };
 }
 
-export { DATETIME_FORMATS, DATE_FORMATS, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, ROLE_BADGE_COLORS, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, TIME_FORMATS, VOTING_METHOD_SETTINGS, applyResidentRestriction, applyResidentRestrictionToItem, buildGoogleCalendarUrl, canDo, canDoOnResource, canMessageUser, computeActionFlags, createPermissionChecker, debounce, formatCurrency, formatCurrencyByLocale, formatCurrencyEUR, formatDate, formatDateTime, formatText, getContextUserId, getDateLocale, getInitials, getMessageableUsers, getRoleBadge, isManagerialRole, normalizePaginatedResponse, parseApiError, parseData, resolveVotingMethods };
-//# sourceMappingURL=chunk-HS4FBBM6.js.map
-//# sourceMappingURL=chunk-HS4FBBM6.js.map
+export { DATETIME_FORMATS, DATE_FORMATS, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, ROLE_BADGE_COLORS, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, TIME_FORMATS, VOTING_METHOD_SETTINGS, applyResidentRestriction, applyResidentRestrictionToItem, buildGoogleCalendarUrl, canDo, canDoOnResource, canMessageUser, computeActionFlags, createPermissionChecker, debounce, formatCurrency, formatCurrencyByLocale, formatCurrencyEUR, formatDate, formatDateTime, formatText, getContextUserId, getDateLocale, getInitials, getMessageableUsers, getRoleBadge, isFeatureAvailable, isManagerialRole, normalizePaginatedResponse, parseApiError, parseData, resolveVotingMethods };
+//# sourceMappingURL=chunk-DNO7JGTP.js.map
+//# sourceMappingURL=chunk-DNO7JGTP.js.map

@@ -2,6 +2,7 @@ import * as zod from 'zod';
 import { z } from 'zod';
 export { C as CreatePollSchema, b as EVENT_COLORS, e as EVENT_TYPES, d as EVENT_TYPE_COLOR_MAP, E as EventColorOption, a as EventTypeOption, F as FinalizePollSchema, P as POLL_LIMITS, l as POLL_TYPES, h as RECURRENCE_TYPES, i as RecordOfflineVotesSchema, R as RecurrenceTypeOption, U as UpdatePollSchema, V as VotePollSchema, c as createEventSchema, j as createPollSchema, f as eventColorSchema, g as eventTypeSchema, k as finalizePollSchema, p as pollTypeSchema, m as recordOfflineVotesSchema, r as recurrenceTypeSchema, t as timeSchema, u as updateEventSchema, n as updatePollSchema, v as votePollSchema } from '../poll.schema-CXKRtDas.cjs';
 import * as zod_v4_core from 'zod/v4/core';
+import { d as NotificationType } from '../notification.enum-BVc4nk2E.cjs';
 
 /**
  * API error response envelope.
@@ -1031,6 +1032,7 @@ declare const updateBuildingSettingsSchema: z.ZodObject<{
     faqEnabled: z.ZodOptional<z.ZodBoolean>;
     houseRulesEnabled: z.ZodOptional<z.ZodBoolean>;
     chatEnabled: z.ZodOptional<z.ZodBoolean>;
+    emailEnabled: z.ZodOptional<z.ZodBoolean>;
     commentsEnabled: z.ZodOptional<z.ZodBoolean>;
     votingCertiliaEnabled: z.ZodOptional<z.ZodBoolean>;
     votingPrintedSignatureEnabled: z.ZodOptional<z.ZodBoolean>;
@@ -2237,6 +2239,17 @@ declare const updateNoticeRequestSchema: zod.ZodObject<{
 }, zod_v4_core.$strip>;
 
 /**
+ * Body of `PATCH /platform/features/:key` — a platform admin flips a feature
+ * on or off app-wide. The `note` is the audit-friendly "why", surfaced back on
+ * the admin page next to who changed it.
+ */
+declare const updatePlatformFeatureRequestSchema: z.ZodObject<{
+    enabled: z.ZodBoolean;
+    note: z.ZodOptional<z.ZodString>;
+}, z.core.$strict>;
+type UpdatePlatformFeatureRequestPayload = z.infer<typeof updatePlatformFeatureRequestSchema>;
+
+/**
  * Update poll request schema — the canonical PATCH request shape,
  * combining the poll `id` (from the URL) with the optional body fields
  * validated by `updatePollSchema` in `entities/poll.schema.ts`.
@@ -2745,6 +2758,7 @@ declare const buildingSettingsResponseSchema: z.ZodObject<{
     faqEnabled: z.ZodBoolean;
     houseRulesEnabled: z.ZodBoolean;
     chatEnabled: z.ZodBoolean;
+    emailEnabled: z.ZodDefault<z.ZodBoolean>;
     commentsEnabled: z.ZodBoolean;
     votingCertiliaEnabled: z.ZodBoolean;
     votingPrintedSignatureEnabled: z.ZodBoolean;
@@ -3459,6 +3473,619 @@ declare const paginatedNoticesResponseSchema: z.ZodObject<{
 type NoticeResponse = Strict<z.infer<typeof noticeResponseSchema>>;
 type PaginatedNoticesResponse = Strict<z.infer<typeof paginatedNoticesResponseSchema>>;
 
+/**
+ * Maps each notification type to its `data` payload schema.
+ *
+ * Sourced from backend emit sites (NotificationService#emit callers in
+ * flatie-backend `src/modules/**`). The service prepends `entityType`,
+ * `entityId`, `actorId`, and `actorName` to every payload before insert.
+ */
+declare const notificationDataSchemaByType: {
+    readonly notice_created: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        content: z.ZodString;
+        createdAt: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+        isPinned: z.ZodOptional<z.ZodBoolean>;
+    }, z.core.$strip>;
+    readonly notice_approved: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+    }, z.core.$strip>;
+    readonly notice_rejected: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+    }, z.core.$strip>;
+    readonly poll_created: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        question: z.ZodString;
+        pollType: z.ZodString;
+        deadline: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodDate]>>>;
+        options: z.ZodArray<z.ZodString>;
+    }, z.core.$strip>;
+    readonly poll_deadline_24h: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+    }, z.core.$strip>;
+    readonly poll_deadline_1h: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+    }, z.core.$strip>;
+    readonly poll_finalized: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        question: z.ZodString;
+        pollType: z.ZodString;
+        options: z.ZodArray<z.ZodString>;
+    }, z.core.$strip>;
+    readonly event_created: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        eventType: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        subtype: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        startDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+        endDate: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodDate]>>>;
+        color: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>;
+    readonly event_updated: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        eventType: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        subtype: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        startDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+        endDate: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodDate]>>>;
+        color: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>;
+    readonly event_cancelled: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        eventType: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        startDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+        endDate: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodDate]>>>;
+    }, z.core.$strip>;
+    readonly event_reminder_24h: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        startTime: z.ZodOptional<z.ZodString>;
+        startDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+    }, z.core.$strip>;
+    readonly event_reminder_1h: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        startTime: z.ZodOptional<z.ZodString>;
+        startDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+    }, z.core.$strip>;
+    readonly waste_reminder_mixed: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        wasteTypeLabel: z.ZodOptional<z.ZodString>;
+        subtype: z.ZodString;
+        startDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+    }, z.core.$strip>;
+    readonly waste_reminder_bio: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        wasteTypeLabel: z.ZodOptional<z.ZodString>;
+        subtype: z.ZodString;
+        startDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+    }, z.core.$strip>;
+    readonly waste_reminder_plastic_metal: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        wasteTypeLabel: z.ZodOptional<z.ZodString>;
+        subtype: z.ZodString;
+        startDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+    }, z.core.$strip>;
+    readonly waste_reminder_paper_cardboard: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        wasteTypeLabel: z.ZodOptional<z.ZodString>;
+        subtype: z.ZodString;
+        startDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+    }, z.core.$strip>;
+    readonly failure_report_created: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        location: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>;
+    readonly failure_report_status_changed: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        status: z.ZodString;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>;
+    readonly failure_report_resolved: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+        status: z.ZodString;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>;
+    readonly failure_report_approved: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+    }, z.core.$strip>;
+    readonly failure_report_declined: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        title: z.ZodString;
+    }, z.core.$strip>;
+    readonly payment_due: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+    }, z.core.$strip>;
+    readonly payment_received: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+    }, z.core.$strip>;
+    readonly building_join_request_received: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        userName: z.ZodString;
+        userEmail: z.ZodString;
+        message: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>;
+    readonly building_join_request_approved: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        rejectionReason: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>;
+    readonly building_join_request_rejected: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        rejectionReason: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>;
+    readonly building_member_joined: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+    }, z.core.$strip>;
+    readonly building_role_changed: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        role: z.ZodString;
+    }, z.core.$strip>;
+    readonly owner_record_linked: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        buildingName: z.ZodString;
+    }, z.core.$strip>;
+    readonly building_pending_approval: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        buildingName: z.ZodString;
+    }, z.core.$strip>;
+    readonly building_approved: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        buildingName: z.ZodString;
+    }, z.core.$strip>;
+    readonly building_rejected: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        buildingName: z.ZodString;
+        rejectionReason: z.ZodString;
+    }, z.core.$strip>;
+    readonly org_member_added: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        orgName: z.ZodString;
+        orgRole: z.ZodString;
+    }, z.core.$strip>;
+    readonly org_member_removed: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        orgName: z.ZodString;
+    }, z.core.$strip>;
+    readonly org_member_role_changed: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        orgName: z.ZodString;
+        orgRole: z.ZodString;
+    }, z.core.$strip>;
+    readonly chat_message: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        senderName: z.ZodString;
+        messagePreview: z.ZodString;
+        conversationId: z.ZodString;
+    }, z.core.$strip>;
+    readonly email_received: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        threadId: z.ZodString;
+        subject: z.ZodString;
+        fromAddress: z.ZodString;
+        preview: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>;
+    readonly poll_vote_signature_pending: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        question: z.ZodString;
+    }, z.core.$strip>;
+    readonly poll_vote_signature_approved: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        question: z.ZodString;
+    }, z.core.$strip>;
+    readonly poll_vote_signature_rejected: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        question: z.ZodString;
+        reason: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    }, z.core.$strip>;
+    readonly system_announcement: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+    }, z.core.$strip>;
+};
+/**
+ * Union of all notification-type data payloads. Each variant is the
+ * per-type object plus the shared base fields (actionUrl, entity*, actor*).
+ *
+ * Payloads are not discriminated internally — callers discriminate on the
+ * parent `type` field or, when not narrowing, read only shared keys like
+ * `actionUrl` which are present on the base schema.
+ */
+declare const notificationDataSchema: z.ZodUnion<readonly [z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    title: z.ZodString;
+    content: z.ZodString;
+    createdAt: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+    isPinned: z.ZodOptional<z.ZodBoolean>;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    title: z.ZodString;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    title: z.ZodString;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    question: z.ZodString;
+    pollType: z.ZodString;
+    deadline: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodDate]>>>;
+    options: z.ZodArray<z.ZodString>;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    question: z.ZodString;
+    pollType: z.ZodString;
+    options: z.ZodArray<z.ZodString>;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    title: z.ZodString;
+    description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    eventType: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    subtype: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    startDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+    endDate: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodDate]>>>;
+    color: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    title: z.ZodString;
+    description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    eventType: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    startDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+    endDate: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodDate]>>>;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    title: z.ZodString;
+    wasteTypeLabel: z.ZodOptional<z.ZodString>;
+    subtype: z.ZodString;
+    startDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    title: z.ZodString;
+    description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    location: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    title: z.ZodString;
+    status: z.ZodString;
+    description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    title: z.ZodString;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    title: z.ZodString;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    userName: z.ZodString;
+    userEmail: z.ZodString;
+    message: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    rejectionReason: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    role: z.ZodString;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    buildingName: z.ZodString;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    buildingName: z.ZodString;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    buildingName: z.ZodString;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    buildingName: z.ZodString;
+    rejectionReason: z.ZodString;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    senderName: z.ZodString;
+    messagePreview: z.ZodString;
+    conversationId: z.ZodString;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    threadId: z.ZodString;
+    subject: z.ZodString;
+    fromAddress: z.ZodString;
+    preview: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    title: z.ZodString;
+    startTime: z.ZodOptional<z.ZodString>;
+    startDate: z.ZodUnion<[z.ZodString, z.ZodDate]>;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    question: z.ZodString;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+    question: z.ZodString;
+    reason: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+}, z.core.$strip>, z.ZodObject<{
+    entityType: z.ZodOptional<z.ZodString>;
+    entityId: z.ZodOptional<z.ZodString>;
+    actorId: z.ZodOptional<z.ZodString>;
+    actorName: z.ZodOptional<z.ZodString>;
+    actionUrl: z.ZodOptional<z.ZodString>;
+}, z.core.$strip>]>;
 declare const notificationResponseSchema: z.ZodObject<{
     id: z.ZodString;
     title: z.ZodString;
@@ -3744,9 +4371,48 @@ declare const notificationPreferenceCategorySchema: z.ZodObject<{
         channels: z.ZodArray<z.ZodString>;
     }, z.core.$loose>>;
 }, z.core.$loose>;
+/**
+ * Look up the data payload schema for a specific notification type.
+ *
+ * Useful for consumers that know the concrete type and want to parse
+ * `notification.data` into a narrowed shape (e.g. push-notification handlers
+ * that branch on `type`).
+ */
+declare const getNotificationDataSchema: <T extends NotificationType>(type: T) => (typeof notificationDataSchemaByType)[T];
 type NotificationResponse = Strict<z.infer<typeof notificationResponseSchema>>;
 type NotificationPreferenceItem = Strict<z.infer<typeof notificationPreferenceItemSchema>>;
 type NotificationPreferenceCategory = Strict<z.infer<typeof notificationPreferenceCategorySchema>>;
+
+declare const platformFeatureFlagSchema: z.ZodObject<{
+    key: z.ZodEnum<{
+        [x: string]: string;
+    }>;
+    enabled: z.ZodBoolean;
+    note: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    updatedByName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    /** How many buildings switched this feature on via their per-building toggle. */
+    buildingOverrideCount: z.ZodOptional<z.ZodNullable<z.ZodCoercedNumber<unknown>>>;
+}, z.core.$loose>;
+declare const platformFeatureFlagsResponseSchema: z.ZodObject<{
+    flags: z.ZodArray<z.ZodObject<{
+        key: z.ZodEnum<{
+            [x: string]: string;
+        }>;
+        enabled: z.ZodBoolean;
+        note: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        updatedByName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        /** How many buildings switched this feature on via their per-building toggle. */
+        buildingOverrideCount: z.ZodOptional<z.ZodNullable<z.ZodCoercedNumber<unknown>>>;
+    }, z.core.$loose>>;
+}, z.core.$loose>;
+declare const featureFlagsResponseSchema: z.ZodObject<{
+    flags: z.ZodRecord<z.ZodString, z.ZodBoolean>;
+}, z.core.$loose>;
+type PlatformFeatureFlag = Strict<z.infer<typeof platformFeatureFlagSchema>>;
+type PlatformFeatureFlagsResponse = Strict<z.infer<typeof platformFeatureFlagsResponseSchema>>;
+type FeatureFlagsResponse = Strict<z.infer<typeof featureFlagsResponseSchema>>;
 
 /**
  * Per-user poll response — shape returned from poll list / detail
@@ -4275,4 +4941,4 @@ declare const PrioritySchema: z.ZodEnum<{
     urgent: "urgent";
 }>;
 
-export { ARCHIVE_TYPES, AUDIT_DENIAL_TARGET_TYPE, type AddOrgMemberSchema, type AiUsageResponse, type ApiError, type ApiErrorResponse, ApprovalStatusSchema, type ApproveFailureReportSchema, type ApproveNoticeSchema, type ArchiveType, type ArchivedItem, type AssignOrgBuildingSchema, type AssignOrgMemberBuildingSchema, type AssignOwnerInput, type AuditLogResponse, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUILDING_LIMITS, BUILDING_TYPES, type BuildingDetailResponse, type BuildingFundsLedgerResponse, type BuildingFundsLedgerRow, type BuildingOwnerAssignment, type BuildingResponse, type BuildingSettingsResponse, type BusinessPartnerResponse, CHAT_LIMITS, type CamtImportResponse, type ChatMessageResponse, type CommentResponse, CommonStatusSchema, type ConversationLastMessage, type ConversationParticipant, type ConversationResponse, ConversationType, type ConversationsListResponse, type CopyFaqsSchema, type CopyTransactionCategoriesSchema, type CreateBoardCardSchema, type CreateBoardColumnSchema, type CreateBoardSchema, type CreateBuildingSchema, type CreateBusinessPartnerInput, type CreateConversationSchema, type CreateDocumentSchema, type CreateDsarEventSchema, type CreateDsarRequestSchema, type CreateEmailThreadRequestPayload, type CreateEntityLinkRequest, type CreateFailureReportSchema, type CreateFaqSchema, type CreateIncomeSchema, type CreateNoticeSchema, type CreateOrgBroadcastSchema, type CreateOrganizationSchema, type CreateOwnerInput, type CreatePlatformSubscriptionSchema, type CreateTransactionCategorySchema, type CreateUnitInput, type CursorQuerySchema, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, type DeleteEntityLinkQuery, type DocumentFile, type DocumentLinkedRecord, type DocumentResponse, type DsarErasureSchema, type DsarEventResponse, type DsarRequestResponse, EMAIL_LIMITS, ENTITY_LINK_TYPES, type EmailAttachment, type EmailMessage, type EmailThread, type EmailThreadDetail, type EmailUnreadCountResponse, type EnterpriseRequestResponse, type EntityLinkCountsResponse, type EntityLinkMetadata, type EntityLinkReference, type EntityLinksResponse, type EventResponse, FAILURE_REPORT_LIMITS, FAQ_LIMITS, type FailureReportEventSchema, type FailureReportResponse, FailureStatusSchema, type FaqResponse, type GetAuditLogsQuerySchema, type GetDsarRequestsQuerySchema, type GetEnterpriseRequestsQuerySchema, type GetEntityLinkCountsQuery, type GetEntityLinksQuery, type GetOrgBuildingsQuerySchema, type GetOrgMembersQuerySchema, type GetPlatformSubscriptionsQuerySchema, type GetTransactionCategoriesQuerySchema, type InviteOrgMemberSchema, type InviteOwnerInput, type JoinBuildingWithOtpSchema, LINKABLE_ENTITY_TYPES, type ListArchivedResponse, type MessageResponse, type MessagesListResponse, type MoveBoardCardSchema, NOTICE_LIMITS, type NoticeEventSchema, type NoticeResponse, type NotificationPreferenceCategory, type NotificationPreferenceItem, type NotificationResponse, ORGANIZATION_LIMITS, type OrgBroadcastResponse, type OrgInvitationResponse, OrgInvitationStatus, type OwnerResponse, type PaginatedBuildingsResponse, type PaginatedDocumentsResponse, type PaginatedEmailThreadsResponse, type PaginatedEventsResponse, type PaginatedFailureReportsResponse, type PaginatedNoticesResponse, type PaginatedPollsResponse, type PaginatedUnitsResponse, type PermissionsResponseSchema, type PlatformSubscriptionResponse, type PollEligibleVoter, type PollEligibleVotersResponse, type PollResponse, type PollResults, type PollVotersResponse, PrioritySchema, type PublicOrgInvitation, REP_RECENT_ACTIVITY_TYPES, type RecordDsarRectificationSchema, type ReorderBoardColumnsSchema, type ReorderFaqsSchema, type RepBuildingActivity, type RepBuildingItem, type RepDashboardSummaryResponse, type RepRecentActivity, type RepUserBuilding, type ReplyEmailThreadRequestPayload, type RevenueMetricsResponse, type SearchUsersQuerySchema, type SendMessageSchema, type SetDsarRestrictionSchema, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, type Unit, type UnitKind, type UnreadCountResponse, type UpdateBoardCardSchema, type UpdateBoardColumnSchema, type UpdateBoardSchema, type UpdateBuildingSchema, type UpdateBuildingSettingsSchema, type UpdateBusinessPartnerInput, type UpdateConversationSchema, type UpdateDocumentSchema, type UpdateDsarRequestSchema, type UpdateEnterpriseRequestSchema, type UpdateExpenseSchema, type UpdateFailureReportSchema, type UpdateFaqSchema, type UpdateIncomeSchema, type UpdateNoticeSchema, type UpdateOrgBuildingContractSchema, type UpdateOrgMemberRoleSchema, type UpdateOrganizationSchema, type UpdateOwnerInput, type UpdatePlatformSubscriptionSchema, type UpdateTransactionCategorySchema, type UpdateUnitInput, type UpdateUserBuildingRoleSchema, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, auditLogResponseSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingOwnerAssignmentSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createDsarEventSchema, createDsarRequestSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createNoticeSchema, createOrgBroadcastSchema, createOrganizationSchema, createOwnerSchema, createPlatformSubscriptionSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, dsarErasureSchema, dsarEventResponseSchema, dsarRequestResponseSchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, emailUnreadCountResponseSchema, enterpriseRequestResponseSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventResponseSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, forgotPasswordSchema, getAuditLogsQuerySchema, getDsarRequestsQuerySchema, getEnterpriseRequestsQuerySchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getPlatformSubscriptionsQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, inviteOwnerSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, loginSchema, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgBroadcastResponseSchema, orgInvitationResponseSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, platformSubscriptionResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollVotersResponseSchema, priorityOptions, publicOrgInvitationSchema, recordDsarRectificationSchema, registerSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, revenueMetricsResponseSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, setDsarRestrictionSchema, signedMoneyStringSchema, strongPasswordSchema, unitKindSchema, unitSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateDsarRequestSchema, updateEnterpriseRequestSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgBuildingContractSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePlatformSubscriptionSchema, updatePollRequestSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema };
+export { ARCHIVE_TYPES, AUDIT_DENIAL_TARGET_TYPE, type AddOrgMemberSchema, type AiUsageResponse, type ApiError, type ApiErrorResponse, ApprovalStatusSchema, type ApproveFailureReportSchema, type ApproveNoticeSchema, type ArchiveType, type ArchivedItem, type AssignOrgBuildingSchema, type AssignOrgMemberBuildingSchema, type AssignOwnerInput, type AuditLogResponse, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUILDING_LIMITS, BUILDING_TYPES, type BuildingDetailResponse, type BuildingFundsLedgerResponse, type BuildingFundsLedgerRow, type BuildingOwnerAssignment, type BuildingResponse, type BuildingSettingsResponse, type BusinessPartnerResponse, CHAT_LIMITS, type CamtImportResponse, type ChatMessageResponse, type CommentResponse, CommonStatusSchema, type ConversationLastMessage, type ConversationParticipant, type ConversationResponse, ConversationType, type ConversationsListResponse, type CopyFaqsSchema, type CopyTransactionCategoriesSchema, type CreateBoardCardSchema, type CreateBoardColumnSchema, type CreateBoardSchema, type CreateBuildingSchema, type CreateBusinessPartnerInput, type CreateConversationSchema, type CreateDocumentSchema, type CreateDsarEventSchema, type CreateDsarRequestSchema, type CreateEmailThreadRequestPayload, type CreateEntityLinkRequest, type CreateFailureReportSchema, type CreateFaqSchema, type CreateIncomeSchema, type CreateNoticeSchema, type CreateOrgBroadcastSchema, type CreateOrganizationSchema, type CreateOwnerInput, type CreatePlatformSubscriptionSchema, type CreateTransactionCategorySchema, type CreateUnitInput, type CursorQuerySchema, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, type DeleteEntityLinkQuery, type DocumentFile, type DocumentLinkedRecord, type DocumentResponse, type DsarErasureSchema, type DsarEventResponse, type DsarRequestResponse, EMAIL_LIMITS, ENTITY_LINK_TYPES, type EmailAttachment, type EmailMessage, type EmailThread, type EmailThreadDetail, type EmailUnreadCountResponse, type EnterpriseRequestResponse, type EntityLinkCountsResponse, type EntityLinkMetadata, type EntityLinkReference, type EntityLinksResponse, type EventResponse, FAILURE_REPORT_LIMITS, FAQ_LIMITS, type FailureReportEventSchema, type FailureReportResponse, FailureStatusSchema, type FaqResponse, type FeatureFlagsResponse, type GetAuditLogsQuerySchema, type GetDsarRequestsQuerySchema, type GetEnterpriseRequestsQuerySchema, type GetEntityLinkCountsQuery, type GetEntityLinksQuery, type GetOrgBuildingsQuerySchema, type GetOrgMembersQuerySchema, type GetPlatformSubscriptionsQuerySchema, type GetTransactionCategoriesQuerySchema, type InviteOrgMemberSchema, type InviteOwnerInput, type JoinBuildingWithOtpSchema, LINKABLE_ENTITY_TYPES, type ListArchivedResponse, type MessageResponse, type MessagesListResponse, type MoveBoardCardSchema, NOTICE_LIMITS, type NoticeEventSchema, type NoticeResponse, type NotificationPreferenceCategory, type NotificationPreferenceItem, type NotificationResponse, ORGANIZATION_LIMITS, type OrgBroadcastResponse, type OrgInvitationResponse, OrgInvitationStatus, type OwnerResponse, type PaginatedBuildingsResponse, type PaginatedDocumentsResponse, type PaginatedEmailThreadsResponse, type PaginatedEventsResponse, type PaginatedFailureReportsResponse, type PaginatedNoticesResponse, type PaginatedPollsResponse, type PaginatedUnitsResponse, type PermissionsResponseSchema, type PlatformFeatureFlag, type PlatformFeatureFlagsResponse, type PlatformSubscriptionResponse, type PollEligibleVoter, type PollEligibleVotersResponse, type PollResponse, type PollResults, type PollVotersResponse, PrioritySchema, type PublicOrgInvitation, REP_RECENT_ACTIVITY_TYPES, type RecordDsarRectificationSchema, type ReorderBoardColumnsSchema, type ReorderFaqsSchema, type RepBuildingActivity, type RepBuildingItem, type RepDashboardSummaryResponse, type RepRecentActivity, type RepUserBuilding, type ReplyEmailThreadRequestPayload, type RevenueMetricsResponse, type SearchUsersQuerySchema, type SendMessageSchema, type SetDsarRestrictionSchema, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, type Unit, type UnitKind, type UnreadCountResponse, type UpdateBoardCardSchema, type UpdateBoardColumnSchema, type UpdateBoardSchema, type UpdateBuildingSchema, type UpdateBuildingSettingsSchema, type UpdateBusinessPartnerInput, type UpdateConversationSchema, type UpdateDocumentSchema, type UpdateDsarRequestSchema, type UpdateEnterpriseRequestSchema, type UpdateExpenseSchema, type UpdateFailureReportSchema, type UpdateFaqSchema, type UpdateIncomeSchema, type UpdateNoticeSchema, type UpdateOrgBuildingContractSchema, type UpdateOrgMemberRoleSchema, type UpdateOrganizationSchema, type UpdateOwnerInput, type UpdatePlatformFeatureRequestPayload, type UpdatePlatformSubscriptionSchema, type UpdateTransactionCategorySchema, type UpdateUnitInput, type UpdateUserBuildingRoleSchema, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, auditLogResponseSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingOwnerAssignmentSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createDsarEventSchema, createDsarRequestSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createNoticeSchema, createOrgBroadcastSchema, createOrganizationSchema, createOwnerSchema, createPlatformSubscriptionSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, dsarErasureSchema, dsarEventResponseSchema, dsarRequestResponseSchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, emailUnreadCountResponseSchema, enterpriseRequestResponseSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventResponseSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, featureFlagsResponseSchema, forgotPasswordSchema, getAuditLogsQuerySchema, getDsarRequestsQuerySchema, getEnterpriseRequestsQuerySchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getNotificationDataSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getPlatformSubscriptionsQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, inviteOrgMemberSchema, inviteOwnerSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, loginSchema, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationDataSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgBroadcastResponseSchema, orgInvitationResponseSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, platformFeatureFlagSchema, platformFeatureFlagsResponseSchema, platformSubscriptionResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollVotersResponseSchema, priorityOptions, publicOrgInvitationSchema, recordDsarRectificationSchema, registerSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, revenueMetricsResponseSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, setDsarRestrictionSchema, signedMoneyStringSchema, strongPasswordSchema, unitKindSchema, unitSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateDsarRequestSchema, updateEnterpriseRequestSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgBuildingContractSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePlatformFeatureRequestSchema, updatePlatformSubscriptionSchema, updatePollRequestSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema };
