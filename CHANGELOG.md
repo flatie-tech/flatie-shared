@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.100.2
+
+### Changes
+
+- fix(constants): export featureFlagKeys + platformFeatureKeys from the barrel
+
 ## 0.100.1
 
 ### Changes

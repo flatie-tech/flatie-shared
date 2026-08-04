@@ -2341,7 +2341,7 @@ var pollVoteSignatureRejectedDataSchema = pollVoteSignatureDataSchema.extend({
   reason: zod.z.string().nullable().optional()
 });
 var unimplementedDataSchema = baseNotificationDataSchema;
-({
+var notificationDataSchemaByType = {
   [chunkXNJC5IQ5_cjs.NotificationType.NOTICE_CREATED]: noticeCreatedDataSchema,
   [chunkXNJC5IQ5_cjs.NotificationType.NOTICE_APPROVED]: noticeApprovedDataSchema,
   [chunkXNJC5IQ5_cjs.NotificationType.NOTICE_REJECTED]: noticeRejectedDataSchema,
@@ -2383,7 +2383,7 @@ var unimplementedDataSchema = baseNotificationDataSchema;
   [chunkXNJC5IQ5_cjs.NotificationType.POLL_VOTE_SIGNATURE_APPROVED]: pollVoteSignatureDataSchema,
   [chunkXNJC5IQ5_cjs.NotificationType.POLL_VOTE_SIGNATURE_REJECTED]: pollVoteSignatureRejectedDataSchema,
   [chunkXNJC5IQ5_cjs.NotificationType.SYSTEM_ANNOUNCEMENT]: unimplementedDataSchema
-});
+};
 var notificationDataSchema = zod.z.union([
   noticeCreatedDataSchema,
   noticeApprovedDataSchema,
@@ -2445,6 +2445,7 @@ var notificationPreferenceCategorySchema = zod.z.looseObject({
     "Items belonging to this category; each represents one toggleable notification type."
   )
 });
+var getNotificationDataSchema = (type) => notificationDataSchemaByType[type];
 var platformFeatureKeySchema = zod.z.enum(chunkXNJC5IQ5_cjs.PLATFORM_FEATURES).describe("Platform feature key (see PlatformFeature in @flatie/shared/enums).");
 var platformFeatureFlagSchema = zod.z.looseObject({
   key: platformFeatureKeySchema,
@@ -2892,6 +2893,7 @@ exports.getDsarRequestsQuerySchema = getDsarRequestsQuerySchema;
 exports.getEnterpriseRequestsQuerySchema = getEnterpriseRequestsQuerySchema;
 exports.getEntityLinkCountsQuerySchema = getEntityLinkCountsQuerySchema;
 exports.getEntityLinksQuerySchema = getEntityLinksQuerySchema;
+exports.getNotificationDataSchema = getNotificationDataSchema;
 exports.getOrgBuildingsQuerySchema = getOrgBuildingsQuerySchema;
 exports.getOrgMembersQuerySchema = getOrgMembersQuerySchema;
 exports.getPlatformSubscriptionsQuerySchema = getPlatformSubscriptionsQuerySchema;
@@ -2912,6 +2914,7 @@ exports.multipartArray = multipartArray;
 exports.multipartBoolean = multipartBoolean;
 exports.noticeEventSchema = noticeEventSchema;
 exports.noticeResponseSchema = noticeResponseSchema;
+exports.notificationDataSchema = notificationDataSchema;
 exports.notificationPreferenceCategorySchema = notificationPreferenceCategorySchema;
 exports.notificationPreferenceItemSchema = notificationPreferenceItemSchema;
 exports.notificationResponseSchema = notificationResponseSchema;
@@ -3005,5 +3008,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-LOITZQQS.cjs.map
-//# sourceMappingURL=chunk-LOITZQQS.cjs.map
+//# sourceMappingURL=chunk-UDT3LEXB.cjs.map
+//# sourceMappingURL=chunk-UDT3LEXB.cjs.map
