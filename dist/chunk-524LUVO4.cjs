@@ -2453,9 +2453,9 @@ var platformFeatureFlagSchema = zod.z.looseObject({
   note: zod.z.string().nullable().optional().describe("Free-text reason recorded by the admin who last flipped it."),
   updatedAt: zod.z.string().nullable().optional().describe("ISO-8601 timestamp of the last change; null when never changed."),
   updatedByName: zod.z.string().nullable().optional().describe("Display name of the platform admin who last changed it."),
-  /** How many buildings have narrowed this feature via its per-building toggle. */
+  /** How many buildings switched this feature on via their per-building toggle. */
   buildingOverrideCount: zod.z.coerce.number().nullable().optional().describe(
-    "Buildings whose per-building toggle disables this feature; null when the feature has no per-building column."
+    "Buildings that switched this feature ON for themselves \u2014 the ones unparking would reach. Counts opt-ins, not the buildings sitting on the (false) default. Null when the feature has no per-building column."
   )
 }).describe("One platform feature flag, as shown on /platform/features.");
 var platformFeatureFlagsResponseSchema = zod.z.looseObject({
@@ -3008,5 +3008,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-UDT3LEXB.cjs.map
-//# sourceMappingURL=chunk-UDT3LEXB.cjs.map
+//# sourceMappingURL=chunk-524LUVO4.cjs.map
+//# sourceMappingURL=chunk-524LUVO4.cjs.map

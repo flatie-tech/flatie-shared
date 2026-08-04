@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.100.3
+
+### Changes
+
+- docs(platform-features): buildingOverrideCount counts opt-ins, not defaults
+
 ## 0.100.2
 
 ### Changes

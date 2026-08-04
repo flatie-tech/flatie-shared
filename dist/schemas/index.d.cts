@@ -4391,7 +4391,7 @@ declare const platformFeatureFlagSchema: z.ZodObject<{
     note: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     updatedByName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-    /** How many buildings have narrowed this feature via its per-building toggle. */
+    /** How many buildings switched this feature on via their per-building toggle. */
     buildingOverrideCount: z.ZodOptional<z.ZodNullable<z.ZodCoercedNumber<unknown>>>;
 }, z.core.$loose>;
 declare const platformFeatureFlagsResponseSchema: z.ZodObject<{
@@ -4403,7 +4403,7 @@ declare const platformFeatureFlagsResponseSchema: z.ZodObject<{
         note: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         updatedByName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-        /** How many buildings have narrowed this feature via its per-building toggle. */
+        /** How many buildings switched this feature on via their per-building toggle. */
         buildingOverrideCount: z.ZodOptional<z.ZodNullable<z.ZodCoercedNumber<unknown>>>;
     }, z.core.$loose>>;
 }, z.core.$loose>;
