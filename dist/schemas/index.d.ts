@@ -1031,6 +1031,7 @@ declare const updateBuildingSettingsSchema: z.ZodObject<{
     faqEnabled: z.ZodOptional<z.ZodBoolean>;
     houseRulesEnabled: z.ZodOptional<z.ZodBoolean>;
     chatEnabled: z.ZodOptional<z.ZodBoolean>;
+    emailEnabled: z.ZodOptional<z.ZodBoolean>;
     commentsEnabled: z.ZodOptional<z.ZodBoolean>;
     votingCertiliaEnabled: z.ZodOptional<z.ZodBoolean>;
     votingPrintedSignatureEnabled: z.ZodOptional<z.ZodBoolean>;
@@ -2745,6 +2746,7 @@ declare const buildingSettingsResponseSchema: z.ZodObject<{
     faqEnabled: z.ZodBoolean;
     houseRulesEnabled: z.ZodBoolean;
     chatEnabled: z.ZodBoolean;
+    emailEnabled: z.ZodBoolean;
     commentsEnabled: z.ZodBoolean;
     votingCertiliaEnabled: z.ZodBoolean;
     votingPrintedSignatureEnabled: z.ZodBoolean;

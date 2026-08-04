@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.99.0
+
+### Changes
+
+- feat(building-settings): emailEnabled toggle — parks the building mailbox (defaults false)
+
 ## 0.98.0
 
 ### Changes

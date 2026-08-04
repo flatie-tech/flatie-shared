@@ -695,6 +695,7 @@ var updateBuildingSettingsSchema = zod.z.object({
   faqEnabled: zod.z.boolean().optional(),
   houseRulesEnabled: zod.z.boolean().optional(),
   chatEnabled: zod.z.boolean().optional(),
+  emailEnabled: zod.z.boolean().optional(),
   commentsEnabled: zod.z.boolean().optional(),
   votingCertiliaEnabled: zod.z.boolean().optional().describe("Deprecated: no longer enforced; accepted for old clients and ignored."),
   votingPrintedSignatureEnabled: zod.z.boolean().optional().describe("Deprecated: no longer enforced; accepted for old clients and ignored."),
@@ -1793,6 +1794,9 @@ var buildingSettingsResponseSchema = zod.z.looseObject({
   faqEnabled: zod.z.boolean().describe("Whether the FAQ section is available in this building."),
   houseRulesEnabled: zod.z.boolean().describe("Whether the house-rules section is available in this building."),
   chatEnabled: zod.z.boolean().describe("Whether building chat is available in this building."),
+  emailEnabled: zod.z.boolean().describe(
+    "Whether the building mailbox (Korisni\u010Dki pretinac) is available in this building. Defaults to FALSE \u2014 the feature is parked pending an inbound-architecture decision (see flatie-docs/team-knowledge/20)."
+  ),
   commentsEnabled: zod.z.boolean().describe("Whether commenting on notices/reports is available in this building."),
   votingCertiliaEnabled: zod.z.boolean().describe("Deprecated: emitted for old clients, no longer enforced."),
   votingPrintedSignatureEnabled: zod.z.boolean().describe("Deprecated: emitted for old clients, no longer enforced."),
@@ -2973,5 +2977,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-WH2TEREJ.cjs.map
-//# sourceMappingURL=chunk-WH2TEREJ.cjs.map
+//# sourceMappingURL=chunk-FG44W3V6.cjs.map
+//# sourceMappingURL=chunk-FG44W3V6.cjs.map
