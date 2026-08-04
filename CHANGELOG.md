@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.101.0
+
+### Changes
+
+- fix(rbac)!: PLATFORM_SUPPORT no longer holds platform:moderate_content
+
 ## 0.100.3
 
 ### Changes
