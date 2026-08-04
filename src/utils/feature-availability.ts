@@ -1,7 +1,4 @@
-import {
-  type PlatformFeature,
-  PLATFORM_FEATURE_META,
-} from '../enums/platform-feature.enum';
+import { PLATFORM_FEATURE_META, type PlatformFeature } from '../enums/platform-feature.enum';
 
 export interface FeatureAvailabilityInput {
   feature: PlatformFeature;

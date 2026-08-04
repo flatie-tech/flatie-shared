@@ -20,12 +20,6 @@ export {
   VerificationTier,
 } from './identity-verification.enum';
 export { JoinRequestStatus } from './join-request-status.enum';
-export type { BuildingFeatureSettingKey, PlatformFeatureMeta } from './platform-feature.enum';
-export {
-  PLATFORM_FEATURE_META,
-  PLATFORM_FEATURES,
-  PlatformFeature,
-} from './platform-feature.enum';
 export {
   CO_OWNER_VISIBLE_SYSTEM_TYPES,
   DevicePlatform,
@@ -48,6 +42,12 @@ export {
   type ScopedAction,
   type ScopedDomain,
 } from './permission.enum';
+export type { BuildingFeatureSettingKey, PlatformFeatureMeta } from './platform-feature.enum';
+export {
+  PLATFORM_FEATURE_META,
+  PLATFORM_FEATURES,
+  PlatformFeature,
+} from './platform-feature.enum';
 export {
   POLL_CANNOT_VOTE_REASON_KEY,
   PollCannotVoteReason,
