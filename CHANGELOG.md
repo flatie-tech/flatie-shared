@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.102.0
+
+### Changes
+
+- brand blue #4878FF -> #007BFF (hue 265.75 -> 257.21) across primary/sidebar-primary/ring/sidebar-ring/chart-1
+
 ## 0.101.0
 
 ### Changes
