@@ -120,6 +120,16 @@ export {
   notificationResponseSchema,
 } from './notifications';
 export type {
+  FeatureFlagsResponse,
+  PlatformFeatureFlag,
+  PlatformFeatureFlagsResponse,
+} from './platform-features';
+export {
+  featureFlagsResponseSchema,
+  platformFeatureFlagSchema,
+  platformFeatureFlagsResponseSchema,
+} from './platform-features';
+export type {
   PaginatedPollsResponse,
   PollEligibleVoter,
   PollEligibleVotersResponse,

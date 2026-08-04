@@ -7,6 +7,9 @@
 // Chat DM eligibility (building-scoped; org chat has no visibility mechanic)
 export type { MessageableUserShape } from './chat-eligibility';
 export { canMessageUser, getMessageableUsers } from './chat-eligibility';
+// Single resolver for platform-feature availability (flags + per-building narrowing)
+export type { FeatureAvailabilityInput } from './feature-availability';
+export { isFeatureAvailable } from './feature-availability';
 // Locale-aware currency formatting with €→EUR + cent-rounding normalization
 export { formatCurrencyEUR } from './currency';
 // Google Calendar "add event" template-URL builder

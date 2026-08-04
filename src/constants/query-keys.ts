@@ -461,3 +461,14 @@ export const queryKeys = {
   unitSearch: unitSearchKeys,
   widget: widgetKeys,
 } as const;
+
+export const platformFeatureKeys = {
+  all: ['platformFeature'] as const,
+  list: () => [...platformFeatureKeys.all, 'list'] as const,
+};
+
+/** Client-facing flag map (nav/widget visibility) — polled on a short staleTime. */
+export const featureFlagKeys = {
+  all: ['featureFlags'] as const,
+  map: () => [...featureFlagKeys.all, 'map'] as const,
+};

@@ -49,13 +49,18 @@ export { permissionsResponseSchema, roleTypeSchema } from './permissions.schema'
 export { getRepBuildingsParamsSchema, getRepUsersParamsSchema } from './rep-list-params.schema';
 
 // Request schemas (PATCH/PUT payloads: id + optional body fields)
-export type { CreateEmailThreadRequestPayload, ReplyEmailThreadRequestPayload } from './requests';
+export type {
+  CreateEmailThreadRequestPayload,
+  ReplyEmailThreadRequestPayload,
+  UpdatePlatformFeatureRequestPayload,
+} from './requests';
 export {
   aiChatMessageSchema,
   aiChatRequestSchema,
   createEmailThreadRequestSchema,
   EMAIL_LIMITS,
   replyEmailThreadRequestSchema,
+  updatePlatformFeatureRequestSchema,
   updateFailureReportRequestSchema,
   updateNoticeRequestSchema,
   updatePollRequestSchema,
@@ -86,6 +91,7 @@ export type {
   EmailThread,
   EmailThreadDetail,
   EmailUnreadCountResponse,
+  FeatureFlagsResponse,
   EntityLinkCountsResponse,
   EntityLinkMetadata,
   EntityLinkReference,
@@ -111,6 +117,8 @@ export type {
   PollEligibleVotersResponse,
   PollResponse,
   PollResults,
+  PlatformFeatureFlag,
+  PlatformFeatureFlagsResponse,
   PollVotersResponse,
   RepBuildingActivity,
   RepBuildingItem,
@@ -145,6 +153,7 @@ export {
   emailThreadDetailSchema,
   emailThreadSchema,
   emailUnreadCountResponseSchema,
+  featureFlagsResponseSchema,
   entityLinkCountsResponseSchema,
   entityLinkMetadataSchema,
   entityLinkReferenceSchema,
@@ -172,6 +181,8 @@ export {
   pollEligibleVotersResponseSchema,
   pollResponseSchema,
   pollResultsSchema,
+  platformFeatureFlagSchema,
+  platformFeatureFlagsResponseSchema,
   pollVotersResponseSchema,
   REP_RECENT_ACTIVITY_TYPES,
   repBuildingActivitySchema,

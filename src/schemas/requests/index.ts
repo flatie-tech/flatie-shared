@@ -21,3 +21,5 @@ export { replyEmailThreadRequestSchema } from './reply-email-thread';
 export { updateFailureReportRequestSchema } from './update-failure-report';
 export { updateNoticeRequestSchema } from './update-notice';
 export { updatePollRequestSchema } from './update-poll';
+export type { UpdatePlatformFeatureRequestPayload } from './update-platform-feature';
+export { updatePlatformFeatureRequestSchema } from './update-platform-feature';
