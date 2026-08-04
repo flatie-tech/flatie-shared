@@ -41,6 +41,11 @@ export const buildingSettingsResponseSchema = z
       .boolean()
       .describe('Whether the house-rules section is available in this building.'),
     chatEnabled: z.boolean().describe('Whether building chat is available in this building.'),
+    emailEnabled: z
+      .boolean()
+      .describe(
+        'Whether the building mailbox (Korisnički pretinac) is available in this building. Defaults to FALSE — the feature is parked pending an inbound-architecture decision (see flatie-docs/team-knowledge/20).',
+      ),
     commentsEnabled: z
       .boolean()
       .describe('Whether commenting on notices/reports is available in this building.'),

@@ -24,6 +24,7 @@ export const updateBuildingSettingsSchema = z.object({
   faqEnabled: z.boolean().optional(),
   houseRulesEnabled: z.boolean().optional(),
   chatEnabled: z.boolean().optional(),
+  emailEnabled: z.boolean().optional(),
   commentsEnabled: z.boolean().optional(),
   votingCertiliaEnabled: z
     .boolean()
