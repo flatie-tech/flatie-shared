@@ -1798,7 +1798,7 @@ var buildingSettingsResponseSchema = zod.z.looseObject({
   faqEnabled: zod.z.boolean().describe("Whether the FAQ section is available in this building."),
   houseRulesEnabled: zod.z.boolean().describe("Whether the house-rules section is available in this building."),
   chatEnabled: zod.z.boolean().describe("Whether building chat is available in this building."),
-  emailEnabled: zod.z.boolean().describe(
+  emailEnabled: zod.z.boolean().default(false).describe(
     "Whether the building mailbox (Korisni\u010Dki pretinac) is available in this building. Defaults to FALSE \u2014 the feature is parked pending an inbound-architecture decision (see flatie-docs/team-knowledge/20)."
   ),
   commentsEnabled: zod.z.boolean().describe("Whether commenting on notices/reports is available in this building."),
@@ -3005,5 +3005,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-DR3P2QTP.cjs.map
-//# sourceMappingURL=chunk-DR3P2QTP.cjs.map
+//# sourceMappingURL=chunk-LOITZQQS.cjs.map
+//# sourceMappingURL=chunk-LOITZQQS.cjs.map

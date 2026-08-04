@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.100.1
+
+### Changes
+
+- fix(building-settings): default emailEnabled to false in the response schema
+
 ## 0.100.0
 
 ### Changes

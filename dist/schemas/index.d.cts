@@ -2757,7 +2757,7 @@ declare const buildingSettingsResponseSchema: z.ZodObject<{
     faqEnabled: z.ZodBoolean;
     houseRulesEnabled: z.ZodBoolean;
     chatEnabled: z.ZodBoolean;
-    emailEnabled: z.ZodBoolean;
+    emailEnabled: z.ZodDefault<z.ZodBoolean>;
     commentsEnabled: z.ZodBoolean;
     votingCertiliaEnabled: z.ZodBoolean;
     votingPrintedSignatureEnabled: z.ZodBoolean;
