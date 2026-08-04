@@ -165,3 +165,31 @@ describe('Platform staff-tier grants — ADMIN-exclusive', () => {
     );
   });
 });
+
+/**
+ * The blog publishes to and deletes from the PUBLIC marketing site, so
+ * `platform:moderate_content` is an outward-facing capability rather than an
+ * internal one. PLATFORM_SUPPORT is rank 1 of 4 — a support tier should not
+ * be able to put text in front of every visitor to flatie.hr.
+ *
+ * Pinned because nothing pinned it before: the grant sat unnoticed until a
+ * per-role e2e gating run surfaced it, and the fix is one line to undo.
+ */
+describe('platform:moderate_content is not a support-tier capability', () => {
+  it('is held by ADMIN and MODERATOR only', () => {
+    const holders = Object.values(PlatformRole).filter((role) =>
+      PLATFORM_ROLE_PERMISSIONS[role].includes('platform:moderate_content' as Permission),
+    );
+
+    expect(holders.sort()).toEqual(
+      [PlatformRole.PLATFORM_ADMIN, PlatformRole.PLATFORM_MODERATOR].sort(),
+    );
+  });
+
+  it('leaves SUPPORT its other three grants', () => {
+    // Removing one permission must not quietly narrow the role further.
+    expect(PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_SUPPORT].sort()).toEqual(
+      ['platform:approve_buildings', 'platform:view_analytics', 'platform:view_orgs'].sort(),
+    );
+  });
+});

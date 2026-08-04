@@ -247,7 +247,10 @@ export const PLATFORM_ROLE_PERMISSIONS: Record<PlatformRole, Permission[]> = {
     'platform:approve_buildings',
     'platform:view_orgs',
     'platform:view_analytics',
-    'platform:moderate_content',
+    // NOT platform:moderate_content. That permission controls the blog, which
+    // publishes to and deletes from the PUBLIC marketing site — a support-tier
+    // action should never be visible to everyone on the internet. Removed
+    // 2026-08-04; MODERATOR and ADMIN retain it.
   ] as Permission[],
   [PlatformRole.PLATFORM_OPERATIVE]: ['platform:view_analytics'] as Permission[],
 };
