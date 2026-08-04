@@ -103,13 +103,13 @@ var colors = {
     dark: "oklch(1 0.005 260 / 16%)"
   },
   ring: {
-    light: "oklch(0.6143 0.2076 265.75)",
-    dark: "oklch(0.65 0.19 265.75)"
+    light: "oklch(0.6048 0.2166 257.21)",
+    dark: "oklch(0.6405 0.199 257.21)"
   },
   // Charts — harmonized with blue primary
   "chart-1": {
-    light: "oklch(0.6143 0.2076 265.75)",
-    dark: "oklch(0.55 0.19 265)"
+    light: "oklch(0.6048 0.2166 257.21)",
+    dark: "oklch(0.5405 0.199 257.21)"
   },
   "chart-2": {
     light: "oklch(0.68 0.14 195)",
@@ -149,8 +149,8 @@ var colors = {
     dark: "oklch(1 0.005 260 / 12%)"
   },
   "sidebar-ring": {
-    light: "oklch(0.6143 0.2076 265.75)",
-    dark: "oklch(0.55 0.15 265)"
+    light: "oklch(0.6048 0.2166 257.21)",
+    dark: "oklch(0.5405 0.159 257.21)"
   },
   // Custom surface tokens
   "card-background": {
@@ -178,20 +178,20 @@ var radii = {
 
 // src/tokens/themes.ts
 var themes = {
-  // Blue (hue 265.75) — default for building resident dashboards
+  // Blue (hue 257.21 — brand #007BFF) — default for building resident dashboards
   default: {
     light: {
-      primary: "oklch(0.6143 0.2076 265.75)",
+      primary: "oklch(0.6048 0.2166 257.21)",
       "primary-foreground": "oklch(0.985 0 0)",
       "button-primary": "oklch(0.22 0.02 265)",
-      "sidebar-primary": "oklch(0.6143 0.2076 265.75)",
+      "sidebar-primary": "oklch(0.6048 0.2166 257.21)",
       "sidebar-primary-foreground": "oklch(0.985 0 0)"
     },
     dark: {
-      primary: "oklch(0.65 0.19 265.75)",
+      primary: "oklch(0.6405 0.199 257.21)",
       "primary-foreground": "oklch(0.16 0.015 265)",
       "button-primary": "oklch(0.92 0.005 260)",
-      "sidebar-primary": "oklch(0.55 0.19 265)",
+      "sidebar-primary": "oklch(0.5405 0.199 257.21)",
       "sidebar-primary-foreground": "oklch(0.95 0.005 260)"
     }
   },
@@ -246,26 +246,26 @@ var themes = {
       "sidebar-primary-foreground": "oklch(0.95 0.005 195)"
     }
   },
-  // Representatives panel — currently blue (hue 265.75), same as default.
+  // Representatives panel — currently blue (hue 257.21), same as default.
   // Tracked in the token source so diverging from default is a one-line change.
   representatives: {
     light: {
-      primary: "oklch(0.6143 0.2076 265.75)",
+      primary: "oklch(0.6048 0.2166 257.21)",
       "primary-foreground": "oklch(0.985 0 0)",
       "button-primary": "oklch(0.22 0.02 265)",
-      "sidebar-primary": "oklch(0.6143 0.2076 265.75)",
+      "sidebar-primary": "oklch(0.6048 0.2166 257.21)",
       "sidebar-primary-foreground": "oklch(0.985 0 0)"
     },
     dark: {
-      primary: "oklch(0.65 0.19 265.75)",
+      primary: "oklch(0.6405 0.199 257.21)",
       "primary-foreground": "oklch(0.16 0.015 265)",
       "button-primary": "oklch(0.92 0.005 260)",
-      "sidebar-primary": "oklch(0.55 0.19 265)",
+      "sidebar-primary": "oklch(0.5405 0.199 257.21)",
       "sidebar-primary-foreground": "oklch(0.95 0.005 260)"
     }
   }
 };
 
 export { colors, radii, themes };
-//# sourceMappingURL=chunk-JLMQ24CD.js.map
-//# sourceMappingURL=chunk-JLMQ24CD.js.map
+//# sourceMappingURL=chunk-D5D2CS5B.js.map
+//# sourceMappingURL=chunk-D5D2CS5B.js.map

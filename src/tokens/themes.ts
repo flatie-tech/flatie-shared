@@ -23,20 +23,20 @@ export type ThemeDefinition = {
 };
 
 export const themes = {
-  // Blue (hue 265.75) — default for building resident dashboards
+  // Blue (hue 257.21 — brand #007BFF) — default for building resident dashboards
   default: {
     light: {
-      primary: 'oklch(0.6143 0.2076 265.75)',
+      primary: 'oklch(0.6048 0.2166 257.21)',
       'primary-foreground': 'oklch(0.985 0 0)',
       'button-primary': 'oklch(0.22 0.02 265)',
-      'sidebar-primary': 'oklch(0.6143 0.2076 265.75)',
+      'sidebar-primary': 'oklch(0.6048 0.2166 257.21)',
       'sidebar-primary-foreground': 'oklch(0.985 0 0)',
     },
     dark: {
-      primary: 'oklch(0.65 0.19 265.75)',
+      primary: 'oklch(0.6405 0.199 257.21)',
       'primary-foreground': 'oklch(0.16 0.015 265)',
       'button-primary': 'oklch(0.92 0.005 260)',
-      'sidebar-primary': 'oklch(0.55 0.19 265)',
+      'sidebar-primary': 'oklch(0.5405 0.199 257.21)',
       'sidebar-primary-foreground': 'oklch(0.95 0.005 260)',
     },
   },
@@ -95,21 +95,21 @@ export const themes = {
     },
   },
 
-  // Representatives panel — currently blue (hue 265.75), same as default.
+  // Representatives panel — currently blue (hue 257.21), same as default.
   // Tracked in the token source so diverging from default is a one-line change.
   representatives: {
     light: {
-      primary: 'oklch(0.6143 0.2076 265.75)',
+      primary: 'oklch(0.6048 0.2166 257.21)',
       'primary-foreground': 'oklch(0.985 0 0)',
       'button-primary': 'oklch(0.22 0.02 265)',
-      'sidebar-primary': 'oklch(0.6143 0.2076 265.75)',
+      'sidebar-primary': 'oklch(0.6048 0.2166 257.21)',
       'sidebar-primary-foreground': 'oklch(0.985 0 0)',
     },
     dark: {
-      primary: 'oklch(0.65 0.19 265.75)',
+      primary: 'oklch(0.6405 0.199 257.21)',
       'primary-foreground': 'oklch(0.16 0.015 265)',
       'button-primary': 'oklch(0.92 0.005 260)',
-      'sidebar-primary': 'oklch(0.55 0.19 265)',
+      'sidebar-primary': 'oklch(0.5405 0.199 257.21)',
       'sidebar-primary-foreground': 'oklch(0.95 0.005 260)',
     },
   },

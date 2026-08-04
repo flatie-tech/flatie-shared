@@ -124,14 +124,14 @@ export const colors = {
     dark: 'oklch(1 0.005 260 / 16%)',
   },
   ring: {
-    light: 'oklch(0.6143 0.2076 265.75)',
-    dark: 'oklch(0.65 0.19 265.75)',
+    light: 'oklch(0.6048 0.2166 257.21)',
+    dark: 'oklch(0.6405 0.199 257.21)',
   },
 
   // Charts — harmonized with blue primary
   'chart-1': {
-    light: 'oklch(0.6143 0.2076 265.75)',
-    dark: 'oklch(0.55 0.19 265)',
+    light: 'oklch(0.6048 0.2166 257.21)',
+    dark: 'oklch(0.5405 0.199 257.21)',
   },
   'chart-2': {
     light: 'oklch(0.68 0.14 195)',
@@ -172,8 +172,8 @@ export const colors = {
     dark: 'oklch(1 0.005 260 / 12%)',
   },
   'sidebar-ring': {
-    light: 'oklch(0.6143 0.2076 265.75)',
-    dark: 'oklch(0.55 0.15 265)',
+    light: 'oklch(0.6048 0.2166 257.21)',
+    dark: 'oklch(0.5405 0.159 257.21)',
   },
 
   // Custom surface tokens

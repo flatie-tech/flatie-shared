@@ -103,12 +103,12 @@ declare const colors: {
         readonly dark: "oklch(1 0.005 260 / 16%)";
     };
     readonly ring: {
-        readonly light: "oklch(0.6143 0.2076 265.75)";
-        readonly dark: "oklch(0.65 0.19 265.75)";
+        readonly light: "oklch(0.6048 0.2166 257.21)";
+        readonly dark: "oklch(0.6405 0.199 257.21)";
     };
     readonly 'chart-1': {
-        readonly light: "oklch(0.6143 0.2076 265.75)";
-        readonly dark: "oklch(0.55 0.19 265)";
+        readonly light: "oklch(0.6048 0.2166 257.21)";
+        readonly dark: "oklch(0.5405 0.199 257.21)";
     };
     readonly 'chart-2': {
         readonly light: "oklch(0.68 0.14 195)";
@@ -147,8 +147,8 @@ declare const colors: {
         readonly dark: "oklch(1 0.005 260 / 12%)";
     };
     readonly 'sidebar-ring': {
-        readonly light: "oklch(0.6143 0.2076 265.75)";
-        readonly dark: "oklch(0.55 0.15 265)";
+        readonly light: "oklch(0.6048 0.2166 257.21)";
+        readonly dark: "oklch(0.5405 0.159 257.21)";
     };
     readonly 'card-background': {
         readonly light: "oklch(0.98 0.005 260)";
@@ -202,17 +202,17 @@ type ThemeDefinition = {
 declare const themes: {
     readonly default: {
         readonly light: {
-            readonly primary: "oklch(0.6143 0.2076 265.75)";
+            readonly primary: "oklch(0.6048 0.2166 257.21)";
             readonly 'primary-foreground': "oklch(0.985 0 0)";
             readonly 'button-primary': "oklch(0.22 0.02 265)";
-            readonly 'sidebar-primary': "oklch(0.6143 0.2076 265.75)";
+            readonly 'sidebar-primary': "oklch(0.6048 0.2166 257.21)";
             readonly 'sidebar-primary-foreground': "oklch(0.985 0 0)";
         };
         readonly dark: {
-            readonly primary: "oklch(0.65 0.19 265.75)";
+            readonly primary: "oklch(0.6405 0.199 257.21)";
             readonly 'primary-foreground': "oklch(0.16 0.015 265)";
             readonly 'button-primary': "oklch(0.92 0.005 260)";
-            readonly 'sidebar-primary': "oklch(0.55 0.19 265)";
+            readonly 'sidebar-primary': "oklch(0.5405 0.199 257.21)";
             readonly 'sidebar-primary-foreground': "oklch(0.95 0.005 260)";
         };
     };
@@ -266,17 +266,17 @@ declare const themes: {
     };
     readonly representatives: {
         readonly light: {
-            readonly primary: "oklch(0.6143 0.2076 265.75)";
+            readonly primary: "oklch(0.6048 0.2166 257.21)";
             readonly 'primary-foreground': "oklch(0.985 0 0)";
             readonly 'button-primary': "oklch(0.22 0.02 265)";
-            readonly 'sidebar-primary': "oklch(0.6143 0.2076 265.75)";
+            readonly 'sidebar-primary': "oklch(0.6048 0.2166 257.21)";
             readonly 'sidebar-primary-foreground': "oklch(0.985 0 0)";
         };
         readonly dark: {
-            readonly primary: "oklch(0.65 0.19 265.75)";
+            readonly primary: "oklch(0.6405 0.199 257.21)";
             readonly 'primary-foreground': "oklch(0.16 0.015 265)";
             readonly 'button-primary': "oklch(0.92 0.005 260)";
-            readonly 'sidebar-primary': "oklch(0.55 0.19 265)";
+            readonly 'sidebar-primary': "oklch(0.5405 0.199 257.21)";
             readonly 'sidebar-primary-foreground': "oklch(0.95 0.005 260)";
         };
     };

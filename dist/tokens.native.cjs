@@ -98,12 +98,12 @@ const colors = {
     "dark": "#fdffff29"
   },
   "ring": {
-    "light": "#4878ff",
-    "dark": "#5786ff"
+    "light": "#007bff",
+    "dark": "#2c89ff"
   },
   "chart-1": {
-    "light": "#4878ff",
-    "dark": "#3967df"
+    "light": "#007bff",
+    "dark": "#0068df"
   },
   "chart-2": {
     "light": "#00b2b3",
@@ -142,8 +142,8 @@ const colors = {
     "dark": "#fdffff1f"
   },
   "sidebar-ring": {
-    "light": "#4878ff",
-    "dark": "#466cc8"
+    "light": "#007bff",
+    "dark": "#286dc9"
   },
   "card-background": {
     "light": "#f6f9fc",
@@ -166,17 +166,17 @@ const colors = {
 const themes = {
   "default": {
     "light": {
-      "primary": "#4878ff",
+      "primary": "#007bff",
       "primary-foreground": "#fafafa",
       "button-primary": "#161b24",
-      "sidebar-primary": "#4878ff",
+      "sidebar-primary": "#007bff",
       "sidebar-primary-foreground": "#fafafa"
     },
     "dark": {
-      "primary": "#5786ff",
+      "primary": "#2c89ff",
       "primary-foreground": "#0a0d14",
       "button-primary": "#e3e5e8",
-      "sidebar-primary": "#3967df",
+      "sidebar-primary": "#0068df",
       "sidebar-primary-foreground": "#eceff2"
     }
   },
@@ -230,17 +230,17 @@ const themes = {
   },
   "representatives": {
     "light": {
-      "primary": "#4878ff",
+      "primary": "#007bff",
       "primary-foreground": "#fafafa",
       "button-primary": "#161b24",
-      "sidebar-primary": "#4878ff",
+      "sidebar-primary": "#007bff",
       "sidebar-primary-foreground": "#fafafa"
     },
     "dark": {
-      "primary": "#5786ff",
+      "primary": "#2c89ff",
       "primary-foreground": "#0a0d14",
       "button-primary": "#e3e5e8",
-      "sidebar-primary": "#3967df",
+      "sidebar-primary": "#0068df",
       "sidebar-primary-foreground": "#eceff2"
     }
   }
