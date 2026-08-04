@@ -1,3 +1,4 @@
+import { c as PlatformFeature } from '../platform-feature.enum-CNEyVm2C.js';
 export { A as AddressParts, P as ParsedHouseNumber, f as formatAddress, n as normalizeHouseNumber, p as parseHouseNumber } from '../house-number-HwVJ833w.js';
 import { P as PaginatedResponse } from '../pagination.types-D3A3752L.js';
 import { z } from 'zod';
@@ -58,6 +59,44 @@ declare function getMessageableUsers<T extends MessageableUserShape>(users: read
  * `undefined` renders as `'-'` — the table-cell convention.
  */
 declare function formatCurrencyEUR(amount: number | undefined, locale: string, currency?: string): string;
+
+interface FeatureAvailabilityInput {
+    feature: PlatformFeature;
+    /**
+     * Platform flag map from `GET /feature-flags`. `undefined` means "not loaded
+     * yet" — pass `loading` too so the resolver can be explicit about it.
+     */
+    platformFlags?: Partial<Record<PlatformFeature, boolean>>;
+    /**
+     * The building's settings row, when the caller has a building in context.
+     * Only consulted for features whose metadata names a `buildingSettingKey`.
+     */
+    buildingSettings?: Partial<Record<string, unknown>> | null;
+    /** True while `platformFlags` (or the building settings) are still in flight. */
+    loading?: boolean;
+}
+/**
+ * THE single resolver for "should this feature be visible / callable?".
+ *
+ * Every nav filter, tab filter, widget mount and page guard calls this instead
+ * of hand-rolling a predicate. Before it existed the same
+ * `settings.chatEnabled`-style check was duplicated in ~5 places on web, all
+ * with the `if (!settings) return true` idiom that makes a parked feature flash
+ * into view on every cold load.
+ *
+ * Resolution order, most restrictive first:
+ *   1. Platform flag off  → false. A ceiling; nothing can override it upward.
+ *   2. Still loading      → the feature's `defaultEnabled`, so parked features
+ *                           stay hidden instead of flickering.
+ *   3. Per-building column (only when metadata names one; a missing/absent value
+ *      is treated as NOT enabled, matching the fail-closed DB default).
+ *   4. Otherwise          → true.
+ *
+ * Deliberately does NOT consider subscription tier or RBAC — those are separate
+ * layers applied by `useSubscription()` / `usePermissions()` respectively. This
+ * answers availability, not entitlement or authorization.
+ */
+declare function isFeatureAvailable({ feature, platformFlags, buildingSettings, loading, }: FeatureAvailabilityInput): boolean;
 
 /**
  * Google Calendar "add event" template-URL builder.
@@ -498,4 +537,4 @@ declare function formatCurrency(amount: number, locale?: string, currency?: stri
  */
 declare function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(func: T, delay: number): (...args: Parameters<T>) => void;
 
-export { type ActionFlags, DATETIME_FORMATS, DATE_FORMATS, type DisplayableRole, type GoogleCalendarEventInput, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, type MessageableUserShape, ParseError, type ParsedApiError, type PermissionChecker, type PermissionSubject, ROLE_BADGE_COLORS, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type RestrictableActionFlags, type RoleBadgeColor, type StatusVariant, TIME_FORMATS, VOTING_METHOD_SETTINGS, type VotingMethodSetting, type VotingMethodState, addMoney, applyResidentRestriction, applyResidentRestrictionToItem, buildGoogleCalendarUrl, canDo, canDoOnResource, canMessageUser, computeActionFlags, createPermissionChecker, debounce, formatCurrency, formatCurrencyByLocale, formatCurrencyEUR, formatDate as formatDateByLocale, formatDateTime, formatMoney, formatText, fromCents, getContextUserId, getDateLocale, getInitials, getMessageableUsers, getRoleBadge, isManagerialRole, normalizeMoney, normalizePaginatedResponse, parseApiError, parseData, resolveVotingMethods, subtractMoney, sumMoney, toCents };
+export { type ActionFlags, DATETIME_FORMATS, DATE_FORMATS, type DisplayableRole, type FeatureAvailabilityInput, type GoogleCalendarEventInput, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, type MessageableUserShape, ParseError, type ParsedApiError, type PermissionChecker, type PermissionSubject, ROLE_BADGE_COLORS, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, type RestrictableActionFlags, type RoleBadgeColor, type StatusVariant, TIME_FORMATS, VOTING_METHOD_SETTINGS, type VotingMethodSetting, type VotingMethodState, addMoney, applyResidentRestriction, applyResidentRestrictionToItem, buildGoogleCalendarUrl, canDo, canDoOnResource, canMessageUser, computeActionFlags, createPermissionChecker, debounce, formatCurrency, formatCurrencyByLocale, formatCurrencyEUR, formatDate as formatDateByLocale, formatDateTime, formatMoney, formatText, fromCents, getContextUserId, getDateLocale, getInitials, getMessageableUsers, getRoleBadge, isFeatureAvailable, isManagerialRole, normalizeMoney, normalizePaginatedResponse, parseApiError, parseData, resolveVotingMethods, subtractMoney, sumMoney, toCents };

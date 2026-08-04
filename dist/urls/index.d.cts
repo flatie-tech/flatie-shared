@@ -192,6 +192,8 @@ declare const API_ROUTES: {
         readonly BUSINESS_PARTNERS: (orgId: string) => string;
         readonly BUSINESS_PARTNER_DETAIL: (orgId: string, partnerId: string) => string;
     };
+    /** Lightweight platform feature-flag map for clients (nav/widget visibility). */
+    readonly FEATURE_FLAGS: "/feature-flags";
     readonly PLATFORM: {
         readonly DASHBOARD_SUMMARY: "/platform/dashboard/summary";
         readonly BUILDINGS: "/platform/buildings";
@@ -210,6 +212,8 @@ declare const API_ROUTES: {
         readonly BLOG_RESTORE: (id: string) => string;
         readonly BLOG_COVER_IMAGE: (id: string) => string;
         readonly BLOG_CATEGORIES: "/platform/blog/categories";
+        readonly FEATURES: "/platform/features";
+        readonly FEATURE_DETAIL: (key: string) => string;
         readonly ARCHIVE: "/platform/archive";
         readonly ARCHIVE_CLEANUP: "/platform/archive/cleanup/run";
         readonly ARCHIVE_RESTORE: (type: string, id: string) => string;

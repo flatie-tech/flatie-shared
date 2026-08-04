@@ -1,5 +1,12 @@
 # @flatie/shared
 
+## 0.100.0
+
+### Changes
+
+- feat(platform): platform feature-flag contracts + the single availability resolver
+- feat(platform): platform feature-flag contracts + the single availability resolver
+
 ## 0.99.0
 
 ### Changes

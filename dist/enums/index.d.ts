@@ -1,6 +1,7 @@
 export { A as ApprovalStatus, B as BuildingType, C as CommonStatus, F as FailureStatus, a as FailureType, b as FileCategory, c as Frequency, P as PollType, d as Priority, T as TransactionCategory, e as TransactionType } from '../status.enum-POCdxmgc.js';
 export { E as EntityLinkType, L as LinkableEntityType } from '../entity-link.enum-D2At-V8D.js';
 export { A as APPROVE_PERMISSIONS, B as BUILDING_ROLE_RANK, e as BuildingRole, O as ORG_ROLE_RANK, i as OrgRole, j as PLATFORM_ROLE_RANK, P as Permission, k as PlatformRole, S as SCOPED_DOMAINS, a as SCOPED_PERMISSIONS, b as ScopedAction, c as ScopedDomain, f as canAssignOrgRole, g as canAssignPlatformRole, h as canAssignRole, d as domainPermissions } from '../role.enum-CvnkuV41.js';
+export { B as BuildingFeatureSettingKey, b as PLATFORM_FEATURES, a as PLATFORM_FEATURE_META, c as PlatformFeature, P as PlatformFeatureMeta } from '../platform-feature.enum-CNEyVm2C.js';
 
 /**
  * Who can see a board. `building` = every member with `board_card:read`
