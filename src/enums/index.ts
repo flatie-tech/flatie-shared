@@ -44,6 +44,7 @@ export {
 } from './permission.enum';
 export type { BuildingFeatureSettingKey, PlatformFeatureMeta } from './platform-feature.enum';
 export {
+  getBuildingFeatureDefault,
   PLATFORM_FEATURE_META,
   PLATFORM_FEATURES,
   PlatformFeature,

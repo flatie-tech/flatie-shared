@@ -35,6 +35,10 @@ export const PlatformFeature = {
   BUILDING_EMAIL: 'building_email',
   /** AI assistant chat widget + its usage endpoints. */
   AI_ASSISTANT: 'ai_assistant',
+  /** Per-building FAQ ("Česta pitanja"). */
+  FAQ: 'faq',
+  /** Building chat — conversations between members of one building. */
+  CHAT: 'chat',
 } as const;
 
 export type PlatformFeature = (typeof PlatformFeature)[keyof typeof PlatformFeature];
@@ -52,6 +56,12 @@ export interface PlatformFeatureMeta {
    * Effective state when `platform_feature_flags` has no row for this key — also
    * what the resolver returns while flag data is still loading, so a parked
    * feature never flickers into view on a cold load.
+   *
+   * For a feature with a `buildingSettingKey` this doubles as the expected
+   * DEFAULT of that `building_settings` column, and is what the resolver and the
+   * backend guard fall back to when a building has no settings row (rows are
+   * lazy-created, so "no row" is a real state). A backend int-spec pins the two
+   * together, because that is the one way this dual use could silently rot.
    */
   defaultEnabled: boolean;
   /**
@@ -82,6 +92,35 @@ export const PLATFORM_FEATURE_META: Record<PlatformFeature, PlatformFeatureMeta>
     defaultEnabled: false,
     parked: true,
   },
+  // Live. Listed here for the app-wide kill switch and, more immediately, so the
+  // per-building toggle finally enforces: before 2026-08-05 `faqEnabled` and
+  // `chatEnabled` hid nav items while every endpoint stayed reachable by URL.
+  [PlatformFeature.FAQ]: {
+    defaultEnabled: true,
+    buildingSettingKey: 'faqEnabled',
+  },
+  [PlatformFeature.CHAT]: {
+    defaultEnabled: true,
+    buildingSettingKey: 'chatEnabled',
+  },
 };
 
 export const PLATFORM_FEATURES = Object.values(PlatformFeature) as PlatformFeature[];
+
+/**
+ * Default for a per-building toggle, taken from the feature that owns it.
+ *
+ * The backend guard and the override count both need "what does this column mean
+ * when absent / unchanged", and neither should hardcode it: `emailEnabled`
+ * defaults false while `faqEnabled` and `chatEnabled` default true, and getting
+ * that backwards either hides a live feature or exposes a parked one.
+ */
+export function getBuildingFeatureDefault(key: BuildingFeatureSettingKey): boolean {
+  for (const feature of PLATFORM_FEATURES) {
+    const meta = PLATFORM_FEATURE_META[feature];
+    if (meta.buildingSettingKey === key) return meta.defaultEnabled;
+  }
+  // Unreachable while the registry covers every toggle (a static test asserts
+  // it does); fail closed rather than invent an answer.
+  return false;
+}

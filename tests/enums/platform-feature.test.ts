@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  getBuildingFeatureDefault,
   PLATFORM_FEATURE_META,
   PLATFORM_FEATURES,
   PlatformFeature,
@@ -41,8 +42,9 @@ describe('PLATFORM_FEATURE_META registry', () => {
 });
 
 describe('isFeatureAvailable — resolution order', () => {
-  const EMAIL = PlatformFeature.BUILDING_EMAIL; // has buildingSettingKey: emailEnabled
+  const EMAIL = PlatformFeature.BUILDING_EMAIL; // buildingSettingKey, defaults OFF (parked)
   const AI = PlatformFeature.AI_ASSISTANT; // global-only
+  const FAQ = PlatformFeature.FAQ; // buildingSettingKey, defaults ON (live)
 
   it('platform flag off wins over an enabled building toggle (ceiling)', () => {
     expect(
@@ -74,12 +76,53 @@ describe('isFeatureAvailable — resolution order', () => {
     ).toBe(false);
   });
 
-  it('a missing per-building value is treated as NOT enabled (fail closed)', () => {
+  it('a missing per-building value falls back to the column default', () => {
+    // Parked feature ⇒ the default is false, so this still fails closed.
     expect(
       isFeatureAvailable({
         feature: EMAIL,
         platformFlags: { [EMAIL]: true },
         buildingSettings: {},
+      }),
+    ).toBe(false);
+    // Live feature ⇒ the default is true. A flat `false` here is what made FAQ
+    // and chat blink out of the nav on every cold load.
+    expect(
+      isFeatureAvailable({
+        feature: FAQ,
+        platformFlags: { [FAQ]: true },
+        buildingSettings: {},
+      }),
+    ).toBe(true);
+  });
+
+  it('a live feature survives a settings row that is still in flight', () => {
+    // `null` is what the web hook passes while the settings query resolves.
+    expect(
+      isFeatureAvailable({
+        feature: FAQ,
+        platformFlags: { [FAQ]: true },
+        buildingSettings: null,
+      }),
+    ).toBe(true);
+    expect(
+      isFeatureAvailable({ feature: FAQ, platformFlags: { [FAQ]: true }, loading: true }),
+    ).toBe(true);
+  });
+
+  it('a live feature is still switchable off, per building and platform-wide', () => {
+    expect(
+      isFeatureAvailable({
+        feature: FAQ,
+        platformFlags: { [FAQ]: true },
+        buildingSettings: { faqEnabled: false },
+      }),
+    ).toBe(false);
+    expect(
+      isFeatureAvailable({
+        feature: FAQ,
+        platformFlags: { [FAQ]: false },
+        buildingSettings: { faqEnabled: true },
       }),
     ).toBe(false);
   });
@@ -115,7 +158,7 @@ describe('isFeatureAvailable — resolution order', () => {
     ).toBe(true);
   });
 
-  it('an explicitly null building settings row means unavailable', () => {
+  it('a null settings row keeps a PARKED feature unavailable', () => {
     expect(
       isFeatureAvailable({
         feature: EMAIL,
@@ -132,5 +175,23 @@ describe('isFeatureAvailable — resolution order', () => {
         platformFlags: { not_a_feature: true } as never,
       }),
     ).toBe(false);
+  });
+});
+
+describe('getBuildingFeatureDefault', () => {
+  // The backend guard and the override count both read defaults through this, so
+  // a wrong answer either hides a live feature or exposes a parked one.
+  it('reports each toggle default from the feature that owns it', () => {
+    expect(getBuildingFeatureDefault('emailEnabled')).toBe(false);
+    expect(getBuildingFeatureDefault('faqEnabled')).toBe(true);
+    expect(getBuildingFeatureDefault('chatEnabled')).toBe(true);
+  });
+
+  it('agrees with the metadata for every registered toggle', () => {
+    for (const feature of PLATFORM_FEATURES) {
+      const key = PLATFORM_FEATURE_META[feature].buildingSettingKey;
+      if (!key) continue;
+      expect(getBuildingFeatureDefault(key)).toBe(PLATFORM_FEATURE_META[feature].defaultEnabled);
+    }
   });
 });

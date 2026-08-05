@@ -27,13 +27,20 @@ export const platformFeatureFlagSchema = z
       .nullable()
       .optional()
       .describe('Display name of the platform admin who last changed it.'),
-    /** How many buildings switched this feature on via their per-building toggle. */
+    /** How many buildings set this feature's per-building toggle away from its default. */
     buildingOverrideCount: z.coerce
       .number()
       .nullable()
       .optional()
       .describe(
-        'Buildings that switched this feature ON for themselves — the ones unparking would reach. Counts opt-ins, not the buildings sitting on the (false) default. Null when the feature has no per-building column.',
+        "Buildings whose per-building toggle DEVIATES from this feature's default — opt-ins for a default-off feature, opt-outs for a default-on one. Buildings sitting on the default are never counted. Null when the feature has no per-building column.",
+      ),
+    buildingOverrideDirection: z
+      .enum(['enabled', 'disabled'])
+      .nullable()
+      .optional()
+      .describe(
+        'Which way those overrides point, so the UI can label the count without knowing the default: `enabled` = they switched it on (feature defaults off), `disabled` = they switched it off (feature defaults on). Null when the feature has no per-building column.',
       ),
   })
   .describe('One platform feature flag, as shown on /platform/features.');

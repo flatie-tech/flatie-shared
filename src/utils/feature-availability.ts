@@ -29,8 +29,9 @@ export interface FeatureAvailabilityInput {
  *   1. Platform flag off  → false. A ceiling; nothing can override it upward.
  *   2. Still loading      → the feature's `defaultEnabled`, so parked features
  *                           stay hidden instead of flickering.
- *   3. Per-building column (only when metadata names one; a missing/absent value
- *      is treated as NOT enabled, matching the fail-closed DB default).
+ *   3. Per-building column (only when metadata names one). A missing row or
+ *      absent key falls back to `defaultEnabled`, which IS the column default —
+ *      false for the parked mailbox, true for FAQ and chat.
  *   4. Otherwise          → true.
  *
  * Deliberately does NOT consider subscription tier or RBAC — those are separate
@@ -61,7 +62,17 @@ export function isFeatureAvailable({
   // No building in context (e.g. a global nav surface): the platform layer is
   // all we can evaluate, so don't hide on account of a building we don't have.
   if (buildingSettings === undefined) return true;
-  if (buildingSettings === null) return false;
 
-  return buildingSettings[meta.buildingSettingKey] === true;
+  // Null means the settings row is in flight, or the building has none (rows are
+  // lazy-created). Fall back to the column's declared default rather than a flat
+  // `false`: false is right for a parked feature but wrong for a live one, and a
+  // flat false made FAQ and chat blink out of the UI on every cold load.
+  if (buildingSettings === null) return meta.defaultEnabled;
+
+  const value = buildingSettings[meta.buildingSettingKey];
+  // An absent key is the same "no answer" case as a null row — a client parsing a
+  // settings payload from an older backend must not lose a live feature.
+  if (value === undefined) return meta.defaultEnabled;
+
+  return value === true;
 }
