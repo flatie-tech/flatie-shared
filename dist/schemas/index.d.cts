@@ -4391,8 +4391,12 @@ declare const platformFeatureFlagSchema: z.ZodObject<{
     note: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     updatedByName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-    /** How many buildings switched this feature on via their per-building toggle. */
+    /** How many buildings set this feature's per-building toggle away from its default. */
     buildingOverrideCount: z.ZodOptional<z.ZodNullable<z.ZodCoercedNumber<unknown>>>;
+    buildingOverrideDirection: z.ZodOptional<z.ZodNullable<z.ZodEnum<{
+        enabled: "enabled";
+        disabled: "disabled";
+    }>>>;
 }, z.core.$loose>;
 declare const platformFeatureFlagsResponseSchema: z.ZodObject<{
     flags: z.ZodArray<z.ZodObject<{
@@ -4403,8 +4407,12 @@ declare const platformFeatureFlagsResponseSchema: z.ZodObject<{
         note: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         updatedByName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-        /** How many buildings switched this feature on via their per-building toggle. */
+        /** How many buildings set this feature's per-building toggle away from its default. */
         buildingOverrideCount: z.ZodOptional<z.ZodNullable<z.ZodCoercedNumber<unknown>>>;
+        buildingOverrideDirection: z.ZodOptional<z.ZodNullable<z.ZodEnum<{
+            enabled: "enabled";
+            disabled: "disabled";
+        }>>>;
     }, z.core.$loose>>;
 }, z.core.$loose>;
 declare const featureFlagsResponseSchema: z.ZodObject<{

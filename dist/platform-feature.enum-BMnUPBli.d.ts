@@ -35,6 +35,10 @@ declare const PlatformFeature: {
     readonly BUILDING_EMAIL: "building_email";
     /** AI assistant chat widget + its usage endpoints. */
     readonly AI_ASSISTANT: "ai_assistant";
+    /** Per-building FAQ ("Česta pitanja"). */
+    readonly FAQ: "faq";
+    /** Building chat — conversations between members of one building. */
+    readonly CHAT: "chat";
 };
 type PlatformFeature = (typeof PlatformFeature)[keyof typeof PlatformFeature];
 /**
@@ -49,6 +53,12 @@ interface PlatformFeatureMeta {
      * Effective state when `platform_feature_flags` has no row for this key — also
      * what the resolver returns while flag data is still loading, so a parked
      * feature never flickers into view on a cold load.
+     *
+     * For a feature with a `buildingSettingKey` this doubles as the expected
+     * DEFAULT of that `building_settings` column, and is what the resolver and the
+     * backend guard fall back to when a building has no settings row (rows are
+     * lazy-created, so "no row" is a real state). A backend int-spec pins the two
+     * together, because that is the one way this dual use could silently rot.
      */
     defaultEnabled: boolean;
     /**
@@ -65,5 +75,14 @@ interface PlatformFeatureMeta {
 }
 declare const PLATFORM_FEATURE_META: Record<PlatformFeature, PlatformFeatureMeta>;
 declare const PLATFORM_FEATURES: PlatformFeature[];
+/**
+ * Default for a per-building toggle, taken from the feature that owns it.
+ *
+ * The backend guard and the override count both need "what does this column mean
+ * when absent / unchanged", and neither should hardcode it: `emailEnabled`
+ * defaults false while `faqEnabled` and `chatEnabled` default true, and getting
+ * that backwards either hides a live feature or exposes a parked one.
+ */
+declare function getBuildingFeatureDefault(key: BuildingFeatureSettingKey): boolean;
 
-export { type BuildingFeatureSettingKey as B, type PlatformFeatureMeta as P, PLATFORM_FEATURE_META as a, PLATFORM_FEATURES as b, PlatformFeature as c };
+export { type BuildingFeatureSettingKey as B, type PlatformFeatureMeta as P, PLATFORM_FEATURE_META as a, PLATFORM_FEATURES as b, PlatformFeature as c, getBuildingFeatureDefault as g };

@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.103.0
+
+### Changes
+
+- feat(platform-features): register faq and chat, and stop hiding live features while loading
+
 ## 0.102.0
 
 ### Changes

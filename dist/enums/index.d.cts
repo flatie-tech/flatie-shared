@@ -2,7 +2,7 @@ export { A as ApprovalStatus, B as BuildingType, C as CommonStatus, F as Failure
 export { E as EntityLinkType, L as LinkableEntityType } from '../entity-link.enum-D2At-V8D.cjs';
 export { C as CO_OWNER_VISIBLE_SYSTEM_TYPES, D as DevicePlatform, N as NOTIFICATION_TYPE_CATEGORY, a as NotificationCategory, b as NotificationChannel, c as NotificationDeliveryStatus, d as NotificationType, R as RESIDENT_VISIBLE_SYSTEM_TYPES, U as UNIMPLEMENTED_NOTIFICATION_TYPES, W as WASTE_SUBTYPE_NOTIFICATION_MAP } from '../notification.enum-BVc4nk2E.cjs';
 export { A as APPROVE_PERMISSIONS, B as BUILDING_ROLE_RANK, e as BuildingRole, O as ORG_ROLE_RANK, i as OrgRole, j as PLATFORM_ROLE_RANK, P as Permission, k as PlatformRole, S as SCOPED_DOMAINS, a as SCOPED_PERMISSIONS, b as ScopedAction, c as ScopedDomain, f as canAssignOrgRole, g as canAssignPlatformRole, h as canAssignRole, d as domainPermissions } from '../role.enum-CvnkuV41.cjs';
-export { B as BuildingFeatureSettingKey, b as PLATFORM_FEATURES, a as PLATFORM_FEATURE_META, c as PlatformFeature, P as PlatformFeatureMeta } from '../platform-feature.enum-CNEyVm2C.cjs';
+export { B as BuildingFeatureSettingKey, b as PLATFORM_FEATURES, a as PLATFORM_FEATURE_META, c as PlatformFeature, P as PlatformFeatureMeta, g as getBuildingFeatureDefault } from '../platform-feature.enum-BMnUPBli.cjs';
 
 /**
  * Who can see a board. `building` = every member with `board_card:read`

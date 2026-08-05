@@ -1,4 +1,4 @@
-import { c as PlatformFeature } from '../platform-feature.enum-CNEyVm2C.js';
+import { c as PlatformFeature } from '../platform-feature.enum-BMnUPBli.js';
 export { A as AddressParts, P as ParsedHouseNumber, f as formatAddress, n as normalizeHouseNumber, p as parseHouseNumber } from '../house-number-HwVJ833w.js';
 import { P as PaginatedResponse } from '../pagination.types-D3A3752L.js';
 import { z } from 'zod';
@@ -88,8 +88,9 @@ interface FeatureAvailabilityInput {
  *   1. Platform flag off  → false. A ceiling; nothing can override it upward.
  *   2. Still loading      → the feature's `defaultEnabled`, so parked features
  *                           stay hidden instead of flickering.
- *   3. Per-building column (only when metadata names one; a missing/absent value
- *      is treated as NOT enabled, matching the fail-closed DB default).
+ *   3. Per-building column (only when metadata names one). A missing row or
+ *      absent key falls back to `defaultEnabled`, which IS the column default —
+ *      false for the parked mailbox, true for FAQ and chat.
  *   4. Otherwise          → true.
  *
  * Deliberately does NOT consider subscription tier or RBAC — those are separate
