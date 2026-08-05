@@ -39,6 +39,8 @@ export const PlatformFeature = {
   FAQ: 'faq',
   /** Building chat — conversations between members of one building. */
   CHAT: 'chat',
+  /** AI document import — extract units + owners from uploaded PDFs/scans/DOCX. */
+  AI_IMPORT: 'ai_import',
 } as const;
 
 export type PlatformFeature = (typeof PlatformFeature)[keyof typeof PlatformFeature];
@@ -102,6 +104,12 @@ export const PLATFORM_FEATURE_META: Record<PlatformFeature, PlatformFeatureMeta>
   [PlatformFeature.CHAT]: {
     defaultEnabled: true,
     buildingSettingKey: 'chatEnabled',
+  },
+  // Ships dark: off until the extraction pipeline is verified on staging, then
+  // enabled from /platform/features. Global-only — reps-only by RBAC, and a
+  // per-building toggle for a one-time setup tool would be dead weight.
+  [PlatformFeature.AI_IMPORT]: {
+    defaultEnabled: false,
   },
 };
 
