@@ -51,6 +51,8 @@ export const API_ROUTES = {
       `/buildings/${id}/join-requests/${requestId}/reject`,
     IMPORT_TEMPLATE: (id: string) => `/buildings/${id}/import/template`,
     IMPORT_PREVIEW: (id: string) => `/buildings/${id}/import/preview`,
+    IMPORT_AI_PREVIEW: (id: string) => `/buildings/${id}/import/ai-preview`,
+    IMPORT_RESTAGE: (id: string) => `/buildings/${id}/import/restage`,
     IMPORT_COMMIT: (id: string) => `/buildings/${id}/import/commit`,
     AI_USAGE: (id: string) => `/buildings/${id}/ai-usage`,
   },
