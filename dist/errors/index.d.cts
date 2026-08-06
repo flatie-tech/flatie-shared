@@ -78,6 +78,10 @@ declare const BACKEND_ERROR_CODES: {
     readonly SUBSCRIPTION_PRICE_REQUIRED: "SUBSCRIPTION_PRICE_REQUIRED";
     readonly ENTERPRISE_REQUEST_NOT_FOUND: "ENTERPRISE_REQUEST_NOT_FOUND";
     readonly AI_BUDGET_EXCEEDED: "AI_BUDGET_EXCEEDED";
+    /** AI document import: per-import or monthly page allowance exhausted. */
+    readonly AI_IMPORT_PAGE_LIMIT: "AI_IMPORT_PAGE_LIMIT";
+    /** AI document import: OCR or extraction failed; retry or fall back to xlsx. */
+    readonly AI_IMPORT_EXTRACTION_FAILED: "AI_IMPORT_EXTRACTION_FAILED";
     readonly BUILDING_NOT_PENDING_APPROVAL: "BUILDING_NOT_PENDING_APPROVAL";
     readonly USER_ALREADY_PLATFORM_MEMBER: "USER_ALREADY_PLATFORM_MEMBER";
     /** Purge/permanent-delete attempted on a row that was never archived. */

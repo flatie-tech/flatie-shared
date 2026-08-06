@@ -43,6 +43,8 @@ var API_ROUTES = {
     JOIN_REQUEST_REJECT: (id, requestId) => `/buildings/${id}/join-requests/${requestId}/reject`,
     IMPORT_TEMPLATE: (id) => `/buildings/${id}/import/template`,
     IMPORT_PREVIEW: (id) => `/buildings/${id}/import/preview`,
+    IMPORT_AI_PREVIEW: (id) => `/buildings/${id}/import/ai-preview`,
+    IMPORT_RESTAGE: (id) => `/buildings/${id}/import/restage`,
     IMPORT_COMMIT: (id) => `/buildings/${id}/import/commit`,
     AI_USAGE: (id) => `/buildings/${id}/ai-usage`
   },
@@ -280,5 +282,5 @@ var API_ROUTES = {
 };
 
 exports.API_ROUTES = API_ROUTES;
-//# sourceMappingURL=chunk-2KIXABFV.cjs.map
-//# sourceMappingURL=chunk-2KIXABFV.cjs.map
+//# sourceMappingURL=chunk-MQW4RJHJ.cjs.map
+//# sourceMappingURL=chunk-MQW4RJHJ.cjs.map

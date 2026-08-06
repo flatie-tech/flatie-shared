@@ -1,5 +1,12 @@
 # @flatie/shared
 
+## 0.104.0
+
+### Changes
+
+- feat(import): AI-import route builders + error codes
+- feat(flags): add ai_import platform feature flag
+
 ## 0.103.0
 
 ### Changes

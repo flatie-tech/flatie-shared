@@ -42,6 +42,8 @@ declare const API_ROUTES: {
         readonly JOIN_REQUEST_REJECT: (id: string, requestId: string) => string;
         readonly IMPORT_TEMPLATE: (id: string) => string;
         readonly IMPORT_PREVIEW: (id: string) => string;
+        readonly IMPORT_AI_PREVIEW: (id: string) => string;
+        readonly IMPORT_RESTAGE: (id: string) => string;
         readonly IMPORT_COMMIT: (id: string) => string;
         readonly AI_USAGE: (id: string) => string;
     };

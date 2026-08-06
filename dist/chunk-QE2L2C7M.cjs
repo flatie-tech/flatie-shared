@@ -1,3 +1,5 @@
+'use strict';
+
 // src/errors/index.ts
 var BACKEND_ERROR_CODES = {
   // Auth
@@ -100,6 +102,10 @@ var BACKEND_ERROR_CODES = {
   SUBSCRIPTION_PRICE_REQUIRED: "SUBSCRIPTION_PRICE_REQUIRED",
   ENTERPRISE_REQUEST_NOT_FOUND: "ENTERPRISE_REQUEST_NOT_FOUND",
   AI_BUDGET_EXCEEDED: "AI_BUDGET_EXCEEDED",
+  /** AI document import: per-import or monthly page allowance exhausted. */
+  AI_IMPORT_PAGE_LIMIT: "AI_IMPORT_PAGE_LIMIT",
+  /** AI document import: OCR or extraction failed; retry or fall back to xlsx. */
+  AI_IMPORT_EXTRACTION_FAILED: "AI_IMPORT_EXTRACTION_FAILED",
   // Platform-specific
   BUILDING_NOT_PENDING_APPROVAL: "BUILDING_NOT_PENDING_APPROVAL",
   USER_ALREADY_PLATFORM_MEMBER: "USER_ALREADY_PLATFORM_MEMBER",
@@ -158,6 +164,7 @@ function isBackendErrorCode(code) {
   return typeof code === "string" && Object.values(BACKEND_ERROR_CODES).includes(code);
 }
 
-export { BACKEND_ERROR_CODES, isBackendErrorCode };
-//# sourceMappingURL=chunk-CKDX3O7O.js.map
-//# sourceMappingURL=chunk-CKDX3O7O.js.map
+exports.BACKEND_ERROR_CODES = BACKEND_ERROR_CODES;
+exports.isBackendErrorCode = isBackendErrorCode;
+//# sourceMappingURL=chunk-QE2L2C7M.cjs.map
+//# sourceMappingURL=chunk-QE2L2C7M.cjs.map

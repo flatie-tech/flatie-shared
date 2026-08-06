@@ -39,6 +39,8 @@ declare const PlatformFeature: {
     readonly FAQ: "faq";
     /** Building chat — conversations between members of one building. */
     readonly CHAT: "chat";
+    /** AI document import — extract units + owners from uploaded PDFs/scans/DOCX. */
+    readonly AI_IMPORT: "ai_import";
 };
 type PlatformFeature = (typeof PlatformFeature)[keyof typeof PlatformFeature];
 /**
