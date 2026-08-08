@@ -3,6 +3,7 @@ import {
   ALWAYS_ON_NOTIFICATION_TYPES,
   getNotificationTopic,
   getUngroupedNotificationTypes,
+  MANAGERIAL_NOTIFICATION_TYPES,
   NOTIFICATION_TOPICS,
   ORG_SCOPED_NOTIFICATION_TYPES,
 } from '../../src/constants/notification-topics';
@@ -71,6 +72,24 @@ describe('NOTIFICATION_TOPICS', () => {
   it('keeps always-on and org-scoped types out of the topic map', () => {
     for (const type of [...ALWAYS_ON_NOTIFICATION_TYPES, ...ORG_SCOPED_NOTIFICATION_TYPES]) {
       expect(getNotificationTopic(type), `${type} is both excluded and grouped`).toBeNull();
+    }
+  });
+
+  it('keeps every managerial type real, grouped and implemented', () => {
+    // A managerial type that stopped existing would silently hide nothing; one
+    // that is unimplemented would hide a row that was never shown anyway. Both
+    // mean the set has drifted from the emit sites it was derived from.
+    const real = new Set(Object.values(NotificationType));
+    for (const type of MANAGERIAL_NOTIFICATION_TYPES) {
+      expect(real.has(type), `${type} is not a real notification type`).toBe(true);
+      expect(UNIMPLEMENTED_NOTIFICATION_TYPES.has(type), `${type} is unimplemented`).toBe(false);
+      expect(getNotificationTopic(type), `${type} is managerial but ungrouped`).not.toBeNull();
+    }
+  });
+
+  it('never marks an always-on or org-scoped type as managerial', () => {
+    for (const type of [...ALWAYS_ON_NOTIFICATION_TYPES, ...ORG_SCOPED_NOTIFICATION_TYPES]) {
+      expect(MANAGERIAL_NOTIFICATION_TYPES.has(type)).toBe(false);
     }
   });
 

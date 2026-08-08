@@ -22,6 +22,7 @@ export {
   ALWAYS_ON_NOTIFICATION_TYPES,
   getNotificationTopic,
   getUngroupedNotificationTypes,
+  MANAGERIAL_NOTIFICATION_TYPES,
   NOTIFICATION_TOPICS,
   type NotificationTopic,
   ORG_SCOPED_NOTIFICATION_TYPES,

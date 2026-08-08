@@ -204,3 +204,39 @@ export function getUngroupedNotificationTypes(): NotificationType[] {
       !TOPIC_BY_TYPE.has(t),
   );
 }
+
+/**
+ * Types a plain resident can never receive, because every emit site targets
+ * representatives, managers, platform admins, or the building's creator.
+ *
+ * Verified against the emit sites rather than assumed (2026-08-08):
+ * - `BUILDING_JOIN_REQUEST_RECEIVED` — queries OWNER_REPRESENTATIVE /
+ *   DEPUTY_REPRESENTATIVE (`building-join-requests.service.ts`)
+ * - `POLL_VOTE_SIGNATURE_PENDING` — same reviewer query
+ *   (`poll-voting.service.ts`)
+ * - `FAILURE_REPORT_CREATED` — `notifyManagersAboutFailureReport`
+ * - `BUILDING_PENDING_APPROVAL` — platform admins via `platform_members`
+ * - `BUILDING_APPROVED` / `BUILDING_REJECTED` — `targetUserIds:
+ *   [building.createdBy]`
+ * - `EMAIL_RECEIVED` — the building mailbox, a representative surface
+ *
+ * Everything else either broadcasts to all building members or targets the
+ * individual it concerns (the notice author, the fault reporter, the voter),
+ * and those can be any role.
+ *
+ * Used to hide preference rows a person could never trigger. The test asserts
+ * each of these is still emitted somewhere, so a type that stops being sent
+ * cannot quietly linger here — but when in doubt LEAVE A TYPE OUT: a wrongly
+ * hidden row means someone cannot mute a notification they do receive, which
+ * is far worse than one redundant row.
+ */
+export const MANAGERIAL_NOTIFICATION_TYPES: ReadonlySet<NotificationType> =
+  new Set<NotificationType>([
+    NotificationType.BUILDING_JOIN_REQUEST_RECEIVED,
+    NotificationType.POLL_VOTE_SIGNATURE_PENDING,
+    NotificationType.FAILURE_REPORT_CREATED,
+    NotificationType.BUILDING_PENDING_APPROVAL,
+    NotificationType.BUILDING_APPROVED,
+    NotificationType.BUILDING_REJECTED,
+    NotificationType.EMAIL_RECEIVED,
+  ]);
