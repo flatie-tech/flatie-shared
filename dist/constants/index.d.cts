@@ -1,4 +1,5 @@
 import { L as LinkableEntityType, E as EntityLinkType } from '../entity-link.enum-D2At-V8D.cjs';
+import { d as NotificationType } from '../notification.enum-BVc4nk2E.cjs';
 import { P as Permission, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-CvnkuV41.cjs';
 
 declare const AI_CHAT_LIMITS: {
@@ -96,6 +97,69 @@ declare const ALLOWED_ENTITY_LINKS: readonly EntityLinkRule[];
  * Self-links (same id would be caught upstream; same type pairs are fine).
  */
 declare function isEntityLinkAllowed(source: LinkableEntityType, target: LinkableEntityType, linkType: EntityLinkType): boolean;
+
+/**
+ * Notification **topics** — the user-facing unit of notification preference.
+ *
+ * A notification *type* is a storage and emit concern: `NOTICE_APPROVED` and
+ * `NOTICE_REJECTED` are separate types because the backend emits one or the
+ * other from a single ternary. To a person they are one thing — "what happened
+ * to the notice I posted" — and offering two switches for it asks a question
+ * nobody has. A topic groups 1..n types under one control.
+ *
+ * Why this lives in shared rather than in the web feature folder: three
+ * surfaces render notification preferences — the settings page, mobile's
+ * `app/notifications/preferences.tsx`, and `FeatureNotificationPopover` on the
+ * feature boards. If the grouping lived in one of them, the others would
+ * re-expose the duplicates and the surfaces would disagree about what "off"
+ * means for the same notification.
+ *
+ * Labels are NOT here. Copy belongs to each client's i18n catalogue, keyed by
+ * `topicId` — this module is structure only.
+ */
+/** Groups whose members are one question with several outcomes or timings. */
+interface NotificationTopic {
+    /** Stable id; the i18n key both clients translate (`topic_<id>`). */
+    readonly id: string;
+    /** The types this topic writes to. Order is display order where it shows. */
+    readonly types: readonly NotificationType[];
+    /**
+     * `timing` topics differ from plain merges: their members are the *same*
+     * event at different lead times, so a client should offer a lead-time
+     * chooser rather than one on/off. Members are ordered earliest-first.
+     */
+    readonly kind: 'single' | 'merged' | 'timing';
+}
+declare const NOTIFICATION_TOPICS: readonly NotificationTopic[];
+/**
+ * Types that carry no preference at all — they describe a change to the
+ * reader's own access, and someone who mutes "your role changed" and then
+ * cannot explain why the app looks different becomes a support ticket.
+ * Clients list these read-only rather than pretending they are switches.
+ */
+declare const ALWAYS_ON_NOTIFICATION_TYPES: ReadonlySet<NotificationType>;
+/**
+ * Org-membership events target property-management staff in an org context,
+ * not residents of a building. They are excluded from the building-scoped
+ * preferences UI entirely rather than shown to everyone as `system` noise.
+ */
+declare const ORG_SCOPED_NOTIFICATION_TYPES: ReadonlySet<NotificationType>;
+/**
+ * The topic a type belongs to, or `null` for always-on / org-scoped types and
+ * for any type added to the enum but not yet grouped.
+ *
+ * Callers should treat `null` from an *ungrouped* type as "render it as its own
+ * single-type topic" rather than hiding it — a new backend type must degrade to
+ * a visible row, never vanish from the settings page.
+ */
+declare function getNotificationTopic(type: NotificationType): NotificationTopic | null;
+/**
+ * Every implemented type that belongs to no topic and is not deliberately
+ * excluded. Empty in a healthy tree; a client can fall back to rendering these
+ * individually, and the shared test asserts the list stays empty so a new type
+ * is grouped deliberately rather than by omission.
+ */
+declare function getUngroupedNotificationTypes(): NotificationType[];
 
 /**
  * React Query Key Factory
@@ -800,4 +864,4 @@ declare const ADMIN_ORG_PERMISSIONS: Permission[];
 /** Admin platform-scope permissions — same as PLATFORM_ADMIN. */
 declare const ADMIN_PLATFORM_PERMISSIONS: Permission[];
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, AI_CHAT_LIMITS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, ENTITY_LINK_TYPE_META, type EntityLinkRule, type EntityLinkTypeMeta, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, OWNERSHIP_DERIVED_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, STANDARD_UNIT_PRICE_CENTS, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, auditLogKeys, blogKeys, boardKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, dsarKeys, enterpriseRequestKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, featureFlagKeys, fundsKeys, garageKeys, incomeKeys, isEntityLinkAllowed, layoutKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, platformFeatureKeys, platformSubscriptionKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, AI_CHAT_LIMITS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, ALWAYS_ON_NOTIFICATION_TYPES, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, ENTITY_LINK_TYPE_META, type EntityLinkRule, type EntityLinkTypeMeta, MAX_PAGINATION_LIMIT, NOTIFICATION_TOPICS, type NotificationTopic, ORG_ROLE_PERMISSIONS, ORG_SCOPED_NOTIFICATION_TYPES, OWNERSHIP_DERIVED_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, STANDARD_UNIT_PRICE_CENTS, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, auditLogKeys, blogKeys, boardKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, dsarKeys, enterpriseRequestKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, featureFlagKeys, fundsKeys, garageKeys, getNotificationTopic, getUngroupedNotificationTypes, incomeKeys, isEntityLinkAllowed, layoutKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, platformFeatureKeys, platformSubscriptionKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };

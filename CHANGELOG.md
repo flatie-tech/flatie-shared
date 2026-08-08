@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.105.0
+
+### Changes
+
+- feat(notifications): notification topics — the user-facing unit of preference
+
 ## 0.104.0
 
 ### Changes

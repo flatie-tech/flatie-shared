@@ -1,4 +1,4 @@
-import { LinkableEntityType, EntityLinkType, domainPermissions, BuildingRole, OrgRole, PlatformRole, Permission } from './chunk-V3DJTTNR.js';
+import { LinkableEntityType, EntityLinkType, NotificationType, domainPermissions, BuildingRole, OrgRole, PlatformRole, Permission, UNIMPLEMENTED_NOTIFICATION_TYPES } from './chunk-HIP43IUP.js';
 
 // src/constants/defaults.ts
 var DEFAULT_PAGINATION_LIMIT = 10;
@@ -56,6 +56,135 @@ function isEntityLinkAllowed(source, target, linkType) {
     const targetOk = rule.target === "*" ? RELATED_TO_LINKABLE_TYPES.includes(target) : rule.target === target;
     return sourceOk && targetOk;
   });
+}
+
+// src/constants/notification-topics.ts
+var NOTIFICATION_TOPICS = [
+  // ── Notices ──────────────────────────────────────────────────────────────
+  { id: "notice_new", kind: "single", types: [NotificationType.NOTICE_CREATED] },
+  {
+    id: "notice_decision",
+    kind: "merged",
+    types: [NotificationType.NOTICE_APPROVED, NotificationType.NOTICE_REJECTED]
+  },
+  // ── Polls ────────────────────────────────────────────────────────────────
+  { id: "poll_new", kind: "single", types: [NotificationType.POLL_CREATED] },
+  {
+    id: "poll_deadline",
+    kind: "timing",
+    types: [NotificationType.POLL_DEADLINE_24H, NotificationType.POLL_DEADLINE_1H]
+  },
+  { id: "poll_results", kind: "single", types: [NotificationType.POLL_FINALIZED] },
+  {
+    id: "ballot_review_pending",
+    kind: "single",
+    types: [NotificationType.POLL_VOTE_SIGNATURE_PENDING]
+  },
+  {
+    id: "ballot_decision",
+    kind: "merged",
+    types: [
+      NotificationType.POLL_VOTE_SIGNATURE_APPROVED,
+      NotificationType.POLL_VOTE_SIGNATURE_REJECTED
+    ]
+  },
+  // ── Events ───────────────────────────────────────────────────────────────
+  { id: "event_new", kind: "single", types: [NotificationType.EVENT_CREATED] },
+  {
+    id: "event_reminder",
+    kind: "timing",
+    types: [NotificationType.EVENT_REMINDER_24H, NotificationType.EVENT_REMINDER_1H]
+  },
+  {
+    id: "event_changes",
+    kind: "merged",
+    types: [NotificationType.EVENT_UPDATED, NotificationType.EVENT_CANCELLED]
+  },
+  // ── Waste ────────────────────────────────────────────────────────────────
+  // Which fractions a building collects is building configuration, not a
+  // personal preference, and the fraction is already named in the message.
+  {
+    id: "waste_collection",
+    kind: "merged",
+    types: [
+      NotificationType.WASTE_REMINDER_MIXED,
+      NotificationType.WASTE_REMINDER_BIO,
+      NotificationType.WASTE_REMINDER_PLASTIC_METAL,
+      NotificationType.WASTE_REMINDER_PAPER_CARDBOARD
+    ]
+  },
+  // ── Maintenance ──────────────────────────────────────────────────────────
+  {
+    id: "failure_report_new",
+    kind: "single",
+    types: [NotificationType.FAILURE_REPORT_CREATED]
+  },
+  {
+    id: "failure_report_progress",
+    kind: "merged",
+    types: [
+      NotificationType.FAILURE_REPORT_STATUS_CHANGED,
+      NotificationType.FAILURE_REPORT_RESOLVED
+    ]
+  },
+  {
+    id: "failure_report_decision",
+    kind: "merged",
+    types: [NotificationType.FAILURE_REPORT_APPROVED, NotificationType.FAILURE_REPORT_DECLINED]
+  },
+  // ── Chat / mailbox ───────────────────────────────────────────────────────
+  { id: "chat_new_message", kind: "single", types: [NotificationType.CHAT_MESSAGE] },
+  { id: "mailbox_new_message", kind: "single", types: [NotificationType.EMAIL_RECEIVED] },
+  // ── Membership ───────────────────────────────────────────────────────────
+  {
+    id: "member_joined",
+    kind: "single",
+    types: [NotificationType.BUILDING_MEMBER_JOINED]
+  },
+  {
+    id: "join_request_decision",
+    kind: "merged",
+    types: [
+      NotificationType.BUILDING_JOIN_REQUEST_APPROVED,
+      NotificationType.BUILDING_JOIN_REQUEST_REJECTED
+    ]
+  },
+  {
+    id: "join_request_received",
+    kind: "single",
+    types: [NotificationType.BUILDING_JOIN_REQUEST_RECEIVED]
+  },
+  // ── Building lifecycle (managerial) ──────────────────────────────────────
+  {
+    id: "building_pending",
+    kind: "single",
+    types: [NotificationType.BUILDING_PENDING_APPROVAL]
+  },
+  {
+    id: "building_decision",
+    kind: "merged",
+    types: [NotificationType.BUILDING_APPROVED, NotificationType.BUILDING_REJECTED]
+  }
+];
+var ALWAYS_ON_NOTIFICATION_TYPES = /* @__PURE__ */ new Set([
+  NotificationType.BUILDING_ROLE_CHANGED,
+  NotificationType.OWNER_RECORD_LINKED
+]);
+var ORG_SCOPED_NOTIFICATION_TYPES = /* @__PURE__ */ new Set([
+  NotificationType.ORG_MEMBER_ADDED,
+  NotificationType.ORG_MEMBER_REMOVED,
+  NotificationType.ORG_MEMBER_ROLE_CHANGED
+]);
+var TOPIC_BY_TYPE = new Map(
+  NOTIFICATION_TOPICS.flatMap((topic) => topic.types.map((t) => [t, topic]))
+);
+function getNotificationTopic(type) {
+  return TOPIC_BY_TYPE.get(type) ?? null;
+}
+function getUngroupedNotificationTypes() {
+  return Object.values(NotificationType).filter(
+    (t) => !UNIMPLEMENTED_NOTIFICATION_TYPES.has(t) && !ALWAYS_ON_NOTIFICATION_TYPES.has(t) && !ORG_SCOPED_NOTIFICATION_TYPES.has(t) && !TOPIC_BY_TYPE.has(t)
+  );
 }
 
 // src/constants/query-keys.ts
@@ -603,6 +732,6 @@ var ALL_PERMISSIONS = unique(Object.values(Permission));
 var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[OrgRole.ORG_ADMIN];
 var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_ADMIN];
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, ENTITY_LINK_TYPE_META, MAX_PAGINATION_LIMIT, ORG_ROLE_PERMISSIONS, OWNERSHIP_DERIVED_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, STANDARD_UNIT_PRICE_CENTS, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, auditLogKeys, blogKeys, boardKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, dsarKeys, enterpriseRequestKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, featureFlagKeys, fundsKeys, garageKeys, incomeKeys, isEntityLinkAllowed, layoutKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, platformFeatureKeys, platformSubscriptionKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };
-//# sourceMappingURL=chunk-LCBQUZYP.js.map
-//# sourceMappingURL=chunk-LCBQUZYP.js.map
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, ALWAYS_ON_NOTIFICATION_TYPES, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, ENTITY_LINK_TYPE_META, MAX_PAGINATION_LIMIT, NOTIFICATION_TOPICS, ORG_ROLE_PERMISSIONS, ORG_SCOPED_NOTIFICATION_TYPES, OWNERSHIP_DERIVED_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, STANDARD_UNIT_PRICE_CENTS, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, auditLogKeys, blogKeys, boardKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, dsarKeys, enterpriseRequestKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, featureFlagKeys, fundsKeys, garageKeys, getNotificationTopic, getUngroupedNotificationTypes, incomeKeys, isEntityLinkAllowed, layoutKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, platformFeatureKeys, platformSubscriptionKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };
+//# sourceMappingURL=chunk-Q6PK2GWI.js.map
+//# sourceMappingURL=chunk-Q6PK2GWI.js.map

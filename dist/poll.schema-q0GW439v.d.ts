@@ -25,12 +25,12 @@ declare const EVENT_TYPE_COLOR_MAP: Record<EventTypeOption, EventColorOption>;
 declare const eventTypeSchema: z.ZodEnum<{
     meeting: "meeting";
     maintenance: "maintenance";
+    waste_collection: "waste_collection";
     other: "other";
     service: "service";
     inspection: "inspection";
     discussion: "discussion";
     planned_works: "planned_works";
-    waste_collection: "waste_collection";
 }>;
 /**
  * Event color schema
@@ -70,12 +70,12 @@ declare const createEventSchema: z.ZodObject<{
     type: z.ZodEnum<{
         meeting: "meeting";
         maintenance: "maintenance";
+        waste_collection: "waste_collection";
         other: "other";
         service: "service";
         inspection: "inspection";
         discussion: "discussion";
         planned_works: "planned_works";
-        waste_collection: "waste_collection";
     }>;
     title: z.ZodString;
     description: z.ZodOptional<z.ZodString>;
@@ -114,12 +114,12 @@ declare const updateEventSchema: z.ZodObject<{
     type: z.ZodOptional<z.ZodEnum<{
         meeting: "meeting";
         maintenance: "maintenance";
+        waste_collection: "waste_collection";
         other: "other";
         service: "service";
         inspection: "inspection";
         discussion: "discussion";
         planned_works: "planned_works";
-        waste_collection: "waste_collection";
     }>>;
     title: z.ZodOptional<z.ZodString>;
     description: z.ZodOptional<z.ZodString>;

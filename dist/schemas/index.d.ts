@@ -1,6 +1,6 @@
 import * as zod from 'zod';
 import { z } from 'zod';
-export { C as CreatePollSchema, b as EVENT_COLORS, e as EVENT_TYPES, d as EVENT_TYPE_COLOR_MAP, E as EventColorOption, a as EventTypeOption, F as FinalizePollSchema, P as POLL_LIMITS, l as POLL_TYPES, h as RECURRENCE_TYPES, i as RecordOfflineVotesSchema, R as RecurrenceTypeOption, U as UpdatePollSchema, V as VotePollSchema, c as createEventSchema, j as createPollSchema, f as eventColorSchema, g as eventTypeSchema, k as finalizePollSchema, p as pollTypeSchema, m as recordOfflineVotesSchema, r as recurrenceTypeSchema, t as timeSchema, u as updateEventSchema, n as updatePollSchema, v as votePollSchema } from '../poll.schema-CXKRtDas.js';
+export { C as CreatePollSchema, b as EVENT_COLORS, e as EVENT_TYPES, d as EVENT_TYPE_COLOR_MAP, E as EventColorOption, a as EventTypeOption, F as FinalizePollSchema, P as POLL_LIMITS, l as POLL_TYPES, h as RECURRENCE_TYPES, i as RecordOfflineVotesSchema, R as RecurrenceTypeOption, U as UpdatePollSchema, V as VotePollSchema, c as createEventSchema, j as createPollSchema, f as eventColorSchema, g as eventTypeSchema, k as finalizePollSchema, p as pollTypeSchema, m as recordOfflineVotesSchema, r as recurrenceTypeSchema, t as timeSchema, u as updateEventSchema, n as updatePollSchema, v as votePollSchema } from '../poll.schema-q0GW439v.js';
 import * as zod_v4_core from 'zod/v4/core';
 import { d as NotificationType } from '../notification.enum-BVc4nk2E.js';
 
@@ -2097,8 +2097,8 @@ declare const getRepBuildingsParamsSchema: z.ZodObject<{
 declare const aiChatMessageSchema: z.ZodObject<{
     id: z.ZodOptional<z.ZodString>;
     role: z.ZodEnum<{
-        user: "user";
         system: "system";
+        user: "user";
         assistant: "assistant";
     }>;
     content: z.ZodOptional<z.ZodString>;
@@ -2116,8 +2116,8 @@ declare const aiChatRequestSchema: z.ZodObject<{
     messages: z.ZodArray<z.ZodObject<{
         id: z.ZodOptional<z.ZodString>;
         role: z.ZodEnum<{
-            user: "user";
             system: "system";
+            user: "user";
             assistant: "assistant";
         }>;
         content: z.ZodOptional<z.ZodString>;
@@ -2320,8 +2320,8 @@ type ArchiveType = (typeof ARCHIVE_TYPES)[number];
 declare const archiveTypeSchema: z.ZodEnum<{
     notices: "notices";
     polls: "polls";
-    buildings: "buildings";
     events: "events";
+    buildings: "buildings";
     apartments: "apartments";
     blog_posts: "blog_posts";
     building_join_requests: "building_join_requests";
@@ -2341,8 +2341,8 @@ declare const archivedItemSchema: z.ZodObject<{
     type: z.ZodEnum<{
         notices: "notices";
         polls: "polls";
-        buildings: "buildings";
         events: "events";
+        buildings: "buildings";
         apartments: "apartments";
         blog_posts: "blog_posts";
         building_join_requests: "building_join_requests";
@@ -2370,8 +2370,8 @@ declare const listArchivedResponseSchema: z.ZodObject<{
         type: z.ZodEnum<{
             notices: "notices";
             polls: "polls";
-            buildings: "buildings";
             events: "events";
+            buildings: "buildings";
             apartments: "apartments";
             blog_posts: "blog_posts";
             building_join_requests: "building_join_requests";
