@@ -16,6 +16,16 @@ export {
   isEntityLinkAllowed,
   RELATED_TO_LINKABLE_TYPES,
 } from './entity-link-rules';
+// Notification topics — the user-facing grouping of notification types that
+// all three preference surfaces render from
+export {
+  ALWAYS_ON_NOTIFICATION_TYPES,
+  getNotificationTopic,
+  getUngroupedNotificationTypes,
+  NOTIFICATION_TOPICS,
+  type NotificationTopic,
+  ORG_SCOPED_NOTIFICATION_TYPES,
+} from './notification-topics';
 // Query keys for React Query / TanStack Query
 export {
   adminBuildingKeys,
