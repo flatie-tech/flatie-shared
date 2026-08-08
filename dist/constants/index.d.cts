@@ -160,6 +160,32 @@ declare function getNotificationTopic(type: NotificationType): NotificationTopic
  * is grouped deliberately rather than by omission.
  */
 declare function getUngroupedNotificationTypes(): NotificationType[];
+/**
+ * Types a plain resident can never receive, because every emit site targets
+ * representatives, managers, platform admins, or the building's creator.
+ *
+ * Verified against the emit sites rather than assumed (2026-08-08):
+ * - `BUILDING_JOIN_REQUEST_RECEIVED` — queries OWNER_REPRESENTATIVE /
+ *   DEPUTY_REPRESENTATIVE (`building-join-requests.service.ts`)
+ * - `POLL_VOTE_SIGNATURE_PENDING` — same reviewer query
+ *   (`poll-voting.service.ts`)
+ * - `FAILURE_REPORT_CREATED` — `notifyManagersAboutFailureReport`
+ * - `BUILDING_PENDING_APPROVAL` — platform admins via `platform_members`
+ * - `BUILDING_APPROVED` / `BUILDING_REJECTED` — `targetUserIds:
+ *   [building.createdBy]`
+ * - `EMAIL_RECEIVED` — the building mailbox, a representative surface
+ *
+ * Everything else either broadcasts to all building members or targets the
+ * individual it concerns (the notice author, the fault reporter, the voter),
+ * and those can be any role.
+ *
+ * Used to hide preference rows a person could never trigger. The test asserts
+ * each of these is still emitted somewhere, so a type that stops being sent
+ * cannot quietly linger here — but when in doubt LEAVE A TYPE OUT: a wrongly
+ * hidden row means someone cannot mute a notification they do receive, which
+ * is far worse than one redundant row.
+ */
+declare const MANAGERIAL_NOTIFICATION_TYPES: ReadonlySet<NotificationType>;
 
 /**
  * React Query Key Factory
@@ -864,4 +890,4 @@ declare const ADMIN_ORG_PERMISSIONS: Permission[];
 /** Admin platform-scope permissions — same as PLATFORM_ADMIN. */
 declare const ADMIN_PLATFORM_PERMISSIONS: Permission[];
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, AI_CHAT_LIMITS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, ALWAYS_ON_NOTIFICATION_TYPES, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, ENTITY_LINK_TYPE_META, type EntityLinkRule, type EntityLinkTypeMeta, MAX_PAGINATION_LIMIT, NOTIFICATION_TOPICS, type NotificationTopic, ORG_ROLE_PERMISSIONS, ORG_SCOPED_NOTIFICATION_TYPES, OWNERSHIP_DERIVED_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, STANDARD_UNIT_PRICE_CENTS, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, auditLogKeys, blogKeys, boardKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, dsarKeys, enterpriseRequestKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, featureFlagKeys, fundsKeys, garageKeys, getNotificationTopic, getUngroupedNotificationTypes, incomeKeys, isEntityLinkAllowed, layoutKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, platformFeatureKeys, platformSubscriptionKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, AI_CHAT_LIMITS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, ALWAYS_ON_NOTIFICATION_TYPES, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, ENTITY_LINK_TYPE_META, type EntityLinkRule, type EntityLinkTypeMeta, MANAGERIAL_NOTIFICATION_TYPES, MAX_PAGINATION_LIMIT, NOTIFICATION_TOPICS, type NotificationTopic, ORG_ROLE_PERMISSIONS, ORG_SCOPED_NOTIFICATION_TYPES, OWNERSHIP_DERIVED_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, STANDARD_UNIT_PRICE_CENTS, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, auditLogKeys, blogKeys, boardKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, dsarKeys, enterpriseRequestKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, featureFlagKeys, fundsKeys, garageKeys, getNotificationTopic, getUngroupedNotificationTypes, incomeKeys, isEntityLinkAllowed, layoutKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, platformFeatureKeys, platformSubscriptionKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };

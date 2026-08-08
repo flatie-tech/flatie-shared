@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.106.0
+
+### Changes
+
+- feat(notifications): mark the types a resident can never receive
+
 ## 0.105.0
 
 ### Changes
