@@ -1,6 +1,8 @@
 import { L as LinkableEntityType, E as EntityLinkType } from '../entity-link.enum-D2At-V8D.cjs';
+import { a as NotificationPreferenceItem } from '../notifications-BRW4RL7H.cjs';
 import { N as NotificationType } from '../notification.enum-BtF7QI0-.cjs';
 import { P as Permission, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-CvnkuV41.cjs';
+import 'zod';
 
 declare const AI_CHAT_LIMITS: {
     /** Hard ceiling on the messages array per request. */
@@ -186,6 +188,78 @@ declare function getUngroupedNotificationTypes(): NotificationType[];
  * is far worse than one redundant row.
  */
 declare const MANAGERIAL_NOTIFICATION_TYPES: ReadonlySet<NotificationType>;
+
+/**
+ * Deriving a topic's state from its member types, and the writes that put them
+ * back. Lives in shared because both clients render the same preference model:
+ * if web and mobile each computed "mixed" or derived `enabled` their own way,
+ * the two would disagree about what a row means — the exact drift that putting
+ * NOTIFICATION_TOPICS here was meant to prevent.
+ */
+/**
+ * The channels a person can actually choose. `in_app` is deliberately absent:
+ * it is the notification *record*, not a delivery preference. Dropping it would
+ * mean the row never reaches the inbox, the unread badge is wrong, and a push
+ * tap deep-links to something that does not exist — so it is implied whenever a
+ * topic is on, and stated once in the UI rather than rendered as a dead chip on
+ * every row.
+ */
+declare const SELECTABLE_CHANNELS: readonly ["push", "email"];
+type SelectableChannel = (typeof SELECTABLE_CHANNELS)[number];
+/** A single PATCH body: one update applied to one or more notification types. */
+interface PreferenceWrite {
+    notificationTypes: string[];
+    enabled: boolean;
+    channels: string[];
+}
+interface TopicState {
+    topic: NotificationTopic;
+    /** Channels shared by every member type. */
+    channels: SelectableChannel[];
+    /**
+     * True when member types disagree — e.g. EVENT_REMINDER_24H defaults to
+     * in_app+push while _1H defaults to push only. Five of the ten merged groups
+     * ship with mismatched defaults, so this is the common case on a fresh
+     * account, not an edge case. The UI says "Prilagođeno" rather than silently
+     * showing one member's state as if it spoke for all of them.
+     */
+    mixed: boolean;
+    /** A topic is on when at least one member type would deliver something. */
+    enabled: boolean;
+    /** Member items, for the lead-time chooser on `timing` topics. */
+    items: NotificationPreferenceItem[];
+}
+/**
+ * Collapse the API's per-type rows into one state per topic.
+ *
+ * Types that belong to no topic are returned as single-type topics rather than
+ * dropped — a notification type added to the backend must degrade to a visible
+ * row, never disappear from the settings page.
+ */
+declare function buildTopicStates(items: NotificationPreferenceItem[]): TopicState[];
+/**
+ * The writes needed to put every member type of a topic into one state.
+ *
+ * `enabled` is derived rather than stored separately: with zero channels the
+ * type is disabled outright. That is what makes the old contradictory state —
+ * `enabled: false` while the email switch renders on — unrepresentable, because
+ * there is now one source of truth instead of two.
+ *
+ * `in_app` is always written alongside the selected channels so the inbox
+ * record still exists; the backend treats an empty channel list as suppressed.
+ */
+declare function buildTopicWrites(topic: NotificationTopic, channels: SelectableChannel[]): PreferenceWrite[];
+/** Toggle one channel on a topic, returning the next channel set. */
+declare function toggleChannel(current: SelectableChannel[], channel: SelectableChannel): SelectableChannel[];
+/** Lead-time selection for `timing` topics (24 h before, 1 h before, or both). */
+type LeadTime = 'early' | 'late' | 'both';
+declare function getLeadTime(state: TopicState): LeadTime | null;
+/**
+ * Writes for a lead-time change. The chooser only decides *which* reminder
+ * fires; the channel selection is carried across unchanged so switching from
+ * "both" to "an hour before" does not silently also turn email off.
+ */
+declare function buildLeadTimeWrites(state: TopicState, lead: LeadTime): PreferenceWrite[];
 
 /**
  * React Query Key Factory
@@ -890,4 +964,4 @@ declare const ADMIN_ORG_PERMISSIONS: Permission[];
 /** Admin platform-scope permissions — same as PLATFORM_ADMIN. */
 declare const ADMIN_PLATFORM_PERMISSIONS: Permission[];
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, AI_CHAT_LIMITS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, ALWAYS_ON_NOTIFICATION_TYPES, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, ENTITY_LINK_TYPE_META, type EntityLinkRule, type EntityLinkTypeMeta, MANAGERIAL_NOTIFICATION_TYPES, MAX_PAGINATION_LIMIT, NOTIFICATION_TOPICS, type NotificationTopic, ORG_ROLE_PERMISSIONS, ORG_SCOPED_NOTIFICATION_TYPES, OWNERSHIP_DERIVED_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, STANDARD_UNIT_PRICE_CENTS, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, auditLogKeys, blogKeys, boardKeys, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, dsarKeys, enterpriseRequestKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, featureFlagKeys, fundsKeys, garageKeys, getNotificationTopic, getUngroupedNotificationTypes, incomeKeys, isEntityLinkAllowed, layoutKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, platformFeatureKeys, platformSubscriptionKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, AI_CHAT_LIMITS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, ALWAYS_ON_NOTIFICATION_TYPES, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, ENTITY_LINK_TYPE_META, type EntityLinkRule, type EntityLinkTypeMeta, type LeadTime, MANAGERIAL_NOTIFICATION_TYPES, MAX_PAGINATION_LIMIT, NOTIFICATION_TOPICS, type NotificationTopic, ORG_ROLE_PERMISSIONS, ORG_SCOPED_NOTIFICATION_TYPES, OWNERSHIP_DERIVED_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, type PreferenceWrite, RELATED_TO_LINKABLE_TYPES, SELECTABLE_CHANNELS, STANDARD_UNIT_PRICE_CENTS, type SelectableChannel, type TopicState, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, auditLogKeys, blogKeys, boardKeys, buildLeadTimeWrites, buildTopicStates, buildTopicWrites, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, dsarKeys, enterpriseRequestKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, featureFlagKeys, fundsKeys, garageKeys, getLeadTime, getNotificationTopic, getUngroupedNotificationTypes, incomeKeys, isEntityLinkAllowed, layoutKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, platformFeatureKeys, platformSubscriptionKeys, pollKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, toggleChannel, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };

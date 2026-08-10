@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.108.0
+
+### Changes
+
+- refactor(notifications): hoist preference-state derivation into shared
+
 ## 0.107.0
 
 ### Changes
