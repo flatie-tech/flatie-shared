@@ -14,6 +14,7 @@ export default defineConfig({
     'utils/index': 'src/utils/index.ts',
     'validation/index': 'src/validation/index.ts',
     'locales/index': 'src/locales/index.ts',
+    'notifications/index': 'src/notifications/index.ts',
   },
   format: ['esm', 'cjs'],
   dts: true,

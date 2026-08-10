@@ -1,5 +1,5 @@
 import { L as LinkableEntityType, E as EntityLinkType } from '../entity-link.enum-D2At-V8D.cjs';
-import { d as NotificationType } from '../notification.enum-BVc4nk2E.cjs';
+import { N as NotificationType } from '../notification.enum-BtF7QI0-.cjs';
 import { P as Permission, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-CvnkuV41.cjs';
 
 declare const AI_CHAT_LIMITS: {

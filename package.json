@@ -148,6 +148,16 @@
         "types": "./dist/locales/index.d.cts",
         "default": "./dist/locales/index.cjs"
       }
+    },
+    "./notifications": {
+      "import": {
+        "types": "./dist/notifications/index.d.ts",
+        "default": "./dist/notifications/index.js"
+      },
+      "require": {
+        "types": "./dist/notifications/index.d.cts",
+        "default": "./dist/notifications/index.cjs"
+      }
     }
   },
   "files": [

@@ -101,4 +101,4 @@ declare const CO_OWNER_VISIBLE_SYSTEM_TYPES: ReadonlySet<NotificationType>;
  */
 declare const WASTE_SUBTYPE_NOTIFICATION_MAP: Record<string, NotificationType>;
 
-export { CO_OWNER_VISIBLE_SYSTEM_TYPES as C, DevicePlatform as D, NOTIFICATION_TYPE_CATEGORY as N, RESIDENT_VISIBLE_SYSTEM_TYPES as R, UNIMPLEMENTED_NOTIFICATION_TYPES as U, WASTE_SUBTYPE_NOTIFICATION_MAP as W, NotificationCategory as a, NotificationChannel as b, NotificationDeliveryStatus as c, NotificationType as d };
+export { CO_OWNER_VISIBLE_SYSTEM_TYPES as C, DevicePlatform as D, NotificationType as N, RESIDENT_VISIBLE_SYSTEM_TYPES as R, UNIMPLEMENTED_NOTIFICATION_TYPES as U, WASTE_SUBTYPE_NOTIFICATION_MAP as W, NOTIFICATION_TYPE_CATEGORY as a, NotificationCategory as b, NotificationChannel as c, NotificationDeliveryStatus as d };
