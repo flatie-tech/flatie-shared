@@ -686,6 +686,7 @@ var REPRESENTATIVE_PERMISSIONS = [
   "document:set_private",
   "chat:create_group",
   "building:update",
+  "building:generate_otp",
   "user:create",
   "user:update",
   "user:kick",
@@ -725,7 +726,6 @@ var ORG_ADMIN_BUILDING_PERMISSIONS = [
   "apartment:delete",
   "apartment:manage_users",
   "building:manage",
-  "building:generate_otp",
   "user:delete:any",
   "system:admin",
   "system:manage",
@@ -883,5 +883,5 @@ exports.transactionCategoryKeys = transactionCategoryKeys;
 exports.unitSearchKeys = unitSearchKeys;
 exports.userKeys = userKeys;
 exports.widgetKeys = widgetKeys;
-//# sourceMappingURL=chunk-S4PVIF7V.cjs.map
-//# sourceMappingURL=chunk-S4PVIF7V.cjs.map
+//# sourceMappingURL=chunk-2KECOCOS.cjs.map
+//# sourceMappingURL=chunk-2KECOCOS.cjs.map
