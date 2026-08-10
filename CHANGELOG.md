@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.107.0
+
+### Changes
+
+- feat(notifications): shared render catalog for notification text
+
 ## 0.106.0
 
 ### Changes
