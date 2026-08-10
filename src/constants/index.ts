@@ -16,6 +16,19 @@ export {
   isEntityLinkAllowed,
   RELATED_TO_LINKABLE_TYPES,
 } from './entity-link-rules';
+// Deriving preference rows from notification types (shared by both clients)
+export {
+  buildLeadTimeWrites,
+  buildTopicStates,
+  buildTopicWrites,
+  getLeadTime,
+  type LeadTime,
+  type PreferenceWrite,
+  SELECTABLE_CHANNELS,
+  type SelectableChannel,
+  type TopicState,
+  toggleChannel,
+} from './notification-preference-state';
 // Notification topics — the user-facing grouping of notification types that
 // all three preference surfaces render from
 export {
