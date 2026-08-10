@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.109.0
+
+### Changes
+
+- feat(features): FAQ is opt-in per building
+
 ## 0.108.0
 
 ### Changes
