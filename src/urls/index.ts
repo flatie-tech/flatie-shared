@@ -30,6 +30,17 @@ export const API_ROUTES = {
       `/users/me/buildings/${buildingId}/chat-visibility`,
   },
 
+  // ── ID Card Verification ──────────────────────────────────────────────
+  ID_CARD_VERIFICATION: {
+    SUBMIT: '/users/me/id-card-verification',
+    STATUS: '/users/me/id-card-verification',
+    PENDING: (buildingId: string) => `/buildings/${buildingId}/id-card-verifications/pending`,
+    APPROVE: (buildingId: string, verificationId: string) =>
+      `/buildings/${buildingId}/id-card-verifications/${verificationId}/approve`,
+    REJECT: (buildingId: string, verificationId: string) =>
+      `/buildings/${buildingId}/id-card-verifications/${verificationId}/reject`,
+  },
+
   // ── Buildings ─────────────────────────────────────────────────────────
   BUILDINGS: {
     BASE: '/buildings',

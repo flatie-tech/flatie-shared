@@ -141,6 +141,7 @@ declare const IdentityVerificationMethod: {
     readonly CERTILIA: "certilia";
     readonly KYC_VENDOR: "kyc_vendor";
     readonly OIB_SELF_DECLARED: "oib_self_declared";
+    readonly ID_CARD_VERIFIED: "id_card_verified";
 };
 type IdentityVerificationMethod = (typeof IdentityVerificationMethod)[keyof typeof IdentityVerificationMethod];
 /**
@@ -296,6 +297,8 @@ declare const VotingStrength: {
     readonly NONE: 0;
     /** Verified e-mail address (the default floor — every active account). */
     readonly EMAIL: 10;
+    /** Verified e-mail + rep-approved ID-card number (broj osobne iskaznice). */
+    readonly ID_CARD: 15;
     /** Verified e-mail + SMS-verified mobile number. */
     readonly PHONE: 20;
     /** eID / qualified electronic signature (Certilia-verified account). */
@@ -306,12 +309,14 @@ type VotingStrength = (typeof VotingStrength)[keyof typeof VotingStrength];
  * Derive a user's current voting strength from account state.
  *
  * `verificationTier` is the user's durable {@link VerificationTier}; only
- * QUALIFIED (eID) raises strength above the contact rungs — OIB/IDENTITY
- * are identity-proof concepts that don't (yet) map to a rung of their own.
+ * QUALIFIED (eID) raises strength above the contact rungs. ID_CARD sits
+ * between EMAIL and PHONE — a rep-approved ID-card number that proves the
+ * voter's identity without requiring phone verification or eID.
  */
 declare function deriveVotingStrength(user: {
     emailVerified?: boolean | null;
     phoneVerified?: boolean | null;
+    idCardVerified?: boolean | null;
     verificationTier?: number | null;
 }): VotingStrength;
 

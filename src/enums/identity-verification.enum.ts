@@ -3,6 +3,7 @@ export const IdentityVerificationMethod = {
   CERTILIA: 'certilia',
   KYC_VENDOR: 'kyc_vendor',
   OIB_SELF_DECLARED: 'oib_self_declared',
+  ID_CARD_VERIFIED: 'id_card_verified',
 } as const;
 
 export type IdentityVerificationMethod =
@@ -37,6 +38,7 @@ export function methodToTier(method: IdentityVerificationMethod): VerificationTi
       return VerificationTier.QUALIFIED;
     case IdentityVerificationMethod.PRINTED_SIGNATURE:
     case IdentityVerificationMethod.KYC_VENDOR:
+    case IdentityVerificationMethod.ID_CARD_VERIFIED:
       return VerificationTier.IDENTITY;
     case IdentityVerificationMethod.OIB_SELF_DECLARED:
       return VerificationTier.OIB;

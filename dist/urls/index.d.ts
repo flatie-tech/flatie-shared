@@ -24,6 +24,13 @@ declare const API_ROUTES: {
         readonly PERMISSIONS: "/users/me/permissions";
         readonly BUILDING_CHAT_VISIBILITY: (buildingId: string) => string;
     };
+    readonly ID_CARD_VERIFICATION: {
+        readonly SUBMIT: "/users/me/id-card-verification";
+        readonly STATUS: "/users/me/id-card-verification";
+        readonly PENDING: (buildingId: string) => string;
+        readonly APPROVE: (buildingId: string, verificationId: string) => string;
+        readonly REJECT: (buildingId: string, verificationId: string) => string;
+    };
     readonly BUILDINGS: {
         readonly BASE: "/buildings";
         readonly BY_ID: (id: string) => string;

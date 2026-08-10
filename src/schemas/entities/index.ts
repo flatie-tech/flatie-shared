@@ -231,6 +231,17 @@ export {
   failureReportEventSchema,
   updateFailureReportSchema,
 } from './failure-report.schema';
+// ID card verification schemas
+export type {
+  IdCardVerificationStatus,
+  RejectIdCardVerificationSchema,
+  SubmitIdCardVerificationSchema,
+} from './id-card-verification.schema';
+export {
+  idCardVerificationStatusSchema,
+  rejectIdCardVerificationSchema,
+  submitIdCardVerificationSchema,
+} from './id-card-verification.schema';
 export type { CreateIncomeSchema, UpdateIncomeSchema } from './income-transaction.schema';
 export { createIncomeSchema, updateIncomeSchema } from './income-transaction.schema';
 export type {

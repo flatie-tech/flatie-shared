@@ -19,6 +19,8 @@ export const VotingStrength = {
   NONE: 0,
   /** Verified e-mail address (the default floor — every active account). */
   EMAIL: 10,
+  /** Verified e-mail + rep-approved ID-card number (broj osobne iskaznice). */
+  ID_CARD: 15,
   /** Verified e-mail + SMS-verified mobile number. */
   PHONE: 20,
   /** eID / qualified electronic signature (Certilia-verified account). */
@@ -31,16 +33,19 @@ export type VotingStrength = (typeof VotingStrength)[keyof typeof VotingStrength
  * Derive a user's current voting strength from account state.
  *
  * `verificationTier` is the user's durable {@link VerificationTier}; only
- * QUALIFIED (eID) raises strength above the contact rungs — OIB/IDENTITY
- * are identity-proof concepts that don't (yet) map to a rung of their own.
+ * QUALIFIED (eID) raises strength above the contact rungs. ID_CARD sits
+ * between EMAIL and PHONE — a rep-approved ID-card number that proves the
+ * voter's identity without requiring phone verification or eID.
  */
 export function deriveVotingStrength(user: {
   emailVerified?: boolean | null;
   phoneVerified?: boolean | null;
+  idCardVerified?: boolean | null;
   verificationTier?: number | null;
 }): VotingStrength {
   if ((user.verificationTier ?? 0) >= VerificationTier.QUALIFIED) return VotingStrength.EID;
   if (user.phoneVerified && user.emailVerified) return VotingStrength.PHONE;
+  if (user.idCardVerified && user.emailVerified) return VotingStrength.ID_CARD;
   if (user.emailVerified) return VotingStrength.EMAIL;
   return VotingStrength.NONE;
 }

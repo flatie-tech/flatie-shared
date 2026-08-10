@@ -1,3 +1,5 @@
+'use strict';
+
 // src/urls/index.ts
 var API_ROUTES = {
   // ── Auth ──────────────────────────────────────────────────────────────
@@ -21,6 +23,14 @@ var API_ROUTES = {
     LOCALE: "/users/me/locale",
     PERMISSIONS: "/users/me/permissions",
     BUILDING_CHAT_VISIBILITY: (buildingId) => `/users/me/buildings/${buildingId}/chat-visibility`
+  },
+  // ── ID Card Verification ──────────────────────────────────────────────
+  ID_CARD_VERIFICATION: {
+    SUBMIT: "/users/me/id-card-verification",
+    STATUS: "/users/me/id-card-verification",
+    PENDING: (buildingId) => `/buildings/${buildingId}/id-card-verifications/pending`,
+    APPROVE: (buildingId, verificationId) => `/buildings/${buildingId}/id-card-verifications/${verificationId}/approve`,
+    REJECT: (buildingId, verificationId) => `/buildings/${buildingId}/id-card-verifications/${verificationId}/reject`
   },
   // ── Buildings ─────────────────────────────────────────────────────────
   BUILDINGS: {
@@ -279,6 +289,6 @@ var API_ROUTES = {
   }
 };
 
-export { API_ROUTES };
-//# sourceMappingURL=chunk-5FUTHA52.js.map
-//# sourceMappingURL=chunk-5FUTHA52.js.map
+exports.API_ROUTES = API_ROUTES;
+//# sourceMappingURL=chunk-G5WSET6F.cjs.map
+//# sourceMappingURL=chunk-G5WSET6F.cjs.map
