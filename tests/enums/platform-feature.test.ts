@@ -44,7 +44,8 @@ describe('PLATFORM_FEATURE_META registry', () => {
 describe('isFeatureAvailable — resolution order', () => {
   const EMAIL = PlatformFeature.BUILDING_EMAIL; // buildingSettingKey, defaults OFF (parked)
   const AI = PlatformFeature.AI_ASSISTANT; // global-only
-  const FAQ = PlatformFeature.FAQ; // buildingSettingKey, defaults ON (live)
+  const FAQ = PlatformFeature.FAQ; // buildingSettingKey, defaults OFF (opt-in)
+  const CHAT = PlatformFeature.CHAT; // buildingSettingKey, defaults ON (live)
 
   it('platform flag off wins over an enabled building toggle (ceiling)', () => {
     expect(
@@ -85,28 +86,36 @@ describe('isFeatureAvailable — resolution order', () => {
         buildingSettings: {},
       }),
     ).toBe(false);
-    // Live feature ⇒ the default is true. A flat `false` here is what made FAQ
-    // and chat blink out of the nav on every cold load.
+    // Live feature ⇒ the default is true. A flat `false` here is what made
+    // chat blink out of the nav on every cold load.
+    expect(
+      isFeatureAvailable({
+        feature: CHAT,
+        platformFlags: { [CHAT]: true },
+        buildingSettings: {},
+      }),
+    ).toBe(true);
+    // FAQ is opt-in since 2026-08-10: no explicit toggle means OFF.
     expect(
       isFeatureAvailable({
         feature: FAQ,
         platformFlags: { [FAQ]: true },
         buildingSettings: {},
       }),
-    ).toBe(true);
+    ).toBe(false);
   });
 
   it('a live feature survives a settings row that is still in flight', () => {
     // `null` is what the web hook passes while the settings query resolves.
     expect(
       isFeatureAvailable({
-        feature: FAQ,
-        platformFlags: { [FAQ]: true },
+        feature: CHAT,
+        platformFlags: { [CHAT]: true },
         buildingSettings: null,
       }),
     ).toBe(true);
     expect(
-      isFeatureAvailable({ feature: FAQ, platformFlags: { [FAQ]: true }, loading: true }),
+      isFeatureAvailable({ feature: CHAT, platformFlags: { [CHAT]: true }, loading: true }),
     ).toBe(true);
   });
 
@@ -183,7 +192,7 @@ describe('getBuildingFeatureDefault', () => {
   // a wrong answer either hides a live feature or exposes a parked one.
   it('reports each toggle default from the feature that owns it', () => {
     expect(getBuildingFeatureDefault('emailEnabled')).toBe(false);
-    expect(getBuildingFeatureDefault('faqEnabled')).toBe(true);
+    expect(getBuildingFeatureDefault('faqEnabled')).toBe(false);
     expect(getBuildingFeatureDefault('chatEnabled')).toBe(true);
   });
 

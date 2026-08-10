@@ -511,8 +511,12 @@ var PLATFORM_FEATURE_META = {
   // Live. Listed here for the app-wide kill switch and, more immediately, so the
   // per-building toggle finally enforces: before 2026-08-05 `faqEnabled` and
   // `chatEnabled` hid nav items while every endpoint stayed reachable by URL.
+  // Opt-in per building since 2026-08-10 (defaultEnabled false = the
+  // resolver's assumption for buildings WITHOUT a settings row AND the DB
+  // column default — the backend int-spec pins the two together). The
+  // platform flag row still acts as the app-wide ceiling.
   [PlatformFeature.FAQ]: {
-    defaultEnabled: true,
+    defaultEnabled: false,
     buildingSettingKey: "faqEnabled"
   },
   [PlatformFeature.CHAT]: {
@@ -810,5 +814,5 @@ exports.deriveVotingStrength = deriveVotingStrength;
 exports.domainPermissions = domainPermissions;
 exports.getBuildingFeatureDefault = getBuildingFeatureDefault;
 exports.methodToTier = methodToTier;
-//# sourceMappingURL=chunk-73OVMLNV.cjs.map
-//# sourceMappingURL=chunk-73OVMLNV.cjs.map
+//# sourceMappingURL=chunk-LKW5HSOS.cjs.map
+//# sourceMappingURL=chunk-LKW5HSOS.cjs.map

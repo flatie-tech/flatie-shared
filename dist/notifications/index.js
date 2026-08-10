@@ -1,4 +1,4 @@
-import { NotificationType } from '../chunk-HIP43IUP.js';
+import { NotificationType } from '../chunk-ORODJY2W.js';
 
 // src/notifications/labels.ts
 var SUPPORTED_LOCALES = ["hr", "en", "de"];

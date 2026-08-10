@@ -509,8 +509,12 @@ var PLATFORM_FEATURE_META = {
   // Live. Listed here for the app-wide kill switch and, more immediately, so the
   // per-building toggle finally enforces: before 2026-08-05 `faqEnabled` and
   // `chatEnabled` hid nav items while every endpoint stayed reachable by URL.
+  // Opt-in per building since 2026-08-10 (defaultEnabled false = the
+  // resolver's assumption for buildings WITHOUT a settings row AND the DB
+  // column default — the backend int-spec pins the two together). The
+  // platform flag row still acts as the app-wide ceiling.
   [PlatformFeature.FAQ]: {
-    defaultEnabled: true,
+    defaultEnabled: false,
     buildingSettingKey: "faqEnabled"
   },
   [PlatformFeature.CHAT]: {
@@ -736,5 +740,5 @@ function deriveVotingStrength(user) {
 }
 
 export { APPROVE_PERMISSIONS, ApprovalStatus, BUILDING_ROLE_RANK, BoardVisibility, BuildingOtpExpiry, BuildingRole, BuildingStatus, BuildingType, CO_OWNER_VISIBLE_SYSTEM_TYPES, CommonStatus, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DevicePlatform, DsarRequestStatus, DsarRequestType, EnterpriseRequestStatus, EntityLinkType, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, IdentityVerificationMethod, JoinRequestStatus, LinkableEntityType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_ROLE_RANK, OrgQuotaResourceType, OrgRole, OrgStatus, OrgType, PLATFORM_FEATURES, PLATFORM_FEATURE_META, PLATFORM_ROLE_RANK, POLL_CANNOT_VOTE_REASON_KEY, Permission, PlatformFeature, PlatformRole, PollCannotVoteReason, PollStatus, PollType, PollVoteStatus, PricuvaRefMode, Priority, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, RESIDENT_VISIBLE_SYSTEM_TYPES, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, VotingStrength, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, deriveVotingStrength, domainPermissions, getBuildingFeatureDefault, methodToTier };
-//# sourceMappingURL=chunk-HIP43IUP.js.map
-//# sourceMappingURL=chunk-HIP43IUP.js.map
+//# sourceMappingURL=chunk-ORODJY2W.js.map
+//# sourceMappingURL=chunk-ORODJY2W.js.map
