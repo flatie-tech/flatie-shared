@@ -3626,6 +3626,8 @@ declare const pollResultsSchema: z.ZodObject<{
         unitId: z.ZodString;
         label: z.ZodString;
         floor: z.ZodOptional<z.ZodString>;
+        ownerNames: z.ZodOptional<z.ZodArray<z.ZodString>>;
+        allOwnersVoted: z.ZodOptional<z.ZodBoolean>;
     }, z.core.$loose>>>;
     eligibleTotalWeight: z.ZodOptional<z.ZodNumber>;
     scopedOwners: z.ZodOptional<z.ZodArray<z.ZodObject<{

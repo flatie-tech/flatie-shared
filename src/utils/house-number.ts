@@ -21,7 +21,7 @@ const HOUSE_NUMBER_PATTERN = /^\d{1,4}[A-Z]?(?:\/\d{1,3})?$|^BB$/;
  * Returns null for empty/whitespace-only input or invalid values.
  */
 export function normalizeHouseNumber(raw: string): string | null {
-  if (!raw || !raw.trim()) return null;
+  if (!raw?.trim()) return null;
 
   const normalized = raw
     .trim()

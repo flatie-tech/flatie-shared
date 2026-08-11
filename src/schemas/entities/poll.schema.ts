@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { isZuozAdjacentConsentCategory } from '../../constants/zuoz-adjacent-consent';
 import { PollType } from '../../enums/poll-type.enum';
 import { uuidSchema } from '../base.schema';
 import { multipartArray } from '../multipart.schema';
@@ -127,6 +128,18 @@ export const createPollSchema = z
     {
       message: 'Consensus percentage must be between 10 and 100 for consensus polls',
       path: ['requiredConsensusPercentage'],
+    },
+  )
+  .refine(
+    (data) => {
+      if (isZuozAdjacentConsentCategory(data.consensusCategory)) {
+        return data.scopedUnitIds && data.scopedUnitIds.length > 0;
+      }
+      return true;
+    },
+    {
+      message: 'Adjacent units must be selected for this type of decision',
+      path: ['scopedUnitIds'],
     },
   );
 

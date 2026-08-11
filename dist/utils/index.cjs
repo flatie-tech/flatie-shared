@@ -1,7 +1,7 @@
 'use strict';
 
 var chunkYPVXTEYS_cjs = require('../chunk-YPVXTEYS.cjs');
-var chunk3YG7UIGR_cjs = require('../chunk-3YG7UIGR.cjs');
+var chunkZUJ6MF3D_cjs = require('../chunk-ZUJ6MF3D.cjs');
 var chunkSHM36YL5_cjs = require('../chunk-SHM36YL5.cjs');
 require('../chunk-N6OR7IQ4.cjs');
 require('../chunk-QE2L2C7M.cjs');
@@ -155,15 +155,15 @@ Object.defineProperty(exports, "resolveVotingMethods", {
 });
 Object.defineProperty(exports, "formatAddress", {
   enumerable: true,
-  get: function () { return chunk3YG7UIGR_cjs.formatAddress; }
+  get: function () { return chunkZUJ6MF3D_cjs.formatAddress; }
 });
 Object.defineProperty(exports, "normalizeHouseNumber", {
   enumerable: true,
-  get: function () { return chunk3YG7UIGR_cjs.normalizeHouseNumber; }
+  get: function () { return chunkZUJ6MF3D_cjs.normalizeHouseNumber; }
 });
 Object.defineProperty(exports, "parseHouseNumber", {
   enumerable: true,
-  get: function () { return chunk3YG7UIGR_cjs.parseHouseNumber; }
+  get: function () { return chunkZUJ6MF3D_cjs.parseHouseNumber; }
 });
 Object.defineProperty(exports, "addMoney", {
   enumerable: true,

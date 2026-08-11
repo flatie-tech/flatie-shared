@@ -2,7 +2,7 @@
 
 var chunkSHM36YL5_cjs = require('./chunk-SHM36YL5.cjs');
 var chunk5I5KPCET_cjs = require('./chunk-5I5KPCET.cjs');
-var chunkNQLL5CZO_cjs = require('./chunk-NQLL5CZO.cjs');
+var chunkPQVZX35D_cjs = require('./chunk-PQVZX35D.cjs');
 var chunkN6OR7IQ4_cjs = require('./chunk-N6OR7IQ4.cjs');
 var chunkQE2L2C7M_cjs = require('./chunk-QE2L2C7M.cjs');
 var zod = require('zod');
@@ -1347,6 +1347,17 @@ var createPollSchema = zod.z.object({
     message: "Consensus percentage must be between 10 and 100 for consensus polls",
     path: ["requiredConsensusPercentage"]
   }
+).refine(
+  (data) => {
+    if (chunkPQVZX35D_cjs.isZuozAdjacentConsentCategory(data.consensusCategory)) {
+      return data.scopedUnitIds && data.scopedUnitIds.length > 0;
+    }
+    return true;
+  },
+  {
+    message: "Adjacent units must be selected for this type of decision",
+    path: ["scopedUnitIds"]
+  }
 );
 var updatePollSchema = zod.z.object({
   question: zod.z.string().min(1).max(POLL_LIMITS.QUESTION_MAX).optional().describe("Revised poll question, up to 250 chars."),
@@ -1463,12 +1474,12 @@ var getRepBuildingsParamsSchema = zod.z.object({
 var aiChatMessageSchema = zod.z.object({
   id: zod.z.string().optional().describe("Client-generated message id (AI SDK UIMessage id)."),
   role: zod.z.enum(["user", "assistant", "system"]).describe("Author of the message in the conversation history."),
-  content: zod.z.string().max(chunkNQLL5CZO_cjs.AI_CHAT_LIMITS.MAX_MESSAGE_CHARS).optional().describe("Plain-text body; legacy shape, superseded by parts."),
+  content: zod.z.string().max(chunkPQVZX35D_cjs.AI_CHAT_LIMITS.MAX_MESSAGE_CHARS).optional().describe("Plain-text body; legacy shape, superseded by parts."),
   parts: zod.z.array(zod.z.any()).optional().refine(
     (parts) => parts === void 0 || parts.every(
-      (part) => typeof part?.text !== "string" || part.text.length <= chunkNQLL5CZO_cjs.AI_CHAT_LIMITS.MAX_MESSAGE_CHARS
+      (part) => typeof part?.text !== "string" || part.text.length <= chunkPQVZX35D_cjs.AI_CHAT_LIMITS.MAX_MESSAGE_CHARS
     ),
-    { message: `Text part exceeds ${chunkNQLL5CZO_cjs.AI_CHAT_LIMITS.MAX_MESSAGE_CHARS} characters` }
+    { message: `Text part exceeds ${chunkPQVZX35D_cjs.AI_CHAT_LIMITS.MAX_MESSAGE_CHARS} characters` }
   ).describe(
     "AI SDK UIMessage parts (text, tool invocations, ...). Text parts are capped at MAX_MESSAGE_CHARS."
   )
@@ -1482,7 +1493,7 @@ var aiChatRequestSchema = zod.z.object({
   locale: zod.z.enum(["hr", "en", "de"]).optional().describe(
     "The user\u2019s active UI locale, sent per request so the assistant locks its reply language without relying on content inference (unreliable on small models). Defaults to hr."
   ),
-  messages: zod.z.array(aiChatMessageSchema).min(1).max(chunkNQLL5CZO_cjs.AI_CHAT_LIMITS.MAX_MESSAGES).describe("Full client-held conversation history, newest last; the server windows it.")
+  messages: zod.z.array(aiChatMessageSchema).min(1).max(chunkPQVZX35D_cjs.AI_CHAT_LIMITS.MAX_MESSAGES).describe("Full client-held conversation history, newest last; the server windows it.")
 });
 var EMAIL_LIMITS = {
   SUBJECT_MAX: 200,
@@ -2493,7 +2504,11 @@ var pollScopedUnitSchema = zod.z.looseObject({
   unitType: zod.z.string().describe("Kind of unit eligible to vote (`apartment`, `garage`, `storage_unit`)."),
   unitId: zod.z.string().describe("UUID of the scoped unit."),
   label: zod.z.string().describe('Human-readable unit label (e.g. "Apartment 4B").'),
-  floor: zod.z.string().optional().describe("Floor label where the unit is located; absent when not recorded.")
+  floor: zod.z.string().optional().describe("Floor label where the unit is located; absent when not recorded."),
+  ownerNames: zod.z.array(zod.z.string()).optional().describe("Display names of owners of this unit; absent when not resolved."),
+  allOwnersVoted: zod.z.boolean().optional().describe(
+    "True when every owner of this unit has cast an accepted vote; absent when vote status is not resolved."
+  )
 }).describe("Unit whose owners/tenants are eligible to participate in a scoped poll.");
 var pollScopedOwnerSchema = zod.z.looseObject({
   ownerId: zod.z.string().describe("UUID of the explicitly-eligible owner record."),
@@ -3021,5 +3036,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-YWWUEZAZ.cjs.map
-//# sourceMappingURL=chunk-YWWUEZAZ.cjs.map
+//# sourceMappingURL=chunk-DF6RY4OO.cjs.map
+//# sourceMappingURL=chunk-DF6RY4OO.cjs.map

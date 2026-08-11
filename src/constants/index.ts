@@ -96,3 +96,9 @@ export {
   OWNERSHIP_DERIVED_PERMISSIONS,
   PLATFORM_ROLE_PERMISSIONS,
 } from './role-permissions';
+// ZUOZ čl. 33/34/35 — adjacent-consent poll categories
+export {
+  isZuozAdjacentConsentCategory,
+  ZUOZ_ADJACENT_CONSENT_CATEGORIES,
+  type ZuozAdjacentConsentCategory,
+} from './zuoz-adjacent-consent';

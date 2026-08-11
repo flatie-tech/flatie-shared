@@ -12,6 +12,19 @@ var AI_CHAT_LIMITS = {
   WINDOW_MAX_CHARS: 24e3
 };
 
-export { AI_CHAT_LIMITS };
-//# sourceMappingURL=chunk-BYX5R6MR.js.map
-//# sourceMappingURL=chunk-BYX5R6MR.js.map
+// src/constants/zuoz-adjacent-consent.ts
+var ZUOZ_ADJACENT_CONSENT_CATEGORIES = [
+  "noisyActivityConsent",
+  // čl. 33. st. 2.
+  "shortTermRentalConsent",
+  // čl. 34. st. 1.
+  "multiPersonRentalConsent"
+  // čl. 35. st. 1.
+];
+function isZuozAdjacentConsentCategory(category) {
+  return category != null && ZUOZ_ADJACENT_CONSENT_CATEGORIES.includes(category);
+}
+
+export { AI_CHAT_LIMITS, ZUOZ_ADJACENT_CONSENT_CATEGORIES, isZuozAdjacentConsentCategory };
+//# sourceMappingURL=chunk-XDD32FEC.js.map
+//# sourceMappingURL=chunk-XDD32FEC.js.map

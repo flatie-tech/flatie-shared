@@ -1,6 +1,6 @@
 'use strict';
 
-var chunk3YG7UIGR_cjs = require('./chunk-3YG7UIGR.cjs');
+var chunkZUJ6MF3D_cjs = require('./chunk-ZUJ6MF3D.cjs');
 var zod = require('zod');
 
 var existingBuildingRefSchema = zod.z.object({
@@ -32,8 +32,8 @@ function buildMapUrl(input) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 }
 function compareHouseNumbers(a, b) {
-  const pa = chunk3YG7UIGR_cjs.parseHouseNumber(a);
-  const pb = chunk3YG7UIGR_cjs.parseHouseNumber(b);
+  const pa = chunkZUJ6MF3D_cjs.parseHouseNumber(a);
+  const pb = chunkZUJ6MF3D_cjs.parseHouseNumber(b);
   if (!pa && !pb) return a.localeCompare(b);
   if (!pa) return 1;
   if (!pb) return -1;
@@ -51,5 +51,5 @@ exports.buildMapUrl = buildMapUrl;
 exports.compareHouseNumbers = compareHouseNumbers;
 exports.existingBuildingRefSchema = existingBuildingRefSchema;
 exports.structuredAddressInputSchema = structuredAddressInputSchema;
-//# sourceMappingURL=chunk-VXKZ7RHS.cjs.map
-//# sourceMappingURL=chunk-VXKZ7RHS.cjs.map
+//# sourceMappingURL=chunk-4RIQODWQ.cjs.map
+//# sourceMappingURL=chunk-4RIQODWQ.cjs.map

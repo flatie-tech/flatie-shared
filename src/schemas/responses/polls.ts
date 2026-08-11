@@ -46,6 +46,16 @@ const pollScopedUnitSchema = z
       .string()
       .optional()
       .describe('Floor label where the unit is located; absent when not recorded.'),
+    ownerNames: z
+      .array(z.string())
+      .optional()
+      .describe('Display names of owners of this unit; absent when not resolved.'),
+    allOwnersVoted: z
+      .boolean()
+      .optional()
+      .describe(
+        'True when every owner of this unit has cast an accepted vote; absent when vote status is not resolved.',
+      ),
   })
   .describe('Unit whose owners/tenants are eligible to participate in a scoped poll.');
 

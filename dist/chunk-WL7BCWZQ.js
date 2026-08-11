@@ -1,9 +1,7 @@
-'use strict';
-
 // src/utils/house-number.ts
 var HOUSE_NUMBER_PATTERN = /^\d{1,4}[A-Z]?(?:\/\d{1,3})?$|^BB$/;
 function normalizeHouseNumber(raw) {
-  if (!raw || !raw.trim()) return null;
+  if (!raw?.trim()) return null;
   const normalized = raw.trim().toUpperCase().replace(/\s+/g, "").replace(/\s*\/\s*/g, "/");
   if (!HOUSE_NUMBER_PATTERN.test(normalized)) return null;
   return normalized;
@@ -22,8 +20,6 @@ function formatAddress(parts) {
   return `${streetPart}, ${parts.postalCode} ${parts.city}`;
 }
 
-exports.formatAddress = formatAddress;
-exports.normalizeHouseNumber = normalizeHouseNumber;
-exports.parseHouseNumber = parseHouseNumber;
-//# sourceMappingURL=chunk-3YG7UIGR.cjs.map
-//# sourceMappingURL=chunk-3YG7UIGR.cjs.map
+export { formatAddress, normalizeHouseNumber, parseHouseNumber };
+//# sourceMappingURL=chunk-WL7BCWZQ.js.map
+//# sourceMappingURL=chunk-WL7BCWZQ.js.map
