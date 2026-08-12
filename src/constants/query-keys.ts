@@ -50,6 +50,7 @@ export const buildingKeys = {
   details: () => [...buildingKeys.all, 'detail'] as const,
   detail: (id: string) => [...buildingKeys.details(), id] as const,
   otp: (id: string) => [...buildingKeys.all, 'otp', id] as const,
+  otpHistory: (id: string) => [...buildingKeys.all, 'otpHistory', id] as const,
   users: (id: string, filters: Record<string, unknown> = {}) =>
     [...buildingKeys.all, 'users', id, { ...filters }] as const,
   settings: (id: string) => [...buildingKeys.all, 'settings', id] as const,
