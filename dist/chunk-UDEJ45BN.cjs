@@ -1378,7 +1378,7 @@ var updatePollSchema = zod.z.object({
 var votePollSchema = zod.z.object({
   selectedOptionIndex: zod.z.number().int().min(0).describe("Zero-based index into the poll\u2019s `options` array identifying the chosen option.")
 });
-votePollSchema.extend({
+var voteWithIdCardSchema = votePollSchema.extend({
   idCardNumber: zod.z.string().regex(/^\d{9}$/, "ID card number must be exactly 9 digits").describe(
     "Croatian ID card number; re-hashed server-side and matched against the approved verification record."
   )
@@ -3041,5 +3041,6 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-X7OEPWHZ.cjs.map
-//# sourceMappingURL=chunk-X7OEPWHZ.cjs.map
+exports.voteWithIdCardSchema = voteWithIdCardSchema;
+//# sourceMappingURL=chunk-UDEJ45BN.cjs.map
+//# sourceMappingURL=chunk-UDEJ45BN.cjs.map

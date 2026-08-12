@@ -300,6 +300,7 @@ export type {
   RecordOfflineVotesSchema,
   UpdatePollSchema,
   VotePollSchema,
+  VoteWithIdCardSchema,
 } from './poll.schema';
 // Poll schemas
 export {
@@ -311,6 +312,7 @@ export {
   recordOfflineVotesSchema,
   updatePollSchema,
   votePollSchema,
+  voteWithIdCardSchema,
 } from './poll.schema';
 // Transaction category schemas
 export type {

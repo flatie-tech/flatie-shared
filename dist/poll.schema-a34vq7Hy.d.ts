@@ -232,6 +232,17 @@ declare const votePollSchema: z.ZodObject<{
     selectedOptionIndex: z.ZodNumber;
 }, z.core.$strip>;
 /**
+ * Vote-with-ID-card request schema
+ *
+ * A ballot cast under VotingStrength.ID_CARD: the standard vote payload
+ * plus the voter's ID card number, which the backend re-hashes and
+ * compares against their approved id-card verification record.
+ */
+declare const voteWithIdCardSchema: z.ZodObject<{
+    selectedOptionIndex: z.ZodNumber;
+    idCardNumber: z.ZodString;
+}, z.core.$strip>;
+/**
  * Record-offline-votes request schema
  *
  * A representative records approval votes collected on a printed
@@ -254,7 +265,8 @@ declare const finalizePollSchema: z.ZodObject<{
 type CreatePollSchema = z.infer<typeof createPollSchema>;
 type UpdatePollSchema = z.infer<typeof updatePollSchema>;
 type VotePollSchema = z.infer<typeof votePollSchema>;
+type VoteWithIdCardSchema = z.infer<typeof voteWithIdCardSchema>;
 type FinalizePollSchema = z.infer<typeof finalizePollSchema>;
 type RecordOfflineVotesSchema = z.infer<typeof recordOfflineVotesSchema>;
 
-export { type CreatePollSchema as C, type EventColorOption as E, type FinalizePollSchema as F, POLL_LIMITS as P, type RecurrenceTypeOption as R, type UpdatePollSchema as U, type VotePollSchema as V, type EventTypeOption as a, EVENT_COLORS as b, createEventSchema as c, EVENT_TYPE_COLOR_MAP as d, EVENT_TYPES as e, eventColorSchema as f, eventTypeSchema as g, RECURRENCE_TYPES as h, type RecordOfflineVotesSchema as i, createPollSchema as j, finalizePollSchema as k, POLL_TYPES as l, recordOfflineVotesSchema as m, updatePollSchema as n, pollTypeSchema as p, recurrenceTypeSchema as r, timeSchema as t, updateEventSchema as u, votePollSchema as v };
+export { type CreatePollSchema as C, type EventColorOption as E, type FinalizePollSchema as F, POLL_LIMITS as P, type RecurrenceTypeOption as R, type UpdatePollSchema as U, type VotePollSchema as V, type EventTypeOption as a, EVENT_COLORS as b, createEventSchema as c, EVENT_TYPE_COLOR_MAP as d, EVENT_TYPES as e, eventColorSchema as f, eventTypeSchema as g, RECURRENCE_TYPES as h, type RecordOfflineVotesSchema as i, type VoteWithIdCardSchema as j, createPollSchema as k, finalizePollSchema as l, POLL_TYPES as m, recordOfflineVotesSchema as n, updatePollSchema as o, pollTypeSchema as p, voteWithIdCardSchema as q, recurrenceTypeSchema as r, timeSchema as t, updateEventSchema as u, votePollSchema as v };
