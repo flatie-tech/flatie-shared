@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.113.1
+
+### Changes
+
+- re-export voteWithIdCardSchema (v0.113.0 missed the barrel)
+
 ## 0.113.0
 
 ### Changes
