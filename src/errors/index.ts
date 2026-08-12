@@ -143,6 +143,13 @@ export const BACKEND_ERROR_CODES = {
   // logged-in user's Flatie account.
   CERTILIA_EMAIL_MISMATCH: 'CERTILIA_EMAIL_MISMATCH',
 
+  // ── ID-card verification (VotingStrength.ID_CARD) ─────────────────
+  // Voter has no approved id-card verification record on file.
+  ID_CARD_NOT_VERIFIED: 'ID_CARD_NOT_VERIFIED',
+  // Submitted card number does not hash-match the approved record.
+  // Wrong card (or wrong person) — refuse to cast the vote.
+  ID_CARD_MISMATCH: 'ID_CARD_MISMATCH',
+
   // ── Tiered verification ───────────────────────────────────────────
   // Voter's durable verification tier is below the building's required
   // minimum for a CONSENSUS vote (rep-configured `minVerificationTierForConsensus`).

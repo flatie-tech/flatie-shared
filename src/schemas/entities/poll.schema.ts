@@ -215,6 +215,22 @@ export const votePollSchema = z.object({
 });
 
 /**
+ * Vote-with-ID-card request schema
+ *
+ * A ballot cast under VotingStrength.ID_CARD: the standard vote payload
+ * plus the voter's ID card number, which the backend re-hashes and
+ * compares against their approved id-card verification record.
+ */
+export const voteWithIdCardSchema = votePollSchema.extend({
+  idCardNumber: z
+    .string()
+    .regex(/^\d{9}$/, 'ID card number must be exactly 9 digits')
+    .describe(
+      'Croatian ID card number; re-hashed server-side and matched against the approved verification record.',
+    ),
+});
+
+/**
  * Record-offline-votes request schema
  *
  * A representative records approval votes collected on a printed
@@ -249,5 +265,6 @@ export const finalizePollSchema = z.object({
 export type CreatePollSchema = z.infer<typeof createPollSchema>;
 export type UpdatePollSchema = z.infer<typeof updatePollSchema>;
 export type VotePollSchema = z.infer<typeof votePollSchema>;
+export type VoteWithIdCardSchema = z.infer<typeof voteWithIdCardSchema>;
 export type FinalizePollSchema = z.infer<typeof finalizePollSchema>;
 export type RecordOfflineVotesSchema = z.infer<typeof recordOfflineVotesSchema>;
