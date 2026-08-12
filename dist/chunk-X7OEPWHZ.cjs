@@ -4,7 +4,7 @@ var chunkSHM36YL5_cjs = require('./chunk-SHM36YL5.cjs');
 var chunk5I5KPCET_cjs = require('./chunk-5I5KPCET.cjs');
 var chunkPQVZX35D_cjs = require('./chunk-PQVZX35D.cjs');
 var chunkN6OR7IQ4_cjs = require('./chunk-N6OR7IQ4.cjs');
-var chunkQE2L2C7M_cjs = require('./chunk-QE2L2C7M.cjs');
+var chunkXOQU25DL_cjs = require('./chunk-XOQU25DL.cjs');
 var zod = require('zod');
 
 var apiErrorSchema = zod.z.object({
@@ -14,7 +14,7 @@ var apiErrorSchema = zod.z.object({
   path: zod.z.string()
 });
 var apiErrorResponseSchema = apiErrorSchema.extend({
-  code: zod.z.enum(Object.values(chunkQE2L2C7M_cjs.BACKEND_ERROR_CODES)).optional().describe(
+  code: zod.z.enum(Object.values(chunkXOQU25DL_cjs.BACKEND_ERROR_CODES)).optional().describe(
     "Canonical error code from `@flatie/shared/errors` (`BACKEND_ERROR_CODES`). Present when the backend raised a `DomainException`; absent for generic HTTP errors (network failures, unhandled exceptions, validation-pipe rejections)."
   )
 }).describe("Standard error envelope returned by the Flatie backend on 4xx and 5xx responses.");
@@ -1377,6 +1377,11 @@ var updatePollSchema = zod.z.object({
 });
 var votePollSchema = zod.z.object({
   selectedOptionIndex: zod.z.number().int().min(0).describe("Zero-based index into the poll\u2019s `options` array identifying the chosen option.")
+});
+votePollSchema.extend({
+  idCardNumber: zod.z.string().regex(/^\d{9}$/, "ID card number must be exactly 9 digits").describe(
+    "Croatian ID card number; re-hashed server-side and matched against the approved verification record."
+  )
 });
 var recordOfflineVotesSchema = zod.z.object({
   ownerIds: zod.z.array(uuidSchema).min(1).describe("UUIDs of owner records whose signed approvals are being recorded."),
@@ -3036,5 +3041,5 @@ exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
-//# sourceMappingURL=chunk-DF6RY4OO.cjs.map
-//# sourceMappingURL=chunk-DF6RY4OO.cjs.map
+//# sourceMappingURL=chunk-X7OEPWHZ.cjs.map
+//# sourceMappingURL=chunk-X7OEPWHZ.cjs.map

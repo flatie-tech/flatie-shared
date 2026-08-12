@@ -1,7 +1,7 @@
 'use strict';
 
 var chunkN6OR7IQ4_cjs = require('./chunk-N6OR7IQ4.cjs');
-var chunkQE2L2C7M_cjs = require('./chunk-QE2L2C7M.cjs');
+var chunkXOQU25DL_cjs = require('./chunk-XOQU25DL.cjs');
 var chunkQKHLAIRE_cjs = require('./chunk-QKHLAIRE.cjs');
 
 // src/utils/role-helpers.ts
@@ -276,7 +276,7 @@ var parseApiError = (error) => {
   const response = readProp(error, "response");
   const data = readProp(response, "data");
   const rawCode = readProp(data, "code");
-  const code = chunkQE2L2C7M_cjs.isBackendErrorCode(rawCode) ? rawCode : null;
+  const code = chunkXOQU25DL_cjs.isBackendErrorCode(rawCode) ? rawCode : null;
   const dataMessage = readProp(data, "message");
   const errorMessage = readProp(error, "message");
   const message = typeof dataMessage === "string" && dataMessage.length > 0 && dataMessage || typeof errorMessage === "string" && errorMessage.length > 0 && errorMessage || "Unknown error";
@@ -409,5 +409,5 @@ exports.normalizePaginatedResponse = normalizePaginatedResponse;
 exports.parseApiError = parseApiError;
 exports.parseData = parseData;
 exports.resolveVotingMethods = resolveVotingMethods;
-//# sourceMappingURL=chunk-YPVXTEYS.cjs.map
-//# sourceMappingURL=chunk-YPVXTEYS.cjs.map
+//# sourceMappingURL=chunk-PI4GTPVW.cjs.map
+//# sourceMappingURL=chunk-PI4GTPVW.cjs.map

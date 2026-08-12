@@ -1,3 +1,5 @@
+'use strict';
+
 // src/errors/index.ts
 var BACKEND_ERROR_CODES = {
   // Auth
@@ -130,6 +132,12 @@ var BACKEND_ERROR_CODES = {
   // Certilia returned an email that doesn't match the email on the
   // logged-in user's Flatie account.
   CERTILIA_EMAIL_MISMATCH: "CERTILIA_EMAIL_MISMATCH",
+  // ── ID-card verification (VotingStrength.ID_CARD) ─────────────────
+  // Voter has no approved id-card verification record on file.
+  ID_CARD_NOT_VERIFIED: "ID_CARD_NOT_VERIFIED",
+  // Submitted card number does not hash-match the approved record.
+  // Wrong card (or wrong person) — refuse to cast the vote.
+  ID_CARD_MISMATCH: "ID_CARD_MISMATCH",
   // ── Tiered verification ───────────────────────────────────────────
   // Voter's durable verification tier is below the building's required
   // minimum for a CONSENSUS vote (rep-configured `minVerificationTierForConsensus`).
@@ -162,6 +170,7 @@ function isBackendErrorCode(code) {
   return typeof code === "string" && Object.values(BACKEND_ERROR_CODES).includes(code);
 }
 
-export { BACKEND_ERROR_CODES, isBackendErrorCode };
-//# sourceMappingURL=chunk-O47XTVAK.js.map
-//# sourceMappingURL=chunk-O47XTVAK.js.map
+exports.BACKEND_ERROR_CODES = BACKEND_ERROR_CODES;
+exports.isBackendErrorCode = isBackendErrorCode;
+//# sourceMappingURL=chunk-XOQU25DL.cjs.map
+//# sourceMappingURL=chunk-XOQU25DL.cjs.map

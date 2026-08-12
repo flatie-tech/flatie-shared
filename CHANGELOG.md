@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.113.0
+
+### Changes
+
+- voteWithIdCardSchema + ID_CARD_NOT_VERIFIED/ID_CARD_MISMATCH error codes (completes the id-card verification shared surface)
+
 ## 0.109.0
 
 ### Changes
