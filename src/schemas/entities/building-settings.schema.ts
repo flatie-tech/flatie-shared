@@ -26,6 +26,12 @@ export const updateBuildingSettingsSchema = z.object({
   chatEnabled: z.boolean().optional(),
   emailEnabled: z.boolean().optional(),
   commentsEnabled: z.boolean().optional(),
+  coOwnerConsensusEnabled: z
+    .boolean()
+    .optional()
+    .describe(
+      'When true, co-owners can start consensus (binding) polls. When false (default), co-owners can only start community (non-binding) polls.',
+    ),
   votingCertiliaEnabled: z
     .boolean()
     .optional()

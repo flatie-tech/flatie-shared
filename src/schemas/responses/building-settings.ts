@@ -50,6 +50,11 @@ export const buildingSettingsResponseSchema = z
     commentsEnabled: z
       .boolean()
       .describe('Whether commenting on notices/reports is available in this building.'),
+    coOwnerConsensusEnabled: z
+      .boolean()
+      .describe(
+        'When true, co-owners can start consensus (binding) polls. When false (default), co-owners can only start community (non-binding) polls.',
+      ),
     votingCertiliaEnabled: z
       .boolean()
       .describe('Deprecated: emitted for old clients, no longer enforced.'),

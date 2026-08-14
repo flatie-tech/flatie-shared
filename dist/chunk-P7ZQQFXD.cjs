@@ -697,6 +697,9 @@ var updateBuildingSettingsSchema = zod.z.object({
   chatEnabled: zod.z.boolean().optional(),
   emailEnabled: zod.z.boolean().optional(),
   commentsEnabled: zod.z.boolean().optional(),
+  coOwnerConsensusEnabled: zod.z.boolean().optional().describe(
+    "When true, co-owners can start consensus (binding) polls. When false (default), co-owners can only start community (non-binding) polls."
+  ),
   votingCertiliaEnabled: zod.z.boolean().optional().describe("Deprecated: no longer enforced; accepted for old clients and ignored."),
   votingPrintedSignatureEnabled: zod.z.boolean().optional().describe("Deprecated: no longer enforced; accepted for old clients and ignored."),
   minVerificationTierForConsensus: zod.z.number().int().min(0).max(3).optional().describe(
@@ -1825,6 +1828,9 @@ var buildingSettingsResponseSchema = zod.z.looseObject({
     "Whether the building mailbox (Korisni\u010Dki pretinac) is available in this building. Defaults to FALSE \u2014 the feature is parked pending an inbound-architecture decision (see flatie-docs/team-knowledge/20)."
   ),
   commentsEnabled: zod.z.boolean().describe("Whether commenting on notices/reports is available in this building."),
+  coOwnerConsensusEnabled: zod.z.boolean().describe(
+    "When true, co-owners can start consensus (binding) polls. When false (default), co-owners can only start community (non-binding) polls."
+  ),
   votingCertiliaEnabled: zod.z.boolean().describe("Deprecated: emitted for old clients, no longer enforced."),
   votingPrintedSignatureEnabled: zod.z.boolean().describe("Deprecated: emitted for old clients, no longer enforced."),
   minVerificationTierForConsensus: zod.z.number().int().describe(
@@ -3042,5 +3048,5 @@ exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
 exports.voteWithIdCardSchema = voteWithIdCardSchema;
-//# sourceMappingURL=chunk-UDEJ45BN.cjs.map
-//# sourceMappingURL=chunk-UDEJ45BN.cjs.map
+//# sourceMappingURL=chunk-P7ZQQFXD.cjs.map
+//# sourceMappingURL=chunk-P7ZQQFXD.cjs.map
