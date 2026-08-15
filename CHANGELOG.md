@@ -1,5 +1,14 @@
 # @flatie/shared
 
+## 0.117.0
+
+### Changes
+
+- feat(urls): platform ID-card verification review routes
+- feat(archive): building-scoped archive routes (BUILDINGS.ARCHIVE / ARCHIVE_RESTORE) + BUILDING_ARCHIVE_TYPES
+- fix(archive): add units/board_cards/boards to ARCHIVE_TYPES — archivedItemSchema rejected valid backend rows of those types
+
+
 ## 0.116.0
 
 ### Changes
