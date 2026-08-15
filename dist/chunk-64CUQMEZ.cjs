@@ -1603,6 +1603,8 @@ var aiUsageResponseSchema = zod.z.looseObject({
 var ARCHIVE_TYPES = [
   "apartments",
   "blog_posts",
+  "board_cards",
+  "boards",
   "building_join_requests",
   "buildings",
   "comments",
@@ -1617,9 +1619,26 @@ var ARCHIVE_TYPES = [
   "polls",
   "recurring_templates",
   "storage_units",
-  "transaction_categories"
+  "transaction_categories",
+  "units"
 ];
 var archiveTypeSchema = zod.z.enum(ARCHIVE_TYPES).describe("Name of the archived entity kind; must match a key in the backend archive registry.");
+var BUILDING_ARCHIVE_TYPES = [
+  "board_cards",
+  "boards",
+  "building_join_requests",
+  "comments",
+  "events",
+  "failure_reports",
+  "faqs",
+  "files",
+  "income_transactions",
+  "notices",
+  "polls",
+  "units",
+  "transaction_categories"
+];
+var buildingArchiveTypeSchema = zod.z.enum(BUILDING_ARCHIVE_TYPES).describe("Building-scoped archive type; the subset restorable by building managers.");
 var archivedItemSchema = zod.z.looseObject({
   id: zod.z.string().uuid().describe("UUID of the archived row within its source table."),
   type: archiveTypeSchema,
@@ -2844,6 +2863,7 @@ exports.ApprovalStatusSchema = ApprovalStatusSchema;
 exports.BOARD_CARD_LIMITS = BOARD_CARD_LIMITS;
 exports.BOARD_COLUMN_LIMITS = BOARD_COLUMN_LIMITS;
 exports.BOARD_LIMITS = BOARD_LIMITS;
+exports.BUILDING_ARCHIVE_TYPES = BUILDING_ARCHIVE_TYPES;
 exports.BUILDING_LIMITS = BUILDING_LIMITS;
 exports.BUILDING_TYPES = BUILDING_TYPES;
 exports.CHAT_LIMITS = CHAT_LIMITS;
@@ -2887,6 +2907,7 @@ exports.auditLogResponseSchema = auditLogResponseSchema;
 exports.baseEntitySchema = baseEntitySchema;
 exports.boardCardChecklistItemSchema = boardCardChecklistItemSchema;
 exports.boardCardEventSchema = boardCardEventSchema;
+exports.buildingArchiveTypeSchema = buildingArchiveTypeSchema;
 exports.buildingDetailResponseSchema = buildingDetailResponseSchema;
 exports.buildingEntitySchema = buildingEntitySchema;
 exports.buildingFundsLedgerResponseSchema = buildingFundsLedgerResponseSchema;
@@ -3094,5 +3115,5 @@ exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
 exports.voteWithIdCardSchema = voteWithIdCardSchema;
-//# sourceMappingURL=chunk-2P5XAHJY.cjs.map
-//# sourceMappingURL=chunk-2P5XAHJY.cjs.map
+//# sourceMappingURL=chunk-64CUQMEZ.cjs.map
+//# sourceMappingURL=chunk-64CUQMEZ.cjs.map

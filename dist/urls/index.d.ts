@@ -34,6 +34,8 @@ declare const API_ROUTES: {
     readonly BUILDINGS: {
         readonly BASE: "/buildings";
         readonly BY_ID: (id: string) => string;
+        readonly ARCHIVE: (id: string) => string;
+        readonly ARCHIVE_RESTORE: (id: string, type: string, rowId: string) => string;
         readonly SETTINGS: (id: string) => string;
         readonly USERS: (id: string) => string;
         readonly OTP: (id: string) => string;

@@ -34,6 +34,11 @@ var API_ROUTES = {
   BUILDINGS: {
     BASE: "/buildings",
     BY_ID: (id) => `/buildings/${id}`,
+    // Rep-facing archive: browse the building's soft-deleted rows and restore
+    // them within the 30-day window. Building-scoped types only; purge stays
+    // on the platform archive routes.
+    ARCHIVE: (id) => `/buildings/${id}/archive`,
+    ARCHIVE_RESTORE: (id, type, rowId) => `/buildings/${id}/archive/${type}/${rowId}/restore`,
     SETTINGS: (id) => `/buildings/${id}/settings`,
     USERS: (id) => `/buildings/${id}/users`,
     OTP: (id) => `/buildings/${id}/otp`,
@@ -293,5 +298,5 @@ var API_ROUTES = {
 };
 
 export { API_ROUTES };
-//# sourceMappingURL=chunk-3GDALLHL.js.map
-//# sourceMappingURL=chunk-3GDALLHL.js.map
+//# sourceMappingURL=chunk-JVMNL6VS.js.map
+//# sourceMappingURL=chunk-JVMNL6VS.js.map

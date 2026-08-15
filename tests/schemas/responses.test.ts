@@ -3,6 +3,7 @@ import { NotificationType } from '../../src/enums/notification.enum';
 import {
   ARCHIVE_TYPES,
   archivedItemSchema,
+  BUILDING_ARCHIVE_TYPES,
   buildingDetailResponseSchema,
   buildingResponseSchema,
   eventResponseSchema,
@@ -517,9 +518,25 @@ describe('Archive response schemas', () => {
     expect(() => archivedItemSchema.parse(payload)).toThrow();
   });
 
-  it('covers all 17 types in ARCHIVE_TYPES', () => {
-    expect(ARCHIVE_TYPES).toHaveLength(17);
-    expect(new Set(ARCHIVE_TYPES).size).toBe(17);
+  it('covers all 20 types in ARCHIVE_TYPES', () => {
+    expect(ARCHIVE_TYPES).toHaveLength(20);
+    expect(new Set(ARCHIVE_TYPES).size).toBe(20);
+    // The 2026-08 additions — backend browser types the enum was missing,
+    // which made archivedItemSchema reject valid backend rows.
+    expect(ARCHIVE_TYPES).toContain('units');
+    expect(ARCHIVE_TYPES).toContain('board_cards');
+    expect(ARCHIVE_TYPES).toContain('boards');
+  });
+
+  it('BUILDING_ARCHIVE_TYPES is a strict subset of ARCHIVE_TYPES', () => {
+    for (const t of BUILDING_ARCHIVE_TYPES) {
+      expect(ARCHIVE_TYPES).toContain(t);
+    }
+    // Never the platform-global types — their backend queries ignore the
+    // buildingId filter, so listing them would leak cross-tenant rows.
+    expect(BUILDING_ARCHIVE_TYPES).not.toContain('blog_posts');
+    expect(BUILDING_ARCHIVE_TYPES).not.toContain('organizations');
+    expect(BUILDING_ARCHIVE_TYPES).not.toContain('buildings');
   });
 
   it('parses the aggregator list response', () => {

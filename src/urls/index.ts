@@ -45,6 +45,12 @@ export const API_ROUTES = {
   BUILDINGS: {
     BASE: '/buildings',
     BY_ID: (id: string) => `/buildings/${id}`,
+    // Rep-facing archive: browse the building's soft-deleted rows and restore
+    // them within the 30-day window. Building-scoped types only; purge stays
+    // on the platform archive routes.
+    ARCHIVE: (id: string) => `/buildings/${id}/archive`,
+    ARCHIVE_RESTORE: (id: string, type: string, rowId: string) =>
+      `/buildings/${id}/archive/${type}/${rowId}/restore`,
     SETTINGS: (id: string) => `/buildings/${id}/settings`,
     USERS: (id: string) => `/buildings/${id}/users`,
     OTP: (id: string) => `/buildings/${id}/otp`,

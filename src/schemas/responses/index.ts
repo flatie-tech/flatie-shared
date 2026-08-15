@@ -2,11 +2,18 @@ export type { MessageResponse } from './action';
 export { messageResponseSchema } from './action';
 export type { AiUsageResponse } from './ai-usage';
 export { aiUsageResponseSchema } from './ai-usage';
-export type { ArchivedItem, ArchiveType, ListArchivedResponse } from './archive';
+export type {
+  ArchivedItem,
+  ArchiveType,
+  BuildingArchiveType,
+  ListArchivedResponse,
+} from './archive';
 export {
   ARCHIVE_TYPES,
   archivedItemSchema,
   archiveTypeSchema,
+  BUILDING_ARCHIVE_TYPES,
+  buildingArchiveTypeSchema,
   listArchivedResponseSchema,
 } from './archive';
 export type {
