@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.115.0
+
+### Changes
+
+- fix(roles): rank the deputy below the representative
+
 ## 0.113.1
 
 ### Changes
