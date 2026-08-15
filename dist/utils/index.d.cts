@@ -3,7 +3,7 @@ export { A as AddressParts, P as ParsedHouseNumber, f as formatAddress, n as nor
 import { P as PaginatedResponse } from '../pagination.types-D3A3752L.cjs';
 import { z } from 'zod';
 import { BackendErrorCode } from '../errors/index.cjs';
-import { P as Permission, c as ScopedDomain, b as ScopedAction, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-CvnkuV41.cjs';
+import { P as Permission, c as ScopedDomain, b as ScopedAction, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-DoYck3g6.cjs';
 
 /**
  * Minimal structural shape of a chat-target candidate.

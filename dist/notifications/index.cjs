@@ -1,6 +1,6 @@
 'use strict';
 
-var chunkN6OR7IQ4_cjs = require('../chunk-N6OR7IQ4.cjs');
+var chunkONOUAWLU_cjs = require('../chunk-ONOUAWLU.cjs');
 
 // src/notifications/labels.ts
 var SUPPORTED_LOCALES = ["hr", "en", "de"];
@@ -150,7 +150,7 @@ function getDateLocale(locale) {
 // src/notifications/templates.ts
 var NOTIFICATION_TEMPLATES = {
   // ── Notices ────────────────────────────────────────────────────────────
-  [chunkN6OR7IQ4_cjs.NotificationType.NOTICE_CREATED]: {
+  [chunkONOUAWLU_cjs.NotificationType.NOTICE_CREATED]: {
     title: { hr: "{{title}}", en: "{{title}}", de: "{{title}}" },
     body: {
       hr: "{{actorName}} je objavio/la novu obavijest u zgradi {{buildingName}}",
@@ -163,7 +163,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird gesendet, wenn eine neue Mitteilung im Geb\xE4ude erstellt wird"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.NOTICE_APPROVED]: {
+  [chunkONOUAWLU_cjs.NotificationType.NOTICE_APPROVED]: {
     title: { hr: "Obavijest odobrena", en: "Notice Approved", de: "Mitteilung genehmigt" },
     body: {
       hr: "Va\u0161a obavijest \u201E{{title}}\u201D je odobrena",
@@ -176,7 +176,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird an den Autor gesendet, wenn seine Mitteilung genehmigt wird"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.NOTICE_REJECTED]: {
+  [chunkONOUAWLU_cjs.NotificationType.NOTICE_REJECTED]: {
     title: { hr: "Obavijest odbijena", en: "Notice Rejected", de: "Mitteilung abgelehnt" },
     body: {
       hr: "Va\u0161a obavijest \u201E{{title}}\u201D nije odobrena",
@@ -190,7 +190,7 @@ var NOTIFICATION_TEMPLATES = {
     }
   },
   // ── Polls ──────────────────────────────────────────────────────────────
-  [chunkN6OR7IQ4_cjs.NotificationType.POLL_CREATED]: {
+  [chunkONOUAWLU_cjs.NotificationType.POLL_CREATED]: {
     title: { hr: "{{question}}", en: "{{question}}", de: "{{question}}" },
     body: {
       hr: "{{actorName}} je kreirao/la novu anketu u zgradi {{buildingName}}",
@@ -203,7 +203,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird gesendet, wenn eine neue Umfrage erstellt wird"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.POLL_DEADLINE_24H]: {
+  [chunkONOUAWLU_cjs.NotificationType.POLL_DEADLINE_24H]: {
     title: { hr: "Anketa uskoro zavr\u0161ava", en: "Poll Ending Soon", de: "Umfrage endet bald" },
     body: {
       hr: "Anketa \u201E{{question}}\u201D zavr\u0161ava za 24 sata. Glasajte!",
@@ -216,7 +216,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Erinnerung 24 Stunden vor Ablauf der Abstimmungsfrist"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.POLL_DEADLINE_1H]: {
+  [chunkONOUAWLU_cjs.NotificationType.POLL_DEADLINE_1H]: {
     title: {
       hr: "Posljednja prilika za glasanje",
       en: "Last Chance to Vote",
@@ -233,7 +233,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Erinnerung 1 Stunde vor Ablauf der Abstimmungsfrist"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.POLL_FINALIZED]: {
+  [chunkONOUAWLU_cjs.NotificationType.POLL_FINALIZED]: {
     title: {
       hr: "Rezultati ankete dostupni",
       en: "Poll Results Available",
@@ -250,7 +250,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird gesendet, wenn die Umfrageergebnisse feststehen"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.POLL_VOTE_SIGNATURE_PENDING]: {
+  [chunkONOUAWLU_cjs.NotificationType.POLL_VOTE_SIGNATURE_PENDING]: {
     title: {
       hr: "Potpisani glas \u010Deka pregled",
       en: "Signed vote awaiting review",
@@ -267,7 +267,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird an Vertreter gesendet, wenn ein Miteigent\xFCmer einen unterschriebenen Stimmzettel hochl\xE4dt"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.POLL_VOTE_SIGNATURE_APPROVED]: {
+  [chunkONOUAWLU_cjs.NotificationType.POLL_VOTE_SIGNATURE_APPROVED]: {
     title: {
       hr: "Potpisani glas odobren",
       en: "Signed vote approved",
@@ -284,7 +284,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird an den W\xE4hler gesendet, wenn ein Vertreter seinen Stimmzettel genehmigt"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.POLL_VOTE_SIGNATURE_REJECTED]: {
+  [chunkONOUAWLU_cjs.NotificationType.POLL_VOTE_SIGNATURE_REJECTED]: {
     title: {
       hr: "Potpisani glas odbijen",
       en: "Signed vote rejected",
@@ -302,7 +302,7 @@ var NOTIFICATION_TEMPLATES = {
     }
   },
   // ── Events ─────────────────────────────────────────────────────────────
-  [chunkN6OR7IQ4_cjs.NotificationType.EVENT_CREATED]: {
+  [chunkONOUAWLU_cjs.NotificationType.EVENT_CREATED]: {
     title: { hr: "{{title}}", en: "{{title}}", de: "{{title}}" },
     body: {
       hr: "{{actorName}} je zakazao/la \u201E{{title}}\u201D za {{startDate}}",
@@ -315,7 +315,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird gesendet, wenn ein neues Ereignis erstellt wird"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.EVENT_REMINDER_24H]: {
+  [chunkONOUAWLU_cjs.NotificationType.EVENT_REMINDER_24H]: {
     title: { hr: "{{title}}", en: "{{title}}", de: "{{title}}" },
     body: {
       hr: "\u201E{{title}}\u201D po\u010Dinje sutra u {{startTime}}",
@@ -328,7 +328,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Erinnerung 24 Stunden vor dem Ereignis"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.EVENT_REMINDER_1H]: {
+  [chunkONOUAWLU_cjs.NotificationType.EVENT_REMINDER_1H]: {
     title: {
       hr: "Doga\u0111aj uskoro po\u010Dinje",
       en: "Event Starting Soon",
@@ -345,7 +345,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Erinnerung 1 Stunde vor dem Ereignis"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.EVENT_UPDATED]: {
+  [chunkONOUAWLU_cjs.NotificationType.EVENT_UPDATED]: {
     title: { hr: "{{title}}", en: "{{title}}", de: "{{title}}" },
     body: {
       hr: "Detalji doga\u0111aja \u201E{{title}}\u201D su a\u017Eurirani",
@@ -358,7 +358,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird gesendet, wenn Ereignisdetails ge\xE4ndert werden"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.EVENT_CANCELLED]: {
+  [chunkONOUAWLU_cjs.NotificationType.EVENT_CANCELLED]: {
     title: { hr: "Doga\u0111aj otkazan", en: "Event Cancelled", de: "Ereignis abgesagt" },
     body: {
       hr: "\u201E{{title}}\u201D zakazan za {{startDate}} je otkazan",
@@ -372,7 +372,7 @@ var NOTIFICATION_TEMPLATES = {
     }
   },
   // ── Waste collection reminders ─────────────────────────────────────────
-  [chunkN6OR7IQ4_cjs.NotificationType.WASTE_REMINDER_MIXED]: {
+  [chunkONOUAWLU_cjs.NotificationType.WASTE_REMINDER_MIXED]: {
     title: { hr: "{{wasteTypeLabel}}", en: "{{wasteTypeLabel}}", de: "{{wasteTypeLabel}}" },
     body: {
       hr: "Odvoz za {{wasteTypeLabel}} po\u010Dinje za 1 sat",
@@ -385,7 +385,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Erinnerung 1 Stunde vor der Restm\xFCllabholung"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.WASTE_REMINDER_BIO]: {
+  [chunkONOUAWLU_cjs.NotificationType.WASTE_REMINDER_BIO]: {
     title: { hr: "{{wasteTypeLabel}}", en: "{{wasteTypeLabel}}", de: "{{wasteTypeLabel}}" },
     body: {
       hr: "Odvoz za {{wasteTypeLabel}} po\u010Dinje za 1 sat",
@@ -398,7 +398,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Erinnerung 1 Stunde vor der Bioabfallabholung"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.WASTE_REMINDER_PLASTIC_METAL]: {
+  [chunkONOUAWLU_cjs.NotificationType.WASTE_REMINDER_PLASTIC_METAL]: {
     title: { hr: "{{wasteTypeLabel}}", en: "{{wasteTypeLabel}}", de: "{{wasteTypeLabel}}" },
     body: {
       hr: "Odvoz za {{wasteTypeLabel}} po\u010Dinje za 1 sat",
@@ -411,7 +411,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Erinnerung 1 Stunde vor der Abholung von Plastik & Metall"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.WASTE_REMINDER_PAPER_CARDBOARD]: {
+  [chunkONOUAWLU_cjs.NotificationType.WASTE_REMINDER_PAPER_CARDBOARD]: {
     title: { hr: "{{wasteTypeLabel}}", en: "{{wasteTypeLabel}}", de: "{{wasteTypeLabel}}" },
     body: {
       hr: "Odvoz za {{wasteTypeLabel}} po\u010Dinje za 1 sat",
@@ -425,7 +425,7 @@ var NOTIFICATION_TEMPLATES = {
     }
   },
   // ── Maintenance ────────────────────────────────────────────────────────
-  [chunkN6OR7IQ4_cjs.NotificationType.FAILURE_REPORT_CREATED]: {
+  [chunkONOUAWLU_cjs.NotificationType.FAILURE_REPORT_CREATED]: {
     title: { hr: "{{title}}", en: "{{title}}", de: "{{title}}" },
     body: {
       hr: "{{actorName}} je prijavio/la kvar: {{title}}",
@@ -438,7 +438,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird an Geb\xE4udeverwalter gesendet, wenn ein Schaden gemeldet wird"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.FAILURE_REPORT_STATUS_CHANGED]: {
+  [chunkONOUAWLU_cjs.NotificationType.FAILURE_REPORT_STATUS_CHANGED]: {
     title: {
       hr: "Status kvara promijenjen",
       en: "Issue Status Updated",
@@ -455,7 +455,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird gesendet, wenn sich der Status einer Schadensmeldung \xE4ndert"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.FAILURE_REPORT_RESOLVED]: {
+  [chunkONOUAWLU_cjs.NotificationType.FAILURE_REPORT_RESOLVED]: {
     title: { hr: "Kvar rije\u0161en", en: "Issue Resolved", de: "Schaden behoben" },
     body: {
       hr: "Prijava \u201E{{title}}\u201D je rije\u0161ena",
@@ -468,7 +468,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird gesendet, wenn eine Schadensmeldung als behoben markiert wird"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.FAILURE_REPORT_APPROVED]: {
+  [chunkONOUAWLU_cjs.NotificationType.FAILURE_REPORT_APPROVED]: {
     title: { hr: "Prijava kvara odobrena", en: "Report Approved", de: "Meldung genehmigt" },
     body: {
       hr: "Va\u0161a prijava kvara \u201E{{title}}\u201D je odobrena",
@@ -481,7 +481,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird an den Einreicher gesendet, wenn seine Schadensmeldung genehmigt wird"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.FAILURE_REPORT_DECLINED]: {
+  [chunkONOUAWLU_cjs.NotificationType.FAILURE_REPORT_DECLINED]: {
     title: { hr: "Prijava kvara odbijena", en: "Report Declined", de: "Meldung abgelehnt" },
     body: {
       hr: "Va\u0161a prijava kvara \u201E{{title}}\u201D nije odobrena",
@@ -495,7 +495,7 @@ var NOTIFICATION_TEMPLATES = {
     }
   },
   // ── Financial ──────────────────────────────────────────────────────────
-  [chunkN6OR7IQ4_cjs.NotificationType.PAYMENT_DUE]: {
+  [chunkONOUAWLU_cjs.NotificationType.PAYMENT_DUE]: {
     title: { hr: "Dospije\u0107e pla\u0107anja", en: "Payment Due", de: "Zahlung f\xE4llig" },
     body: {
       hr: "Pla\u0107anje od {{amount}} dospijeva za zgradu {{buildingName}}",
@@ -508,7 +508,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird gesendet, wenn eine Zahlung f\xE4llig ist"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.PAYMENT_RECEIVED]: {
+  [chunkONOUAWLU_cjs.NotificationType.PAYMENT_RECEIVED]: {
     title: { hr: "Uplata primljena", en: "Payment Received", de: "Zahlung erhalten" },
     body: {
       hr: "Uplata od {{amount}} primljena za zgradu {{buildingName}}",
@@ -522,7 +522,7 @@ var NOTIFICATION_TEMPLATES = {
     }
   },
   // ── Building / system ──────────────────────────────────────────────────
-  [chunkN6OR7IQ4_cjs.NotificationType.BUILDING_JOIN_REQUEST_RECEIVED]: {
+  [chunkONOUAWLU_cjs.NotificationType.BUILDING_JOIN_REQUEST_RECEIVED]: {
     title: {
       hr: "Novi zahtjev za pridru\u017Eivanje",
       en: "New Join Request",
@@ -539,7 +539,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird an Verwalter gesendet, wenn jemand einen Beitritt anfragt"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.BUILDING_JOIN_REQUEST_APPROVED]: {
+  [chunkONOUAWLU_cjs.NotificationType.BUILDING_JOIN_REQUEST_APPROVED]: {
     title: { hr: "Zahtjev odobren", en: "Join Request Approved", de: "Anfrage genehmigt" },
     body: {
       hr: "Va\u0161 zahtjev za pridru\u017Eivanje zgradi {{buildingName}} je odobren",
@@ -552,7 +552,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird gesendet, wenn die Beitrittsanfrage genehmigt wird"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.BUILDING_JOIN_REQUEST_REJECTED]: {
+  [chunkONOUAWLU_cjs.NotificationType.BUILDING_JOIN_REQUEST_REJECTED]: {
     title: { hr: "Zahtjev odbijen", en: "Join Request Rejected", de: "Anfrage abgelehnt" },
     body: {
       hr: "Va\u0161 zahtjev za pridru\u017Eivanje zgradi {{buildingName}} nije odobren",
@@ -565,7 +565,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird gesendet, wenn die Beitrittsanfrage abgelehnt wird"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.BUILDING_MEMBER_JOINED]: {
+  [chunkONOUAWLU_cjs.NotificationType.BUILDING_MEMBER_JOINED]: {
     title: { hr: "Novi \u010Dlan", en: "New Member", de: "Neues Mitglied" },
     body: {
       hr: "{{actorName}} se pridru\u017Eio/la zgradi {{buildingName}}",
@@ -578,7 +578,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird an Verwalter gesendet, wenn jemand dem Geb\xE4ude beitritt"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.BUILDING_ROLE_CHANGED]: {
+  [chunkONOUAWLU_cjs.NotificationType.BUILDING_ROLE_CHANGED]: {
     title: {
       hr: "Va\u0161a uloga je promijenjena",
       en: "Your Role Changed",
@@ -595,7 +595,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird gesendet, wenn sich die Rolle eines Nutzers \xE4ndert"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.OWNER_RECORD_LINKED]: {
+  [chunkONOUAWLU_cjs.NotificationType.OWNER_RECORD_LINKED]: {
     title: {
       hr: "Povezani ste kao suvlasnik",
       en: "Linked as an Owner",
@@ -612,7 +612,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird gesendet, wenn ein Konto mit einem Eigentumseintrag verkn\xFCpft wird"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.BUILDING_PENDING_APPROVAL]: {
+  [chunkONOUAWLU_cjs.NotificationType.BUILDING_PENDING_APPROVAL]: {
     title: {
       hr: "Nova zgrada \u010Deka odobrenje",
       en: "New Building Pending Approval",
@@ -629,7 +629,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird an Admins gesendet, wenn ein neues Geb\xE4ude auf Genehmigung wartet"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.BUILDING_APPROVED]: {
+  [chunkONOUAWLU_cjs.NotificationType.BUILDING_APPROVED]: {
     title: { hr: "Zgrada odobrena", en: "Building Approved", de: "Geb\xE4ude genehmigt" },
     body: {
       hr: "Va\u0161a zgrada \u201E{{buildingName}}\u201D je odobrena",
@@ -642,7 +642,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird an den Ersteller gesendet, wenn sein Geb\xE4ude genehmigt wird"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.BUILDING_REJECTED]: {
+  [chunkONOUAWLU_cjs.NotificationType.BUILDING_REJECTED]: {
     title: { hr: "Zgrada odbijena", en: "Building Rejected", de: "Geb\xE4ude abgelehnt" },
     body: {
       hr: "Va\u0161a zgrada \u201E{{buildingName}}\u201D nije odobrena: {{rejectionReason}}",
@@ -656,7 +656,7 @@ var NOTIFICATION_TEMPLATES = {
     }
   },
   // ── Chat ───────────────────────────────────────────────────────────────
-  [chunkN6OR7IQ4_cjs.NotificationType.CHAT_MESSAGE]: {
+  [chunkONOUAWLU_cjs.NotificationType.CHAT_MESSAGE]: {
     // User content — identical in every locale by design.
     title: { hr: "{{senderName}}", en: "{{senderName}}", de: "{{senderName}}" },
     body: { hr: "{{messagePreview}}", en: "{{messagePreview}}", de: "{{messagePreview}}" },
@@ -667,7 +667,7 @@ var NOTIFICATION_TEMPLATES = {
     }
   },
   // ── Building mailbox (Korisnički pretinac; rep/deputy audience) ────────
-  [chunkN6OR7IQ4_cjs.NotificationType.EMAIL_RECEIVED]: {
+  [chunkONOUAWLU_cjs.NotificationType.EMAIL_RECEIVED]: {
     title: {
       hr: "Nova poruka u korisni\u010Dkom pretincu",
       en: "New message in the inbox",
@@ -685,7 +685,7 @@ var NOTIFICATION_TEMPLATES = {
     }
   },
   // ── Organization membership (fired at the affected member only) ────────
-  [chunkN6OR7IQ4_cjs.NotificationType.ORG_MEMBER_ADDED]: {
+  [chunkONOUAWLU_cjs.NotificationType.ORG_MEMBER_ADDED]: {
     title: {
       hr: "Dodani ste u organizaciju",
       en: "Added to an Organization",
@@ -702,7 +702,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird gesendet, wenn ein Nutzer Mitglied einer Organisation wird"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.ORG_MEMBER_REMOVED]: {
+  [chunkONOUAWLU_cjs.NotificationType.ORG_MEMBER_REMOVED]: {
     title: {
       hr: "Uklonjeni ste iz organizacije",
       en: "Removed from an Organization",
@@ -719,7 +719,7 @@ var NOTIFICATION_TEMPLATES = {
       de: "Wird gesendet, wenn ein Nutzer aus einer Organisation entfernt wird"
     }
   },
-  [chunkN6OR7IQ4_cjs.NotificationType.ORG_MEMBER_ROLE_CHANGED]: {
+  [chunkONOUAWLU_cjs.NotificationType.ORG_MEMBER_ROLE_CHANGED]: {
     title: {
       hr: "Va\u0161a uloga u organizaciji je promijenjena",
       en: "Your Organization Role Changed",
@@ -737,7 +737,7 @@ var NOTIFICATION_TEMPLATES = {
     }
   },
   // ── System ─────────────────────────────────────────────────────────────
-  [chunkN6OR7IQ4_cjs.NotificationType.SYSTEM_ANNOUNCEMENT]: {
+  [chunkONOUAWLU_cjs.NotificationType.SYSTEM_ANNOUNCEMENT]: {
     // Announcement content is authored, not templated — identical everywhere.
     title: { hr: "{{title}}", en: "{{title}}", de: "{{title}}" },
     body: { hr: "{{body}}", en: "{{body}}", de: "{{body}}" },

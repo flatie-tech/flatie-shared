@@ -18,9 +18,29 @@ describe('Role Hierarchies', () => {
       expect(canAssignRole(BuildingRole.DEPUTY_REPRESENTATIVE, BuildingRole.CO_OWNER)).toBe(true);
     });
 
-    it('OWNER_REPRESENTATIVE cannot assign DEPUTY_REPRESENTATIVE (same rank)', () => {
+    it('OWNER_REPRESENTATIVE can assign DEPUTY_REPRESENTATIVE (the deputy ranks below)', () => {
+      // They shared rank 2 until 2026-08-15, so a representative could not
+      // appoint their own deputy — the role dropdown offered residents only.
       expect(
         canAssignRole(BuildingRole.OWNER_REPRESENTATIVE, BuildingRole.DEPUTY_REPRESENTATIVE),
+      ).toBe(true);
+    });
+
+    it('OWNER_REPRESENTATIVE cannot assign a peer OWNER_REPRESENTATIVE', () => {
+      // Deliberately unlike canAssignOrgRole / canAssignPlatformRole, which
+      // carry a peer-admin exception: the top building role is handed out by
+      // org/platform staff, not by the incumbent.
+      expect(
+        canAssignRole(BuildingRole.OWNER_REPRESENTATIVE, BuildingRole.OWNER_REPRESENTATIVE),
+      ).toBe(false);
+    });
+
+    it('DEPUTY_REPRESENTATIVE cannot assign a peer or the representative above them', () => {
+      expect(
+        canAssignRole(BuildingRole.DEPUTY_REPRESENTATIVE, BuildingRole.DEPUTY_REPRESENTATIVE),
+      ).toBe(false);
+      expect(
+        canAssignRole(BuildingRole.DEPUTY_REPRESENTATIVE, BuildingRole.OWNER_REPRESENTATIVE),
       ).toBe(false);
     });
 

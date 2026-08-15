@@ -126,7 +126,20 @@ declare const BuildingRole: {
     readonly RESIDENT: "resident";
 };
 type BuildingRole = (typeof BuildingRole)[keyof typeof BuildingRole];
+/**
+ * The deputy sits BELOW the representative. They shared rank 2 until
+ * 2026-08-15, which made `canAssignRole(rep, deputy)` false and left a
+ * representative unable to appoint their own deputy: the role dropdown offered
+ * residents and nothing else, and only org/platform staff (who bypass this
+ * hierarchy) could fill the post.
+ */
 declare const BUILDING_ROLE_RANK: Record<BuildingRole, number>;
+/**
+ * Strictly-lower ranks only — no peer exception here, unlike `canAssignOrgRole`
+ * and `canAssignPlatformRole`. A representative cannot mint another
+ * representative; promoting someone to the top building role stays an
+ * org/platform action.
+ */
 declare function canAssignRole(assignerRole: BuildingRole, targetRole: BuildingRole): boolean;
 declare const OrgRole: {
     readonly ORG_ADMIN: "org_admin";
