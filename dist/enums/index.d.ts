@@ -108,6 +108,24 @@ declare const FailureUnitType: {
     readonly STORAGE_UNIT: "storage_unit";
 };
 type FailureUnitType = (typeof FailureUnitType)[keyof typeof FailureUnitType];
+/**
+ * Who paid for the repair — "financirano od" on the report.
+ *
+ * Bookkeeping only: recording `pricuva` here does NOT move money or create a
+ * fund transaction, it just says where the money came from so residents can
+ * read the record. Fund movements live in expense_transactions.
+ */
+declare const FailureFundingSource: {
+    /** Building reserve fund (pričuva). */
+    readonly PRICUVA: "pricuva";
+    /** Covered by an insurance claim (osiguranje). */
+    readonly OSIGURANJE: "osiguranje";
+    /** Paid by an individual co-owner (suvlasnik). */
+    readonly SUVLASNIK: "suvlasnik";
+    /** Anything else (ostalo). */
+    readonly OSTALO: "ostalo";
+};
+type FailureFundingSource = (typeof FailureFundingSource)[keyof typeof FailureFundingSource];
 
 /**
  * How a building's fund transactions are populated.
@@ -320,4 +338,4 @@ declare function deriveVotingStrength(user: {
     verificationTier?: number | null;
 }): VotingStrength;
 
-export { BoardVisibility, BuildingOtpExpiry, BuildingStatus, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DsarRequestStatus, DsarRequestType, EnterpriseRequestStatus, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, JoinRequestStatus, OrgQuotaResourceType, OrgStatus, OrgType, POLL_CANNOT_VOTE_REASON_KEY, PollCannotVoteReason, PollStatus, PollVoteStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, TransactionSource, UnitType, VerificationTier, VotingStrength, deriveVotingStrength, methodToTier };
+export { BoardVisibility, BuildingOtpExpiry, BuildingStatus, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DsarRequestStatus, DsarRequestType, EnterpriseRequestStatus, FailureFundingSource, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, JoinRequestStatus, OrgQuotaResourceType, OrgStatus, OrgType, POLL_CANNOT_VOTE_REASON_KEY, PollCannotVoteReason, PollStatus, PollVoteStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, TransactionSource, UnitType, VerificationTier, VotingStrength, deriveVotingStrength, methodToTier };

@@ -313,7 +313,6 @@ declare const buildingKeys: {
     details: () => readonly ["building", "detail"];
     detail: (id: string) => readonly ["building", "detail", string];
     otp: (id: string) => readonly ["building", "otp", string];
-    otpHistory: (id: string) => readonly ["building", "otpHistory", string];
     users: (id: string, filters?: Record<string, unknown>) => readonly ["building", "users", string, {
         readonly [x: string]: unknown;
     }];
@@ -686,7 +685,6 @@ declare const queryKeys: {
         details: () => readonly ["building", "detail"];
         detail: (id: string) => readonly ["building", "detail", string];
         otp: (id: string) => readonly ["building", "otp", string];
-        otpHistory: (id: string) => readonly ["building", "otpHistory", string];
         users: (id: string, filters?: Record<string, unknown>) => readonly ["building", "users", string, {
             readonly [x: string]: unknown;
         }];

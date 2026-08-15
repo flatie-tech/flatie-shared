@@ -1503,6 +1503,7 @@ declare const FAILURE_REPORT_LIMITS: {
     readonly TITLE_MAX: 100;
     readonly DESCRIPTION_MAX: 2000;
     readonly COMMON_AREA_DESCRIPTION_MAX: 500;
+    readonly CONTRACTOR_MAX: 200;
 };
 /**
  * Failure report nested event schema (same shape as notice event —
@@ -1539,6 +1540,15 @@ declare const createFailureReportSchema: z.ZodObject<{
         storage_unit: "storage_unit";
     }>>;
     unitId: z.ZodOptional<z.ZodString>;
+    fundingSource: z.ZodOptional<z.ZodEnum<{
+        pricuva: "pricuva";
+        osiguranje: "osiguranje";
+        suvlasnik: "suvlasnik";
+        ostalo: "ostalo";
+    }>>;
+    warrantyClaim: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
+    contractor: z.ZodOptional<z.ZodString>;
+    cost: z.ZodOptional<z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>>;
     fileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
     events: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodObject<{
         startDate: z.ZodCoercedDate<unknown>;
@@ -1576,6 +1586,15 @@ declare const updateFailureReportSchema: z.ZodObject<{
         storage_unit: "storage_unit";
     }>>;
     unitId: z.ZodOptional<z.ZodString>;
+    fundingSource: z.ZodOptional<z.ZodEnum<{
+        pricuva: "pricuva";
+        osiguranje: "osiguranje";
+        suvlasnik: "suvlasnik";
+        ostalo: "ostalo";
+    }>>;
+    warrantyClaim: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
+    contractor: z.ZodOptional<z.ZodString>;
+    cost: z.ZodOptional<z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>>;
     fileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
     removeChildFileIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
     events: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodObject<{
@@ -3260,6 +3279,15 @@ declare const failureReportResponseSchema: z.ZodObject<{
     unitType: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     unitId: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     unitName: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    fundingSource: z.ZodNullable<z.ZodOptional<z.ZodEnum<{
+        pricuva: "pricuva";
+        osiguranje: "osiguranje";
+        suvlasnik: "suvlasnik";
+        ostalo: "ostalo";
+    }>>>;
+    warrantyClaim: z.ZodDefault<z.ZodBoolean>;
+    contractor: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    cost: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     events: z.ZodDefault<z.ZodArray<z.ZodObject<{
         id: z.ZodString;
         title: z.ZodString;
@@ -3317,6 +3345,15 @@ declare const paginatedFailureReportsResponseSchema: z.ZodObject<{
         unitType: z.ZodNullable<z.ZodOptional<z.ZodString>>;
         unitId: z.ZodNullable<z.ZodOptional<z.ZodString>>;
         unitName: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+        fundingSource: z.ZodNullable<z.ZodOptional<z.ZodEnum<{
+            pricuva: "pricuva";
+            osiguranje: "osiguranje";
+            suvlasnik: "suvlasnik";
+            ostalo: "ostalo";
+        }>>>;
+        warrantyClaim: z.ZodDefault<z.ZodBoolean>;
+        contractor: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+        cost: z.ZodNullable<z.ZodOptional<z.ZodString>>;
         events: z.ZodDefault<z.ZodArray<z.ZodObject<{
             id: z.ZodString;
             title: z.ZodString;

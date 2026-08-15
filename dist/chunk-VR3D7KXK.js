@@ -1,7 +1,7 @@
 import { normalizeMoney } from './chunk-ZD7YLRHX.js';
 import { optionalIbanSchema } from './chunk-7YKQN43X.js';
 import { isZuozAdjacentConsentCategory, AI_CHAT_LIMITS } from './chunk-XDD32FEC.js';
-import { BoardVisibility, Priority, OrgRole, OrgType, BuildingType, BuildingRole, PricuvaRefMode, FundsSource, QUOTA_RESOURCE_TYPES, DsarRequestType, DsarRequestStatus, DSAR_MAX_EXTENSION_DAYS, FailureUnitType, FailureLocationType, FailureStatus, EnterpriseRequestStatus, PollType, TransactionType, PlatformRole, BuildingStatus, CommonStatus, ApprovalStatus, NotificationType, PLATFORM_FEATURES, PollCannotVoteReason } from './chunk-IE7GOQYI.js';
+import { BoardVisibility, Priority, OrgRole, OrgType, BuildingType, BuildingRole, PricuvaRefMode, FundsSource, QUOTA_RESOURCE_TYPES, DsarRequestType, DsarRequestStatus, DSAR_MAX_EXTENSION_DAYS, FailureFundingSource, FailureUnitType, FailureLocationType, FailureStatus, EnterpriseRequestStatus, PollType, TransactionType, PlatformRole, BuildingStatus, CommonStatus, ApprovalStatus, NotificationType, PLATFORM_FEATURES, PollCannotVoteReason } from './chunk-WZKOAKYT.js';
 import { BACKEND_ERROR_CODES } from './chunk-FJGH2CTJ.js';
 import { z } from 'zod';
 
@@ -1009,7 +1009,8 @@ var FAILURE_REPORT_LIMITS = {
   TITLE_MIN: 1,
   TITLE_MAX: 100,
   DESCRIPTION_MAX: 2e3,
-  COMMON_AREA_DESCRIPTION_MAX: 500
+  COMMON_AREA_DESCRIPTION_MAX: 500,
+  CONTRACTOR_MAX: 200
 };
 var failureReportEventSchema = z.object({
   startDate: z.coerce.date().describe("Event start \u2014 accepts an ISO-8601 string or Date."),
@@ -1073,6 +1074,21 @@ var createFailureReportSchema = refineLocation(
     commonAreaDescription: z.string().max(FAILURE_REPORT_LIMITS.COMMON_AREA_DESCRIPTION_MAX).optional().describe("Free-text location description. Required when `locationType` is `common_area`."),
     unitType: z.enum([FailureUnitType.APARTMENT, FailureUnitType.GARAGE, FailureUnitType.STORAGE_UNIT]).optional().describe("Kind of unit when `locationType` is `own_unit`. Required in that case."),
     unitId: uuidSchema.optional().describe("UUID of the specific unit. Required when `locationType` is `own_unit`."),
+    fundingSource: z.enum([
+      FailureFundingSource.PRICUVA,
+      FailureFundingSource.OSIGURANJE,
+      FailureFundingSource.SUVLASNIK,
+      FailureFundingSource.OSTALO
+    ]).optional().describe(
+      'Who paid for the repair ("financirano od"). Record-keeping only \u2014 it does not move money or create a fund transaction.'
+    ),
+    warrantyClaim: multipartBoolean().optional().describe(
+      'True when the repair was handled as a warranty/complaint claim ("reklamacija"). Defaults to false.'
+    ),
+    contractor: z.string().max(FAILURE_REPORT_LIMITS.CONTRACTOR_MAX).optional().describe('Who did the work ("izvo\u0111a\u010D"), free text. Record-keeping only.'),
+    cost: moneyStringSchema.optional().describe(
+      'What the repair cost, EUR two-decimal string ("izvo\u0111a\u010D i iznos"). Deliberately NOT a fund transaction \u2014 it is written on the report so residents can read what was spent, and never touches the building funds ledger.'
+    ),
     fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-uploaded files to attach to this report."),
     events: multipartArray(failureReportEventWithDateOrderSchema).optional().describe("Calendar events to create alongside the report (inspections, scheduled fixes).")
   })
@@ -1090,6 +1106,21 @@ var updateFailureReportSchema = refineLocation(
     commonAreaDescription: z.string().max(FAILURE_REPORT_LIMITS.COMMON_AREA_DESCRIPTION_MAX).optional().describe("Revised common-area description. Required when `locationType` is `common_area`."),
     unitType: z.enum([FailureUnitType.APARTMENT, FailureUnitType.GARAGE, FailureUnitType.STORAGE_UNIT]).optional().describe("Revised unit kind. Required when `locationType` is `own_unit`."),
     unitId: uuidSchema.optional().describe("Revised unit UUID. Required when `locationType` is `own_unit`."),
+    fundingSource: z.enum([
+      FailureFundingSource.PRICUVA,
+      FailureFundingSource.OSIGURANJE,
+      FailureFundingSource.SUVLASNIK,
+      FailureFundingSource.OSTALO
+    ]).optional().describe(
+      'Who paid for the repair ("financirano od"). Record-keeping only \u2014 it does not move money or create a fund transaction.'
+    ),
+    warrantyClaim: multipartBoolean().optional().describe(
+      'True when the repair was handled as a warranty/complaint claim ("reklamacija"). Defaults to false.'
+    ),
+    contractor: z.string().max(FAILURE_REPORT_LIMITS.CONTRACTOR_MAX).optional().describe('Who did the work ("izvo\u0111a\u010D"), free text. Record-keeping only.'),
+    cost: moneyStringSchema.optional().describe(
+      'What the repair cost, EUR two-decimal string ("izvo\u0111a\u010D i iznos"). Deliberately NOT a fund transaction \u2014 it is written on the report so residents can read what was spent, and never touches the building funds ledger.'
+    ),
     fileIds: multipartArray(uuidSchema).optional().describe("UUIDs of newly-uploaded files to add to the report."),
     removeChildFileIds: multipartArray(uuidSchema).optional().describe("UUIDs of previously-attached files to detach from the report."),
     events: multipartArray(failureReportEventWithDateOrderSchema).optional().describe("Full list of events for the report \u2014 replaces the existing event set.")
@@ -2151,6 +2182,21 @@ var failureReportResponseSchema = z.looseObject({
   ),
   unitId: z.string().uuid().optional().nullable().describe("UUID of the specific unit when `locationType` is `own_unit`; null otherwise."),
   unitName: z.string().optional().nullable().describe('Resolved human-readable label of the unit (e.g. "Apartment 4B"); null when unset.'),
+  fundingSource: z.enum([
+    FailureFundingSource.PRICUVA,
+    FailureFundingSource.OSIGURANJE,
+    FailureFundingSource.SUVLASNIK,
+    FailureFundingSource.OSTALO
+  ]).optional().nullable().describe(
+    'Who paid for the repair ("financirano od"); null when not recorded. Bookkeeping only \u2014 no fund transaction is implied.'
+  ),
+  warrantyClaim: z.boolean().default(false).describe(
+    'True when the repair was handled as a warranty/complaint claim ("reklamacija"). Defaults to false so responses predating the field still parse.'
+  ),
+  contractor: z.string().optional().nullable().describe('Who did the work ("izvo\u0111a\u010D"); null when not recorded.'),
+  cost: z.string().optional().nullable().describe(
+    "What the repair cost, EUR two-decimal string; null when not recorded. Never a fund transaction \u2014 see the request schema."
+  ),
   events: z.array(nestedEventSchema).default([]).describe("Events (scheduled work or meetings) linked to this report; empty when none."),
   polls: z.array(pollReferenceSchema).default([]).describe("Polls created to gather resident input on this report; empty when none.")
 });
@@ -2791,5 +2837,5 @@ var repDashboardSummaryResponseSchema = z.looseObject({
 }).describe("Payload of `GET /representatives/dashboard/summary`.");
 
 export { ARCHIVE_TYPES, AUDIT_DENIAL_TARGET_TYPE, ApprovalStatusSchema, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, EMAIL_LIMITS, ENTITY_LINK_TYPES, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, LINKABLE_ENTITY_TYPES, NOTICE_LIMITS, ORGANIZATION_LIMITS, OrgInvitationStatus, POLL_LIMITS, POLL_TYPES, PrioritySchema, RECURRENCE_TYPES, REP_RECENT_ACTIVITY_TYPES, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, auditLogResponseSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingOwnerAssignmentSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createDsarEventSchema, createDsarRequestSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createEventSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createNoticeSchema, createOrgBroadcastSchema, createOrganizationSchema, createOwnerSchema, createPlatformSubscriptionSchema, createPollSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, dsarErasureSchema, dsarEventResponseSchema, dsarRequestResponseSchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, emailUnreadCountResponseSchema, enterpriseRequestResponseSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, featureFlagsResponseSchema, finalizePollSchema, forgotPasswordSchema, getAuditLogsQuerySchema, getDsarRequestsQuerySchema, getEnterpriseRequestsQuerySchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getNotificationDataSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getPlatformSubscriptionsQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, idCardVerificationStatusSchema, inviteOrgMemberSchema, inviteOwnerSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, loginSchema, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationDataSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgBroadcastResponseSchema, orgInvitationResponseSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, platformFeatureFlagSchema, platformFeatureFlagsResponseSchema, platformSubscriptionResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, priorityOptions, publicOrgInvitationSchema, recordDsarRectificationSchema, recordOfflineVotesSchema, recurrenceTypeSchema, registerSchema, rejectIdCardVerificationSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, revenueMetricsResponseSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, setDsarRestrictionSchema, signedMoneyStringSchema, strongPasswordSchema, submitIdCardVerificationSchema, timeSchema, unitKindSchema, unitSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateDsarRequestSchema, updateEnterpriseRequestSchema, updateEventSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgBuildingContractSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePlatformFeatureRequestSchema, updatePlatformSubscriptionSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema, voteWithIdCardSchema };
-//# sourceMappingURL=chunk-5QCC5KRM.js.map
-//# sourceMappingURL=chunk-5QCC5KRM.js.map
+//# sourceMappingURL=chunk-VR3D7KXK.js.map
+//# sourceMappingURL=chunk-VR3D7KXK.js.map

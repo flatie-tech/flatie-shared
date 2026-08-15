@@ -12,7 +12,11 @@ export {
 } from './dsar.enum';
 export { EnterpriseRequestStatus } from './enterprise-request.enum';
 export { EntityLinkType, LinkableEntityType } from './entity-link.enum';
-export { FailureLocationType, FailureUnitType } from './failure-location.enum';
+export {
+  FailureFundingSource,
+  FailureLocationType,
+  FailureUnitType,
+} from './failure-location.enum';
 export { FundsSource, TransactionSource } from './funds-source.enum';
 export {
   IdentityVerificationMethod,

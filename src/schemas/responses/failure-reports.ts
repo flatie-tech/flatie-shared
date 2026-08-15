@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { FailureFundingSource } from '../../enums/failure-location.enum';
 import { paginatedResponseSchema } from '../pagination.schema';
 import { FailureStatusSchema, PrioritySchema } from '../status.schema';
 import { nestedEventSchema, nestedFileSchema, pollReferenceSchema } from './_nested';
@@ -95,6 +96,36 @@ export const failureReportResponseSchema = z.looseObject({
     .optional()
     .nullable()
     .describe('Resolved human-readable label of the unit (e.g. "Apartment 4B"); null when unset.'),
+  fundingSource: z
+    .enum([
+      FailureFundingSource.PRICUVA,
+      FailureFundingSource.OSIGURANJE,
+      FailureFundingSource.SUVLASNIK,
+      FailureFundingSource.OSTALO,
+    ])
+    .optional()
+    .nullable()
+    .describe(
+      'Who paid for the repair ("financirano od"); null when not recorded. Bookkeeping only — no fund transaction is implied.',
+    ),
+  warrantyClaim: z
+    .boolean()
+    .default(false)
+    .describe(
+      'True when the repair was handled as a warranty/complaint claim ("reklamacija"). Defaults to false so responses predating the field still parse.',
+    ),
+  contractor: z
+    .string()
+    .optional()
+    .nullable()
+    .describe('Who did the work ("izvođač"); null when not recorded.'),
+  cost: z
+    .string()
+    .optional()
+    .nullable()
+    .describe(
+      'What the repair cost, EUR two-decimal string; null when not recorded. Never a fund transaction — see the request schema.',
+    ),
   events: z
     .array(nestedEventSchema)
     .default([])

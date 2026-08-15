@@ -1,7 +1,12 @@
 import { z } from 'zod';
-import { FailureLocationType, FailureUnitType } from '../../enums/failure-location.enum';
+import {
+  FailureFundingSource,
+  FailureLocationType,
+  FailureUnitType,
+} from '../../enums/failure-location.enum';
 import { FailureStatus, Priority } from '../../enums/status.enum';
 import { uuidSchema } from '../base.schema';
+import { moneyStringSchema } from '../money.schema';
 import { multipartArray, multipartBoolean } from '../multipart.schema';
 
 /**
@@ -12,6 +17,7 @@ export const FAILURE_REPORT_LIMITS = {
   TITLE_MAX: 100,
   DESCRIPTION_MAX: 2000,
   COMMON_AREA_DESCRIPTION_MAX: 500,
+  CONTRACTOR_MAX: 200,
 } as const;
 
 /**
@@ -133,6 +139,32 @@ export const createFailureReportSchema = refineLocation(
     unitId: uuidSchema
       .optional()
       .describe('UUID of the specific unit. Required when `locationType` is `own_unit`.'),
+    fundingSource: z
+      .enum([
+        FailureFundingSource.PRICUVA,
+        FailureFundingSource.OSIGURANJE,
+        FailureFundingSource.SUVLASNIK,
+        FailureFundingSource.OSTALO,
+      ])
+      .optional()
+      .describe(
+        'Who paid for the repair ("financirano od"). Record-keeping only — it does not move money or create a fund transaction.',
+      ),
+    warrantyClaim: multipartBoolean()
+      .optional()
+      .describe(
+        'True when the repair was handled as a warranty/complaint claim ("reklamacija"). Defaults to false.',
+      ),
+    contractor: z
+      .string()
+      .max(FAILURE_REPORT_LIMITS.CONTRACTOR_MAX)
+      .optional()
+      .describe('Who did the work ("izvođač"), free text. Record-keeping only.'),
+    cost: moneyStringSchema
+      .optional()
+      .describe(
+        'What the repair cost, EUR two-decimal string ("izvođač i iznos"). Deliberately NOT a fund transaction — it is written on the report so residents can read what was spent, and never touches the building funds ledger.',
+      ),
     fileIds: multipartArray(uuidSchema)
       .optional()
       .describe('UUIDs of previously-uploaded files to attach to this report.'),
@@ -190,6 +222,32 @@ export const updateFailureReportSchema = refineLocation(
     unitId: uuidSchema
       .optional()
       .describe('Revised unit UUID. Required when `locationType` is `own_unit`.'),
+    fundingSource: z
+      .enum([
+        FailureFundingSource.PRICUVA,
+        FailureFundingSource.OSIGURANJE,
+        FailureFundingSource.SUVLASNIK,
+        FailureFundingSource.OSTALO,
+      ])
+      .optional()
+      .describe(
+        'Who paid for the repair ("financirano od"). Record-keeping only — it does not move money or create a fund transaction.',
+      ),
+    warrantyClaim: multipartBoolean()
+      .optional()
+      .describe(
+        'True when the repair was handled as a warranty/complaint claim ("reklamacija"). Defaults to false.',
+      ),
+    contractor: z
+      .string()
+      .max(FAILURE_REPORT_LIMITS.CONTRACTOR_MAX)
+      .optional()
+      .describe('Who did the work ("izvođač"), free text. Record-keeping only.'),
+    cost: moneyStringSchema
+      .optional()
+      .describe(
+        'What the repair cost, EUR two-decimal string ("izvođač i iznos"). Deliberately NOT a fund transaction — it is written on the report so residents can read what was spent, and never touches the building funds ledger.',
+      ),
     fileIds: multipartArray(uuidSchema)
       .optional()
       .describe('UUIDs of newly-uploaded files to add to the report.'),
