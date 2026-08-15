@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.116.0
+
+### Changes
+
+- feat(failure-reports): record who paid, who did the work, and what it cost
+
 ## 0.115.0
 
 ### Changes

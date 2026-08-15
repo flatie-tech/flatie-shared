@@ -2237,6 +2237,15 @@ declare const updateFailureReportRequestSchema: zod.ZodObject<{
         storage_unit: "storage_unit";
     }>>;
     unitId: zod.ZodOptional<zod.ZodString>;
+    fundingSource: zod.ZodOptional<zod.ZodEnum<{
+        pricuva: "pricuva";
+        osiguranje: "osiguranje";
+        suvlasnik: "suvlasnik";
+        ostalo: "ostalo";
+    }>>;
+    warrantyClaim: zod.ZodOptional<zod.ZodPipe<zod.ZodTransform<{}, unknown>, zod.ZodBoolean>>;
+    contractor: zod.ZodOptional<zod.ZodString>;
+    cost: zod.ZodOptional<zod.ZodPipe<zod.ZodPipe<zod.ZodUnion<readonly [zod.ZodString, zod.ZodNumber]>, zod.ZodTransform<string, string | number>>, zod.ZodPipe<zod.ZodString, zod.ZodTransform<string, string>>>>;
     fileIds: zod.ZodOptional<zod.ZodPipe<zod.ZodTransform<unknown, unknown>, zod.ZodArray<zod.ZodString>>>;
     removeChildFileIds: zod.ZodOptional<zod.ZodPipe<zod.ZodTransform<unknown, unknown>, zod.ZodArray<zod.ZodString>>>;
     events: zod.ZodOptional<zod.ZodPipe<zod.ZodTransform<unknown, unknown>, zod.ZodArray<zod.ZodObject<{
