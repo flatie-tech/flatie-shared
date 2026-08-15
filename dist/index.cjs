@@ -1,6 +1,6 @@
 'use strict';
 
-var chunkG5WSET6F_cjs = require('./chunk-G5WSET6F.cjs');
+var chunk4QLRGV5D_cjs = require('./chunk-4QLRGV5D.cjs');
 var chunkFQ3VGRZL_cjs = require('./chunk-FQ3VGRZL.cjs');
 var chunkI5URKSQA_cjs = require('./chunk-I5URKSQA.cjs');
 var chunk4RIQODWQ_cjs = require('./chunk-4RIQODWQ.cjs');
@@ -224,7 +224,7 @@ var SettingsTestIds = {
 
 Object.defineProperty(exports, "API_ROUTES", {
   enumerable: true,
-  get: function () { return chunkG5WSET6F_cjs.API_ROUTES; }
+  get: function () { return chunk4QLRGV5D_cjs.API_ROUTES; }
 });
 Object.defineProperty(exports, "DATETIME_FORMATS", {
   enumerable: true,

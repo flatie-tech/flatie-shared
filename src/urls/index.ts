@@ -312,6 +312,13 @@ export const API_ROUTES = {
     USER_DETAIL: (userId: string) => `/platform/users/${userId}`,
     MEMBERS: '/platform/members',
     MEMBER_DETAIL: (memberId: string) => `/platform/members/${memberId}`,
+    // Review queue for ID-card verifications — the platform-staff path for
+    // representatives of self-managed buildings, who have no org reviewer.
+    ID_CARD_VERIFICATIONS_PENDING: '/platform/id-card-verifications/pending',
+    ID_CARD_VERIFICATION_APPROVE: (verificationId: string) =>
+      `/platform/id-card-verifications/${verificationId}/approve`,
+    ID_CARD_VERIFICATION_REJECT: (verificationId: string) =>
+      `/platform/id-card-verifications/${verificationId}/reject`,
     ORGANIZATIONS: '/platform/organizations',
     ORGANIZATION_DETAIL: (orgId: string) => `/platform/organizations/${orgId}`,
     ORGANIZATION_MEMBERS: (orgId: string) => `/platform/organizations/${orgId}/members`,

@@ -210,6 +210,9 @@ declare const API_ROUTES: {
         readonly USER_DETAIL: (userId: string) => string;
         readonly MEMBERS: "/platform/members";
         readonly MEMBER_DETAIL: (memberId: string) => string;
+        readonly ID_CARD_VERIFICATIONS_PENDING: "/platform/id-card-verifications/pending";
+        readonly ID_CARD_VERIFICATION_APPROVE: (verificationId: string) => string;
+        readonly ID_CARD_VERIFICATION_REJECT: (verificationId: string) => string;
         readonly ORGANIZATIONS: "/platform/organizations";
         readonly ORGANIZATION_DETAIL: (orgId: string) => string;
         readonly ORGANIZATION_MEMBERS: (orgId: string) => string;

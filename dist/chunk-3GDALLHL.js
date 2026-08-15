@@ -229,6 +229,11 @@ var API_ROUTES = {
     USER_DETAIL: (userId) => `/platform/users/${userId}`,
     MEMBERS: "/platform/members",
     MEMBER_DETAIL: (memberId) => `/platform/members/${memberId}`,
+    // Review queue for ID-card verifications — the platform-staff path for
+    // representatives of self-managed buildings, who have no org reviewer.
+    ID_CARD_VERIFICATIONS_PENDING: "/platform/id-card-verifications/pending",
+    ID_CARD_VERIFICATION_APPROVE: (verificationId) => `/platform/id-card-verifications/${verificationId}/approve`,
+    ID_CARD_VERIFICATION_REJECT: (verificationId) => `/platform/id-card-verifications/${verificationId}/reject`,
     ORGANIZATIONS: "/platform/organizations",
     ORGANIZATION_DETAIL: (orgId) => `/platform/organizations/${orgId}`,
     ORGANIZATION_MEMBERS: (orgId) => `/platform/organizations/${orgId}/members`,
@@ -288,5 +293,5 @@ var API_ROUTES = {
 };
 
 export { API_ROUTES };
-//# sourceMappingURL=chunk-OFLEK7PU.js.map
-//# sourceMappingURL=chunk-OFLEK7PU.js.map
+//# sourceMappingURL=chunk-3GDALLHL.js.map
+//# sourceMappingURL=chunk-3GDALLHL.js.map
