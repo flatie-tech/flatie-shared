@@ -51,6 +51,11 @@ export const API_ROUTES = {
     ARCHIVE: (id: string) => `/buildings/${id}/archive`,
     ARCHIVE_RESTORE: (id: string, type: string, rowId: string) =>
       `/buildings/${id}/archive/${type}/${rowId}/restore`,
+    // Pričuva arrears tracking: per-owner opening balances at the
+    // cut-over month, and a manual trigger that posts due monthly
+    // charges (the daily scheduler does the same on its own).
+    PRICUVA_OPENING_BALANCES: (id: string) => `/buildings/${id}/pricuva/opening-balances`,
+    PRICUVA_POST_CHARGES: (id: string) => `/buildings/${id}/pricuva/post-charges`,
     SETTINGS: (id: string) => `/buildings/${id}/settings`,
     USERS: (id: string) => `/buildings/${id}/users`,
     OTP: (id: string) => `/buildings/${id}/otp`,

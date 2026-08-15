@@ -36,6 +36,8 @@ declare const API_ROUTES: {
         readonly BY_ID: (id: string) => string;
         readonly ARCHIVE: (id: string) => string;
         readonly ARCHIVE_RESTORE: (id: string, type: string, rowId: string) => string;
+        readonly PRICUVA_OPENING_BALANCES: (id: string) => string;
+        readonly PRICUVA_POST_CHARGES: (id: string) => string;
         readonly SETTINGS: (id: string) => string;
         readonly USERS: (id: string) => string;
         readonly OTP: (id: string) => string;

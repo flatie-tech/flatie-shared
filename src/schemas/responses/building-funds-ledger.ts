@@ -61,6 +61,31 @@ export const buildingFundsLedgerRowSchema = z
         'Attributed apartment income for the period, in EUR. Does not include garage/storage.',
       ),
     diff: z.number().describe('paid − expected, in EUR.'),
+    // ── Cumulative arrears — present only when the building has
+    // `pricuvaTrackingFrom` set and the requested period is inside the
+    // tracked range. All in EUR; `balance` positive = the owner owes.
+    openingBalance: z
+      .number()
+      .optional()
+      .describe(
+        'Debt (+) or credit (−) carried over from before tracking started, entered at onboarding. 0 when none was recorded.',
+      ),
+    chargedTotal: z
+      .number()
+      .optional()
+      .describe(
+        'Σ posted monthly charges from `pricuvaTrackingFrom` up to and including the requested period. Charges are posted once a month closes and are immutable against later rate/area edits.',
+      ),
+    paidSinceStart: z
+      .number()
+      .optional()
+      .describe(
+        'Σ matched payments in periods from `pricuvaTrackingFrom` up to and including the requested period. Payments dated before tracking started are excluded.',
+      ),
+    balance: z
+      .number()
+      .optional()
+      .describe('openingBalance + chargedTotal − paidSinceStart. Positive = the owner owes.'),
   })
   .meta({ id: 'BuildingFundsLedgerRow' });
 
@@ -83,9 +108,19 @@ export const buildingFundsLedgerResponseSchema = z
       .describe(
         'Commercial rate in EUR per m² used for this report; null when the building has no commercial rate.',
       ),
+    pricuvaTrackingFrom: z
+      .string()
+      .regex(/^\d{4}-\d{2}$/)
+      .nullable()
+      .optional()
+      .describe(
+        'Month tracking started, when per-owner arrears tracking is enabled for this building; null/absent otherwise. When set and the requested period is inside the range, rows carry the cumulative fields.',
+      ),
     rows: z
       .array(buildingFundsLedgerRowSchema)
-      .describe('One entry per co-owner with any owned area on the building.'),
+      .describe(
+        'One entry per co-owner with any owned area on the building — plus, under tracking, owners with an opening balance or posted charges even if they no longer own area.',
+      ),
   })
   .meta({ id: 'BuildingFundsLedgerResponse' });
 

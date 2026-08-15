@@ -1,5 +1,12 @@
 # @flatie/shared
 
+## 0.118.0
+
+### Changes
+
+- feat(pricuva): arrears-tracking contracts — `pricuvaTrackingFrom` on building update/detail, cumulative ledger row fields (openingBalance/chargedTotal/paidSinceStart/balance), opening-balance schemas, and the opening-balances / post-charges routes
+
+
 ## 0.117.0
 
 ### Changes

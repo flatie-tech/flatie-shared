@@ -39,6 +39,11 @@ var API_ROUTES = {
     // on the platform archive routes.
     ARCHIVE: (id) => `/buildings/${id}/archive`,
     ARCHIVE_RESTORE: (id, type, rowId) => `/buildings/${id}/archive/${type}/${rowId}/restore`,
+    // Pričuva arrears tracking: per-owner opening balances at the
+    // cut-over month, and a manual trigger that posts due monthly
+    // charges (the daily scheduler does the same on its own).
+    PRICUVA_OPENING_BALANCES: (id) => `/buildings/${id}/pricuva/opening-balances`,
+    PRICUVA_POST_CHARGES: (id) => `/buildings/${id}/pricuva/post-charges`,
     SETTINGS: (id) => `/buildings/${id}/settings`,
     USERS: (id) => `/buildings/${id}/users`,
     OTP: (id) => `/buildings/${id}/otp`,
@@ -298,5 +303,5 @@ var API_ROUTES = {
 };
 
 export { API_ROUTES };
-//# sourceMappingURL=chunk-JVMNL6VS.js.map
-//# sourceMappingURL=chunk-JVMNL6VS.js.map
+//# sourceMappingURL=chunk-ZAD3LBOK.js.map
+//# sourceMappingURL=chunk-ZAD3LBOK.js.map

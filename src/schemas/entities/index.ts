@@ -92,6 +92,19 @@ export {
   updateOrgBuildingContractSchema,
   updateOrgMemberRoleSchema,
 } from './organization.schema';
+// Pričuva arrears tracking (opening balances + posted charges)
+export type {
+  PostPricuvaChargesResponse,
+  PricuvaOpeningBalanceRow,
+  PricuvaOpeningBalancesResponse,
+  UpsertPricuvaOpeningBalancesSchema,
+} from './pricuva.schema';
+export {
+  postPricuvaChargesResponseSchema,
+  pricuvaOpeningBalanceRowSchema,
+  pricuvaOpeningBalancesResponseSchema,
+  upsertPricuvaOpeningBalancesSchema,
+} from './pricuva.schema';
 export type {
   CreateUnitInput,
   PaginatedUnitsResponse,

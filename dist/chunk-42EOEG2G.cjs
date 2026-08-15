@@ -470,6 +470,34 @@ var orgBroadcastResponseSchema = zod.z.looseObject({
   noticeCount: zod.z.number().describe("Number of per-building notices created."),
   createdAt: zod.z.string().describe("ISO-8601 creation timestamp.")
 });
+var pricuvaOpeningBalanceRowSchema = zod.z.object({
+  ownerId: uuidSchema.describe("Owner record the balance belongs to (building-scoped)."),
+  ownerName: zod.z.string().describe("Owner full name, for display."),
+  amount: zod.z.number().describe(
+    "EUR carried over from before tracking started. Positive = debt owed, negative = prepaid credit."
+  ),
+  note: zod.z.string().nullable().describe(
+    'Free-text provenance, e.g. "prijenos od prethodnog upravitelja, stanje 30.6.2026.".'
+  ),
+  updatedAt: zod.z.string().nullable().describe("ISO timestamp of the last edit; null if unknown.")
+}).meta({ id: "PricuvaOpeningBalanceRow" });
+var pricuvaOpeningBalancesResponseSchema = zod.z.object({
+  buildingId: uuidSchema,
+  rows: zod.z.array(pricuvaOpeningBalanceRowSchema).describe("One row per owner that has a recorded opening balance.")
+}).meta({ id: "PricuvaOpeningBalancesResponse" });
+var upsertPricuvaOpeningBalancesSchema = zod.z.object({
+  balances: zod.z.array(
+    zod.z.object({
+      ownerId: uuidSchema.describe("Owner record the balance belongs to."),
+      amount: zod.z.number().min(-1e6).max(1e6).describe("EUR; positive = debt, negative = credit, 0 = remove the row."),
+      note: zod.z.string().trim().max(500).optional().nullable().describe("Provenance note shown alongside the balance.")
+    })
+  ).min(1).max(500).describe("Balances to upsert; owners not listed are left untouched.")
+});
+var postPricuvaChargesResponseSchema = zod.z.object({
+  postedPeriods: zod.z.array(zod.z.string().regex(/^\d{4}-\d{2}$/)).describe("Closed months that received charges in this run (already-posted months skip)."),
+  chargesPosted: zod.z.number().int().describe("Total charge rows written across those periods.")
+}).meta({ id: "PostPricuvaChargesResponse" });
 var paginationParamsSchema = zod.z.object({
   offset: zod.z.coerce.number().min(0).optional().default(0),
   limit: zod.z.coerce.number().min(1).max(100).optional().default(10)
@@ -646,6 +674,9 @@ var updateBuildingSchema = zod.z.object({
   ),
   pricuvaRefMode: zod.z.enum([chunkRI7DE3ZD_cjs.PricuvaRefMode.APARTMENT, chunkRI7DE3ZD_cjs.PricuvaRefMode.OWNER]).optional().describe(
     "Selects whether the HR01 poziv-na-broj middle segment identifies the apartment (`apartment`, default) or the individual co-owner (`owner`). Changes how CAMT imports match payments to units/users."
+  ),
+  pricuvaTrackingFrom: zod.z.string().regex(/^\d{4}-\d{2}$/).optional().nullable().describe(
+    "Month (YYYY-MM) from which Flatie is authoritative for per-owner pri\u010Duva arrears. Monthly charges are posted from this month on; payments before it stay out of per-owner balances (pre-history belongs to the previous manager and enters via opening balances). Pass null to disable tracking; omit to leave unchanged. Cannot be moved past already-posted charges."
   )
 });
 var joinBuildingWithOtpSchema = zod.z.object({
@@ -1754,6 +1785,9 @@ var buildingDetailResponseSchema = zod.z.looseObject({
   monthlyFeeCommercialPerSqm: zod.z.number().nullable().optional().describe(
     "Monthly COMMERCIAL pri\u010Duva rate in EUR per m\xB2 of owned commercial area. Null when the building has no commercial units or the rate has not been configured."
   ),
+  pricuvaTrackingFrom: zod.z.string().regex(/^\d{4}-\d{2}$/).nullable().optional().describe(
+    "Month (YYYY-MM) from which per-owner pri\u010Duva arrears are tracked; null when tracking is not enabled."
+  ),
   hasResidentialUnits: zod.z.boolean().optional().describe(
     "True when the building has at least one unit (apartment/garage/storage) with `type = residential`. Lets the UI decide whether to show the residential rate input."
   ),
@@ -1847,7 +1881,20 @@ var buildingFundsLedgerRowSchema = zod.z.object({
   paid: zod.z.number().describe(
     "Attributed apartment income for the period, in EUR. Does not include garage/storage."
   ),
-  diff: zod.z.number().describe("paid \u2212 expected, in EUR.")
+  diff: zod.z.number().describe("paid \u2212 expected, in EUR."),
+  // ── Cumulative arrears — present only when the building has
+  // `pricuvaTrackingFrom` set and the requested period is inside the
+  // tracked range. All in EUR; `balance` positive = the owner owes.
+  openingBalance: zod.z.number().optional().describe(
+    "Debt (+) or credit (\u2212) carried over from before tracking started, entered at onboarding. 0 when none was recorded."
+  ),
+  chargedTotal: zod.z.number().optional().describe(
+    "\u03A3 posted monthly charges from `pricuvaTrackingFrom` up to and including the requested period. Charges are posted once a month closes and are immutable against later rate/area edits."
+  ),
+  paidSinceStart: zod.z.number().optional().describe(
+    "\u03A3 matched payments in periods from `pricuvaTrackingFrom` up to and including the requested period. Payments dated before tracking started are excluded."
+  ),
+  balance: zod.z.number().optional().describe("openingBalance + chargedTotal \u2212 paidSinceStart. Positive = the owner owes.")
 }).meta({ id: "BuildingFundsLedgerRow" });
 var buildingFundsLedgerResponseSchema = zod.z.object({
   buildingId: zod.z.string().uuid(),
@@ -1858,7 +1905,12 @@ var buildingFundsLedgerResponseSchema = zod.z.object({
   monthlyFeeCommercialPerSqm: zod.z.number().nullable().describe(
     "Commercial rate in EUR per m\xB2 used for this report; null when the building has no commercial rate."
   ),
-  rows: zod.z.array(buildingFundsLedgerRowSchema).describe("One entry per co-owner with any owned area on the building.")
+  pricuvaTrackingFrom: zod.z.string().regex(/^\d{4}-\d{2}$/).nullable().optional().describe(
+    "Month tracking started, when per-owner arrears tracking is enabled for this building; null/absent otherwise. When set and the requested period is inside the range, rows carry the cumulative fields."
+  ),
+  rows: zod.z.array(buildingFundsLedgerRowSchema).describe(
+    "One entry per co-owner with any owned area on the building \u2014 plus, under tracking, owners with an opening balance or posted charges even if they no longer own area."
+  )
 }).meta({ id: "BuildingFundsLedgerResponse" });
 var buildingSettingsResponseSchema = zod.z.looseObject({
   id: zod.z.string().uuid().optional(),
@@ -3050,6 +3102,9 @@ exports.pollResponseSchema = pollResponseSchema;
 exports.pollResultsSchema = pollResultsSchema;
 exports.pollTypeSchema = pollTypeSchema;
 exports.pollVotersResponseSchema = pollVotersResponseSchema;
+exports.postPricuvaChargesResponseSchema = postPricuvaChargesResponseSchema;
+exports.pricuvaOpeningBalanceRowSchema = pricuvaOpeningBalanceRowSchema;
+exports.pricuvaOpeningBalancesResponseSchema = pricuvaOpeningBalancesResponseSchema;
 exports.priorityOptions = priorityOptions;
 exports.publicOrgInvitationSchema = publicOrgInvitationSchema;
 exports.recordDsarRectificationSchema = recordDsarRectificationSchema;
@@ -3110,10 +3165,11 @@ exports.updatePollSchema = updatePollSchema;
 exports.updateTransactionCategorySchema = updateTransactionCategorySchema;
 exports.updateUnitSchema = updateUnitSchema;
 exports.updateUserBuildingRoleSchema = updateUserBuildingRoleSchema;
+exports.upsertPricuvaOpeningBalancesSchema = upsertPricuvaOpeningBalancesSchema;
 exports.userEntitySchema = userEntitySchema;
 exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
 exports.voteWithIdCardSchema = voteWithIdCardSchema;
-//# sourceMappingURL=chunk-64CUQMEZ.cjs.map
-//# sourceMappingURL=chunk-64CUQMEZ.cjs.map
+//# sourceMappingURL=chunk-42EOEG2G.cjs.map
+//# sourceMappingURL=chunk-42EOEG2G.cjs.map

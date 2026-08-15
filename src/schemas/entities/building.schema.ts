@@ -226,6 +226,14 @@ export const updateBuildingSchema = z.object({
     .describe(
       'Selects whether the HR01 poziv-na-broj middle segment identifies the apartment (`apartment`, default) or the individual co-owner (`owner`). Changes how CAMT imports match payments to units/users.',
     ),
+  pricuvaTrackingFrom: z
+    .string()
+    .regex(/^\d{4}-\d{2}$/)
+    .optional()
+    .nullable()
+    .describe(
+      'Month (YYYY-MM) from which Flatie is authoritative for per-owner pričuva arrears. Monthly charges are posted from this month on; payments before it stay out of per-owner balances (pre-history belongs to the previous manager and enters via opening balances). Pass null to disable tracking; omit to leave unchanged. Cannot be moved past already-posted charges.',
+    ),
 });
 
 /**

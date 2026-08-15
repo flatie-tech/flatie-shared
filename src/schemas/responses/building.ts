@@ -251,6 +251,14 @@ export const buildingDetailResponseSchema = z.looseObject({
     .describe(
       'Monthly COMMERCIAL pričuva rate in EUR per m² of owned commercial area. Null when the building has no commercial units or the rate has not been configured.',
     ),
+  pricuvaTrackingFrom: z
+    .string()
+    .regex(/^\d{4}-\d{2}$/)
+    .nullable()
+    .optional()
+    .describe(
+      'Month (YYYY-MM) from which per-owner pričuva arrears are tracked; null when tracking is not enabled.',
+    ),
   hasResidentialUnits: z
     .boolean()
     .optional()
