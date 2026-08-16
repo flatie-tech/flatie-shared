@@ -1,7 +1,7 @@
 import { normalizeMoney } from './chunk-ZD7YLRHX.js';
 import { optionalIbanSchema } from './chunk-7YKQN43X.js';
 import { isZuozAdjacentConsentCategory, AI_CHAT_LIMITS } from './chunk-XDD32FEC.js';
-import { BoardVisibility, Priority, OrgRole, OrgType, BuildingType, BuildingRole, PricuvaRefMode, FundsSource, QUOTA_RESOURCE_TYPES, DsarRequestType, DsarRequestStatus, DSAR_MAX_EXTENSION_DAYS, FailureFundingSource, FailureUnitType, FailureLocationType, FailureStatus, EnterpriseRequestStatus, PollType, TransactionType, PlatformRole, BuildingStatus, CommonStatus, ApprovalStatus, NotificationType, PLATFORM_FEATURES, PollCannotVoteReason } from './chunk-WZKOAKYT.js';
+import { BoardVisibility, Priority, BuildingType, BuildingRole, PricuvaRefMode, FundsSource, OrgRole, OrgType, QUOTA_RESOURCE_TYPES, DsarRequestType, DsarRequestStatus, DSAR_MAX_EXTENSION_DAYS, FailureFundingSource, FailureUnitType, FailureLocationType, FailureStatus, EnterpriseRequestStatus, PollType, TransactionType, PlatformRole, BuildingStatus, CommonStatus, ApprovalStatus, NotificationType, PLATFORM_FEATURES, PollCannotVoteReason } from './chunk-WZKOAKYT.js';
 import { BACKEND_ERROR_CODES } from './chunk-FJGH2CTJ.js';
 import { z } from 'zod';
 
@@ -300,6 +300,181 @@ var copyFaqsSchema = z.object({
     "UUID of the building whose FAQs should be copied into the target building."
   )
 });
+var BUILDING_TYPES = [
+  BuildingType.RESIDENTIAL,
+  BuildingType.COMMERCIAL,
+  BuildingType.RESIDENTIAL_COMMERCIAL
+];
+var buildingTypeSchema = z.enum(BUILDING_TYPES).describe(
+  "Usage of the building: `residential` (homes only), `commercial` (business only), or `residential_commercial` (mixed use)."
+);
+var BUILDING_LIMITS = {
+  NAME_MIN: 1,
+  NAME_MAX: 100,
+  ADDRESS_MIN: 1,
+  ADDRESS_MAX: 200,
+  HOUSE_NUMBER_MIN: 1,
+  HOUSE_NUMBER_MAX: 20,
+  OTP_LENGTH: 6,
+  UNITS_MIN: 1,
+  UNITS_MAX: 1e4
+};
+var createBuildingSchema = z.object({
+  name: z.string().min(BUILDING_LIMITS.NAME_MIN, "Name is required").max(BUILDING_LIMITS.NAME_MAX, `Name must be at most ${BUILDING_LIMITS.NAME_MAX} characters`).describe("Display name of the building shown throughout the UI."),
+  addressId: uuidSchema.optional().describe(
+    "UUID of an existing address record. When provided, streetId/houseNumber are ignored."
+  ),
+  streetId: uuidSchema.optional().describe(
+    "UUID of the street record. Required when addressId is not provided (address will be resolved or created)."
+  ),
+  houseNumber: z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN, "House number is required").max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).optional().describe('Street/house number (e.g. "12A", "16/1"). Required when addressId is not provided.'),
+  type: buildingTypeSchema,
+  totalUnits: z.coerce.number().int().min(BUILDING_LIMITS.UNITS_MIN, "Building must have at least 1 unit").max(
+    BUILDING_LIMITS.UNITS_MAX,
+    `Building cannot have more than ${BUILDING_LIMITS.UNITS_MAX} units`
+  ).describe("Total number of individual units (apartments, garages, storage)."),
+  isStratified: multipartBoolean().optional().describe(
+    "True when the building is stratified (each unit has its own title deed). Defaults to false when omitted."
+  ),
+  role: z.enum([
+    BuildingRole.OWNER_REPRESENTATIVE,
+    BuildingRole.DEPUTY_REPRESENTATIVE,
+    BuildingRole.CO_OWNER
+  ]).optional().describe(
+    "Role the creating user should claim for themselves in the new building; omitted creates the building without assigning the caller a role."
+  ),
+  iban: optionalIbanSchema,
+  oib: z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").optional().nullable().describe(
+    "Croatian tax ID (OIB) of the building (Zajednica suvlasnika). Used as the payee OIB on generated uplatnicas."
+  ),
+  monthlyFeePerSqm: z.coerce.number().nonnegative().optional().describe(
+    "Monthly fund contribution rate in EUR per m\xB2 for RESIDENTIAL units. Multiplied by each co-owner\u2019s owned residential area (apartments/garages/storage of type `residential`) to derive their expected pri\u010Duva."
+  ),
+  monthlyFeeCommercialPerSqm: z.coerce.number().nonnegative().optional().describe(
+    "Monthly fund contribution rate in EUR per m\xB2 for COMMERCIAL units. Applied to owned area of any unit with `type = commercial`. Leave unset when the building has no commercial units."
+  ),
+  apartmentResidentialCoef: z.coerce.number().nonnegative().optional(),
+  apartmentCommercialCoef: z.coerce.number().nonnegative().optional(),
+  garageResidentialCoef: z.coerce.number().nonnegative().optional(),
+  garageCommercialCoef: z.coerce.number().nonnegative().optional(),
+  storageResidentialCoef: z.coerce.number().nonnegative().optional(),
+  storageCommercialCoef: z.coerce.number().nonnegative().optional(),
+  billingBuildingCode: z.string().trim().min(1).max(22).optional().describe(
+    "Short code identifying this building in HR01 poziv-na-broj references. Forms the first segment of `{billingBuildingCode}-{paymentRefCode}-{YYYYMM}`. Independent of the street house number."
+  )
+});
+var updateBuildingSchema = z.object({
+  name: z.string().min(BUILDING_LIMITS.NAME_MIN).max(BUILDING_LIMITS.NAME_MAX).optional().describe("New display name of the building."),
+  addressId: uuidSchema.optional().describe("UUID of the new address record to assign to this building."),
+  streetId: uuidSchema.optional().describe("UUID of the street record. Used with houseNumber to resolve or create an address."),
+  houseNumber: z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN).max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).optional().describe(
+    'Street/house number (e.g. "12A", "16/1"). Used with streetId to resolve an address.'
+  ),
+  type: buildingTypeSchema.optional(),
+  totalUnits: z.coerce.number().int().min(BUILDING_LIMITS.UNITS_MIN).max(BUILDING_LIMITS.UNITS_MAX).optional().describe("Revised total unit count."),
+  isStratified: multipartBoolean().optional().describe("Toggles whether the building is stratified (per-unit title deeds)."),
+  removeHouseRulesFile: multipartBoolean().optional().describe(
+    "When true, clears the existing house-rules attachment. Submit independently of `houseRulesFile` uploads."
+  ),
+  iban: optionalIbanSchema,
+  oib: z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").optional().nullable().describe("Croatian tax ID (OIB) of the building. Pass null to clear."),
+  monthlyFeePerSqm: z.coerce.number().nonnegative().optional().describe(
+    "New monthly residential fund contribution rate in EUR per m\xB2. Pass a value to update, omit to leave unchanged."
+  ),
+  monthlyFeeCommercialPerSqm: z.coerce.number().nonnegative().optional().nullable().describe(
+    "New monthly commercial fund contribution rate in EUR per m\xB2. Pass null to clear; omit to leave unchanged."
+  ),
+  apartmentResidentialCoef: z.coerce.number().nonnegative().optional(),
+  apartmentCommercialCoef: z.coerce.number().nonnegative().optional(),
+  garageResidentialCoef: z.coerce.number().nonnegative().optional(),
+  garageCommercialCoef: z.coerce.number().nonnegative().optional(),
+  storageResidentialCoef: z.coerce.number().nonnegative().optional(),
+  storageCommercialCoef: z.coerce.number().nonnegative().optional(),
+  billingBuildingCode: z.string().trim().min(1).max(22).optional().nullable().describe(
+    "New poziv-na-broj building identifier. Pass null to clear; omit to leave unchanged."
+  ),
+  fundsSource: z.enum([FundsSource.MANUAL, FundsSource.CAMT]).optional().describe(
+    "Switches how the building's fund transactions are populated. `manual` (default) keeps the representative-facing add/edit flow; `camt` locks manual writes and only a platform admin can ingest CAMT.053 XML statements."
+  ),
+  pricuvaRefMode: z.enum([PricuvaRefMode.APARTMENT, PricuvaRefMode.OWNER]).optional().describe(
+    "Selects whether the HR01 poziv-na-broj middle segment identifies the apartment (`apartment`, default) or the individual co-owner (`owner`). Changes how CAMT imports match payments to units/users."
+  ),
+  pricuvaTrackingFrom: z.string().regex(/^\d{4}-\d{2}$/).optional().nullable().describe(
+    "Month (YYYY-MM) from which Flatie is authoritative for per-owner pri\u010Duva arrears. Monthly charges are posted from this month on; payments before it stay out of per-owner balances (pre-history belongs to the previous manager and enters via opening balances). Pass null to disable tracking; omit to leave unchanged. Cannot be moved past already-posted charges."
+  )
+});
+var joinBuildingWithOtpSchema = z.object({
+  code: z.string().length(
+    BUILDING_LIMITS.OTP_LENGTH,
+    `OTP must be a ${BUILDING_LIMITS.OTP_LENGTH}-character code`
+  ).regex(/^[A-Z0-9]{6}$/, "OTP must be a 6-character alphanumeric code").describe("Six-character alphanumeric invite code shared by a building representative.")
+});
+var updateUserBuildingRoleSchema = z.object({
+  userId: uuidSchema.describe("UUID of the user whose building role is being updated."),
+  roleType: z.enum([
+    BuildingRole.OWNER_REPRESENTATIVE,
+    BuildingRole.DEPUTY_REPRESENTATIVE,
+    BuildingRole.CO_OWNER,
+    // RESIDENT was unassignable through any endpoint until 2026-07-23
+    // (the role existed but the wire schema accepted only the other
+    // three). The backend hierarchy check (canAssignRole) covers it.
+    BuildingRole.RESIDENT
+  ]).optional().describe(
+    "New building role for the user; omit to leave the role unchanged while updating other fields."
+  ),
+  buildingSurfacePercentage: z.coerce.number().min(0).max(100).optional().describe(
+    "User\u2019s weighted share of the building surface, 0\u2013100. Used to compute vote weight for consensus polls."
+  ),
+  chatVisibleToCoOwners: z.boolean().optional().describe("Controls whether this user appears in chat directories visible to co-owners.")
+});
+
+// src/schemas/entities/org-ai-import.schema.ts
+var orgAiImportBuildingSchema = z.object({
+  name: z.string().nullable().describe("Building name/label as the documents call it, or null."),
+  address: z.string().nullable().describe("Street + house number as written in the documents, or null."),
+  city: z.string().nullable().describe("City/settlement, or null."),
+  postalCode: z.string().nullable().describe("Postal code, or null."),
+  oib: z.string().nullable().describe("OIB of the co-owners association if stated, or null."),
+  iban: z.string().nullable().describe("Pri\u010Duva account IBAN if stated, or null.")
+});
+var orgAiImportAddressCandidateSchema = z.object({
+  addressId: uuidSchema.describe("Registry address UUID, usable directly on commit."),
+  fullAddress: z.string().describe('Rendered "Street 12, 10000 Zagreb" form for display.')
+});
+var orgAiImportExtractResponseSchema = z.object({
+  extractionId: uuidSchema.describe(
+    "Handle for the cached extraction; pass to commit. Expires after an hour."
+  ),
+  building: orgAiImportBuildingSchema,
+  addressCandidates: z.array(orgAiImportAddressCandidateSchema).describe("Registry matches for the extracted address, best first; may be empty."),
+  unitCount: z.number().int().nonnegative().describe("Units found in the documents."),
+  ownerCount: z.number().int().nonnegative().describe("Owner entries found across units."),
+  pagesProcessed: z.number().int().nonnegative().describe("OCR pages consumed."),
+  extractionWarnings: z.array(z.string()).describe("Model ambiguity notes + server-side extraction warnings, reviewer-facing.")
+}).meta({ id: "OrgAiImportExtractResponse" });
+var orgAiImportCommitSchema = z.object({
+  extractionId: uuidSchema.describe("The extraction to commit."),
+  name: z.string().trim().min(BUILDING_LIMITS.NAME_MIN).max(BUILDING_LIMITS.NAME_MAX).describe("Confirmed building name."),
+  addressId: uuidSchema.optional().describe("Confirmed registry address (one of the candidates, or user-searched)."),
+  streetId: uuidSchema.optional().describe("Street UUID when no addressId \u2014 pairs with houseNumber."),
+  houseNumber: z.string().trim().min(1).max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).optional().describe("House number when no addressId."),
+  type: buildingTypeSchema,
+  oib: z.string().regex(/^\d{11}$/).optional().nullable().describe("Confirmed association OIB; omit/null to skip."),
+  iban: z.string().trim().max(34).optional().nullable().describe("Confirmed pri\u010Duva IBAN; omit/null to skip.")
+});
+var orgAiImportSkippedRowSchema = z.object({
+  unitLabel: z.string().describe("Label of the row that could not be imported."),
+  errors: z.array(z.string()).describe("Why the row was skipped (reviewer-facing, Croatian).")
+});
+var orgAiImportCommitResponseSchema = z.object({
+  buildingId: uuidSchema.describe("The created building."),
+  unitsCreated: z.number().int().nonnegative().describe("Units created by the import."),
+  ownersCreated: z.number().int().nonnegative().describe("Owner records created."),
+  assignmentsCreated: z.number().int().nonnegative().describe("Owner\u2194unit assignments (with shares) created."),
+  skippedRows: z.array(orgAiImportSkippedRowSchema).describe(
+    "Extracted rows that failed validation and were left out \u2014 fix them on the building afterwards."
+  )
+}).meta({ id: "OrgAiImportCommitResponse" });
 var NOTICE_LIMITS = {
   TITLE_MIN: 1,
   TITLE_MAX: 100,
@@ -574,133 +749,6 @@ var auditLogResponseSchema = z.looseObject({
   ipAddress: z.string().nullable(),
   userAgent: z.string().nullable()
 }).meta({ id: "AuditLogResponse" });
-var BUILDING_TYPES = [
-  BuildingType.RESIDENTIAL,
-  BuildingType.COMMERCIAL,
-  BuildingType.RESIDENTIAL_COMMERCIAL
-];
-var buildingTypeSchema = z.enum(BUILDING_TYPES).describe(
-  "Usage of the building: `residential` (homes only), `commercial` (business only), or `residential_commercial` (mixed use)."
-);
-var BUILDING_LIMITS = {
-  NAME_MIN: 1,
-  NAME_MAX: 100,
-  ADDRESS_MIN: 1,
-  ADDRESS_MAX: 200,
-  HOUSE_NUMBER_MIN: 1,
-  HOUSE_NUMBER_MAX: 20,
-  OTP_LENGTH: 6,
-  UNITS_MIN: 1,
-  UNITS_MAX: 1e4
-};
-var createBuildingSchema = z.object({
-  name: z.string().min(BUILDING_LIMITS.NAME_MIN, "Name is required").max(BUILDING_LIMITS.NAME_MAX, `Name must be at most ${BUILDING_LIMITS.NAME_MAX} characters`).describe("Display name of the building shown throughout the UI."),
-  addressId: uuidSchema.optional().describe(
-    "UUID of an existing address record. When provided, streetId/houseNumber are ignored."
-  ),
-  streetId: uuidSchema.optional().describe(
-    "UUID of the street record. Required when addressId is not provided (address will be resolved or created)."
-  ),
-  houseNumber: z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN, "House number is required").max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).optional().describe('Street/house number (e.g. "12A", "16/1"). Required when addressId is not provided.'),
-  type: buildingTypeSchema,
-  totalUnits: z.coerce.number().int().min(BUILDING_LIMITS.UNITS_MIN, "Building must have at least 1 unit").max(
-    BUILDING_LIMITS.UNITS_MAX,
-    `Building cannot have more than ${BUILDING_LIMITS.UNITS_MAX} units`
-  ).describe("Total number of individual units (apartments, garages, storage)."),
-  isStratified: multipartBoolean().optional().describe(
-    "True when the building is stratified (each unit has its own title deed). Defaults to false when omitted."
-  ),
-  role: z.enum([
-    BuildingRole.OWNER_REPRESENTATIVE,
-    BuildingRole.DEPUTY_REPRESENTATIVE,
-    BuildingRole.CO_OWNER
-  ]).optional().describe(
-    "Role the creating user should claim for themselves in the new building; omitted creates the building without assigning the caller a role."
-  ),
-  iban: optionalIbanSchema,
-  oib: z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").optional().nullable().describe(
-    "Croatian tax ID (OIB) of the building (Zajednica suvlasnika). Used as the payee OIB on generated uplatnicas."
-  ),
-  monthlyFeePerSqm: z.coerce.number().nonnegative().optional().describe(
-    "Monthly fund contribution rate in EUR per m\xB2 for RESIDENTIAL units. Multiplied by each co-owner\u2019s owned residential area (apartments/garages/storage of type `residential`) to derive their expected pri\u010Duva."
-  ),
-  monthlyFeeCommercialPerSqm: z.coerce.number().nonnegative().optional().describe(
-    "Monthly fund contribution rate in EUR per m\xB2 for COMMERCIAL units. Applied to owned area of any unit with `type = commercial`. Leave unset when the building has no commercial units."
-  ),
-  apartmentResidentialCoef: z.coerce.number().nonnegative().optional(),
-  apartmentCommercialCoef: z.coerce.number().nonnegative().optional(),
-  garageResidentialCoef: z.coerce.number().nonnegative().optional(),
-  garageCommercialCoef: z.coerce.number().nonnegative().optional(),
-  storageResidentialCoef: z.coerce.number().nonnegative().optional(),
-  storageCommercialCoef: z.coerce.number().nonnegative().optional(),
-  billingBuildingCode: z.string().trim().min(1).max(22).optional().describe(
-    "Short code identifying this building in HR01 poziv-na-broj references. Forms the first segment of `{billingBuildingCode}-{paymentRefCode}-{YYYYMM}`. Independent of the street house number."
-  )
-});
-var updateBuildingSchema = z.object({
-  name: z.string().min(BUILDING_LIMITS.NAME_MIN).max(BUILDING_LIMITS.NAME_MAX).optional().describe("New display name of the building."),
-  addressId: uuidSchema.optional().describe("UUID of the new address record to assign to this building."),
-  streetId: uuidSchema.optional().describe("UUID of the street record. Used with houseNumber to resolve or create an address."),
-  houseNumber: z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN).max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).optional().describe(
-    'Street/house number (e.g. "12A", "16/1"). Used with streetId to resolve an address.'
-  ),
-  type: buildingTypeSchema.optional(),
-  totalUnits: z.coerce.number().int().min(BUILDING_LIMITS.UNITS_MIN).max(BUILDING_LIMITS.UNITS_MAX).optional().describe("Revised total unit count."),
-  isStratified: multipartBoolean().optional().describe("Toggles whether the building is stratified (per-unit title deeds)."),
-  removeHouseRulesFile: multipartBoolean().optional().describe(
-    "When true, clears the existing house-rules attachment. Submit independently of `houseRulesFile` uploads."
-  ),
-  iban: optionalIbanSchema,
-  oib: z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").optional().nullable().describe("Croatian tax ID (OIB) of the building. Pass null to clear."),
-  monthlyFeePerSqm: z.coerce.number().nonnegative().optional().describe(
-    "New monthly residential fund contribution rate in EUR per m\xB2. Pass a value to update, omit to leave unchanged."
-  ),
-  monthlyFeeCommercialPerSqm: z.coerce.number().nonnegative().optional().nullable().describe(
-    "New monthly commercial fund contribution rate in EUR per m\xB2. Pass null to clear; omit to leave unchanged."
-  ),
-  apartmentResidentialCoef: z.coerce.number().nonnegative().optional(),
-  apartmentCommercialCoef: z.coerce.number().nonnegative().optional(),
-  garageResidentialCoef: z.coerce.number().nonnegative().optional(),
-  garageCommercialCoef: z.coerce.number().nonnegative().optional(),
-  storageResidentialCoef: z.coerce.number().nonnegative().optional(),
-  storageCommercialCoef: z.coerce.number().nonnegative().optional(),
-  billingBuildingCode: z.string().trim().min(1).max(22).optional().nullable().describe(
-    "New poziv-na-broj building identifier. Pass null to clear; omit to leave unchanged."
-  ),
-  fundsSource: z.enum([FundsSource.MANUAL, FundsSource.CAMT]).optional().describe(
-    "Switches how the building's fund transactions are populated. `manual` (default) keeps the representative-facing add/edit flow; `camt` locks manual writes and only a platform admin can ingest CAMT.053 XML statements."
-  ),
-  pricuvaRefMode: z.enum([PricuvaRefMode.APARTMENT, PricuvaRefMode.OWNER]).optional().describe(
-    "Selects whether the HR01 poziv-na-broj middle segment identifies the apartment (`apartment`, default) or the individual co-owner (`owner`). Changes how CAMT imports match payments to units/users."
-  ),
-  pricuvaTrackingFrom: z.string().regex(/^\d{4}-\d{2}$/).optional().nullable().describe(
-    "Month (YYYY-MM) from which Flatie is authoritative for per-owner pri\u010Duva arrears. Monthly charges are posted from this month on; payments before it stay out of per-owner balances (pre-history belongs to the previous manager and enters via opening balances). Pass null to disable tracking; omit to leave unchanged. Cannot be moved past already-posted charges."
-  )
-});
-var joinBuildingWithOtpSchema = z.object({
-  code: z.string().length(
-    BUILDING_LIMITS.OTP_LENGTH,
-    `OTP must be a ${BUILDING_LIMITS.OTP_LENGTH}-character code`
-  ).regex(/^[A-Z0-9]{6}$/, "OTP must be a 6-character alphanumeric code").describe("Six-character alphanumeric invite code shared by a building representative.")
-});
-var updateUserBuildingRoleSchema = z.object({
-  userId: uuidSchema.describe("UUID of the user whose building role is being updated."),
-  roleType: z.enum([
-    BuildingRole.OWNER_REPRESENTATIVE,
-    BuildingRole.DEPUTY_REPRESENTATIVE,
-    BuildingRole.CO_OWNER,
-    // RESIDENT was unassignable through any endpoint until 2026-07-23
-    // (the role existed but the wire schema accepted only the other
-    // three). The backend hierarchy check (canAssignRole) covers it.
-    BuildingRole.RESIDENT
-  ]).optional().describe(
-    "New building role for the user; omit to leave the role unchanged while updating other fields."
-  ),
-  buildingSurfacePercentage: z.coerce.number().min(0).max(100).optional().describe(
-    "User\u2019s weighted share of the building surface, 0\u2013100. Used to compute vote weight for consensus polls."
-  ),
-  chatVisibleToCoOwners: z.boolean().optional().describe("Controls whether this user appears in chat directories visible to co-owners.")
-});
 var buildingQuotaEntrySchema = z.object({
   resourceType: z.enum(
     QUOTA_RESOURCE_TYPES
@@ -2952,6 +3000,6 @@ var repDashboardSummaryResponseSchema = z.looseObject({
   pendingSignatureVotes: z.number().nullable().optional().describe("Printed-signature votes awaiting representative review (rep scope only).")
 }).describe("Payload of `GET /representatives/dashboard/summary`.");
 
-export { ARCHIVE_TYPES, AUDIT_DENIAL_TARGET_TYPE, ApprovalStatusSchema, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUILDING_ARCHIVE_TYPES, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, EMAIL_LIMITS, ENTITY_LINK_TYPES, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, LINKABLE_ENTITY_TYPES, NOTICE_LIMITS, ORGANIZATION_LIMITS, OrgInvitationStatus, POLL_LIMITS, POLL_TYPES, PrioritySchema, RECURRENCE_TYPES, REP_RECENT_ACTIVITY_TYPES, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, auditLogResponseSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, buildingArchiveTypeSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingOwnerAssignmentSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createDsarEventSchema, createDsarRequestSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createEventSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createNoticeSchema, createOrgBroadcastSchema, createOrganizationSchema, createOwnerSchema, createPlatformSubscriptionSchema, createPollSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, dsarErasureSchema, dsarEventResponseSchema, dsarRequestResponseSchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, emailUnreadCountResponseSchema, enterpriseRequestResponseSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, featureFlagsResponseSchema, finalizePollSchema, forgotPasswordSchema, getAuditLogsQuerySchema, getDsarRequestsQuerySchema, getEnterpriseRequestsQuerySchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getNotificationDataSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getPlatformSubscriptionsQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, idCardVerificationStatusSchema, inviteOrgMemberSchema, inviteOwnerSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, loginSchema, mapPricuvaRefResponseSchema, mapPricuvaRefSchema, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationDataSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgBroadcastResponseSchema, orgInvitationResponseSchema, orgStatementImportResponseSchema, orgStatementImportResultSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, platformFeatureFlagSchema, platformFeatureFlagsResponseSchema, platformSubscriptionResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, postPricuvaChargesResponseSchema, pricuvaOpeningBalanceRowSchema, pricuvaOpeningBalancesResponseSchema, priorityOptions, publicOrgInvitationSchema, recordDsarRectificationSchema, recordOfflineVotesSchema, recurrenceTypeSchema, registerSchema, rejectIdCardVerificationSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, revenueMetricsResponseSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, setDsarRestrictionSchema, signedMoneyStringSchema, strongPasswordSchema, submitIdCardVerificationSchema, timeSchema, unitKindSchema, unitSchema, unmatchedPricuvaRefRowSchema, unmatchedPricuvaRefsResponseSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateDsarRequestSchema, updateEnterpriseRequestSchema, updateEventSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgBuildingContractSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePlatformFeatureRequestSchema, updatePlatformSubscriptionSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, upsertPricuvaOpeningBalancesSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema, voteWithIdCardSchema };
-//# sourceMappingURL=chunk-MBGIGQHQ.js.map
-//# sourceMappingURL=chunk-MBGIGQHQ.js.map
+export { ARCHIVE_TYPES, AUDIT_DENIAL_TARGET_TYPE, ApprovalStatusSchema, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUILDING_ARCHIVE_TYPES, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, EMAIL_LIMITS, ENTITY_LINK_TYPES, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, LINKABLE_ENTITY_TYPES, NOTICE_LIMITS, ORGANIZATION_LIMITS, OrgInvitationStatus, POLL_LIMITS, POLL_TYPES, PrioritySchema, RECURRENCE_TYPES, REP_RECENT_ACTIVITY_TYPES, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, auditLogResponseSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, buildingArchiveTypeSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingOwnerAssignmentSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createDsarEventSchema, createDsarRequestSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createEventSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createNoticeSchema, createOrgBroadcastSchema, createOrganizationSchema, createOwnerSchema, createPlatformSubscriptionSchema, createPollSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, dsarErasureSchema, dsarEventResponseSchema, dsarRequestResponseSchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, emailUnreadCountResponseSchema, enterpriseRequestResponseSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, featureFlagsResponseSchema, finalizePollSchema, forgotPasswordSchema, getAuditLogsQuerySchema, getDsarRequestsQuerySchema, getEnterpriseRequestsQuerySchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getNotificationDataSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getPlatformSubscriptionsQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, idCardVerificationStatusSchema, inviteOrgMemberSchema, inviteOwnerSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, loginSchema, mapPricuvaRefResponseSchema, mapPricuvaRefSchema, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, notificationDataSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgAiImportAddressCandidateSchema, orgAiImportBuildingSchema, orgAiImportCommitResponseSchema, orgAiImportCommitSchema, orgAiImportExtractResponseSchema, orgAiImportSkippedRowSchema, orgBroadcastResponseSchema, orgInvitationResponseSchema, orgStatementImportResponseSchema, orgStatementImportResultSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, platformFeatureFlagSchema, platformFeatureFlagsResponseSchema, platformSubscriptionResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, postPricuvaChargesResponseSchema, pricuvaOpeningBalanceRowSchema, pricuvaOpeningBalancesResponseSchema, priorityOptions, publicOrgInvitationSchema, recordDsarRectificationSchema, recordOfflineVotesSchema, recurrenceTypeSchema, registerSchema, rejectIdCardVerificationSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, revenueMetricsResponseSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, setDsarRestrictionSchema, signedMoneyStringSchema, strongPasswordSchema, submitIdCardVerificationSchema, timeSchema, unitKindSchema, unitSchema, unmatchedPricuvaRefRowSchema, unmatchedPricuvaRefsResponseSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateDsarRequestSchema, updateEnterpriseRequestSchema, updateEventSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgBuildingContractSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePlatformFeatureRequestSchema, updatePlatformSubscriptionSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, upsertPricuvaOpeningBalancesSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema, voteWithIdCardSchema };
+//# sourceMappingURL=chunk-M2UVWBST.js.map
+//# sourceMappingURL=chunk-M2UVWBST.js.map

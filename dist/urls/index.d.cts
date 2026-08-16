@@ -191,6 +191,8 @@ declare const API_ROUTES: {
     };
     readonly ORGANIZATIONS: {
         readonly STATEMENT_IMPORT: (orgId: string) => string;
+        readonly AI_IMPORT_EXTRACT: (orgId: string) => string;
+        readonly AI_IMPORT_COMMIT: (orgId: string) => string;
         readonly BASE: "/organizations";
         readonly MY: "/organizations/my";
         readonly BY_ID: (orgId: string) => string;

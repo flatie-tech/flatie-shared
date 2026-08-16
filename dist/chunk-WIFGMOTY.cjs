@@ -220,6 +220,10 @@ var API_ROUTES = {
     // Org-wide bank statement import: one FINA/PBZ file carries the whole
     // portfolio; statements route to buildings by IBAN.
     STATEMENT_IMPORT: (orgId) => `/organizations/${orgId}/statement-imports`,
+    // Org-level AI building import: extract founding documents for a building
+    // not yet on Flatie, then commit = create building + import units/owners.
+    AI_IMPORT_EXTRACT: (orgId) => `/organizations/${orgId}/ai-import/extract`,
+    AI_IMPORT_COMMIT: (orgId) => `/organizations/${orgId}/ai-import/commit`,
     BASE: "/organizations",
     MY: "/organizations/my",
     BY_ID: (orgId) => `/organizations/${orgId}`,
@@ -312,5 +316,5 @@ var API_ROUTES = {
 };
 
 exports.API_ROUTES = API_ROUTES;
-//# sourceMappingURL=chunk-4TV7LERS.cjs.map
-//# sourceMappingURL=chunk-4TV7LERS.cjs.map
+//# sourceMappingURL=chunk-WIFGMOTY.cjs.map
+//# sourceMappingURL=chunk-WIFGMOTY.cjs.map

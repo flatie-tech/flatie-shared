@@ -55,6 +55,21 @@ export {
   reorderFaqsSchema,
   updateFaqSchema,
 } from './faq.schema';
+// Org-level AI building import
+export type {
+  OrgAiImportBuilding,
+  OrgAiImportCommitResponse,
+  OrgAiImportCommitSchema,
+  OrgAiImportExtractResponse,
+} from './org-ai-import.schema';
+export {
+  orgAiImportAddressCandidateSchema,
+  orgAiImportBuildingSchema,
+  orgAiImportCommitResponseSchema,
+  orgAiImportCommitSchema,
+  orgAiImportExtractResponseSchema,
+  orgAiImportSkippedRowSchema,
+} from './org-ai-import.schema';
 // Organization schemas
 export type {
   AddOrgMemberSchema,

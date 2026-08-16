@@ -1,5 +1,12 @@
 # @flatie/shared
 
+## 0.120.0
+
+### Changes
+
+- feat(org-ai-import): contracts for org-level AI building import — extract founding documents, review metadata + address candidates, one commit creates the building and imports units/owners
+
+
 ## 0.119.0
 
 ### Changes

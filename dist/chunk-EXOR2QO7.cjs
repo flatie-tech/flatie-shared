@@ -302,6 +302,181 @@ var copyFaqsSchema = zod.z.object({
     "UUID of the building whose FAQs should be copied into the target building."
   )
 });
+var BUILDING_TYPES = [
+  chunkRI7DE3ZD_cjs.BuildingType.RESIDENTIAL,
+  chunkRI7DE3ZD_cjs.BuildingType.COMMERCIAL,
+  chunkRI7DE3ZD_cjs.BuildingType.RESIDENTIAL_COMMERCIAL
+];
+var buildingTypeSchema = zod.z.enum(BUILDING_TYPES).describe(
+  "Usage of the building: `residential` (homes only), `commercial` (business only), or `residential_commercial` (mixed use)."
+);
+var BUILDING_LIMITS = {
+  NAME_MIN: 1,
+  NAME_MAX: 100,
+  ADDRESS_MIN: 1,
+  ADDRESS_MAX: 200,
+  HOUSE_NUMBER_MIN: 1,
+  HOUSE_NUMBER_MAX: 20,
+  OTP_LENGTH: 6,
+  UNITS_MIN: 1,
+  UNITS_MAX: 1e4
+};
+var createBuildingSchema = zod.z.object({
+  name: zod.z.string().min(BUILDING_LIMITS.NAME_MIN, "Name is required").max(BUILDING_LIMITS.NAME_MAX, `Name must be at most ${BUILDING_LIMITS.NAME_MAX} characters`).describe("Display name of the building shown throughout the UI."),
+  addressId: uuidSchema.optional().describe(
+    "UUID of an existing address record. When provided, streetId/houseNumber are ignored."
+  ),
+  streetId: uuidSchema.optional().describe(
+    "UUID of the street record. Required when addressId is not provided (address will be resolved or created)."
+  ),
+  houseNumber: zod.z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN, "House number is required").max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).optional().describe('Street/house number (e.g. "12A", "16/1"). Required when addressId is not provided.'),
+  type: buildingTypeSchema,
+  totalUnits: zod.z.coerce.number().int().min(BUILDING_LIMITS.UNITS_MIN, "Building must have at least 1 unit").max(
+    BUILDING_LIMITS.UNITS_MAX,
+    `Building cannot have more than ${BUILDING_LIMITS.UNITS_MAX} units`
+  ).describe("Total number of individual units (apartments, garages, storage)."),
+  isStratified: multipartBoolean().optional().describe(
+    "True when the building is stratified (each unit has its own title deed). Defaults to false when omitted."
+  ),
+  role: zod.z.enum([
+    chunkRI7DE3ZD_cjs.BuildingRole.OWNER_REPRESENTATIVE,
+    chunkRI7DE3ZD_cjs.BuildingRole.DEPUTY_REPRESENTATIVE,
+    chunkRI7DE3ZD_cjs.BuildingRole.CO_OWNER
+  ]).optional().describe(
+    "Role the creating user should claim for themselves in the new building; omitted creates the building without assigning the caller a role."
+  ),
+  iban: chunk5I5KPCET_cjs.optionalIbanSchema,
+  oib: zod.z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").optional().nullable().describe(
+    "Croatian tax ID (OIB) of the building (Zajednica suvlasnika). Used as the payee OIB on generated uplatnicas."
+  ),
+  monthlyFeePerSqm: zod.z.coerce.number().nonnegative().optional().describe(
+    "Monthly fund contribution rate in EUR per m\xB2 for RESIDENTIAL units. Multiplied by each co-owner\u2019s owned residential area (apartments/garages/storage of type `residential`) to derive their expected pri\u010Duva."
+  ),
+  monthlyFeeCommercialPerSqm: zod.z.coerce.number().nonnegative().optional().describe(
+    "Monthly fund contribution rate in EUR per m\xB2 for COMMERCIAL units. Applied to owned area of any unit with `type = commercial`. Leave unset when the building has no commercial units."
+  ),
+  apartmentResidentialCoef: zod.z.coerce.number().nonnegative().optional(),
+  apartmentCommercialCoef: zod.z.coerce.number().nonnegative().optional(),
+  garageResidentialCoef: zod.z.coerce.number().nonnegative().optional(),
+  garageCommercialCoef: zod.z.coerce.number().nonnegative().optional(),
+  storageResidentialCoef: zod.z.coerce.number().nonnegative().optional(),
+  storageCommercialCoef: zod.z.coerce.number().nonnegative().optional(),
+  billingBuildingCode: zod.z.string().trim().min(1).max(22).optional().describe(
+    "Short code identifying this building in HR01 poziv-na-broj references. Forms the first segment of `{billingBuildingCode}-{paymentRefCode}-{YYYYMM}`. Independent of the street house number."
+  )
+});
+var updateBuildingSchema = zod.z.object({
+  name: zod.z.string().min(BUILDING_LIMITS.NAME_MIN).max(BUILDING_LIMITS.NAME_MAX).optional().describe("New display name of the building."),
+  addressId: uuidSchema.optional().describe("UUID of the new address record to assign to this building."),
+  streetId: uuidSchema.optional().describe("UUID of the street record. Used with houseNumber to resolve or create an address."),
+  houseNumber: zod.z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN).max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).optional().describe(
+    'Street/house number (e.g. "12A", "16/1"). Used with streetId to resolve an address.'
+  ),
+  type: buildingTypeSchema.optional(),
+  totalUnits: zod.z.coerce.number().int().min(BUILDING_LIMITS.UNITS_MIN).max(BUILDING_LIMITS.UNITS_MAX).optional().describe("Revised total unit count."),
+  isStratified: multipartBoolean().optional().describe("Toggles whether the building is stratified (per-unit title deeds)."),
+  removeHouseRulesFile: multipartBoolean().optional().describe(
+    "When true, clears the existing house-rules attachment. Submit independently of `houseRulesFile` uploads."
+  ),
+  iban: chunk5I5KPCET_cjs.optionalIbanSchema,
+  oib: zod.z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").optional().nullable().describe("Croatian tax ID (OIB) of the building. Pass null to clear."),
+  monthlyFeePerSqm: zod.z.coerce.number().nonnegative().optional().describe(
+    "New monthly residential fund contribution rate in EUR per m\xB2. Pass a value to update, omit to leave unchanged."
+  ),
+  monthlyFeeCommercialPerSqm: zod.z.coerce.number().nonnegative().optional().nullable().describe(
+    "New monthly commercial fund contribution rate in EUR per m\xB2. Pass null to clear; omit to leave unchanged."
+  ),
+  apartmentResidentialCoef: zod.z.coerce.number().nonnegative().optional(),
+  apartmentCommercialCoef: zod.z.coerce.number().nonnegative().optional(),
+  garageResidentialCoef: zod.z.coerce.number().nonnegative().optional(),
+  garageCommercialCoef: zod.z.coerce.number().nonnegative().optional(),
+  storageResidentialCoef: zod.z.coerce.number().nonnegative().optional(),
+  storageCommercialCoef: zod.z.coerce.number().nonnegative().optional(),
+  billingBuildingCode: zod.z.string().trim().min(1).max(22).optional().nullable().describe(
+    "New poziv-na-broj building identifier. Pass null to clear; omit to leave unchanged."
+  ),
+  fundsSource: zod.z.enum([chunkRI7DE3ZD_cjs.FundsSource.MANUAL, chunkRI7DE3ZD_cjs.FundsSource.CAMT]).optional().describe(
+    "Switches how the building's fund transactions are populated. `manual` (default) keeps the representative-facing add/edit flow; `camt` locks manual writes and only a platform admin can ingest CAMT.053 XML statements."
+  ),
+  pricuvaRefMode: zod.z.enum([chunkRI7DE3ZD_cjs.PricuvaRefMode.APARTMENT, chunkRI7DE3ZD_cjs.PricuvaRefMode.OWNER]).optional().describe(
+    "Selects whether the HR01 poziv-na-broj middle segment identifies the apartment (`apartment`, default) or the individual co-owner (`owner`). Changes how CAMT imports match payments to units/users."
+  ),
+  pricuvaTrackingFrom: zod.z.string().regex(/^\d{4}-\d{2}$/).optional().nullable().describe(
+    "Month (YYYY-MM) from which Flatie is authoritative for per-owner pri\u010Duva arrears. Monthly charges are posted from this month on; payments before it stay out of per-owner balances (pre-history belongs to the previous manager and enters via opening balances). Pass null to disable tracking; omit to leave unchanged. Cannot be moved past already-posted charges."
+  )
+});
+var joinBuildingWithOtpSchema = zod.z.object({
+  code: zod.z.string().length(
+    BUILDING_LIMITS.OTP_LENGTH,
+    `OTP must be a ${BUILDING_LIMITS.OTP_LENGTH}-character code`
+  ).regex(/^[A-Z0-9]{6}$/, "OTP must be a 6-character alphanumeric code").describe("Six-character alphanumeric invite code shared by a building representative.")
+});
+var updateUserBuildingRoleSchema = zod.z.object({
+  userId: uuidSchema.describe("UUID of the user whose building role is being updated."),
+  roleType: zod.z.enum([
+    chunkRI7DE3ZD_cjs.BuildingRole.OWNER_REPRESENTATIVE,
+    chunkRI7DE3ZD_cjs.BuildingRole.DEPUTY_REPRESENTATIVE,
+    chunkRI7DE3ZD_cjs.BuildingRole.CO_OWNER,
+    // RESIDENT was unassignable through any endpoint until 2026-07-23
+    // (the role existed but the wire schema accepted only the other
+    // three). The backend hierarchy check (canAssignRole) covers it.
+    chunkRI7DE3ZD_cjs.BuildingRole.RESIDENT
+  ]).optional().describe(
+    "New building role for the user; omit to leave the role unchanged while updating other fields."
+  ),
+  buildingSurfacePercentage: zod.z.coerce.number().min(0).max(100).optional().describe(
+    "User\u2019s weighted share of the building surface, 0\u2013100. Used to compute vote weight for consensus polls."
+  ),
+  chatVisibleToCoOwners: zod.z.boolean().optional().describe("Controls whether this user appears in chat directories visible to co-owners.")
+});
+
+// src/schemas/entities/org-ai-import.schema.ts
+var orgAiImportBuildingSchema = zod.z.object({
+  name: zod.z.string().nullable().describe("Building name/label as the documents call it, or null."),
+  address: zod.z.string().nullable().describe("Street + house number as written in the documents, or null."),
+  city: zod.z.string().nullable().describe("City/settlement, or null."),
+  postalCode: zod.z.string().nullable().describe("Postal code, or null."),
+  oib: zod.z.string().nullable().describe("OIB of the co-owners association if stated, or null."),
+  iban: zod.z.string().nullable().describe("Pri\u010Duva account IBAN if stated, or null.")
+});
+var orgAiImportAddressCandidateSchema = zod.z.object({
+  addressId: uuidSchema.describe("Registry address UUID, usable directly on commit."),
+  fullAddress: zod.z.string().describe('Rendered "Street 12, 10000 Zagreb" form for display.')
+});
+var orgAiImportExtractResponseSchema = zod.z.object({
+  extractionId: uuidSchema.describe(
+    "Handle for the cached extraction; pass to commit. Expires after an hour."
+  ),
+  building: orgAiImportBuildingSchema,
+  addressCandidates: zod.z.array(orgAiImportAddressCandidateSchema).describe("Registry matches for the extracted address, best first; may be empty."),
+  unitCount: zod.z.number().int().nonnegative().describe("Units found in the documents."),
+  ownerCount: zod.z.number().int().nonnegative().describe("Owner entries found across units."),
+  pagesProcessed: zod.z.number().int().nonnegative().describe("OCR pages consumed."),
+  extractionWarnings: zod.z.array(zod.z.string()).describe("Model ambiguity notes + server-side extraction warnings, reviewer-facing.")
+}).meta({ id: "OrgAiImportExtractResponse" });
+var orgAiImportCommitSchema = zod.z.object({
+  extractionId: uuidSchema.describe("The extraction to commit."),
+  name: zod.z.string().trim().min(BUILDING_LIMITS.NAME_MIN).max(BUILDING_LIMITS.NAME_MAX).describe("Confirmed building name."),
+  addressId: uuidSchema.optional().describe("Confirmed registry address (one of the candidates, or user-searched)."),
+  streetId: uuidSchema.optional().describe("Street UUID when no addressId \u2014 pairs with houseNumber."),
+  houseNumber: zod.z.string().trim().min(1).max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).optional().describe("House number when no addressId."),
+  type: buildingTypeSchema,
+  oib: zod.z.string().regex(/^\d{11}$/).optional().nullable().describe("Confirmed association OIB; omit/null to skip."),
+  iban: zod.z.string().trim().max(34).optional().nullable().describe("Confirmed pri\u010Duva IBAN; omit/null to skip.")
+});
+var orgAiImportSkippedRowSchema = zod.z.object({
+  unitLabel: zod.z.string().describe("Label of the row that could not be imported."),
+  errors: zod.z.array(zod.z.string()).describe("Why the row was skipped (reviewer-facing, Croatian).")
+});
+var orgAiImportCommitResponseSchema = zod.z.object({
+  buildingId: uuidSchema.describe("The created building."),
+  unitsCreated: zod.z.number().int().nonnegative().describe("Units created by the import."),
+  ownersCreated: zod.z.number().int().nonnegative().describe("Owner records created."),
+  assignmentsCreated: zod.z.number().int().nonnegative().describe("Owner\u2194unit assignments (with shares) created."),
+  skippedRows: zod.z.array(orgAiImportSkippedRowSchema).describe(
+    "Extracted rows that failed validation and were left out \u2014 fix them on the building afterwards."
+  )
+}).meta({ id: "OrgAiImportCommitResponse" });
 var NOTICE_LIMITS = {
   TITLE_MIN: 1,
   TITLE_MAX: 100,
@@ -576,133 +751,6 @@ var auditLogResponseSchema = zod.z.looseObject({
   ipAddress: zod.z.string().nullable(),
   userAgent: zod.z.string().nullable()
 }).meta({ id: "AuditLogResponse" });
-var BUILDING_TYPES = [
-  chunkRI7DE3ZD_cjs.BuildingType.RESIDENTIAL,
-  chunkRI7DE3ZD_cjs.BuildingType.COMMERCIAL,
-  chunkRI7DE3ZD_cjs.BuildingType.RESIDENTIAL_COMMERCIAL
-];
-var buildingTypeSchema = zod.z.enum(BUILDING_TYPES).describe(
-  "Usage of the building: `residential` (homes only), `commercial` (business only), or `residential_commercial` (mixed use)."
-);
-var BUILDING_LIMITS = {
-  NAME_MIN: 1,
-  NAME_MAX: 100,
-  ADDRESS_MIN: 1,
-  ADDRESS_MAX: 200,
-  HOUSE_NUMBER_MIN: 1,
-  HOUSE_NUMBER_MAX: 20,
-  OTP_LENGTH: 6,
-  UNITS_MIN: 1,
-  UNITS_MAX: 1e4
-};
-var createBuildingSchema = zod.z.object({
-  name: zod.z.string().min(BUILDING_LIMITS.NAME_MIN, "Name is required").max(BUILDING_LIMITS.NAME_MAX, `Name must be at most ${BUILDING_LIMITS.NAME_MAX} characters`).describe("Display name of the building shown throughout the UI."),
-  addressId: uuidSchema.optional().describe(
-    "UUID of an existing address record. When provided, streetId/houseNumber are ignored."
-  ),
-  streetId: uuidSchema.optional().describe(
-    "UUID of the street record. Required when addressId is not provided (address will be resolved or created)."
-  ),
-  houseNumber: zod.z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN, "House number is required").max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).optional().describe('Street/house number (e.g. "12A", "16/1"). Required when addressId is not provided.'),
-  type: buildingTypeSchema,
-  totalUnits: zod.z.coerce.number().int().min(BUILDING_LIMITS.UNITS_MIN, "Building must have at least 1 unit").max(
-    BUILDING_LIMITS.UNITS_MAX,
-    `Building cannot have more than ${BUILDING_LIMITS.UNITS_MAX} units`
-  ).describe("Total number of individual units (apartments, garages, storage)."),
-  isStratified: multipartBoolean().optional().describe(
-    "True when the building is stratified (each unit has its own title deed). Defaults to false when omitted."
-  ),
-  role: zod.z.enum([
-    chunkRI7DE3ZD_cjs.BuildingRole.OWNER_REPRESENTATIVE,
-    chunkRI7DE3ZD_cjs.BuildingRole.DEPUTY_REPRESENTATIVE,
-    chunkRI7DE3ZD_cjs.BuildingRole.CO_OWNER
-  ]).optional().describe(
-    "Role the creating user should claim for themselves in the new building; omitted creates the building without assigning the caller a role."
-  ),
-  iban: chunk5I5KPCET_cjs.optionalIbanSchema,
-  oib: zod.z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").optional().nullable().describe(
-    "Croatian tax ID (OIB) of the building (Zajednica suvlasnika). Used as the payee OIB on generated uplatnicas."
-  ),
-  monthlyFeePerSqm: zod.z.coerce.number().nonnegative().optional().describe(
-    "Monthly fund contribution rate in EUR per m\xB2 for RESIDENTIAL units. Multiplied by each co-owner\u2019s owned residential area (apartments/garages/storage of type `residential`) to derive their expected pri\u010Duva."
-  ),
-  monthlyFeeCommercialPerSqm: zod.z.coerce.number().nonnegative().optional().describe(
-    "Monthly fund contribution rate in EUR per m\xB2 for COMMERCIAL units. Applied to owned area of any unit with `type = commercial`. Leave unset when the building has no commercial units."
-  ),
-  apartmentResidentialCoef: zod.z.coerce.number().nonnegative().optional(),
-  apartmentCommercialCoef: zod.z.coerce.number().nonnegative().optional(),
-  garageResidentialCoef: zod.z.coerce.number().nonnegative().optional(),
-  garageCommercialCoef: zod.z.coerce.number().nonnegative().optional(),
-  storageResidentialCoef: zod.z.coerce.number().nonnegative().optional(),
-  storageCommercialCoef: zod.z.coerce.number().nonnegative().optional(),
-  billingBuildingCode: zod.z.string().trim().min(1).max(22).optional().describe(
-    "Short code identifying this building in HR01 poziv-na-broj references. Forms the first segment of `{billingBuildingCode}-{paymentRefCode}-{YYYYMM}`. Independent of the street house number."
-  )
-});
-var updateBuildingSchema = zod.z.object({
-  name: zod.z.string().min(BUILDING_LIMITS.NAME_MIN).max(BUILDING_LIMITS.NAME_MAX).optional().describe("New display name of the building."),
-  addressId: uuidSchema.optional().describe("UUID of the new address record to assign to this building."),
-  streetId: uuidSchema.optional().describe("UUID of the street record. Used with houseNumber to resolve or create an address."),
-  houseNumber: zod.z.string().min(BUILDING_LIMITS.HOUSE_NUMBER_MIN).max(BUILDING_LIMITS.HOUSE_NUMBER_MAX).optional().describe(
-    'Street/house number (e.g. "12A", "16/1"). Used with streetId to resolve an address.'
-  ),
-  type: buildingTypeSchema.optional(),
-  totalUnits: zod.z.coerce.number().int().min(BUILDING_LIMITS.UNITS_MIN).max(BUILDING_LIMITS.UNITS_MAX).optional().describe("Revised total unit count."),
-  isStratified: multipartBoolean().optional().describe("Toggles whether the building is stratified (per-unit title deeds)."),
-  removeHouseRulesFile: multipartBoolean().optional().describe(
-    "When true, clears the existing house-rules attachment. Submit independently of `houseRulesFile` uploads."
-  ),
-  iban: chunk5I5KPCET_cjs.optionalIbanSchema,
-  oib: zod.z.string().regex(/^\d{11}$/, "OIB must be exactly 11 digits").optional().nullable().describe("Croatian tax ID (OIB) of the building. Pass null to clear."),
-  monthlyFeePerSqm: zod.z.coerce.number().nonnegative().optional().describe(
-    "New monthly residential fund contribution rate in EUR per m\xB2. Pass a value to update, omit to leave unchanged."
-  ),
-  monthlyFeeCommercialPerSqm: zod.z.coerce.number().nonnegative().optional().nullable().describe(
-    "New monthly commercial fund contribution rate in EUR per m\xB2. Pass null to clear; omit to leave unchanged."
-  ),
-  apartmentResidentialCoef: zod.z.coerce.number().nonnegative().optional(),
-  apartmentCommercialCoef: zod.z.coerce.number().nonnegative().optional(),
-  garageResidentialCoef: zod.z.coerce.number().nonnegative().optional(),
-  garageCommercialCoef: zod.z.coerce.number().nonnegative().optional(),
-  storageResidentialCoef: zod.z.coerce.number().nonnegative().optional(),
-  storageCommercialCoef: zod.z.coerce.number().nonnegative().optional(),
-  billingBuildingCode: zod.z.string().trim().min(1).max(22).optional().nullable().describe(
-    "New poziv-na-broj building identifier. Pass null to clear; omit to leave unchanged."
-  ),
-  fundsSource: zod.z.enum([chunkRI7DE3ZD_cjs.FundsSource.MANUAL, chunkRI7DE3ZD_cjs.FundsSource.CAMT]).optional().describe(
-    "Switches how the building's fund transactions are populated. `manual` (default) keeps the representative-facing add/edit flow; `camt` locks manual writes and only a platform admin can ingest CAMT.053 XML statements."
-  ),
-  pricuvaRefMode: zod.z.enum([chunkRI7DE3ZD_cjs.PricuvaRefMode.APARTMENT, chunkRI7DE3ZD_cjs.PricuvaRefMode.OWNER]).optional().describe(
-    "Selects whether the HR01 poziv-na-broj middle segment identifies the apartment (`apartment`, default) or the individual co-owner (`owner`). Changes how CAMT imports match payments to units/users."
-  ),
-  pricuvaTrackingFrom: zod.z.string().regex(/^\d{4}-\d{2}$/).optional().nullable().describe(
-    "Month (YYYY-MM) from which Flatie is authoritative for per-owner pri\u010Duva arrears. Monthly charges are posted from this month on; payments before it stay out of per-owner balances (pre-history belongs to the previous manager and enters via opening balances). Pass null to disable tracking; omit to leave unchanged. Cannot be moved past already-posted charges."
-  )
-});
-var joinBuildingWithOtpSchema = zod.z.object({
-  code: zod.z.string().length(
-    BUILDING_LIMITS.OTP_LENGTH,
-    `OTP must be a ${BUILDING_LIMITS.OTP_LENGTH}-character code`
-  ).regex(/^[A-Z0-9]{6}$/, "OTP must be a 6-character alphanumeric code").describe("Six-character alphanumeric invite code shared by a building representative.")
-});
-var updateUserBuildingRoleSchema = zod.z.object({
-  userId: uuidSchema.describe("UUID of the user whose building role is being updated."),
-  roleType: zod.z.enum([
-    chunkRI7DE3ZD_cjs.BuildingRole.OWNER_REPRESENTATIVE,
-    chunkRI7DE3ZD_cjs.BuildingRole.DEPUTY_REPRESENTATIVE,
-    chunkRI7DE3ZD_cjs.BuildingRole.CO_OWNER,
-    // RESIDENT was unassignable through any endpoint until 2026-07-23
-    // (the role existed but the wire schema accepted only the other
-    // three). The backend hierarchy check (canAssignRole) covers it.
-    chunkRI7DE3ZD_cjs.BuildingRole.RESIDENT
-  ]).optional().describe(
-    "New building role for the user; omit to leave the role unchanged while updating other fields."
-  ),
-  buildingSurfacePercentage: zod.z.coerce.number().min(0).max(100).optional().describe(
-    "User\u2019s weighted share of the building surface, 0\u2013100. Used to compute vote weight for consensus polls."
-  ),
-  chatVisibleToCoOwners: zod.z.boolean().optional().describe("Controls whether this user appears in chat directories visible to co-owners.")
-});
 var buildingQuotaEntrySchema = zod.z.object({
   resourceType: zod.z.enum(
     chunkRI7DE3ZD_cjs.QUOTA_RESOURCE_TYPES
@@ -3122,6 +3170,12 @@ exports.notificationPreferenceCategorySchema = notificationPreferenceCategorySch
 exports.notificationPreferenceItemSchema = notificationPreferenceItemSchema;
 exports.notificationResponseSchema = notificationResponseSchema;
 exports.optionalDateTimeSchema = optionalDateTimeSchema;
+exports.orgAiImportAddressCandidateSchema = orgAiImportAddressCandidateSchema;
+exports.orgAiImportBuildingSchema = orgAiImportBuildingSchema;
+exports.orgAiImportCommitResponseSchema = orgAiImportCommitResponseSchema;
+exports.orgAiImportCommitSchema = orgAiImportCommitSchema;
+exports.orgAiImportExtractResponseSchema = orgAiImportExtractResponseSchema;
+exports.orgAiImportSkippedRowSchema = orgAiImportSkippedRowSchema;
 exports.orgBroadcastResponseSchema = orgBroadcastResponseSchema;
 exports.orgInvitationResponseSchema = orgInvitationResponseSchema;
 exports.orgStatementImportResponseSchema = orgStatementImportResponseSchema;
@@ -3222,5 +3276,5 @@ exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
 exports.voteWithIdCardSchema = voteWithIdCardSchema;
-//# sourceMappingURL=chunk-VP6IE7ZJ.cjs.map
-//# sourceMappingURL=chunk-VP6IE7ZJ.cjs.map
+//# sourceMappingURL=chunk-EXOR2QO7.cjs.map
+//# sourceMappingURL=chunk-EXOR2QO7.cjs.map

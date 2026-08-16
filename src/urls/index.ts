@@ -296,6 +296,10 @@ export const API_ROUTES = {
     // Org-wide bank statement import: one FINA/PBZ file carries the whole
     // portfolio; statements route to buildings by IBAN.
     STATEMENT_IMPORT: (orgId: string) => `/organizations/${orgId}/statement-imports`,
+    // Org-level AI building import: extract founding documents for a building
+    // not yet on Flatie, then commit = create building + import units/owners.
+    AI_IMPORT_EXTRACT: (orgId: string) => `/organizations/${orgId}/ai-import/extract`,
+    AI_IMPORT_COMMIT: (orgId: string) => `/organizations/${orgId}/ai-import/commit`,
     BASE: '/organizations',
     MY: '/organizations/my',
     BY_ID: (orgId: string) => `/organizations/${orgId}`,
