@@ -142,6 +142,23 @@ export {
   upsertPricuvaOpeningBalancesSchema,
 } from './pricuva.schema';
 export type {
+  OrgBuildingFundsRow,
+  OrgFundsOverviewResponse,
+  PricuvaDeliveriesResponse,
+  PricuvaDeliveryRow,
+} from './pricuva-delivery.schema';
+// Value exports: the two const objects are used as values (enum members) at
+// call sites, so they must not sit in the type-only block above — see the
+// ConversationType incident fixed in v0.123.0.
+export {
+  orgBuildingFundsRowSchema,
+  orgFundsOverviewResponseSchema,
+  PricuvaDeliveryChannel,
+  PricuvaDeliveryStatus,
+  pricuvaDeliveriesResponseSchema,
+  pricuvaDeliveryRowSchema,
+} from './pricuva-delivery.schema';
+export type {
   CreateUnitInput,
   PaginatedUnitsResponse,
   Unit,
