@@ -6,6 +6,8 @@
  * crash. House fallback locale is Croatian, never English.
  */
 
+import { BuildingRole, OrgRole } from '../enums/role.enum';
+
 export type NotificationLocale = 'hr' | 'en' | 'de';
 
 export const SUPPORTED_LOCALES: readonly NotificationLocale[] = ['hr', 'en', 'de'];
@@ -125,27 +127,60 @@ const POLL_TYPE_LABELS: LabelMap = {
   de: { consensus: 'Konsens', community: 'Gemeinschaft' },
 };
 
-const ROLE_LABELS: LabelMap = {
+/**
+ * Keyed by the ENUM VALUE (`owner_representative`), not the TypeScript key
+ * (`OWNER_REPRESENTATIVE`) — that is what the pgEnum stores and what the
+ * backend puts in the notification's `role` var. Keyed the other way every
+ * lookup missed and `getRoleLabel` fell through to the raw token, rendering
+ * "Vaša uloga … je promijenjena u: owner_representative". The `Record<
+ * BuildingRole, …>` typing makes a new role a compile error rather than a
+ * silent fallback.
+ */
+const ROLE_LABELS: Record<NotificationLocale, Record<BuildingRole, string>> = {
   hr: {
-    BUILDING_MANAGER: 'Upravitelj zgrade',
-    OWNER_REPRESENTATIVE: 'Predstavnik suvlasnika',
-    DEPUTY_REPRESENTATIVE: 'Zamjenik predstavnika',
-    CO_OWNER: 'Suvlasnik',
-    TENANT: 'Stanar',
+    [BuildingRole.OWNER_REPRESENTATIVE]: 'Predstavnik suvlasnika',
+    [BuildingRole.DEPUTY_REPRESENTATIVE]: 'Zamjenik predstavnika',
+    [BuildingRole.CO_OWNER]: 'Suvlasnik',
+    [BuildingRole.RESIDENT]: 'Stanar',
   },
   en: {
-    BUILDING_MANAGER: 'Building manager',
-    OWNER_REPRESENTATIVE: 'Owner representative',
-    DEPUTY_REPRESENTATIVE: 'Deputy representative',
-    CO_OWNER: 'Co-owner',
-    TENANT: 'Tenant',
+    [BuildingRole.OWNER_REPRESENTATIVE]: 'Owner representative',
+    [BuildingRole.DEPUTY_REPRESENTATIVE]: 'Deputy representative',
+    [BuildingRole.CO_OWNER]: 'Co-owner',
+    [BuildingRole.RESIDENT]: 'Resident',
   },
   de: {
-    BUILDING_MANAGER: 'Gebäudeverwalter',
-    OWNER_REPRESENTATIVE: 'Eigentümervertreter',
-    DEPUTY_REPRESENTATIVE: 'Stellvertreter',
-    CO_OWNER: 'Miteigentümer',
-    TENANT: 'Mieter',
+    [BuildingRole.OWNER_REPRESENTATIVE]: 'Eigentümervertreter',
+    [BuildingRole.DEPUTY_REPRESENTATIVE]: 'Stellvertreter',
+    [BuildingRole.CO_OWNER]: 'Miteigentümer',
+    [BuildingRole.RESIDENT]: 'Bewohner',
+  },
+};
+
+/**
+ * Org-role twin of `ROLE_LABELS`, for the `{{orgRole}}` var in
+ * ORG_MEMBER_ADDED / ORG_MEMBER_ROLE_CHANGED. Wording mirrors the web
+ * `orgRole_*` translation keys and the org-invite email, so the two channels
+ * for one action no longer disagree.
+ */
+const ORG_ROLE_LABELS: Record<NotificationLocale, Record<OrgRole, string>> = {
+  hr: {
+    [OrgRole.ORG_ADMIN]: 'Administrator organizacije',
+    [OrgRole.SUPERVISOR]: 'Supervizor',
+    [OrgRole.REFERENT]: 'Referent',
+    [OrgRole.OPERATIVE]: 'Operativa',
+  },
+  en: {
+    [OrgRole.ORG_ADMIN]: 'Organization admin',
+    [OrgRole.SUPERVISOR]: 'Supervisor',
+    [OrgRole.REFERENT]: 'Clerk',
+    [OrgRole.OPERATIVE]: 'Field worker',
+  },
+  de: {
+    [OrgRole.ORG_ADMIN]: 'Organisationsadministrator',
+    [OrgRole.SUPERVISOR]: 'Supervisor',
+    [OrgRole.REFERENT]: 'Sachbearbeiter',
+    [OrgRole.OPERATIVE]: 'Außendienst',
   },
 };
 
@@ -166,7 +201,11 @@ export function getPollTypeLabel(locale: NotificationLocale, pollType: string): 
 }
 
 export function getRoleLabel(locale: NotificationLocale, role: string): string {
-  return ROLE_LABELS[locale][role] ?? role;
+  return (ROLE_LABELS[locale] as Record<string, string>)[role] ?? role;
+}
+
+export function getOrgRoleLabel(locale: NotificationLocale, orgRole: string): string {
+  return (ORG_ROLE_LABELS[locale] as Record<string, string>)[orgRole] ?? orgRole;
 }
 
 /** BCP-47 tag for Intl date/number formatting in this locale. */

@@ -2,6 +2,7 @@ export {
   DEFAULT_LOCALE,
   getDateLocale,
   getEventTypeLabel,
+  getOrgRoleLabel,
   getPollTypeLabel,
   getRoleLabel,
   getStatusLabel,

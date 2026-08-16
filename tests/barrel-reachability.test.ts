@@ -26,6 +26,10 @@ const leafModules = import.meta.glob<Record<string, unknown>>(
   [
     '../src/constants/*.ts',
     '../src/enums/*.ts',
+    // `entities/` was missing until 2026-08-16, which is why `ConversationType`
+    // — a const object re-exported from the entities barrel with `export type`
+    // — shipped as `undefined` at runtime while type-checking as a value.
+    '../src/schemas/entities/*.ts',
     '../src/schemas/requests/*.ts',
     '../src/schemas/responses/*.ts',
     '../src/utils/*.ts',

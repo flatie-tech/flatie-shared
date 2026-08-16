@@ -69,11 +69,11 @@ export const createOwnerSchema = z
      */
     buildingSharePercentage: z.number().min(0).max(100).optional().nullable(),
   })
-  .meta({ id: 'CreateOwner' });
+  .meta({ id: 'CreateOwnerInput' });
 
 export type CreateOwnerInput = z.infer<typeof createOwnerSchema>;
 
-export const updateOwnerSchema = createOwnerSchema.partial().meta({ id: 'UpdateOwner' });
+export const updateOwnerSchema = createOwnerSchema.partial().meta({ id: 'UpdateOwnerInput' });
 export type UpdateOwnerInput = z.infer<typeof updateOwnerSchema>;
 
 /**
@@ -86,7 +86,7 @@ export const assignOwnerSchema = z
     ownerId: z.string().uuid(),
     ownershipPercentage: z.number().min(0).max(100).nullable().optional(),
   })
-  .meta({ id: 'AssignOwner' });
+  .meta({ id: 'AssignOwnerInput' });
 
 export type AssignOwnerInput = z.infer<typeof assignOwnerSchema>;
 

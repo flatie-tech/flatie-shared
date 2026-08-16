@@ -48,42 +48,44 @@ export const orgAiImportExtractResponseSchema = z
   })
   .meta({ id: 'OrgAiImportExtractResponse' });
 
-export const orgAiImportCommitSchema = z.object({
-  extractionId: uuidSchema.describe('The extraction to commit.'),
-  name: z
-    .string()
-    .trim()
-    .min(BUILDING_LIMITS.NAME_MIN)
-    .max(BUILDING_LIMITS.NAME_MAX)
-    .describe('Confirmed building name.'),
-  addressId: uuidSchema
-    .optional()
-    .describe('Confirmed registry address (one of the candidates, or user-searched).'),
-  streetId: uuidSchema
-    .optional()
-    .describe('Street UUID when no addressId — pairs with houseNumber.'),
-  houseNumber: z
-    .string()
-    .trim()
-    .min(1)
-    .max(BUILDING_LIMITS.HOUSE_NUMBER_MAX)
-    .optional()
-    .describe('House number when no addressId.'),
-  type: buildingTypeSchema,
-  oib: z
-    .string()
-    .regex(/^\d{11}$/)
-    .optional()
-    .nullable()
-    .describe('Confirmed association OIB; omit/null to skip.'),
-  iban: z
-    .string()
-    .trim()
-    .max(34)
-    .optional()
-    .nullable()
-    .describe('Confirmed pričuva IBAN; omit/null to skip.'),
-});
+export const orgAiImportCommitSchema = z
+  .object({
+    extractionId: uuidSchema.describe('The extraction to commit.'),
+    name: z
+      .string()
+      .trim()
+      .min(BUILDING_LIMITS.NAME_MIN)
+      .max(BUILDING_LIMITS.NAME_MAX)
+      .describe('Confirmed building name.'),
+    addressId: uuidSchema
+      .optional()
+      .describe('Confirmed registry address (one of the candidates, or user-searched).'),
+    streetId: uuidSchema
+      .optional()
+      .describe('Street UUID when no addressId — pairs with houseNumber.'),
+    houseNumber: z
+      .string()
+      .trim()
+      .min(1)
+      .max(BUILDING_LIMITS.HOUSE_NUMBER_MAX)
+      .optional()
+      .describe('House number when no addressId.'),
+    type: buildingTypeSchema,
+    oib: z
+      .string()
+      .regex(/^\d{11}$/)
+      .optional()
+      .nullable()
+      .describe('Confirmed association OIB; omit/null to skip.'),
+    iban: z
+      .string()
+      .trim()
+      .max(34)
+      .optional()
+      .nullable()
+      .describe('Confirmed pričuva IBAN; omit/null to skip.'),
+  })
+  .meta({ id: 'OrgAiImportCommit' });
 
 export type OrgAiImportCommitSchema = z.infer<typeof orgAiImportCommitSchema>;
 

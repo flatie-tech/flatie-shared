@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { NotificationType } from '../../src/enums';
+import { BuildingRole, NotificationType, OrgRole } from '../../src/enums';
 
 import {
   ACTOR_FALLBACK,
   buildLocalizedVars,
   getLocalizedTypeDescription,
+  getOrgRoleLabel,
+  getRoleLabel,
   type NotificationLocale as Locale,
   NOTIFICATION_TEMPLATES,
   renderNotificationText,
@@ -89,8 +91,14 @@ describe('buildLocalizedVars', () => {
   it('localizes status and role enum values', () => {
     expect(buildLocalizedVars('hr', { status: 'in_progress' }).status).toBe('U tijeku');
     expect(buildLocalizedVars('de', { status: 'resolved' }).status).toBe('Behoben');
-    expect(buildLocalizedVars('hr', { role: 'CO_OWNER' }).role).toBe('Suvlasnik');
-    expect(buildLocalizedVars('de', { role: 'TENANT' }).role).toBe('Mieter');
+    // The DB enum value, not the TypeScript key — the backend puts
+    // `owner_representative` / `co_owner` in the var, never `CO_OWNER`.
+    expect(buildLocalizedVars('hr', { role: BuildingRole.CO_OWNER }).role).toBe('Suvlasnik');
+    expect(buildLocalizedVars('de', { role: BuildingRole.RESIDENT }).role).toBe('Bewohner');
+    expect(buildLocalizedVars('hr', { orgRole: OrgRole.ORG_ADMIN }).orgRole).toBe(
+      'Administrator organizacije',
+    );
+    expect(buildLocalizedVars('en', { orgRole: OrgRole.REFERENT }).orgRole).toBe('Clerk');
   });
 
   it('formats date vars per locale in Europe/Zagreb wall-clock time', () => {
@@ -167,5 +175,41 @@ describe('getLocalizedTypeDescription', () => {
   it('returns the per-locale preferences description', () => {
     expect(getLocalizedTypeDescription(NotificationType.CHAT_MESSAGE, 'hr')).toContain('poruku');
     expect(getLocalizedTypeDescription(NotificationType.CHAT_MESSAGE, 'de')).toContain('Nachricht');
+  });
+});
+
+/**
+ * Both label maps fall back to the raw token on a miss, so a mis-keyed map is
+ * invisible: the `{{role}}` substitution still succeeds, `unresolvedVars`
+ * stays empty, and the notification simply reads "…promijenjena u:
+ * owner_representative". ROLE_LABELS was keyed SCREAMING_SNAKE against the
+ * lowercase pgEnum for its whole life for exactly that reason. So assert the
+ * label differs from the value it was looked up by, per enum value per locale.
+ */
+describe('role label exhaustiveness', () => {
+  const roleCases = LOCALES.flatMap((locale) =>
+    Object.values(BuildingRole).map((role) => [locale, role] as const),
+  );
+  const orgRoleCases = LOCALES.flatMap((locale) =>
+    Object.values(OrgRole).map((orgRole) => [locale, orgRole] as const),
+  );
+
+  it.each(roleCases)('%s / %s resolves to a real building-role label', (locale, role) => {
+    const label = getRoleLabel(locale, role);
+    expect(label, `getRoleLabel fell through to the raw enum value for ${role}`).not.toBe(role);
+    expect(label.trim()).not.toBe('');
+  });
+
+  it.each(orgRoleCases)('%s / %s resolves to a real org-role label', (locale, orgRole) => {
+    const label = getOrgRoleLabel(locale, orgRole);
+    expect(label, `getOrgRoleLabel fell through to the raw enum value for ${orgRole}`).not.toBe(
+      orgRole,
+    );
+    expect(label.trim()).not.toBe('');
+  });
+
+  it('passes an unknown role through unchanged rather than throwing', () => {
+    expect(getRoleLabel('hr', 'not_a_role')).toBe('not_a_role');
+    expect(getOrgRoleLabel('hr', 'not_a_role')).toBe('not_a_role');
   });
 });

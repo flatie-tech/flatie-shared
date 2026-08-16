@@ -29,6 +29,15 @@ import type { Strict } from './_strict';
  *
  * Both rates are null when neither has been configured. In that case
  * `rows` is empty — the server can't compute expected amounts.
+ *
+ * The EUR fields below are `z.number()`, NOT the package's
+ * `moneyStringSchema` / `signedMoneyStringSchema` — a deliberate exemption
+ * from the "money is a two-decimal string" rule in `money.schema.ts`. That
+ * rule exists to keep stored `decimal` columns exact end to end; every field
+ * here is a DERIVED report figure, aggregated in Postgres `numeric` and
+ * rounded once on the way out, never round-tripped back into a column. The
+ * clients chart and total these values, so a string representation would
+ * turn arithmetic into concatenation for no exactness gain.
  */
 export const buildingFundsLedgerRowSchema = z
   .object({

@@ -21,6 +21,7 @@ export {
 // Base schemas
 export {
   baseEntitySchema,
+  booleanish,
   buildingEntitySchema,
   buildingUserEntitySchema,
   dateTimeSchema,

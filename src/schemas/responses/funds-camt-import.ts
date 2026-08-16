@@ -188,14 +188,16 @@ export const unmatchedPricuvaRefsResponseSchema = z
   })
   .describe('Aggregated unmatched pričuva reference codes for a building.');
 
-export const mapPricuvaRefSchema = z.object({
-  refCode: z
-    .string()
-    .trim()
-    .regex(/^\d{1,22}$/)
-    .describe('The unit segment to adopt as the unit’s paymentRefCode.'),
-  unitId: z.string().uuid().describe('The unit this code belongs to.'),
-});
+export const mapPricuvaRefSchema = z
+  .object({
+    refCode: z
+      .string()
+      .trim()
+      .regex(/^\d{1,22}$/)
+      .describe('The unit segment to adopt as the unit’s paymentRefCode.'),
+    unitId: z.string().uuid().describe('The unit this code belongs to.'),
+  })
+  .meta({ id: 'MapPricuvaRef' });
 
 export const mapPricuvaRefResponseSchema = z
   .object({

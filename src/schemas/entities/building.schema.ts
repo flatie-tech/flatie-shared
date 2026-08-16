@@ -26,6 +26,35 @@ export const buildingTypeSchema = z
   );
 
 /**
+ * Numeric field a form can CLEAR.
+ *
+ * `z.coerce.number()` maps both `''` — what a cleared number input posts,
+ * multipart or JSON — and `null` to `0`, indistinguishable from a deliberate
+ * zero. For the pričuva rates and surface coefficients that is a financial
+ * consequence, not a cosmetic one: a rate cleared in the UI was stored as
+ * `0.0000`, which prices every co-owner's contribution at zero, posts
+ * 0-amount charges, and can never be returned to NULL through the API.
+ *
+ * `emptyAs` says what an empty submission means for the field:
+ *   - `null` — the column is clearable, so clearing writes NULL.
+ *   - `undefined` — the backend has no clear path (it calls `.toString()`
+ *     unguarded), so an empty submission leaves the stored value unchanged.
+ */
+function clearableNumber<T extends z.ZodTypeAny>(inner: T, emptyAs: null | undefined) {
+  return z.preprocess((value) => (value === '' || value === null ? emptyAs : value), inner);
+}
+
+/** Monthly EUR/m² rate — clearable back to NULL ("no rate configured"). */
+function feeRate() {
+  return clearableNumber(z.coerce.number().nonnegative().nullable(), null).optional();
+}
+
+/** Surface coefficient — an empty submission leaves the stored value as is. */
+function surfaceCoef() {
+  return clearableNumber(z.coerce.number().nonnegative().optional(), undefined).optional();
+}
+
+/**
  * Validation constants for buildings
  */
 export const BUILDING_LIMITS = {
@@ -102,26 +131,18 @@ export const createBuildingSchema = z.object({
     .describe(
       'Croatian tax ID (OIB) of the building (Zajednica suvlasnika). Used as the payee OIB on generated uplatnicas.',
     ),
-  monthlyFeePerSqm: z.coerce
-    .number()
-    .nonnegative()
-    .optional()
-    .describe(
-      'Monthly fund contribution rate in EUR per m² for RESIDENTIAL units. Multiplied by each co-owner’s owned residential area (apartments/garages/storage of type `residential`) to derive their expected pričuva.',
-    ),
-  monthlyFeeCommercialPerSqm: z.coerce
-    .number()
-    .nonnegative()
-    .optional()
-    .describe(
-      'Monthly fund contribution rate in EUR per m² for COMMERCIAL units. Applied to owned area of any unit with `type = commercial`. Leave unset when the building has no commercial units.',
-    ),
-  apartmentResidentialCoef: z.coerce.number().nonnegative().optional(),
-  apartmentCommercialCoef: z.coerce.number().nonnegative().optional(),
-  garageResidentialCoef: z.coerce.number().nonnegative().optional(),
-  garageCommercialCoef: z.coerce.number().nonnegative().optional(),
-  storageResidentialCoef: z.coerce.number().nonnegative().optional(),
-  storageCommercialCoef: z.coerce.number().nonnegative().optional(),
+  monthlyFeePerSqm: feeRate().describe(
+    'Monthly fund contribution rate in EUR per m² for RESIDENTIAL units. Multiplied by each co-owner’s owned residential area (apartments/garages/storage of type `residential`) to derive their expected pričuva. Pass null or an empty value to leave it unset.',
+  ),
+  monthlyFeeCommercialPerSqm: feeRate().describe(
+    'Monthly fund contribution rate in EUR per m² for COMMERCIAL units. Applied to owned area of any unit with `type = commercial`. Leave unset when the building has no commercial units.',
+  ),
+  apartmentResidentialCoef: surfaceCoef(),
+  apartmentCommercialCoef: surfaceCoef(),
+  garageResidentialCoef: surfaceCoef(),
+  garageCommercialCoef: surfaceCoef(),
+  storageResidentialCoef: surfaceCoef(),
+  storageCommercialCoef: surfaceCoef(),
   billingBuildingCode: z
     .string()
     .trim()
@@ -183,27 +204,18 @@ export const updateBuildingSchema = z.object({
     .optional()
     .nullable()
     .describe('Croatian tax ID (OIB) of the building. Pass null to clear.'),
-  monthlyFeePerSqm: z.coerce
-    .number()
-    .nonnegative()
-    .optional()
-    .describe(
-      'New monthly residential fund contribution rate in EUR per m². Pass a value to update, omit to leave unchanged.',
-    ),
-  monthlyFeeCommercialPerSqm: z.coerce
-    .number()
-    .nonnegative()
-    .optional()
-    .nullable()
-    .describe(
-      'New monthly commercial fund contribution rate in EUR per m². Pass null to clear; omit to leave unchanged.',
-    ),
-  apartmentResidentialCoef: z.coerce.number().nonnegative().optional(),
-  apartmentCommercialCoef: z.coerce.number().nonnegative().optional(),
-  garageResidentialCoef: z.coerce.number().nonnegative().optional(),
-  garageCommercialCoef: z.coerce.number().nonnegative().optional(),
-  storageResidentialCoef: z.coerce.number().nonnegative().optional(),
-  storageCommercialCoef: z.coerce.number().nonnegative().optional(),
+  monthlyFeePerSqm: feeRate().describe(
+    'New monthly residential fund contribution rate in EUR per m². Pass null (or an empty value) to clear; omit to leave unchanged.',
+  ),
+  monthlyFeeCommercialPerSqm: feeRate().describe(
+    'New monthly commercial fund contribution rate in EUR per m². Pass null (or an empty value) to clear; omit to leave unchanged.',
+  ),
+  apartmentResidentialCoef: surfaceCoef(),
+  apartmentCommercialCoef: surfaceCoef(),
+  garageResidentialCoef: surfaceCoef(),
+  garageCommercialCoef: surfaceCoef(),
+  storageResidentialCoef: surfaceCoef(),
+  storageCommercialCoef: surfaceCoef(),
   billingBuildingCode: z
     .string()
     .trim()

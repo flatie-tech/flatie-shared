@@ -1,6 +1,7 @@
 import type { NotificationType } from '../enums';
 import {
   getDateLocale,
+  getOrgRoleLabel,
   getRoleLabel,
   getStatusLabel,
   getWasteSubtypeLabel,
@@ -48,6 +49,9 @@ export function buildLocalizedVars(
   }
   if (typeof vars.role === 'string' && vars.role) {
     vars.role = getRoleLabel(locale, vars.role);
+  }
+  if (typeof vars.orgRole === 'string' && vars.orgRole) {
+    vars.orgRole = getOrgRoleLabel(locale, vars.orgRole);
   }
   for (const key of DATE_VARS) {
     if (vars[key] !== undefined && vars[key] !== null) {

@@ -57,11 +57,11 @@ export const createBusinessPartnerSchema = z
     isVatPayer: z.boolean().optional(),
     isActive: z.boolean().optional(),
   })
-  .meta({ id: 'CreateBusinessPartner' });
+  .meta({ id: 'CreateBusinessPartnerInput' });
 
 export type CreateBusinessPartnerInput = z.infer<typeof createBusinessPartnerSchema>;
 
 export const updateBusinessPartnerSchema = createBusinessPartnerSchema
   .partial()
-  .meta({ id: 'UpdateBusinessPartner' });
+  .meta({ id: 'UpdateBusinessPartnerInput' });
 export type UpdateBusinessPartnerInput = z.infer<typeof updateBusinessPartnerSchema>;

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { EnterpriseRequestStatus } from '../../enums/enterprise-request.enum';
+import { booleanish } from '../base.schema';
 
 /**
  * Staff-side subscription administration.
@@ -59,7 +60,7 @@ export const getPlatformSubscriptionsQuerySchema = z.object({
   status: z.string().trim().max(32).optional(),
   tier: tierSchema.optional(),
   entityType: entityTypeSchema.optional(),
-  trialing: z.coerce.boolean().optional().describe('Only subscriptions still inside a trial.'),
+  trialing: booleanish.optional().describe('Only subscriptions still inside a trial.'),
   search: z.string().trim().max(255).optional(),
   sortBy: z.string().trim().max(32).optional(),
   sortOrder: z.enum(['asc', 'desc']).optional(),

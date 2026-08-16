@@ -45,7 +45,6 @@ export {
 } from './bug-report.schema';
 // Chat schemas
 export type {
-  ConversationType,
   CreateConversationSchema,
   CursorQuerySchema,
   SendMessageSchema,
@@ -53,6 +52,11 @@ export type {
 } from './chat.schema';
 export {
   CHAT_LIMITS,
+  // `ConversationType` is a const object + same-named type. It belongs in the
+  // VALUE block: re-exported with `export type` it type-checks as a value and
+  // is `undefined` at runtime, so `ConversationType.DIRECT` throws in a
+  // consumer that compiled clean.
+  ConversationType,
   createConversationSchema,
   cursorQuerySchema,
   sendMessageSchema,
@@ -178,12 +182,6 @@ export {
   updateBuildingSchema,
   updateUserBuildingRoleSchema,
 } from './building.schema';
-// Building quota schemas
-export {
-  buildingQuotaConfigSchema,
-  buildingQuotaEntrySchema,
-  buildingQuotaListSchema,
-} from './building-quota.schema';
 // Building settings schemas
 export type { UpdateBuildingSettingsSchema } from './building-settings.schema';
 export { updateBuildingSettingsSchema } from './building-settings.schema';
@@ -274,6 +272,7 @@ export {
   createFailureReportSchema,
   FAILURE_REPORT_LIMITS,
   failureReportEventSchema,
+  failureReportEventWithDateOrderSchema,
   updateFailureReportSchema,
 } from './failure-report.schema';
 // ID card verification schemas
@@ -301,6 +300,7 @@ export {
   createNoticeSchema,
   NOTICE_LIMITS,
   noticeEventSchema,
+  noticeEventWithDateOrderSchema,
   updateNoticeSchema,
 } from './notice.schema';
 // Owner schemas

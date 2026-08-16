@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   check:
-    name: Build, test, verify dist
+    name: Lint, type check, test, build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -41,9 +41,18 @@ jobs:
       - name: Build
         run: pnpm build
 
-      # dist/ is gitignored — consumers regenerate it on `pnpm install`
-      # via the `prepare` script (`test -d dist || tsup`). The build step
-      # above just verifies the current src/ produces dist/ cleanly.
+      # dist/ IS git-tracked — see the note in .gitignore. All three
+      # consumers install via `github:flatie-tech/flatie-shared#vX.Y.Z`,
+      # where the `prepare` script (`test -d dist || tsup`) is a no-op
+      # because devDependencies aren't installed in a nested git dep, so
+      # the committed bytes ship verbatim.
+      #
+      # This job deliberately does NOT diff dist/ against src/. dist is
+      # rebuilt at release time, not per PR: scripts/release.mjs runs
+      # `pnpm build` and stages dist/ before tagging, so the TAG — never
+      # an intermediate main commit — is the unit of distribution. A
+      # `git diff --exit-code -- dist/` step here would fail every normal
+      # src-only PR. The build step above only proves src/ still compiles.
 
   docs-check:
     name: Doc hygiene

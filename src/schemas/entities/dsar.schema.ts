@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { DSAR_MAX_EXTENSION_DAYS, DsarRequestStatus, DsarRequestType } from '../../enums/dsar.enum';
+import { booleanish } from '../base.schema';
 
 /**
  * GDPR data-subject-access-request tracking for the platform DSAR console.
@@ -90,7 +91,7 @@ export const getDsarRequestsQuerySchema = z.object({
   status: dsarStatusSchema.optional(),
   type: dsarTypeSchema.optional(),
   assigneeUserId: z.string().uuid().optional(),
-  overdue: z.coerce.boolean().optional().describe('Only open requests past their due date.'),
+  overdue: booleanish.optional().describe('Only open requests past their due date.'),
   search: z.string().trim().max(255).optional(),
   limit: z.coerce.number().int().min(1).max(100).optional(),
   offset: z.coerce.number().int().min(0).optional(),

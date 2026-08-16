@@ -12,6 +12,19 @@ import { uuidSchema } from '../base.schema';
  * charge per owner. Cumulative arrears are then
  * `opening + Σ charges − Σ matched payments`, exposed on the
  * building-funds ledger rows.
+ *
+ * The EUR fields here are `z.number()`, NOT the package's
+ * `signedMoneyStringSchema` — a deliberate exemption from the
+ * "money is a two-decimal string" rule in `money.schema.ts`. These are
+ * derived/aggregate figures, not stored `decimal` columns: the backend
+ * sums them in Postgres `numeric` and hands the result over as
+ * `Number(row.amount)`, and on the write side it re-serialises with
+ * `.toFixed(2)` before the INSERT. Switching the contract to a string
+ * would break both halves at runtime (`.toFixed` on a string) and
+ * silently turn client-side arithmetic into concatenation. Migrating
+ * them is a coordinated backend + web + mobile change, not a
+ * package-local one — see `responses/building-funds-ledger.ts`, which
+ * carries the same exemption for the same reason.
  */
 
 /** One owner's opening balance at the tracking cut-over. */
@@ -47,29 +60,34 @@ export const pricuvaOpeningBalancesResponseSchema = z
  * Bulk upsert of opening balances. Amount 0 removes the owner's row —
  * "no opening balance" and "zero opening balance" are the same state.
  */
-export const upsertPricuvaOpeningBalancesSchema = z.object({
-  balances: z
-    .array(
-      z.object({
-        ownerId: uuidSchema.describe('Owner record the balance belongs to.'),
-        amount: z
-          .number()
-          .min(-1_000_000)
-          .max(1_000_000)
-          .describe('EUR; positive = debt, negative = credit, 0 = remove the row.'),
-        note: z
-          .string()
-          .trim()
-          .max(500)
-          .optional()
-          .nullable()
-          .describe('Provenance note shown alongside the balance.'),
-      }),
-    )
-    .min(1)
-    .max(500)
-    .describe('Balances to upsert; owners not listed are left untouched.'),
-});
+export const upsertPricuvaOpeningBalancesSchema = z
+  .object({
+    balances: z
+      .array(
+        z.object({
+          ownerId: uuidSchema.describe('Owner record the balance belongs to.'),
+          amount: z
+            .number()
+            .min(-1_000_000)
+            .max(1_000_000)
+            .describe('EUR; positive = debt, negative = credit, 0 = remove the row.'),
+          note: z
+            .string()
+            .trim()
+            .max(500)
+            .optional()
+            .nullable()
+            .describe('Provenance note shown alongside the balance.'),
+        }),
+      )
+      .min(1)
+      .max(500)
+      .describe('Balances to upsert; owners not listed are left untouched.'),
+  })
+  // Registers the OpenAPI component the backend's
+  // `$ref: '#/components/schemas/UpsertPricuvaOpeningBalances'` resolves
+  // against — the controller passes this schema to `@ZodBody` unwrapped.
+  .meta({ id: 'UpsertPricuvaOpeningBalances' });
 
 export type UpsertPricuvaOpeningBalancesSchema = z.infer<typeof upsertPricuvaOpeningBalancesSchema>;
 

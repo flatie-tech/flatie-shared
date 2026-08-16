@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { booleanish } from '../base.schema';
 
 /**
  * Read contract for the platform audit-log viewer.
@@ -24,8 +25,8 @@ export const getAuditLogsQuerySchema = z.object({
   targetId: z.string().uuid().optional(),
   fromDate: z.string().optional(),
   toDate: z.string().optional(),
-  includeDenials: z.coerce.boolean().optional().describe('Defaults to false.'),
-  denialsOnly: z.coerce.boolean().optional().describe('Security view: only 403 denials.'),
+  includeDenials: booleanish.optional().describe('Defaults to false.'),
+  denialsOnly: booleanish.optional().describe('Security view: only 403 denials.'),
   limit: z.coerce.number().int().min(1).max(100).optional(),
   offset: z.coerce
     .number()
