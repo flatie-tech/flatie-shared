@@ -31,6 +31,11 @@ declare const API_ROUTES: {
         readonly APPROVE: (buildingId: string, verificationId: string) => string;
         readonly REJECT: (buildingId: string, verificationId: string) => string;
     };
+    readonly BUG_REPORTS: {
+        readonly CREATE: "/bug-reports";
+        readonly PLATFORM_LIST: "/platform/bug-reports";
+        readonly PLATFORM_UPDATE: (id: string) => string;
+    };
     readonly BUILDINGS: {
         readonly BASE: "/buildings";
         readonly BY_ID: (id: string) => string;

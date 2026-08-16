@@ -41,6 +41,13 @@ export const API_ROUTES = {
       `/buildings/${buildingId}/id-card-verifications/${verificationId}/reject`,
   },
 
+  // ── Bug reports ───────────────────────────────────────────────────────
+  BUG_REPORTS: {
+    CREATE: '/bug-reports',
+    PLATFORM_LIST: '/platform/bug-reports',
+    PLATFORM_UPDATE: (id: string) => `/platform/bug-reports/${id}`,
+  },
+
   // ── Buildings ─────────────────────────────────────────────────────────
   BUILDINGS: {
     BASE: '/buildings',

@@ -1,5 +1,12 @@
 # @flatie/shared
 
+## 0.121.0
+
+### Changes
+
+- feat(bug-reports): in-app bug report contracts — create schema (auto-captured URL/viewport), triage statuses, platform list/update routes
+
+
 ## 0.120.0
 
 ### Changes

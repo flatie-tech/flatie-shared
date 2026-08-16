@@ -26,6 +26,23 @@ export {
   updateBoardColumnSchema,
   updateBoardSchema,
 } from './board-card.schema';
+// In-app bug reports
+export type {
+  BugReportResponse,
+  BugReportStatus,
+  CreateBugReportSchema,
+  ListBugReportsResponse,
+  UpdateBugReportSchema,
+} from './bug-report.schema';
+export {
+  BUG_REPORT_LIMITS,
+  BUG_REPORT_STATUSES,
+  bugReportResponseSchema,
+  bugReportStatusSchema,
+  createBugReportSchema,
+  listBugReportsResponseSchema,
+  updateBugReportSchema,
+} from './bug-report.schema';
 // Chat schemas
 export type {
   ConversationType,

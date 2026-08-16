@@ -1,12 +1,12 @@
 'use strict';
 
-var chunkWIFGMOTY_cjs = require('../chunk-WIFGMOTY.cjs');
+var chunkZ3QOBYRE_cjs = require('../chunk-Z3QOBYRE.cjs');
 
 
 
 Object.defineProperty(exports, "API_ROUTES", {
   enumerable: true,
-  get: function () { return chunkWIFGMOTY_cjs.API_ROUTES; }
+  get: function () { return chunkZ3QOBYRE_cjs.API_ROUTES; }
 });
 //# sourceMappingURL=index.cjs.map
 //# sourceMappingURL=index.cjs.map

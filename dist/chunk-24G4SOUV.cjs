@@ -247,6 +247,41 @@ var moveBoardCardSchema = zod.z.object({
   columnId: uuidSchema.describe("Target column."),
   position: zod.z.number().finite().nonnegative().describe("Fractional index within the target column (midpoint between neighbours).")
 });
+var BUG_REPORT_STATUSES = ["new", "in_review", "resolved", "dismissed"];
+var bugReportStatusSchema = zod.z.enum(BUG_REPORT_STATUSES).describe("Triage state of the report.");
+var BUG_REPORT_LIMITS = {
+  TITLE_MAX: 120,
+  DESCRIPTION_MAX: 4e3,
+  URL_MAX: 1e3,
+  NOTE_MAX: 1e3
+};
+var createBugReportSchema = zod.z.object({
+  title: zod.z.string().trim().min(1).max(BUG_REPORT_LIMITS.TITLE_MAX).describe("One-line summary of the problem."),
+  description: zod.z.string().trim().min(1).max(BUG_REPORT_LIMITS.DESCRIPTION_MAX).describe("What happened, what was expected \u2014 free text."),
+  url: zod.z.string().trim().max(BUG_REPORT_LIMITS.URL_MAX).describe("The in-app URL the report was filed from, captured automatically."),
+  viewport: zod.z.string().trim().max(40).optional().describe('Client viewport at report time, e.g. "1440x900", captured automatically.')
+});
+var updateBugReportSchema = zod.z.object({
+  status: bugReportStatusSchema.optional().describe("New triage state; omit to keep."),
+  adminNote: zod.z.string().trim().max(BUG_REPORT_LIMITS.NOTE_MAX).optional().nullable().describe("Internal triage note; null clears it, omit keeps it.")
+});
+var bugReportResponseSchema = zod.z.looseObject({
+  id: uuidSchema.describe("Report UUID."),
+  title: zod.z.string().describe("One-line summary."),
+  description: zod.z.string().describe("Free-text detail."),
+  url: zod.z.string().describe("In-app URL the report was filed from."),
+  status: bugReportStatusSchema,
+  screenshotUrl: zod.z.string().nullable().describe("Presigned URL of the attached screenshot; null when none was attached."),
+  reporterName: zod.z.string().nullable().describe("Display name of the reporter; null if deleted."),
+  reporterEmail: zod.z.string().nullable().describe("Email of the reporter; null if deleted."),
+  userAgent: zod.z.string().nullable().describe("Browser user agent captured at submit."),
+  viewport: zod.z.string().nullable().describe('Viewport at submit, e.g. "1440x900".'),
+  adminNote: zod.z.string().nullable().describe("Internal triage note."),
+  createdAt: zod.z.string().describe("ISO timestamp the report was filed.")
+}).meta({ id: "BugReportResponse" });
+var listBugReportsResponseSchema = zod.z.object({
+  reports: zod.z.array(bugReportResponseSchema).describe("Reports, newest first.")
+}).meta({ id: "ListBugReportsResponse" });
 var CHAT_LIMITS = {
   MESSAGE_MIN: 1,
   MESSAGE_MAX: 5e3,
@@ -3008,6 +3043,8 @@ exports.ApprovalStatusSchema = ApprovalStatusSchema;
 exports.BOARD_CARD_LIMITS = BOARD_CARD_LIMITS;
 exports.BOARD_COLUMN_LIMITS = BOARD_COLUMN_LIMITS;
 exports.BOARD_LIMITS = BOARD_LIMITS;
+exports.BUG_REPORT_LIMITS = BUG_REPORT_LIMITS;
+exports.BUG_REPORT_STATUSES = BUG_REPORT_STATUSES;
 exports.BUILDING_ARCHIVE_TYPES = BUILDING_ARCHIVE_TYPES;
 exports.BUILDING_LIMITS = BUILDING_LIMITS;
 exports.BUILDING_TYPES = BUILDING_TYPES;
@@ -3052,6 +3089,8 @@ exports.auditLogResponseSchema = auditLogResponseSchema;
 exports.baseEntitySchema = baseEntitySchema;
 exports.boardCardChecklistItemSchema = boardCardChecklistItemSchema;
 exports.boardCardEventSchema = boardCardEventSchema;
+exports.bugReportResponseSchema = bugReportResponseSchema;
+exports.bugReportStatusSchema = bugReportStatusSchema;
 exports.buildingArchiveTypeSchema = buildingArchiveTypeSchema;
 exports.buildingDetailResponseSchema = buildingDetailResponseSchema;
 exports.buildingEntitySchema = buildingEntitySchema;
@@ -3080,6 +3119,7 @@ exports.copyTransactionCategoriesSchema = copyTransactionCategoriesSchema;
 exports.createBoardCardSchema = createBoardCardSchema;
 exports.createBoardColumnSchema = createBoardColumnSchema;
 exports.createBoardSchema = createBoardSchema;
+exports.createBugReportSchema = createBugReportSchema;
 exports.createBuildingSchema = createBuildingSchema;
 exports.createBusinessPartnerSchema = createBusinessPartnerSchema;
 exports.createConversationSchema = createConversationSchema;
@@ -3154,6 +3194,7 @@ exports.inviteOwnerSchema = inviteOwnerSchema;
 exports.joinBuildingWithOtpSchema = joinBuildingWithOtpSchema;
 exports.linkableEntityTypeSchema = linkableEntityTypeSchema;
 exports.listArchivedResponseSchema = listArchivedResponseSchema;
+exports.listBugReportsResponseSchema = listBugReportsResponseSchema;
 exports.loginSchema = loginSchema;
 exports.mapPricuvaRefResponseSchema = mapPricuvaRefResponseSchema;
 exports.mapPricuvaRefSchema = mapPricuvaRefSchema;
@@ -3243,6 +3284,7 @@ exports.unreadCountResponseSchema = unreadCountResponseSchema;
 exports.updateBoardCardSchema = updateBoardCardSchema;
 exports.updateBoardColumnSchema = updateBoardColumnSchema;
 exports.updateBoardSchema = updateBoardSchema;
+exports.updateBugReportSchema = updateBugReportSchema;
 exports.updateBuildingSchema = updateBuildingSchema;
 exports.updateBuildingSettingsSchema = updateBuildingSettingsSchema;
 exports.updateBusinessPartnerSchema = updateBusinessPartnerSchema;
@@ -3276,5 +3318,5 @@ exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
 exports.voteWithIdCardSchema = voteWithIdCardSchema;
-//# sourceMappingURL=chunk-EXOR2QO7.cjs.map
-//# sourceMappingURL=chunk-EXOR2QO7.cjs.map
+//# sourceMappingURL=chunk-24G4SOUV.cjs.map
+//# sourceMappingURL=chunk-24G4SOUV.cjs.map

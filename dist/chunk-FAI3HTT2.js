@@ -1,5 +1,3 @@
-'use strict';
-
 // src/urls/index.ts
 var API_ROUTES = {
   // ── Auth ──────────────────────────────────────────────────────────────
@@ -31,6 +29,12 @@ var API_ROUTES = {
     PENDING: (buildingId) => `/buildings/${buildingId}/id-card-verifications/pending`,
     APPROVE: (buildingId, verificationId) => `/buildings/${buildingId}/id-card-verifications/${verificationId}/approve`,
     REJECT: (buildingId, verificationId) => `/buildings/${buildingId}/id-card-verifications/${verificationId}/reject`
+  },
+  // ── Bug reports ───────────────────────────────────────────────────────
+  BUG_REPORTS: {
+    CREATE: "/bug-reports",
+    PLATFORM_LIST: "/platform/bug-reports",
+    PLATFORM_UPDATE: (id) => `/platform/bug-reports/${id}`
   },
   // ── Buildings ─────────────────────────────────────────────────────────
   BUILDINGS: {
@@ -315,6 +319,6 @@ var API_ROUTES = {
   }
 };
 
-exports.API_ROUTES = API_ROUTES;
-//# sourceMappingURL=chunk-WIFGMOTY.cjs.map
-//# sourceMappingURL=chunk-WIFGMOTY.cjs.map
+export { API_ROUTES };
+//# sourceMappingURL=chunk-FAI3HTT2.js.map
+//# sourceMappingURL=chunk-FAI3HTT2.js.map
