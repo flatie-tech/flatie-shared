@@ -607,26 +607,6 @@ var PricuvaRefMode = {
   OWNER: "owner"
 };
 
-// src/enums/quota.enum.ts
-var QuotaResourceType = {
-  COMMENT: "comment",
-  INVITE: "invite",
-  NOTIFICATION: "notification"
-};
-var QUOTA_RESOURCE_TYPES = Object.values(
-  QuotaResourceType
-);
-var QUOTA_DEFAULT_DAILY_LIMITS = {
-  [QuotaResourceType.COMMENT]: 50,
-  [QuotaResourceType.INVITE]: 20,
-  [QuotaResourceType.NOTIFICATION]: null
-};
-var OrgQuotaResourceType = {
-  MEMBER_INVITE: "member_invite",
-  BUILDING_CREATE: "building_create",
-  NOTIFICATION: "notification"
-};
-
 // src/enums/role.enum.ts
 var BuildingRole = {
   OWNER_REPRESENTATIVE: "owner_representative",
@@ -792,7 +772,6 @@ exports.NotificationChannel = NotificationChannel;
 exports.NotificationDeliveryStatus = NotificationDeliveryStatus;
 exports.NotificationType = NotificationType;
 exports.ORG_ROLE_RANK = ORG_ROLE_RANK;
-exports.OrgQuotaResourceType = OrgQuotaResourceType;
 exports.OrgRole = OrgRole;
 exports.OrgStatus = OrgStatus;
 exports.OrgType = OrgType;
@@ -809,9 +788,6 @@ exports.PollType = PollType;
 exports.PollVoteStatus = PollVoteStatus;
 exports.PricuvaRefMode = PricuvaRefMode;
 exports.Priority = Priority;
-exports.QUOTA_DEFAULT_DAILY_LIMITS = QUOTA_DEFAULT_DAILY_LIMITS;
-exports.QUOTA_RESOURCE_TYPES = QUOTA_RESOURCE_TYPES;
-exports.QuotaResourceType = QuotaResourceType;
 exports.RESIDENT_VISIBLE_SYSTEM_TYPES = RESIDENT_VISIBLE_SYSTEM_TYPES;
 exports.SCOPED_DOMAINS = SCOPED_DOMAINS;
 exports.SCOPED_PERMISSIONS = SCOPED_PERMISSIONS;
@@ -830,5 +806,5 @@ exports.deriveVotingStrength = deriveVotingStrength;
 exports.domainPermissions = domainPermissions;
 exports.getBuildingFeatureDefault = getBuildingFeatureDefault;
 exports.methodToTier = methodToTier;
-//# sourceMappingURL=chunk-RI7DE3ZD.cjs.map
-//# sourceMappingURL=chunk-RI7DE3ZD.cjs.map
+//# sourceMappingURL=chunk-I2YOJMQL.cjs.map
+//# sourceMappingURL=chunk-I2YOJMQL.cjs.map

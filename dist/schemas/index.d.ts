@@ -123,6 +123,16 @@ declare const dateTimeSchema: z.ZodString;
  */
 declare const optionalDateTimeSchema: z.ZodOptional<z.ZodNullable<z.ZodString>>;
 /**
+ * Boolean that survives a query string.
+ *
+ * `z.coerce.boolean()` is `Boolean(value)`, and `Boolean('false')` is TRUE — so
+ * `?flag=false` silently means "on", which is worse than no filter at all: a
+ * denials-only audit view returns everything, an overdue-only DSAR queue
+ * returns every request. Use this for every boolean query param. Real booleans
+ * pass through for callers that already parsed the query string.
+ */
+declare const booleanish: z.ZodPipe<z.ZodUnion<readonly [z.ZodBoolean, z.ZodLiteral<"true">, z.ZodLiteral<"false">]>, z.ZodTransform<boolean, boolean | "true" | "false">>;
+/**
  * Base entity schema with common fields
  */
 declare const baseEntitySchema: z.ZodObject<{
@@ -856,6 +866,19 @@ type OrgBroadcastResponse = z.infer<typeof orgBroadcastResponseSchema>;
  * charge per owner. Cumulative arrears are then
  * `opening + Σ charges − Σ matched payments`, exposed on the
  * building-funds ledger rows.
+ *
+ * The EUR fields here are `z.number()`, NOT the package's
+ * `signedMoneyStringSchema` — a deliberate exemption from the
+ * "money is a two-decimal string" rule in `money.schema.ts`. These are
+ * derived/aggregate figures, not stored `decimal` columns: the backend
+ * sums them in Postgres `numeric` and hands the result over as
+ * `Number(row.amount)`, and on the write side it re-serialises with
+ * `.toFixed(2)` before the INSERT. Switching the contract to a string
+ * would break both halves at runtime (`.toFixed` on a string) and
+ * silently turn client-side arithmetic into concatenation. Migrating
+ * them is a coordinated backend + web + mobile change, not a
+ * package-local one — see `responses/building-funds-ledger.ts`, which
+ * carries the same exemption for the same reason.
  */
 /** One owner's opening balance at the tracking cut-over. */
 declare const pricuvaOpeningBalanceRowSchema: z.ZodObject<{
@@ -1020,8 +1043,8 @@ declare const getAuditLogsQuerySchema: z.ZodObject<{
     targetId: z.ZodOptional<z.ZodString>;
     fromDate: z.ZodOptional<z.ZodString>;
     toDate: z.ZodOptional<z.ZodString>;
-    includeDenials: z.ZodOptional<z.ZodCoercedBoolean<unknown>>;
-    denialsOnly: z.ZodOptional<z.ZodCoercedBoolean<unknown>>;
+    includeDenials: z.ZodOptional<z.ZodPipe<z.ZodUnion<readonly [z.ZodBoolean, z.ZodLiteral<"true">, z.ZodLiteral<"false">]>, z.ZodTransform<boolean, boolean | "true" | "false">>>;
+    denialsOnly: z.ZodOptional<z.ZodPipe<z.ZodUnion<readonly [z.ZodBoolean, z.ZodLiteral<"true">, z.ZodLiteral<"false">]>, z.ZodTransform<boolean, boolean | "true" | "false">>>;
     limit: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
     offset: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
     sortOrder: z.ZodOptional<z.ZodEnum<{
@@ -1097,14 +1120,14 @@ declare const createBuildingSchema: z.ZodObject<{
     }>>;
     iban: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     oib: z.ZodNullable<z.ZodOptional<z.ZodString>>;
-    monthlyFeePerSqm: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
-    monthlyFeeCommercialPerSqm: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
-    apartmentResidentialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
-    apartmentCommercialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
-    garageResidentialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
-    garageCommercialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
-    storageResidentialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
-    storageCommercialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    monthlyFeePerSqm: z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | null | undefined, unknown>, z.ZodNullable<z.ZodCoercedNumber<unknown>>>>;
+    monthlyFeeCommercialPerSqm: z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | null | undefined, unknown>, z.ZodNullable<z.ZodCoercedNumber<unknown>>>>;
+    apartmentResidentialCoef: z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | null | undefined, unknown>, z.ZodOptional<z.ZodCoercedNumber<unknown>>>>;
+    apartmentCommercialCoef: z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | null | undefined, unknown>, z.ZodOptional<z.ZodCoercedNumber<unknown>>>>;
+    garageResidentialCoef: z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | null | undefined, unknown>, z.ZodOptional<z.ZodCoercedNumber<unknown>>>>;
+    garageCommercialCoef: z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | null | undefined, unknown>, z.ZodOptional<z.ZodCoercedNumber<unknown>>>>;
+    storageResidentialCoef: z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | null | undefined, unknown>, z.ZodOptional<z.ZodCoercedNumber<unknown>>>>;
+    storageCommercialCoef: z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | null | undefined, unknown>, z.ZodOptional<z.ZodCoercedNumber<unknown>>>>;
     billingBuildingCode: z.ZodOptional<z.ZodString>;
 }, z.core.$strip>;
 /**
@@ -1128,14 +1151,14 @@ declare const updateBuildingSchema: z.ZodObject<{
     removeHouseRulesFile: z.ZodOptional<z.ZodPipe<z.ZodTransform<{}, unknown>, z.ZodBoolean>>;
     iban: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     oib: z.ZodNullable<z.ZodOptional<z.ZodString>>;
-    monthlyFeePerSqm: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
-    monthlyFeeCommercialPerSqm: z.ZodNullable<z.ZodOptional<z.ZodCoercedNumber<unknown>>>;
-    apartmentResidentialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
-    apartmentCommercialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
-    garageResidentialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
-    garageCommercialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
-    storageResidentialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
-    storageCommercialCoef: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    monthlyFeePerSqm: z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | null | undefined, unknown>, z.ZodNullable<z.ZodCoercedNumber<unknown>>>>;
+    monthlyFeeCommercialPerSqm: z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | null | undefined, unknown>, z.ZodNullable<z.ZodCoercedNumber<unknown>>>>;
+    apartmentResidentialCoef: z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | null | undefined, unknown>, z.ZodOptional<z.ZodCoercedNumber<unknown>>>>;
+    apartmentCommercialCoef: z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | null | undefined, unknown>, z.ZodOptional<z.ZodCoercedNumber<unknown>>>>;
+    garageResidentialCoef: z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | null | undefined, unknown>, z.ZodOptional<z.ZodCoercedNumber<unknown>>>>;
+    garageCommercialCoef: z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | null | undefined, unknown>, z.ZodOptional<z.ZodCoercedNumber<unknown>>>>;
+    storageResidentialCoef: z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | null | undefined, unknown>, z.ZodOptional<z.ZodCoercedNumber<unknown>>>>;
+    storageCommercialCoef: z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | null | undefined, unknown>, z.ZodOptional<z.ZodCoercedNumber<unknown>>>>;
     billingBuildingCode: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     fundsSource: z.ZodOptional<z.ZodEnum<{
         manual: "manual";
@@ -1173,49 +1196,6 @@ type CreateBuildingSchema = z.infer<typeof createBuildingSchema>;
 type UpdateBuildingSchema = z.infer<typeof updateBuildingSchema>;
 type JoinBuildingWithOtpSchema = z.infer<typeof joinBuildingWithOtpSchema>;
 type UpdateUserBuildingRoleSchema = z.infer<typeof updateUserBuildingRoleSchema>;
-
-/**
- * One row of per-building daily quota configuration. `dailyLimit` is an integer
- * number of actions allowed per day per user in that building; `null` means
- * "unlimited" (quota is disabled for this resource in this building).
- */
-declare const buildingQuotaEntrySchema: z.ZodObject<{
-    resourceType: z.ZodEnum<{
-        notification: "notification";
-        comment: "comment";
-        invite: "invite";
-    }>;
-    dailyLimit: z.ZodNullable<z.ZodNumber>;
-}, z.core.$strip>;
-/**
- * PUT /buildings/:id/quotas payload — full list of quota rows the representative
- * is configuring for the building. Missing resource types fall back to the
- * platform defaults from `QUOTA_DEFAULT_DAILY_LIMITS`.
- */
-declare const buildingQuotaConfigSchema: z.ZodObject<{
-    quotas: z.ZodArray<z.ZodObject<{
-        resourceType: z.ZodEnum<{
-            notification: "notification";
-            comment: "comment";
-            invite: "invite";
-        }>;
-        dailyLimit: z.ZodNullable<z.ZodNumber>;
-    }, z.core.$strip>>;
-}, z.core.$strip>;
-/**
- * GET /buildings/:id/quotas response shape.
- */
-declare const buildingQuotaListSchema: z.ZodObject<{
-    buildingId: z.ZodString;
-    quotas: z.ZodArray<z.ZodObject<{
-        resourceType: z.ZodEnum<{
-            notification: "notification";
-            comment: "comment";
-            invite: "invite";
-        }>;
-        dailyLimit: z.ZodNullable<z.ZodNumber>;
-    }, z.core.$strip>>;
-}, z.core.$strip>;
 
 /**
  * Update building settings request — body of
@@ -1421,7 +1401,7 @@ declare const getDsarRequestsQuerySchema: z.ZodObject<{
         objection: "objection";
     }>>;
     assigneeUserId: z.ZodOptional<z.ZodString>;
-    overdue: z.ZodOptional<z.ZodCoercedBoolean<unknown>>;
+    overdue: z.ZodOptional<z.ZodPipe<z.ZodUnion<readonly [z.ZodBoolean, z.ZodLiteral<"true">, z.ZodLiteral<"false">]>, z.ZodTransform<boolean, boolean | "true" | "false">>>;
     search: z.ZodOptional<z.ZodString>;
     limit: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
     offset: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
@@ -1722,6 +1702,17 @@ declare const failureReportEventSchema: z.ZodObject<{
     description: z.ZodOptional<z.ZodString>;
 }, z.core.$strip>;
 /**
+ * Date-order-enforced variant used inside create/update arrays (refining the
+ * base directly would break multipartArray element parsing — validate per
+ * element).
+ */
+declare const failureReportEventWithDateOrderSchema: z.ZodObject<{
+    startDate: z.ZodCoercedDate<unknown>;
+    endDate: z.ZodCoercedDate<unknown>;
+    title: z.ZodOptional<z.ZodString>;
+    description: z.ZodOptional<z.ZodString>;
+}, z.core.$strip>;
+/**
  * Create failure report request schema — matches
  * `POST /buildings/:buildingId/failure-reports` multipart/form-data.
  * buildingId comes from the URL, not the body.
@@ -1871,6 +1862,18 @@ declare const NOTICE_LIMITS: {
  * omitted from the array are deleted.
  */
 declare const noticeEventSchema: z.ZodObject<{
+    id: z.ZodOptional<z.ZodString>;
+    startDate: z.ZodCoercedDate<unknown>;
+    endDate: z.ZodCoercedDate<unknown>;
+    title: z.ZodOptional<z.ZodString>;
+    description: z.ZodOptional<z.ZodString>;
+}, z.core.$strip>;
+/**
+ * Event date-order refinement, applied wherever noticeEventSchema is used
+ * inside arrays (refining the base schema directly would break
+ * multipartArray's element parsing expectations — validate per element).
+ */
+declare const noticeEventWithDateOrderSchema: z.ZodObject<{
     id: z.ZodOptional<z.ZodString>;
     startDate: z.ZodCoercedDate<unknown>;
     endDate: z.ZodCoercedDate<unknown>;
@@ -2057,7 +2060,7 @@ declare const getPlatformSubscriptionsQuerySchema: z.ZodObject<{
         organization: "organization";
         building: "building";
     }>>;
-    trialing: z.ZodOptional<z.ZodCoercedBoolean<unknown>>;
+    trialing: z.ZodOptional<z.ZodPipe<z.ZodUnion<readonly [z.ZodBoolean, z.ZodLiteral<"true">, z.ZodLiteral<"false">]>, z.ZodTransform<boolean, boolean | "true" | "false">>>;
     search: z.ZodOptional<z.ZodString>;
     sortBy: z.ZodOptional<z.ZodString>;
     sortOrder: z.ZodOptional<z.ZodEnum<{
@@ -2968,6 +2971,15 @@ type EmailUnreadCountResponse = Strict<z.infer<typeof emailUnreadCountResponseSc
  *
  * Both rates are null when neither has been configured. In that case
  * `rows` is empty — the server can't compute expected amounts.
+ *
+ * The EUR fields below are `z.number()`, NOT the package's
+ * `moneyStringSchema` / `signedMoneyStringSchema` — a deliberate exemption
+ * from the "money is a two-decimal string" rule in `money.schema.ts`. That
+ * rule exists to keep stored `decimal` columns exact end to end; every field
+ * here is a DERIVED report figure, aggregated in Postgres `numeric` and
+ * rounded once on the way out, never round-tripped back into a column. The
+ * clients chart and total these values, so a string representation would
+ * turn arithmetic into concatenation for no exactness gain.
  */
 declare const buildingFundsLedgerRowSchema: z.ZodObject<{
     ownerId: z.ZodString;
@@ -4420,4 +4432,4 @@ declare const PrioritySchema: z.ZodEnum<{
     urgent: "urgent";
 }>;
 
-export { ARCHIVE_TYPES, AUDIT_DENIAL_TARGET_TYPE, type AddOrgMemberSchema, type AiUsageResponse, type ApiError, type ApiErrorResponse, ApprovalStatusSchema, type ApproveFailureReportSchema, type ApproveNoticeSchema, type ArchiveType, type ArchivedItem, type AssignOrgBuildingSchema, type AssignOrgMemberBuildingSchema, type AssignOwnerInput, type AuditLogResponse, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUG_REPORT_LIMITS, BUG_REPORT_STATUSES, BUILDING_ARCHIVE_TYPES, BUILDING_LIMITS, BUILDING_TYPES, type BugReportResponse, type BugReportStatus, type BuildingArchiveType, type BuildingDetailResponse, type BuildingFundsLedgerResponse, type BuildingFundsLedgerRow, type BuildingOwnerAssignment, type BuildingResponse, type BuildingSettingsResponse, type BusinessPartnerResponse, CHAT_LIMITS, type CamtImportResponse, type ChatMessageResponse, type CommentResponse, CommonStatusSchema, type ConversationLastMessage, type ConversationParticipant, type ConversationResponse, ConversationType, type ConversationsListResponse, type CopyFaqsSchema, type CopyTransactionCategoriesSchema, type CreateBoardCardSchema, type CreateBoardColumnSchema, type CreateBoardSchema, type CreateBugReportSchema, type CreateBuildingSchema, type CreateBusinessPartnerInput, type CreateConversationSchema, type CreateDocumentSchema, type CreateDsarEventSchema, type CreateDsarRequestSchema, type CreateEmailThreadRequestPayload, type CreateEntityLinkRequest, type CreateFailureReportSchema, type CreateFaqSchema, type CreateIncomeSchema, type CreateNoticeSchema, type CreateOrgBroadcastSchema, type CreateOrganizationSchema, type CreateOwnerInput, type CreatePlatformSubscriptionSchema, type CreateTransactionCategorySchema, type CreateUnitInput, type CursorQuerySchema, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, type DeleteEntityLinkQuery, type DocumentFile, type DocumentLinkedRecord, type DocumentResponse, type DsarErasureSchema, type DsarEventResponse, type DsarRequestResponse, EMAIL_LIMITS, ENTITY_LINK_TYPES, type EmailAttachment, type EmailMessage, type EmailThread, type EmailThreadDetail, type EmailUnreadCountResponse, type EnterpriseRequestResponse, type EntityLinkCountsResponse, type EntityLinkMetadata, type EntityLinkReference, type EntityLinksResponse, type EventResponse, FAILURE_REPORT_LIMITS, FAQ_LIMITS, type FailureReportEventSchema, type FailureReportResponse, FailureStatusSchema, type FaqResponse, type FeatureFlagsResponse, type GetAuditLogsQuerySchema, type GetDsarRequestsQuerySchema, type GetEnterpriseRequestsQuerySchema, type GetEntityLinkCountsQuery, type GetEntityLinksQuery, type GetOrgBuildingsQuerySchema, type GetOrgMembersQuerySchema, type GetPlatformSubscriptionsQuerySchema, type GetTransactionCategoriesQuerySchema, type IdCardVerificationStatus, type InviteOrgMemberSchema, type InviteOwnerInput, type JoinBuildingWithOtpSchema, LINKABLE_ENTITY_TYPES, type ListArchivedResponse, type ListBugReportsResponse, type MapPricuvaRefResponse, type MapPricuvaRefSchema, type MessageResponse, type MessagesListResponse, type MoveBoardCardSchema, NOTICE_LIMITS, type NoticeEventSchema, type NoticeResponse, ORGANIZATION_LIMITS, type OrgAiImportBuilding, type OrgAiImportCommitResponse, type OrgAiImportCommitSchema, type OrgAiImportExtractResponse, type OrgBroadcastResponse, type OrgInvitationResponse, OrgInvitationStatus, type OrgStatementImportResponse, type OrgStatementImportResult, type OwnerResponse, type PaginatedBuildingsResponse, type PaginatedDocumentsResponse, type PaginatedEmailThreadsResponse, type PaginatedEventsResponse, type PaginatedFailureReportsResponse, type PaginatedNoticesResponse, type PaginatedPollsResponse, type PaginatedUnitsResponse, type PermissionsResponseSchema, type PlatformFeatureFlag, type PlatformFeatureFlagsResponse, type PlatformSubscriptionResponse, type PollEligibleVoter, type PollEligibleVotersResponse, type PollResponse, type PollResults, type PollVotersResponse, type PostPricuvaChargesResponse, type PricuvaOpeningBalanceRow, type PricuvaOpeningBalancesResponse, PrioritySchema, type PublicOrgInvitation, REP_RECENT_ACTIVITY_TYPES, type RecordDsarRectificationSchema, type RejectIdCardVerificationSchema, type ReorderBoardColumnsSchema, type ReorderFaqsSchema, type RepBuildingActivity, type RepBuildingItem, type RepDashboardSummaryResponse, type RepRecentActivity, type RepUserBuilding, type ReplyEmailThreadRequestPayload, type RevenueMetricsResponse, type SearchUsersQuerySchema, type SendMessageSchema, type SetDsarRestrictionSchema, type SubmitIdCardVerificationSchema, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, type Unit, type UnitKind, type UnmatchedPricuvaRefsResponse, type UnreadCountResponse, type UpdateBoardCardSchema, type UpdateBoardColumnSchema, type UpdateBoardSchema, type UpdateBugReportSchema, type UpdateBuildingSchema, type UpdateBuildingSettingsSchema, type UpdateBusinessPartnerInput, type UpdateConversationSchema, type UpdateDocumentSchema, type UpdateDsarRequestSchema, type UpdateEnterpriseRequestSchema, type UpdateExpenseSchema, type UpdateFailureReportSchema, type UpdateFaqSchema, type UpdateIncomeSchema, type UpdateNoticeSchema, type UpdateOrgBuildingContractSchema, type UpdateOrgMemberRoleSchema, type UpdateOrganizationSchema, type UpdateOwnerInput, type UpdatePlatformFeatureRequestPayload, type UpdatePlatformSubscriptionSchema, type UpdateTransactionCategorySchema, type UpdateUnitInput, type UpdateUserBuildingRoleSchema, type UpsertPricuvaOpeningBalancesSchema, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, auditLogResponseSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, bugReportResponseSchema, bugReportStatusSchema, buildingArchiveTypeSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingOwnerAssignmentSchema, buildingQuotaConfigSchema, buildingQuotaEntrySchema, buildingQuotaListSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBugReportSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createDsarEventSchema, createDsarRequestSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createNoticeSchema, createOrgBroadcastSchema, createOrganizationSchema, createOwnerSchema, createPlatformSubscriptionSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, dsarErasureSchema, dsarEventResponseSchema, dsarRequestResponseSchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, emailUnreadCountResponseSchema, enterpriseRequestResponseSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventResponseSchema, failureReportEventSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, featureFlagsResponseSchema, forgotPasswordSchema, getAuditLogsQuerySchema, getDsarRequestsQuerySchema, getEnterpriseRequestsQuerySchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getPlatformSubscriptionsQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, idCardVerificationStatusSchema, inviteOrgMemberSchema, inviteOwnerSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, listBugReportsResponseSchema, loginSchema, mapPricuvaRefResponseSchema, mapPricuvaRefSchema, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeResponseSchema, optionalDateTimeSchema, orgAiImportAddressCandidateSchema, orgAiImportBuildingSchema, orgAiImportCommitResponseSchema, orgAiImportCommitSchema, orgAiImportExtractResponseSchema, orgAiImportSkippedRowSchema, orgBroadcastResponseSchema, orgInvitationResponseSchema, orgStatementImportResponseSchema, orgStatementImportResultSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, platformFeatureFlagSchema, platformFeatureFlagsResponseSchema, platformSubscriptionResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollVotersResponseSchema, postPricuvaChargesResponseSchema, pricuvaOpeningBalanceRowSchema, pricuvaOpeningBalancesResponseSchema, priorityOptions, publicOrgInvitationSchema, recordDsarRectificationSchema, registerSchema, rejectIdCardVerificationSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, revenueMetricsResponseSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, setDsarRestrictionSchema, signedMoneyStringSchema, strongPasswordSchema, submitIdCardVerificationSchema, unitKindSchema, unitSchema, unmatchedPricuvaRefRowSchema, unmatchedPricuvaRefsResponseSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBugReportSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateDsarRequestSchema, updateEnterpriseRequestSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgBuildingContractSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePlatformFeatureRequestSchema, updatePlatformSubscriptionSchema, updatePollRequestSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, upsertPricuvaOpeningBalancesSchema, userEntitySchema, uuidSchema, verifyOtpSchema };
+export { ARCHIVE_TYPES, AUDIT_DENIAL_TARGET_TYPE, type AddOrgMemberSchema, type AiUsageResponse, type ApiError, type ApiErrorResponse, ApprovalStatusSchema, type ApproveFailureReportSchema, type ApproveNoticeSchema, type ArchiveType, type ArchivedItem, type AssignOrgBuildingSchema, type AssignOrgMemberBuildingSchema, type AssignOwnerInput, type AuditLogResponse, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUG_REPORT_LIMITS, BUG_REPORT_STATUSES, BUILDING_ARCHIVE_TYPES, BUILDING_LIMITS, BUILDING_TYPES, type BugReportResponse, type BugReportStatus, type BuildingArchiveType, type BuildingDetailResponse, type BuildingFundsLedgerResponse, type BuildingFundsLedgerRow, type BuildingOwnerAssignment, type BuildingResponse, type BuildingSettingsResponse, type BusinessPartnerResponse, CHAT_LIMITS, type CamtImportResponse, type ChatMessageResponse, type CommentResponse, CommonStatusSchema, type ConversationLastMessage, type ConversationParticipant, type ConversationResponse, ConversationType, type ConversationsListResponse, type CopyFaqsSchema, type CopyTransactionCategoriesSchema, type CreateBoardCardSchema, type CreateBoardColumnSchema, type CreateBoardSchema, type CreateBugReportSchema, type CreateBuildingSchema, type CreateBusinessPartnerInput, type CreateConversationSchema, type CreateDocumentSchema, type CreateDsarEventSchema, type CreateDsarRequestSchema, type CreateEmailThreadRequestPayload, type CreateEntityLinkRequest, type CreateFailureReportSchema, type CreateFaqSchema, type CreateIncomeSchema, type CreateNoticeSchema, type CreateOrgBroadcastSchema, type CreateOrganizationSchema, type CreateOwnerInput, type CreatePlatformSubscriptionSchema, type CreateTransactionCategorySchema, type CreateUnitInput, type CursorQuerySchema, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, type DeleteEntityLinkQuery, type DocumentFile, type DocumentLinkedRecord, type DocumentResponse, type DsarErasureSchema, type DsarEventResponse, type DsarRequestResponse, EMAIL_LIMITS, ENTITY_LINK_TYPES, type EmailAttachment, type EmailMessage, type EmailThread, type EmailThreadDetail, type EmailUnreadCountResponse, type EnterpriseRequestResponse, type EntityLinkCountsResponse, type EntityLinkMetadata, type EntityLinkReference, type EntityLinksResponse, type EventResponse, FAILURE_REPORT_LIMITS, FAQ_LIMITS, type FailureReportEventSchema, type FailureReportResponse, FailureStatusSchema, type FaqResponse, type FeatureFlagsResponse, type GetAuditLogsQuerySchema, type GetDsarRequestsQuerySchema, type GetEnterpriseRequestsQuerySchema, type GetEntityLinkCountsQuery, type GetEntityLinksQuery, type GetOrgBuildingsQuerySchema, type GetOrgMembersQuerySchema, type GetPlatformSubscriptionsQuerySchema, type GetTransactionCategoriesQuerySchema, type IdCardVerificationStatus, type InviteOrgMemberSchema, type InviteOwnerInput, type JoinBuildingWithOtpSchema, LINKABLE_ENTITY_TYPES, type ListArchivedResponse, type ListBugReportsResponse, type MapPricuvaRefResponse, type MapPricuvaRefSchema, type MessageResponse, type MessagesListResponse, type MoveBoardCardSchema, NOTICE_LIMITS, type NoticeEventSchema, type NoticeResponse, ORGANIZATION_LIMITS, type OrgAiImportBuilding, type OrgAiImportCommitResponse, type OrgAiImportCommitSchema, type OrgAiImportExtractResponse, type OrgBroadcastResponse, type OrgInvitationResponse, OrgInvitationStatus, type OrgStatementImportResponse, type OrgStatementImportResult, type OwnerResponse, type PaginatedBuildingsResponse, type PaginatedDocumentsResponse, type PaginatedEmailThreadsResponse, type PaginatedEventsResponse, type PaginatedFailureReportsResponse, type PaginatedNoticesResponse, type PaginatedPollsResponse, type PaginatedUnitsResponse, type PermissionsResponseSchema, type PlatformFeatureFlag, type PlatformFeatureFlagsResponse, type PlatformSubscriptionResponse, type PollEligibleVoter, type PollEligibleVotersResponse, type PollResponse, type PollResults, type PollVotersResponse, type PostPricuvaChargesResponse, type PricuvaOpeningBalanceRow, type PricuvaOpeningBalancesResponse, PrioritySchema, type PublicOrgInvitation, REP_RECENT_ACTIVITY_TYPES, type RecordDsarRectificationSchema, type RejectIdCardVerificationSchema, type ReorderBoardColumnsSchema, type ReorderFaqsSchema, type RepBuildingActivity, type RepBuildingItem, type RepDashboardSummaryResponse, type RepRecentActivity, type RepUserBuilding, type ReplyEmailThreadRequestPayload, type RevenueMetricsResponse, type SearchUsersQuerySchema, type SendMessageSchema, type SetDsarRestrictionSchema, type SubmitIdCardVerificationSchema, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, type Unit, type UnitKind, type UnmatchedPricuvaRefsResponse, type UnreadCountResponse, type UpdateBoardCardSchema, type UpdateBoardColumnSchema, type UpdateBoardSchema, type UpdateBugReportSchema, type UpdateBuildingSchema, type UpdateBuildingSettingsSchema, type UpdateBusinessPartnerInput, type UpdateConversationSchema, type UpdateDocumentSchema, type UpdateDsarRequestSchema, type UpdateEnterpriseRequestSchema, type UpdateExpenseSchema, type UpdateFailureReportSchema, type UpdateFaqSchema, type UpdateIncomeSchema, type UpdateNoticeSchema, type UpdateOrgBuildingContractSchema, type UpdateOrgMemberRoleSchema, type UpdateOrganizationSchema, type UpdateOwnerInput, type UpdatePlatformFeatureRequestPayload, type UpdatePlatformSubscriptionSchema, type UpdateTransactionCategorySchema, type UpdateUnitInput, type UpdateUserBuildingRoleSchema, type UpsertPricuvaOpeningBalancesSchema, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, auditLogResponseSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, booleanish, bugReportResponseSchema, bugReportStatusSchema, buildingArchiveTypeSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingOwnerAssignmentSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBugReportSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createDsarEventSchema, createDsarRequestSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createNoticeSchema, createOrgBroadcastSchema, createOrganizationSchema, createOwnerSchema, createPlatformSubscriptionSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, dsarErasureSchema, dsarEventResponseSchema, dsarRequestResponseSchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, emailUnreadCountResponseSchema, enterpriseRequestResponseSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventResponseSchema, failureReportEventSchema, failureReportEventWithDateOrderSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, featureFlagsResponseSchema, forgotPasswordSchema, getAuditLogsQuerySchema, getDsarRequestsQuerySchema, getEnterpriseRequestsQuerySchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getPlatformSubscriptionsQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, idCardVerificationStatusSchema, inviteOrgMemberSchema, inviteOwnerSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, listBugReportsResponseSchema, loginSchema, mapPricuvaRefResponseSchema, mapPricuvaRefSchema, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeEventWithDateOrderSchema, noticeResponseSchema, optionalDateTimeSchema, orgAiImportAddressCandidateSchema, orgAiImportBuildingSchema, orgAiImportCommitResponseSchema, orgAiImportCommitSchema, orgAiImportExtractResponseSchema, orgAiImportSkippedRowSchema, orgBroadcastResponseSchema, orgInvitationResponseSchema, orgStatementImportResponseSchema, orgStatementImportResultSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, platformFeatureFlagSchema, platformFeatureFlagsResponseSchema, platformSubscriptionResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollVotersResponseSchema, postPricuvaChargesResponseSchema, pricuvaOpeningBalanceRowSchema, pricuvaOpeningBalancesResponseSchema, priorityOptions, publicOrgInvitationSchema, recordDsarRectificationSchema, registerSchema, rejectIdCardVerificationSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, revenueMetricsResponseSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, setDsarRestrictionSchema, signedMoneyStringSchema, strongPasswordSchema, submitIdCardVerificationSchema, unitKindSchema, unitSchema, unmatchedPricuvaRefRowSchema, unmatchedPricuvaRefsResponseSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBugReportSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateDsarRequestSchema, updateEnterpriseRequestSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgBuildingContractSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePlatformFeatureRequestSchema, updatePlatformSubscriptionSchema, updatePollRequestSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, upsertPricuvaOpeningBalancesSchema, userEntitySchema, uuidSchema, verifyOtpSchema };

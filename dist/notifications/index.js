@@ -1,4 +1,4 @@
-import { NotificationType } from '../chunk-WZKOAKYT.js';
+import { BuildingRole, OrgRole, NotificationType } from '../chunk-7OVJB72E.js';
 
 // src/notifications/labels.ts
 var SUPPORTED_LOCALES = ["hr", "en", "de"];
@@ -105,25 +105,42 @@ var POLL_TYPE_LABELS = {
 };
 var ROLE_LABELS = {
   hr: {
-    BUILDING_MANAGER: "Upravitelj zgrade",
-    OWNER_REPRESENTATIVE: "Predstavnik suvlasnika",
-    DEPUTY_REPRESENTATIVE: "Zamjenik predstavnika",
-    CO_OWNER: "Suvlasnik",
-    TENANT: "Stanar"
+    [BuildingRole.OWNER_REPRESENTATIVE]: "Predstavnik suvlasnika",
+    [BuildingRole.DEPUTY_REPRESENTATIVE]: "Zamjenik predstavnika",
+    [BuildingRole.CO_OWNER]: "Suvlasnik",
+    [BuildingRole.RESIDENT]: "Stanar"
   },
   en: {
-    BUILDING_MANAGER: "Building manager",
-    OWNER_REPRESENTATIVE: "Owner representative",
-    DEPUTY_REPRESENTATIVE: "Deputy representative",
-    CO_OWNER: "Co-owner",
-    TENANT: "Tenant"
+    [BuildingRole.OWNER_REPRESENTATIVE]: "Owner representative",
+    [BuildingRole.DEPUTY_REPRESENTATIVE]: "Deputy representative",
+    [BuildingRole.CO_OWNER]: "Co-owner",
+    [BuildingRole.RESIDENT]: "Resident"
   },
   de: {
-    BUILDING_MANAGER: "Geb\xE4udeverwalter",
-    OWNER_REPRESENTATIVE: "Eigent\xFCmervertreter",
-    DEPUTY_REPRESENTATIVE: "Stellvertreter",
-    CO_OWNER: "Miteigent\xFCmer",
-    TENANT: "Mieter"
+    [BuildingRole.OWNER_REPRESENTATIVE]: "Eigent\xFCmervertreter",
+    [BuildingRole.DEPUTY_REPRESENTATIVE]: "Stellvertreter",
+    [BuildingRole.CO_OWNER]: "Miteigent\xFCmer",
+    [BuildingRole.RESIDENT]: "Bewohner"
+  }
+};
+var ORG_ROLE_LABELS = {
+  hr: {
+    [OrgRole.ORG_ADMIN]: "Administrator organizacije",
+    [OrgRole.SUPERVISOR]: "Supervizor",
+    [OrgRole.REFERENT]: "Referent",
+    [OrgRole.OPERATIVE]: "Operativa"
+  },
+  en: {
+    [OrgRole.ORG_ADMIN]: "Organization admin",
+    [OrgRole.SUPERVISOR]: "Supervisor",
+    [OrgRole.REFERENT]: "Clerk",
+    [OrgRole.OPERATIVE]: "Field worker"
+  },
+  de: {
+    [OrgRole.ORG_ADMIN]: "Organisationsadministrator",
+    [OrgRole.SUPERVISOR]: "Supervisor",
+    [OrgRole.REFERENT]: "Sachbearbeiter",
+    [OrgRole.OPERATIVE]: "Au\xDFendienst"
   }
 };
 function getStatusLabel(locale, status) {
@@ -140,6 +157,9 @@ function getPollTypeLabel(locale, pollType) {
 }
 function getRoleLabel(locale, role) {
   return ROLE_LABELS[locale][role] ?? role;
+}
+function getOrgRoleLabel(locale, orgRole) {
+  return ORG_ROLE_LABELS[locale][orgRole] ?? orgRole;
 }
 function getDateLocale(locale) {
   return locale === "hr" ? "hr-HR" : locale === "de" ? "de-DE" : "en-US";
@@ -777,6 +797,9 @@ function buildLocalizedVars(locale, rawVars) {
   if (typeof vars.role === "string" && vars.role) {
     vars.role = getRoleLabel(locale, vars.role);
   }
+  if (typeof vars.orgRole === "string" && vars.orgRole) {
+    vars.orgRole = getOrgRoleLabel(locale, vars.orgRole);
+  }
   for (const key of DATE_VARS) {
     if (vars[key] !== void 0 && vars[key] !== null) {
       vars[key] = formatNotificationDate(vars[key], locale);
@@ -810,6 +833,6 @@ function getLocalizedTypeDescription(type, locale) {
   return NOTIFICATION_TEMPLATES[type].description[locale];
 }
 
-export { ACTOR_FALLBACK, DEFAULT_LOCALE, NOTIFICATION_TEMPLATES, SUPPORTED_LOCALES, buildLocalizedVars, formatNotificationDate, getDateLocale, getEventTypeLabel, getLocalizedTypeDescription, getPollTypeLabel, getRoleLabel, getStatusLabel, getWasteSubtypeLabel, renderNotificationText, renderTemplate, resolveLocale };
+export { ACTOR_FALLBACK, DEFAULT_LOCALE, NOTIFICATION_TEMPLATES, SUPPORTED_LOCALES, buildLocalizedVars, formatNotificationDate, getDateLocale, getEventTypeLabel, getLocalizedTypeDescription, getOrgRoleLabel, getPollTypeLabel, getRoleLabel, getStatusLabel, getWasteSubtypeLabel, renderNotificationText, renderTemplate, resolveLocale };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

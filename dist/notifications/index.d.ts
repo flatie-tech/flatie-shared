@@ -21,6 +21,7 @@ declare function getEventTypeLabel(locale: NotificationLocale, eventType: string
 declare function getWasteSubtypeLabel(locale: NotificationLocale, subtype: string): string;
 declare function getPollTypeLabel(locale: NotificationLocale, pollType: string): string;
 declare function getRoleLabel(locale: NotificationLocale, role: string): string;
+declare function getOrgRoleLabel(locale: NotificationLocale, orgRole: string): string;
 /** BCP-47 tag for Intl date/number formatting in this locale. */
 declare function getDateLocale(locale: NotificationLocale): string;
 
@@ -76,4 +77,4 @@ interface LocalizedNotificationTemplate {
 declare const NOTIFICATION_TEMPLATES: Record<NotificationType, LocalizedNotificationTemplate>;
 declare const ACTOR_FALLBACK: Record<NotificationLocale, string>;
 
-export { ACTOR_FALLBACK, DEFAULT_LOCALE, NOTIFICATION_TEMPLATES, type NotificationLocale, type RenderNotificationTextOptions, SUPPORTED_LOCALES, buildLocalizedVars, formatNotificationDate, getDateLocale, getEventTypeLabel, getLocalizedTypeDescription, getPollTypeLabel, getRoleLabel, getStatusLabel, getWasteSubtypeLabel, renderNotificationText, renderTemplate, resolveLocale };
+export { ACTOR_FALLBACK, DEFAULT_LOCALE, NOTIFICATION_TEMPLATES, type NotificationLocale, type RenderNotificationTextOptions, SUPPORTED_LOCALES, buildLocalizedVars, formatNotificationDate, getDateLocale, getEventTypeLabel, getLocalizedTypeDescription, getOrgRoleLabel, getPollTypeLabel, getRoleLabel, getStatusLabel, getWasteSubtypeLabel, renderNotificationText, renderTemplate, resolveLocale };

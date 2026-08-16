@@ -1,64 +1,64 @@
 'use strict';
 
-var chunkRI7DE3ZD_cjs = require('./chunk-RI7DE3ZD.cjs');
+var chunkI2YOJMQL_cjs = require('./chunk-I2YOJMQL.cjs');
 var chunkXOQU25DL_cjs = require('./chunk-XOQU25DL.cjs');
 var chunkQKHLAIRE_cjs = require('./chunk-QKHLAIRE.cjs');
 
 // src/utils/role-helpers.ts
 var MANAGERIAL_BUILDING_ROLES = [
-  chunkRI7DE3ZD_cjs.BuildingRole.OWNER_REPRESENTATIVE,
-  chunkRI7DE3ZD_cjs.BuildingRole.DEPUTY_REPRESENTATIVE
+  chunkI2YOJMQL_cjs.BuildingRole.OWNER_REPRESENTATIVE,
+  chunkI2YOJMQL_cjs.BuildingRole.DEPUTY_REPRESENTATIVE
 ];
 function isManagerialRole(role) {
   return MANAGERIAL_BUILDING_ROLES.includes(role);
 }
 var ROLE_TRANSLATION_KEYS = {
   // Building roles
-  [chunkRI7DE3ZD_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
-  [chunkRI7DE3ZD_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
-  [chunkRI7DE3ZD_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER",
-  [chunkRI7DE3ZD_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT",
+  [chunkI2YOJMQL_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
+  [chunkI2YOJMQL_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
+  [chunkI2YOJMQL_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER",
+  [chunkI2YOJMQL_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT",
   // Org roles
-  [chunkRI7DE3ZD_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
-  [chunkRI7DE3ZD_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
-  [chunkRI7DE3ZD_cjs.OrgRole.REFERENT]: "roles.REFERENT",
-  [chunkRI7DE3ZD_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE",
+  [chunkI2YOJMQL_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
+  [chunkI2YOJMQL_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
+  [chunkI2YOJMQL_cjs.OrgRole.REFERENT]: "roles.REFERENT",
+  [chunkI2YOJMQL_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE",
   // Platform roles
-  [chunkRI7DE3ZD_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
-  [chunkRI7DE3ZD_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
-  [chunkRI7DE3ZD_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
-  [chunkRI7DE3ZD_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
+  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
+  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
+  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
+  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
 };
 var ROLE_DESCRIPTION_KEYS = {
-  [chunkRI7DE3ZD_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
-  [chunkRI7DE3ZD_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
-  [chunkRI7DE3ZD_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
-  [chunkRI7DE3ZD_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
-  [chunkRI7DE3ZD_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
-  [chunkRI7DE3ZD_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
-  [chunkRI7DE3ZD_cjs.OrgRole.REFERENT]: "roles.REFERENT_DESC",
-  [chunkRI7DE3ZD_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
-  [chunkRI7DE3ZD_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
-  [chunkRI7DE3ZD_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
-  [chunkRI7DE3ZD_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
-  [chunkRI7DE3ZD_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
+  [chunkI2YOJMQL_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
+  [chunkI2YOJMQL_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
+  [chunkI2YOJMQL_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
+  [chunkI2YOJMQL_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
+  [chunkI2YOJMQL_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
+  [chunkI2YOJMQL_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
+  [chunkI2YOJMQL_cjs.OrgRole.REFERENT]: "roles.REFERENT_DESC",
+  [chunkI2YOJMQL_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
+  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
+  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
+  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
+  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
 };
 var ROLE_BADGE_COLORS = {
   // Building roles
-  [chunkRI7DE3ZD_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "info",
-  [chunkRI7DE3ZD_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "success",
-  [chunkRI7DE3ZD_cjs.BuildingRole.CO_OWNER]: "warning",
-  [chunkRI7DE3ZD_cjs.BuildingRole.RESIDENT]: "neutral",
+  [chunkI2YOJMQL_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "info",
+  [chunkI2YOJMQL_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "success",
+  [chunkI2YOJMQL_cjs.BuildingRole.CO_OWNER]: "warning",
+  [chunkI2YOJMQL_cjs.BuildingRole.RESIDENT]: "neutral",
   // Org roles
-  [chunkRI7DE3ZD_cjs.OrgRole.ORG_ADMIN]: "purple",
-  [chunkRI7DE3ZD_cjs.OrgRole.SUPERVISOR]: "info",
-  [chunkRI7DE3ZD_cjs.OrgRole.REFERENT]: "success",
-  [chunkRI7DE3ZD_cjs.OrgRole.OPERATIVE]: "amber",
+  [chunkI2YOJMQL_cjs.OrgRole.ORG_ADMIN]: "purple",
+  [chunkI2YOJMQL_cjs.OrgRole.SUPERVISOR]: "info",
+  [chunkI2YOJMQL_cjs.OrgRole.REFERENT]: "success",
+  [chunkI2YOJMQL_cjs.OrgRole.OPERATIVE]: "amber",
   // Platform roles
-  [chunkRI7DE3ZD_cjs.PlatformRole.PLATFORM_ADMIN]: "purple",
-  [chunkRI7DE3ZD_cjs.PlatformRole.PLATFORM_MODERATOR]: "info",
-  [chunkRI7DE3ZD_cjs.PlatformRole.PLATFORM_SUPPORT]: "success",
-  [chunkRI7DE3ZD_cjs.PlatformRole.PLATFORM_OPERATIVE]: "amber"
+  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_ADMIN]: "purple",
+  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_MODERATOR]: "info",
+  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_SUPPORT]: "success",
+  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_OPERATIVE]: "amber"
 };
 function getRoleBadge(role) {
   const known = role;
@@ -175,7 +175,7 @@ function isFeatureAvailable({
   buildingSettings,
   loading = false
 }) {
-  const meta = chunkRI7DE3ZD_cjs.PLATFORM_FEATURE_META[feature];
+  const meta = chunkI2YOJMQL_cjs.PLATFORM_FEATURE_META[feature];
   if (!meta) return false;
   const platformState = platformFlags?.[feature];
   if (loading || platformState === void 0) {
@@ -290,13 +290,13 @@ function canDo(subject, permission) {
   return subject.permissions.includes(permission);
 }
 function canDoOnResource(subject, domain, action, resourceOwnerId) {
-  const scopedPerms = chunkRI7DE3ZD_cjs.SCOPED_PERMISSIONS[domain]?.[action];
+  const scopedPerms = chunkI2YOJMQL_cjs.SCOPED_PERMISSIONS[domain]?.[action];
   if (!scopedPerms) return false;
   if (subject.permissions.includes(scopedPerms.any)) return true;
   return subject.permissions.includes(scopedPerms.own) && resourceOwnerId === subject.userId;
 }
 function computeActionFlags(subject, domain, resourceOwnerId) {
-  const approvePermission = chunkRI7DE3ZD_cjs.APPROVE_PERMISSIONS[domain];
+  const approvePermission = chunkI2YOJMQL_cjs.APPROVE_PERMISSIONS[domain];
   return {
     canEdit: canDoOnResource(subject, domain, "update", resourceOwnerId),
     canDelete: canDoOnResource(subject, domain, "delete", resourceOwnerId),
@@ -409,5 +409,5 @@ exports.normalizePaginatedResponse = normalizePaginatedResponse;
 exports.parseApiError = parseApiError;
 exports.parseData = parseData;
 exports.resolveVotingMethods = resolveVotingMethods;
-//# sourceMappingURL=chunk-FQ3VGRZL.cjs.map
-//# sourceMappingURL=chunk-FQ3VGRZL.cjs.map
+//# sourceMappingURL=chunk-EE4RQJET.cjs.map
+//# sourceMappingURL=chunk-EE4RQJET.cjs.map

@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.123.0
+
+### Changes
+
+- fix(contracts): reachable exports, money representation, enum casing
+
 ## 0.121.0
 
 ### Changes

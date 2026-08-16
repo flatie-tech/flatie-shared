@@ -605,26 +605,6 @@ var PricuvaRefMode = {
   OWNER: "owner"
 };
 
-// src/enums/quota.enum.ts
-var QuotaResourceType = {
-  COMMENT: "comment",
-  INVITE: "invite",
-  NOTIFICATION: "notification"
-};
-var QUOTA_RESOURCE_TYPES = Object.values(
-  QuotaResourceType
-);
-var QUOTA_DEFAULT_DAILY_LIMITS = {
-  [QuotaResourceType.COMMENT]: 50,
-  [QuotaResourceType.INVITE]: 20,
-  [QuotaResourceType.NOTIFICATION]: null
-};
-var OrgQuotaResourceType = {
-  MEMBER_INVITE: "member_invite",
-  BUILDING_CREATE: "building_create",
-  NOTIFICATION: "notification"
-};
-
 // src/enums/role.enum.ts
 var BuildingRole = {
   OWNER_REPRESENTATIVE: "owner_representative",
@@ -754,6 +734,6 @@ function deriveVotingStrength(user) {
   return VotingStrength.NONE;
 }
 
-export { APPROVE_PERMISSIONS, ApprovalStatus, BUILDING_ROLE_RANK, BoardVisibility, BuildingOtpExpiry, BuildingRole, BuildingStatus, BuildingType, CO_OWNER_VISIBLE_SYSTEM_TYPES, CommonStatus, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DevicePlatform, DsarRequestStatus, DsarRequestType, EnterpriseRequestStatus, EntityLinkType, FailureFundingSource, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, IdentityVerificationMethod, JoinRequestStatus, LinkableEntityType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_ROLE_RANK, OrgQuotaResourceType, OrgRole, OrgStatus, OrgType, PLATFORM_FEATURES, PLATFORM_FEATURE_META, PLATFORM_ROLE_RANK, POLL_CANNOT_VOTE_REASON_KEY, Permission, PlatformFeature, PlatformRole, PollCannotVoteReason, PollStatus, PollType, PollVoteStatus, PricuvaRefMode, Priority, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, RESIDENT_VISIBLE_SYSTEM_TYPES, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, VotingStrength, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, deriveVotingStrength, domainPermissions, getBuildingFeatureDefault, methodToTier };
-//# sourceMappingURL=chunk-WZKOAKYT.js.map
-//# sourceMappingURL=chunk-WZKOAKYT.js.map
+export { APPROVE_PERMISSIONS, ApprovalStatus, BUILDING_ROLE_RANK, BoardVisibility, BuildingOtpExpiry, BuildingRole, BuildingStatus, BuildingType, CO_OWNER_VISIBLE_SYSTEM_TYPES, CommonStatus, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DevicePlatform, DsarRequestStatus, DsarRequestType, EnterpriseRequestStatus, EntityLinkType, FailureFundingSource, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, IdentityVerificationMethod, JoinRequestStatus, LinkableEntityType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_ROLE_RANK, OrgRole, OrgStatus, OrgType, PLATFORM_FEATURES, PLATFORM_FEATURE_META, PLATFORM_ROLE_RANK, POLL_CANNOT_VOTE_REASON_KEY, Permission, PlatformFeature, PlatformRole, PollCannotVoteReason, PollStatus, PollType, PollVoteStatus, PricuvaRefMode, Priority, RESIDENT_VISIBLE_SYSTEM_TYPES, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, VotingStrength, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, deriveVotingStrength, domainPermissions, getBuildingFeatureDefault, methodToTier };
+//# sourceMappingURL=chunk-7OVJB72E.js.map
+//# sourceMappingURL=chunk-7OVJB72E.js.map

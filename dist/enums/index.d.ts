@@ -267,21 +267,6 @@ declare const PricuvaRefMode: {
 };
 type PricuvaRefMode = (typeof PricuvaRefMode)[keyof typeof PricuvaRefMode];
 
-declare const QuotaResourceType: {
-    readonly COMMENT: "comment";
-    readonly INVITE: "invite";
-    readonly NOTIFICATION: "notification";
-};
-type QuotaResourceType = (typeof QuotaResourceType)[keyof typeof QuotaResourceType];
-declare const QUOTA_RESOURCE_TYPES: readonly QuotaResourceType[];
-declare const QUOTA_DEFAULT_DAILY_LIMITS: Record<QuotaResourceType, number | null>;
-declare const OrgQuotaResourceType: {
-    readonly MEMBER_INVITE: "member_invite";
-    readonly BUILDING_CREATE: "building_create";
-    readonly NOTIFICATION: "notification";
-};
-type OrgQuotaResourceType = (typeof OrgQuotaResourceType)[keyof typeof OrgQuotaResourceType];
-
 /**
  * Usage classification for a physical unit (apartment, garage, or
  * storage). Drives split pričuva rates — a building can carry a
@@ -338,4 +323,4 @@ declare function deriveVotingStrength(user: {
     verificationTier?: number | null;
 }): VotingStrength;
 
-export { BoardVisibility, BuildingOtpExpiry, BuildingStatus, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DsarRequestStatus, DsarRequestType, EnterpriseRequestStatus, FailureFundingSource, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, JoinRequestStatus, OrgQuotaResourceType, OrgStatus, OrgType, POLL_CANNOT_VOTE_REASON_KEY, PollCannotVoteReason, PollStatus, PollVoteStatus, PricuvaRefMode, QUOTA_DEFAULT_DAILY_LIMITS, QUOTA_RESOURCE_TYPES, QuotaResourceType, TransactionSource, UnitType, VerificationTier, VotingStrength, deriveVotingStrength, methodToTier };
+export { BoardVisibility, BuildingOtpExpiry, BuildingStatus, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DsarRequestStatus, DsarRequestType, EnterpriseRequestStatus, FailureFundingSource, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, JoinRequestStatus, OrgStatus, OrgType, POLL_CANNOT_VOTE_REASON_KEY, PollCannotVoteReason, PollStatus, PollVoteStatus, PricuvaRefMode, TransactionSource, UnitType, VerificationTier, VotingStrength, deriveVotingStrength, methodToTier };
