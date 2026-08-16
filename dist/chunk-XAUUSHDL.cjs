@@ -718,6 +718,82 @@ var postPricuvaChargesResponseSchema = zod.z.object({
   postedPeriods: zod.z.array(zod.z.string().regex(/^\d{4}-\d{2}$/)).describe("Closed months that received charges in this run (already-posted months skip)."),
   chargesPosted: zod.z.number().int().describe("Total charge rows written across those periods.")
 }).meta({ id: "PostPricuvaChargesResponse" });
+var PricuvaDeliveryChannel = {
+  /** Emailed to the payer — a real delivery attempt with a provider result. */
+  EMAIL: "email",
+  /** Included in a generated ZIP — proves the slip was produced, not received. */
+  DOWNLOAD: "download"
+};
+var PricuvaDeliveryStatus = {
+  /** Accepted by the mail provider for delivery. */
+  SENT: "sent",
+  /** Not attempted — no payer email, suppression list, no mail provider. */
+  SKIPPED: "skipped",
+  /** Attempted and rejected. `reason` carries the provider's message. */
+  FAILED: "failed",
+  /** Produced into a ZIP for the representative to distribute. */
+  GENERATED: "generated"
+};
+var pricuvaDeliveryRowSchema = zod.z.object({
+  id: uuidSchema,
+  period: zod.z.string().regex(/^\d{4}-\d{2}$/, "Period must be YYYY-MM."),
+  channel: zod.z.enum([PricuvaDeliveryChannel.EMAIL, PricuvaDeliveryChannel.DOWNLOAD]),
+  status: zod.z.enum([
+    PricuvaDeliveryStatus.SENT,
+    PricuvaDeliveryStatus.SKIPPED,
+    PricuvaDeliveryStatus.FAILED,
+    PricuvaDeliveryStatus.GENERATED
+  ]),
+  paymentRefCode: zod.z.string().nullable().describe("The slip reference. Null in owner-mode buildings, which bill per co-owner."),
+  unitLabel: zod.z.string().nullable().describe("Unit the ref belongs to, for display."),
+  ownerId: uuidSchema.nullable(),
+  ownerName: zod.z.string().nullable(),
+  recipientEmail: zod.z.string().nullable().describe("Address the mail was addressed to. Null for download rows."),
+  reason: zod.z.string().nullable().describe("Why a slip was skipped or failed \u2014 the provider message, verbatim."),
+  amount: zod.z.number().describe("Slip amount in EUR. See pricuva.schema.ts on the number exemption."),
+  /** Groups every row produced by one send run or one ZIP generation. */
+  batchId: uuidSchema,
+  createdAt: zod.z.string()
+}).meta({ id: "PricuvaDeliveryRow" });
+var pricuvaDeliveriesResponseSchema = zod.z.object({
+  buildingId: uuidSchema,
+  period: zod.z.string(),
+  rows: zod.z.array(pricuvaDeliveryRowSchema),
+  emailedCount: zod.z.number().int().describe("Distinct payers with a `sent` email row."),
+  generatedCount: zod.z.number().int().describe("Distinct payers with a `download` row."),
+  failedCount: zod.z.number().int(),
+  neverBilled: zod.z.array(
+    zod.z.object({
+      paymentRefCode: zod.z.string().nullable(),
+      unitLabel: zod.z.string().nullable(),
+      ownerId: uuidSchema.nullable(),
+      ownerName: zod.z.string().nullable()
+    })
+  ).describe("Billable payers with no delivery row for this period, by either channel.")
+}).meta({ id: "PricuvaDeliveriesResponse" });
+var orgBuildingFundsRowSchema = zod.z.object({
+  buildingId: uuidSchema,
+  buildingName: zod.z.string(),
+  buildingSlug: zod.z.string().nullable(),
+  /** MANUAL buildings cannot be imported into; the row explains why it is inert. */
+  fundsSource: zod.z.enum(["manual", "camt"]),
+  currentBalance: zod.z.number().describe("Fund balance in EUR."),
+  monthlyPricuva: zod.z.number().describe("Total pri\u010Duva charged across the building for the current period, EUR."),
+  totalOwed: zod.z.number().describe("Sum of positive owner balances \u2014 arrears only, credits excluded."),
+  ownersInArrears: zod.z.number().int(),
+  ownersTotal: zod.z.number().int(),
+  unmatchedRefsCount: zod.z.number().int().describe("Payments received that matched no owner, so they reduced nobody\u2019s arrears."),
+  lastStatementImportAt: zod.z.string().nullable().describe("When a statement was last imported. Null = never."),
+  /** Null when the building is not under pričuva tracking. */
+  pricuvaTrackingFrom: zod.z.string().nullable()
+}).meta({ id: "OrgBuildingFundsRow" });
+var orgFundsOverviewResponseSchema = zod.z.object({
+  orgId: uuidSchema,
+  buildings: zod.z.array(orgBuildingFundsRowSchema),
+  totalBalance: zod.z.number().describe("\u03A3 currentBalance across the org, EUR."),
+  totalOwed: zod.z.number().describe("\u03A3 totalOwed across the org, EUR."),
+  buildingsInCamtMode: zod.z.number().int()
+}).meta({ id: "OrgFundsOverviewResponse" });
 var paginationParamsSchema = zod.z.object({
   offset: zod.z.coerce.number().min(0).optional().default(0),
   limit: zod.z.coerce.number().min(1).max(100).optional().default(10)
@@ -3064,6 +3140,8 @@ exports.ORGANIZATION_LIMITS = ORGANIZATION_LIMITS;
 exports.OrgInvitationStatus = OrgInvitationStatus;
 exports.POLL_LIMITS = POLL_LIMITS;
 exports.POLL_TYPES = POLL_TYPES;
+exports.PricuvaDeliveryChannel = PricuvaDeliveryChannel;
+exports.PricuvaDeliveryStatus = PricuvaDeliveryStatus;
 exports.PrioritySchema = PrioritySchema;
 exports.RECURRENCE_TYPES = RECURRENCE_TYPES;
 exports.REP_RECENT_ACTIVITY_TYPES = REP_RECENT_ACTIVITY_TYPES;
@@ -3216,6 +3294,8 @@ exports.orgAiImportCommitSchema = orgAiImportCommitSchema;
 exports.orgAiImportExtractResponseSchema = orgAiImportExtractResponseSchema;
 exports.orgAiImportSkippedRowSchema = orgAiImportSkippedRowSchema;
 exports.orgBroadcastResponseSchema = orgBroadcastResponseSchema;
+exports.orgBuildingFundsRowSchema = orgBuildingFundsRowSchema;
+exports.orgFundsOverviewResponseSchema = orgFundsOverviewResponseSchema;
 exports.orgInvitationResponseSchema = orgInvitationResponseSchema;
 exports.orgStatementImportResponseSchema = orgStatementImportResponseSchema;
 exports.orgStatementImportResultSchema = orgStatementImportResultSchema;
@@ -3245,6 +3325,8 @@ exports.pollResultsSchema = pollResultsSchema;
 exports.pollTypeSchema = pollTypeSchema;
 exports.pollVotersResponseSchema = pollVotersResponseSchema;
 exports.postPricuvaChargesResponseSchema = postPricuvaChargesResponseSchema;
+exports.pricuvaDeliveriesResponseSchema = pricuvaDeliveriesResponseSchema;
+exports.pricuvaDeliveryRowSchema = pricuvaDeliveryRowSchema;
 exports.pricuvaOpeningBalanceRowSchema = pricuvaOpeningBalanceRowSchema;
 exports.pricuvaOpeningBalancesResponseSchema = pricuvaOpeningBalancesResponseSchema;
 exports.priorityOptions = priorityOptions;
@@ -3316,5 +3398,5 @@ exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
 exports.voteWithIdCardSchema = voteWithIdCardSchema;
-//# sourceMappingURL=chunk-3GMJ77O7.cjs.map
-//# sourceMappingURL=chunk-3GMJ77O7.cjs.map
+//# sourceMappingURL=chunk-XAUUSHDL.cjs.map
+//# sourceMappingURL=chunk-XAUUSHDL.cjs.map

@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.124.0
+
+### Changes
+
+- feat(pricuva): bill-delivery register and org funds-overview contracts
+
 ## 0.123.0
 
 ### Changes
