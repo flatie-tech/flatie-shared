@@ -21,44 +21,51 @@ export const BUG_REPORT_LIMITS = {
   NOTE_MAX: 1000,
 } as const;
 
-export const createBugReportSchema = z.object({
-  title: z
-    .string()
-    .trim()
-    .min(1)
-    .max(BUG_REPORT_LIMITS.TITLE_MAX)
-    .describe('One-line summary of the problem.'),
-  description: z
-    .string()
-    .trim()
-    .min(1)
-    .max(BUG_REPORT_LIMITS.DESCRIPTION_MAX)
-    .describe('What happened, what was expected — free text.'),
-  url: z
-    .string()
-    .trim()
-    .max(BUG_REPORT_LIMITS.URL_MAX)
-    .describe('The in-app URL the report was filed from, captured automatically.'),
-  viewport: z
-    .string()
-    .trim()
-    .max(40)
-    .optional()
-    .describe('Client viewport at report time, e.g. "1440x900", captured automatically.'),
-});
+export const createBugReportSchema = z
+  .object({
+    title: z
+      .string()
+      .trim()
+      .min(1)
+      .max(BUG_REPORT_LIMITS.TITLE_MAX)
+      .describe('One-line summary of the problem.'),
+    description: z
+      .string()
+      .trim()
+      .min(1)
+      .max(BUG_REPORT_LIMITS.DESCRIPTION_MAX)
+      .describe('What happened, what was expected — free text.'),
+    url: z
+      .string()
+      .trim()
+      .max(BUG_REPORT_LIMITS.URL_MAX)
+      .describe('The in-app URL the report was filed from, captured automatically.'),
+    viewport: z
+      .string()
+      .trim()
+      .max(40)
+      .optional()
+      .describe('Client viewport at report time, e.g. "1440x900", captured automatically.'),
+  })
+  // The id is what registers this as an OpenAPI component; without it the
+  // backend's `$ref: '#/components/schemas/CreateBugReport'` dangles and
+  // Swagger renders an empty request body.
+  .meta({ id: 'CreateBugReport' });
 
 export type CreateBugReportSchema = z.infer<typeof createBugReportSchema>;
 
-export const updateBugReportSchema = z.object({
-  status: bugReportStatusSchema.optional().describe('New triage state; omit to keep.'),
-  adminNote: z
-    .string()
-    .trim()
-    .max(BUG_REPORT_LIMITS.NOTE_MAX)
-    .optional()
-    .nullable()
-    .describe('Internal triage note; null clears it, omit keeps it.'),
-});
+export const updateBugReportSchema = z
+  .object({
+    status: bugReportStatusSchema.optional().describe('New triage state; omit to keep.'),
+    adminNote: z
+      .string()
+      .trim()
+      .max(BUG_REPORT_LIMITS.NOTE_MAX)
+      .optional()
+      .nullable()
+      .describe('Internal triage note; null clears it, omit keeps it.'),
+  })
+  .meta({ id: 'UpdateBugReport' });
 
 export type UpdateBugReportSchema = z.infer<typeof updateBugReportSchema>;
 

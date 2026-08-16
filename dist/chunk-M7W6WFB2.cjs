@@ -260,11 +260,11 @@ var createBugReportSchema = zod.z.object({
   description: zod.z.string().trim().min(1).max(BUG_REPORT_LIMITS.DESCRIPTION_MAX).describe("What happened, what was expected \u2014 free text."),
   url: zod.z.string().trim().max(BUG_REPORT_LIMITS.URL_MAX).describe("The in-app URL the report was filed from, captured automatically."),
   viewport: zod.z.string().trim().max(40).optional().describe('Client viewport at report time, e.g. "1440x900", captured automatically.')
-});
+}).meta({ id: "CreateBugReport" });
 var updateBugReportSchema = zod.z.object({
   status: bugReportStatusSchema.optional().describe("New triage state; omit to keep."),
   adminNote: zod.z.string().trim().max(BUG_REPORT_LIMITS.NOTE_MAX).optional().nullable().describe("Internal triage note; null clears it, omit keeps it.")
-});
+}).meta({ id: "UpdateBugReport" });
 var bugReportResponseSchema = zod.z.looseObject({
   id: uuidSchema.describe("Report UUID."),
   title: zod.z.string().describe("One-line summary."),
@@ -3318,5 +3318,5 @@ exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
 exports.voteWithIdCardSchema = voteWithIdCardSchema;
-//# sourceMappingURL=chunk-24G4SOUV.cjs.map
-//# sourceMappingURL=chunk-24G4SOUV.cjs.map
+//# sourceMappingURL=chunk-M7W6WFB2.cjs.map
+//# sourceMappingURL=chunk-M7W6WFB2.cjs.map
