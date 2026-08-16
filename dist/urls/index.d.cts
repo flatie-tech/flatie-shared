@@ -38,6 +38,8 @@ declare const API_ROUTES: {
         readonly ARCHIVE_RESTORE: (id: string, type: string, rowId: string) => string;
         readonly PRICUVA_OPENING_BALANCES: (id: string) => string;
         readonly PRICUVA_POST_CHARGES: (id: string) => string;
+        readonly PRICUVA_UNMATCHED_REFS: (id: string) => string;
+        readonly PRICUVA_MAP_REF: (id: string) => string;
         readonly SETTINGS: (id: string) => string;
         readonly USERS: (id: string) => string;
         readonly OTP: (id: string) => string;
@@ -188,6 +190,7 @@ declare const API_ROUTES: {
         readonly READ_CHAT: (conversationId: string) => string;
     };
     readonly ORGANIZATIONS: {
+        readonly STATEMENT_IMPORT: (orgId: string) => string;
         readonly BASE: "/organizations";
         readonly MY: "/organizations/my";
         readonly BY_ID: (orgId: string) => string;

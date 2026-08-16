@@ -1,5 +1,13 @@
 # @flatie/shared
 
+## 0.119.0
+
+### Changes
+
+- feat(fund-imports): org-wide statement import contracts (ORGANIZATIONS.STATEMENT_IMPORT + response schemas) — real HUB3 exports carry one upravitelj's whole portfolio
+- feat(pricuva): unmatched-ref listing and ref-adoption contracts (PRICUVA_UNMATCHED_REFS / PRICUVA_MAP_REF)
+
+
 ## 0.118.0
 
 ### Changes

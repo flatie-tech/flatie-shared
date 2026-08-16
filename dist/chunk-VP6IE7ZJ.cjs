@@ -2330,6 +2330,51 @@ var camtImportResponseSchema = zod.z.looseObject({
   imported: zod.z.array(camtImportedEntrySchema).describe("Detail rows for each newly persisted transaction."),
   errors: zod.z.array(camtImportErrorSchema).describe("Detail rows for each rejected entry, matched 1:1 against `errorCount`.")
 }).describe("Outcome summary for a CAMT.053 statement import.");
+var orgStatementImportResultSchema = zod.z.object({
+  buildingId: zod.z.string().uuid().describe("Building the statements were routed to."),
+  buildingName: zod.z.string().describe("Building display name."),
+  iban: zod.z.string().describe("The building IBAN the statements matched on."),
+  statements: zod.z.number().int().nonnegative().describe("Statements in the file for this account."),
+  status: zod.z.enum(["imported", "not_camt_mode"]).describe(
+    "`imported` = entries were processed; `not_camt_mode` = the IBAN matched but the building is not in CAMT funds mode, nothing was written."
+  ),
+  importedCount: zod.z.number().int().nonnegative().describe("New transaction rows written."),
+  skippedCount: zod.z.number().int().nonnegative().describe("Entries already imported earlier (idempotent skip)."),
+  errorCount: zod.z.number().int().nonnegative().describe("Entries rejected with errors.")
+});
+var orgStatementImportResponseSchema = zod.z.object({
+  results: zod.z.array(orgStatementImportResultSchema).describe("One row per org building whose IBAN appeared in the file."),
+  unmatchedIbans: zod.z.array(
+    zod.z.object({
+      iban: zod.z.string().describe("Account IBAN found in the file."),
+      statements: zod.z.number().int().nonnegative().describe("Statements for this account."),
+      entries: zod.z.number().int().nonnegative().describe("Transactions across those statements.")
+    })
+  ).describe(
+    "Accounts in the file that match NO building of this organization \u2014 buildings not yet on Flatie, or with a missing/mismatched IBAN."
+  )
+}).describe("Outcome of an organization-wide bank statement import.");
+var unmatchedPricuvaRefRowSchema = zod.z.object({
+  refCode: zod.z.string().describe('The middle (unit) segment of the reference, e.g. "183003".'),
+  count: zod.z.number().int().positive().describe("How many unmatched payments carry this code."),
+  totalAmount: zod.z.number().describe("\u03A3 amounts of those payments, EUR."),
+  firstPeriod: zod.z.string().nullable().describe("Earliest reference period seen, YYYY-MM."),
+  lastPeriod: zod.z.string().nullable().describe("Latest reference period seen, YYYY-MM."),
+  samplePayer: zod.z.string().nullable().describe("Description of one of the payments \u2014 usually carries the payer name.")
+});
+var unmatchedPricuvaRefsResponseSchema = zod.z.object({
+  buildingId: zod.z.string().uuid().describe("Building the aggregation is scoped to."),
+  rows: zod.z.array(unmatchedPricuvaRefRowSchema).describe("One row per distinct unmatched code.")
+}).describe("Aggregated unmatched pri\u010Duva reference codes for a building.");
+var mapPricuvaRefSchema = zod.z.object({
+  refCode: zod.z.string().trim().regex(/^\d{1,22}$/).describe("The unit segment to adopt as the unit\u2019s paymentRefCode."),
+  unitId: zod.z.string().uuid().describe("The unit this code belongs to.")
+});
+var mapPricuvaRefResponseSchema = zod.z.object({
+  unitId: zod.z.string().uuid().describe("Unit that adopted the code."),
+  refCode: zod.z.string().describe("The adopted paymentRefCode."),
+  linkedCount: zod.z.number().int().nonnegative().describe("Previously-unmatched income rows retroactively linked to the unit.")
+}).describe("Result of adopting an incumbent ref code for a unit.");
 var noticeResponseSchema = zod.z.looseObject({
   id: zod.z.string().uuid(),
   buildingId: zod.z.string().uuid().describe("UUID of the building this notice was posted in."),
@@ -3062,6 +3107,8 @@ exports.joinBuildingWithOtpSchema = joinBuildingWithOtpSchema;
 exports.linkableEntityTypeSchema = linkableEntityTypeSchema;
 exports.listArchivedResponseSchema = listArchivedResponseSchema;
 exports.loginSchema = loginSchema;
+exports.mapPricuvaRefResponseSchema = mapPricuvaRefResponseSchema;
+exports.mapPricuvaRefSchema = mapPricuvaRefSchema;
 exports.messageResponseSchema = messageResponseSchema;
 exports.messagesListResponseSchema = messagesListResponseSchema;
 exports.moneyStringSchema = moneyStringSchema;
@@ -3077,6 +3124,8 @@ exports.notificationResponseSchema = notificationResponseSchema;
 exports.optionalDateTimeSchema = optionalDateTimeSchema;
 exports.orgBroadcastResponseSchema = orgBroadcastResponseSchema;
 exports.orgInvitationResponseSchema = orgInvitationResponseSchema;
+exports.orgStatementImportResponseSchema = orgStatementImportResponseSchema;
+exports.orgStatementImportResultSchema = orgStatementImportResultSchema;
 exports.ownerResponseSchema = ownerResponseSchema;
 exports.paginatedBuildingsResponseSchema = paginatedBuildingsResponseSchema;
 exports.paginatedDocumentsResponseSchema = paginatedDocumentsResponseSchema;
@@ -3134,6 +3183,8 @@ exports.submitIdCardVerificationSchema = submitIdCardVerificationSchema;
 exports.timeSchema = timeSchema;
 exports.unitKindSchema = unitKindSchema;
 exports.unitSchema = unitSchema;
+exports.unmatchedPricuvaRefRowSchema = unmatchedPricuvaRefRowSchema;
+exports.unmatchedPricuvaRefsResponseSchema = unmatchedPricuvaRefsResponseSchema;
 exports.unreadCountResponseSchema = unreadCountResponseSchema;
 exports.updateBoardCardSchema = updateBoardCardSchema;
 exports.updateBoardColumnSchema = updateBoardColumnSchema;
@@ -3171,5 +3222,5 @@ exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
 exports.voteWithIdCardSchema = voteWithIdCardSchema;
-//# sourceMappingURL=chunk-42EOEG2G.cjs.map
-//# sourceMappingURL=chunk-42EOEG2G.cjs.map
+//# sourceMappingURL=chunk-VP6IE7ZJ.cjs.map
+//# sourceMappingURL=chunk-VP6IE7ZJ.cjs.map

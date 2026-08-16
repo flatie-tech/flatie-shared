@@ -44,6 +44,10 @@ var API_ROUTES = {
     // charges (the daily scheduler does the same on its own).
     PRICUVA_OPENING_BALANCES: (id) => `/buildings/${id}/pricuva/opening-balances`,
     PRICUVA_POST_CHARGES: (id) => `/buildings/${id}/pricuva/post-charges`,
+    // Incumbent-upravitelj ref adoption: list payment ref codes that match
+    // no unit, and adopt one as a unit's paymentRefCode (relinks history).
+    PRICUVA_UNMATCHED_REFS: (id) => `/buildings/${id}/pricuva/unmatched-refs`,
+    PRICUVA_MAP_REF: (id) => `/buildings/${id}/pricuva/map-ref`,
     SETTINGS: (id) => `/buildings/${id}/settings`,
     USERS: (id) => `/buildings/${id}/users`,
     OTP: (id) => `/buildings/${id}/otp`,
@@ -211,6 +215,9 @@ var API_ROUTES = {
   },
   // ── Organizations ────────────────────────────────────────────────────
   ORGANIZATIONS: {
+    // Org-wide bank statement import: one FINA/PBZ file carries the whole
+    // portfolio; statements route to buildings by IBAN.
+    STATEMENT_IMPORT: (orgId) => `/organizations/${orgId}/statement-imports`,
     BASE: "/organizations",
     MY: "/organizations/my",
     BY_ID: (orgId) => `/organizations/${orgId}`,
@@ -303,5 +310,5 @@ var API_ROUTES = {
 };
 
 export { API_ROUTES };
-//# sourceMappingURL=chunk-ZAD3LBOK.js.map
-//# sourceMappingURL=chunk-ZAD3LBOK.js.map
+//# sourceMappingURL=chunk-WCH5ORN2.js.map
+//# sourceMappingURL=chunk-WCH5ORN2.js.map
