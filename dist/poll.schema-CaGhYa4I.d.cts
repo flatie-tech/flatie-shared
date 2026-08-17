@@ -213,8 +213,8 @@ declare const updatePollSchema: z.ZodObject<{
     legalBasis: z.ZodOptional<z.ZodString>;
     status: z.ZodOptional<z.ZodEnum<{
         active: "active";
-        inactive: "inactive";
-        ended: "ended";
+        cancelled: "cancelled";
+        completed: "completed";
     }>>;
     scopedUnitIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;
     scopedOwnerIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodArray<z.ZodString>>>;

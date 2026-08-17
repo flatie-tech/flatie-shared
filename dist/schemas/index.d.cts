@@ -1,6 +1,6 @@
 import * as zod from 'zod';
 import { z } from 'zod';
-export { C as CreatePollSchema, b as EVENT_COLORS, e as EVENT_TYPES, d as EVENT_TYPE_COLOR_MAP, E as EventColorOption, a as EventTypeOption, F as FinalizePollSchema, P as POLL_LIMITS, m as POLL_TYPES, h as RECURRENCE_TYPES, i as RecordOfflineVotesSchema, R as RecurrenceTypeOption, U as UpdatePollSchema, V as VotePollSchema, j as VoteWithIdCardSchema, c as createEventSchema, k as createPollSchema, f as eventColorSchema, g as eventTypeSchema, l as finalizePollSchema, p as pollTypeSchema, n as recordOfflineVotesSchema, r as recurrenceTypeSchema, t as timeSchema, u as updateEventSchema, o as updatePollSchema, v as votePollSchema, q as voteWithIdCardSchema } from '../poll.schema-a34vq7Hy.cjs';
+export { C as CreatePollSchema, b as EVENT_COLORS, e as EVENT_TYPES, d as EVENT_TYPE_COLOR_MAP, E as EventColorOption, a as EventTypeOption, F as FinalizePollSchema, P as POLL_LIMITS, m as POLL_TYPES, h as RECURRENCE_TYPES, i as RecordOfflineVotesSchema, R as RecurrenceTypeOption, U as UpdatePollSchema, V as VotePollSchema, j as VoteWithIdCardSchema, c as createEventSchema, k as createPollSchema, f as eventColorSchema, g as eventTypeSchema, l as finalizePollSchema, p as pollTypeSchema, n as recordOfflineVotesSchema, r as recurrenceTypeSchema, t as timeSchema, u as updateEventSchema, o as updatePollSchema, v as votePollSchema, q as voteWithIdCardSchema } from '../poll.schema-CaGhYa4I.cjs';
 import * as zod_v4_core from 'zod/v4/core';
 import { S as Strict } from '../notifications-BRW4RL7H.cjs';
 export { N as NotificationPreferenceCategory, a as NotificationPreferenceItem, b as NotificationResponse, g as getNotificationDataSchema, n as notificationDataSchema, c as notificationPreferenceCategorySchema, d as notificationPreferenceItemSchema, e as notificationResponseSchema } from '../notifications-BRW4RL7H.cjs';
@@ -2695,8 +2695,8 @@ declare const updatePollRequestSchema: zod.ZodObject<{
     legalBasis: zod.ZodOptional<zod.ZodString>;
     status: zod.ZodOptional<zod.ZodEnum<{
         active: "active";
-        inactive: "inactive";
-        ended: "ended";
+        cancelled: "cancelled";
+        completed: "completed";
     }>>;
     scopedUnitIds: zod.ZodOptional<zod.ZodPipe<zod.ZodTransform<unknown, unknown>, zod.ZodArray<zod.ZodString>>>;
     scopedOwnerIds: zod.ZodOptional<zod.ZodPipe<zod.ZodTransform<unknown, unknown>, zod.ZodArray<zod.ZodString>>>;
@@ -2731,7 +2731,22 @@ declare const aiUsageResponseSchema: z.ZodObject<{
 }, z.core.$loose>;
 type AiUsageResponse = z.infer<typeof aiUsageResponseSchema>;
 
-declare const ARCHIVE_TYPES: readonly ["apartments", "blog_posts", "board_cards", "boards", "building_join_requests", "buildings", "comments", "events", "failure_reports", "faqs", "files", "garages", "income_transactions", "notices", "organizations", "polls", "recurring_templates", "storage_units", "transaction_categories", "units"];
+/**
+ * Every archivable entity kind, mirroring the backend's ARCHIVE_REGISTRY.
+ *
+ * This is parsed, not just typed: `archivedItemSchema.type` is a strict enum,
+ * so a value the backend can emit but this list omits makes the whole archive
+ * response fail validation and the page render as an error. That happened —
+ * the list carried four kinds the registry has never had (`apartments`,
+ * `garages`, `storage_units`, `recurring_templates`, all pre-rename or
+ * never-shipped) while missing four it does emit (`business_partners`,
+ * `bug_reports`, `expense_transactions`, `owners`), so the platform archive
+ * threw as soon as one of those rows appeared.
+ *
+ * Keep sorted and identical to the registry. The backend asserts its own two
+ * lists agree in `archive-registry.spec.ts`; this is the third copy.
+ */
+declare const ARCHIVE_TYPES: readonly ["blog_posts", "board_cards", "boards", "bug_reports", "building_join_requests", "buildings", "business_partners", "comments", "events", "expense_transactions", "failure_reports", "faqs", "files", "income_transactions", "notices", "organizations", "owners", "polls", "transaction_categories", "units"];
 type ArchiveType = (typeof ARCHIVE_TYPES)[number];
 declare const archiveTypeSchema: z.ZodEnum<{
     notices: "notices";
@@ -2740,27 +2755,32 @@ declare const archiveTypeSchema: z.ZodEnum<{
     buildings: "buildings";
     boards: "boards";
     units: "units";
-    apartments: "apartments";
     blog_posts: "blog_posts";
     board_cards: "board_cards";
+    bug_reports: "bug_reports";
     building_join_requests: "building_join_requests";
+    business_partners: "business_partners";
     comments: "comments";
+    expense_transactions: "expense_transactions";
     failure_reports: "failure_reports";
     faqs: "faqs";
     files: "files";
-    garages: "garages";
     income_transactions: "income_transactions";
     organizations: "organizations";
-    recurring_templates: "recurring_templates";
-    storage_units: "storage_units";
+    owners: "owners";
     transaction_categories: "transaction_categories";
 }>;
 /**
- * The subset of archive types a building's own managers may browse and
- * restore via `GET/POST /buildings/:id/archive/…` — strictly the
- * building-scoped tables. Mirrors the backend's BUILDING_ARCHIVE_TYPE_FILTERS.
+ * The subset of archive types reachable through `GET/POST
+ * /buildings/:id/archive/…` — strictly the building-scoped tables. Mirrors the
+ * backend's BUILDING_ARCHIVE_TYPE_FILTERS.
+ *
+ * A manager (`building:settings:manage`) sees all of these; a plain member
+ * sees only rows they authored, and only for the scoped domains — notices,
+ * events, polls, failure reports and documents (`files`). The rest are
+ * manage-only, so a member's list simply comes back empty for them.
  */
-declare const BUILDING_ARCHIVE_TYPES: readonly ["board_cards", "boards", "building_join_requests", "comments", "events", "failure_reports", "faqs", "files", "income_transactions", "notices", "polls", "units", "transaction_categories"];
+declare const BUILDING_ARCHIVE_TYPES: readonly ["board_cards", "boards", "building_join_requests", "comments", "events", "expense_transactions", "failure_reports", "faqs", "files", "income_transactions", "notices", "owners", "polls", "transaction_categories", "units"];
 type BuildingArchiveType = (typeof BUILDING_ARCHIVE_TYPES)[number];
 declare const buildingArchiveTypeSchema: z.ZodEnum<{
     notices: "notices";
@@ -2771,10 +2791,12 @@ declare const buildingArchiveTypeSchema: z.ZodEnum<{
     board_cards: "board_cards";
     building_join_requests: "building_join_requests";
     comments: "comments";
+    expense_transactions: "expense_transactions";
     failure_reports: "failure_reports";
     faqs: "faqs";
     files: "files";
     income_transactions: "income_transactions";
+    owners: "owners";
     transaction_categories: "transaction_categories";
 }>;
 declare const archivedItemSchema: z.ZodObject<{
@@ -2786,19 +2808,19 @@ declare const archivedItemSchema: z.ZodObject<{
         buildings: "buildings";
         boards: "boards";
         units: "units";
-        apartments: "apartments";
         blog_posts: "blog_posts";
         board_cards: "board_cards";
+        bug_reports: "bug_reports";
         building_join_requests: "building_join_requests";
+        business_partners: "business_partners";
         comments: "comments";
+        expense_transactions: "expense_transactions";
         failure_reports: "failure_reports";
         faqs: "faqs";
         files: "files";
-        garages: "garages";
         income_transactions: "income_transactions";
         organizations: "organizations";
-        recurring_templates: "recurring_templates";
-        storage_units: "storage_units";
+        owners: "owners";
         transaction_categories: "transaction_categories";
     }>;
     label: z.ZodString;
@@ -2818,19 +2840,19 @@ declare const listArchivedResponseSchema: z.ZodObject<{
             buildings: "buildings";
             boards: "boards";
             units: "units";
-            apartments: "apartments";
             blog_posts: "blog_posts";
             board_cards: "board_cards";
+            bug_reports: "bug_reports";
             building_join_requests: "building_join_requests";
+            business_partners: "business_partners";
             comments: "comments";
+            expense_transactions: "expense_transactions";
             failure_reports: "failure_reports";
             faqs: "faqs";
             files: "files";
-            garages: "garages";
             income_transactions: "income_transactions";
             organizations: "organizations";
-            recurring_templates: "recurring_templates";
-            storage_units: "storage_units";
+            owners: "owners";
             transaction_categories: "transaction_categories";
         }>;
         label: z.ZodString;
@@ -3405,7 +3427,7 @@ declare const documentResponseSchema: z.ZodObject<{
         fileSize: z.ZodNullable<z.ZodOptional<z.ZodNumber>>;
         createdAt: z.ZodUnion<readonly [z.ZodString, z.ZodDate]>;
     }, z.core.$loose>>>>;
-    uploadedBy: z.ZodString;
+    uploadedBy: z.ZodNullable<z.ZodString>;
     uploadedByName: z.ZodString;
     createdAt: z.ZodUnion<readonly [z.ZodString, z.ZodDate]>;
     updatedAt: z.ZodOptional<z.ZodNullable<z.ZodUnion<readonly [z.ZodString, z.ZodDate]>>>;
@@ -3449,7 +3471,7 @@ declare const paginatedDocumentsResponseSchema: z.ZodObject<{
             fileSize: z.ZodNullable<z.ZodOptional<z.ZodNumber>>;
             createdAt: z.ZodUnion<readonly [z.ZodString, z.ZodDate]>;
         }, z.core.$loose>>>>;
-        uploadedBy: z.ZodString;
+        uploadedBy: z.ZodNullable<z.ZodString>;
         uploadedByName: z.ZodString;
         createdAt: z.ZodUnion<readonly [z.ZodString, z.ZodDate]>;
         updatedAt: z.ZodOptional<z.ZodNullable<z.ZodUnion<readonly [z.ZodString, z.ZodDate]>>>;
@@ -4131,7 +4153,7 @@ declare const pollResultsSchema: z.ZodObject<{
     buildingId: z.ZodString;
     question: z.ZodString;
     options: z.ZodArray<z.ZodString>;
-    createdBy: z.ZodString;
+    createdBy: z.ZodNullable<z.ZodString>;
     createdAt: z.ZodString;
     deadline: z.ZodOptional<z.ZodString>;
     pollType: z.ZodEnum<{
@@ -4356,7 +4378,7 @@ declare const repUserBuildingSchema: z.ZodObject<{
         co_owner: "co_owner";
         resident: "resident";
     }>;
-    buildingSurfacePercentage: z.ZodString;
+    buildingSurfacePercentage: z.ZodNullable<z.ZodString>;
     createdAt: z.ZodString;
     canEdit: z.ZodBoolean;
     canKick: z.ZodBoolean;
@@ -4377,7 +4399,7 @@ declare const repUserItemSchema: z.ZodObject<{
             co_owner: "co_owner";
             resident: "resident";
         }>;
-        buildingSurfacePercentage: z.ZodString;
+        buildingSurfacePercentage: z.ZodNullable<z.ZodString>;
         createdAt: z.ZodString;
         canEdit: z.ZodBoolean;
         canKick: z.ZodBoolean;
@@ -4401,7 +4423,7 @@ declare const paginatedRepUsersResponseSchema: z.ZodObject<{
                 co_owner: "co_owner";
                 resident: "resident";
             }>;
-            buildingSurfacePercentage: z.ZodString;
+            buildingSurfacePercentage: z.ZodNullable<z.ZodString>;
             createdAt: z.ZodString;
             canEdit: z.ZodBoolean;
             canKick: z.ZodBoolean;

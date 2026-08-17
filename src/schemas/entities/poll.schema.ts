@@ -180,10 +180,17 @@ export const updatePollSchema = z.object({
     .optional()
     .describe('Revised reference to the legal article or statute that authorises the vote.'),
   status: z
-    .enum(['active', 'inactive', 'ended'])
+    .enum(['active', 'completed', 'cancelled'])
     .optional()
     .describe(
-      'Lifecycle override: `active` accepts votes, `inactive` pauses the poll, `ended` seals it.',
+      'Lifecycle override. Must be one of the three values the `poll_status` ' +
+        'database enum defines: `active` accepts votes, `completed` closes the ' +
+        'poll, `cancelled` abandons it. This previously advertised `inactive` ' +
+        'and `ended`, neither of which exists in that enum — sending either ' +
+        'raised `invalid input value for enum poll_status` and 500d, leaving ' +
+        '`active` as the only value that worked, which is also the only one ' +
+        'that can reopen a closed poll. A poll whose results are finalized ' +
+        'cannot be moved back to `active`.',
     ),
   scopedUnitIds: multipartArray(uuidSchema)
     .optional()

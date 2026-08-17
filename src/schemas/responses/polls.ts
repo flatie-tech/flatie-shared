@@ -174,7 +174,12 @@ export const pollResultsSchema = z.looseObject({
   buildingId: z.string().uuid().describe('UUID of the building this poll belongs to.'),
   question: z.string().describe('Poll question displayed to voters.'),
   options: z.array(z.string()).describe('Answer options in display order.'),
-  createdBy: z.string().describe('UUID of the user who created the poll.'),
+  createdBy: z
+    .string()
+    .nullable()
+    .describe(
+      'UUID of the user who created the poll; null once that user is deleted — `polls.created_by` is ON DELETE SET NULL, so this is a normal state, not an anomaly.',
+    ),
   createdAt: z.string().describe('ISO-8601 timestamp when the poll was created.'),
   deadline: z
     .string()

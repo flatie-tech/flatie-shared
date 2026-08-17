@@ -1588,8 +1588,8 @@ var updatePollSchema = zod.z.object({
   requiredConsensusPercentage: zod.z.coerce.number().min(POLL_LIMITS.CONSENSUS_PERCENTAGE_MIN).max(POLL_LIMITS.CONSENSUS_PERCENTAGE_MAX).optional().describe("Revised ownership-weighted approval threshold (10\u2013100) for consensus polls."),
   consensusCategory: zod.z.string().max(100).optional().describe('Revised classification of the consensus decision (e.g. "fundUsage", "houseRules").'),
   legalBasis: zod.z.string().max(100).optional().describe("Revised reference to the legal article or statute that authorises the vote."),
-  status: zod.z.enum(["active", "inactive", "ended"]).optional().describe(
-    "Lifecycle override: `active` accepts votes, `inactive` pauses the poll, `ended` seals it."
+  status: zod.z.enum(["active", "completed", "cancelled"]).optional().describe(
+    "Lifecycle override. Must be one of the three values the `poll_status` database enum defines: `active` accepts votes, `completed` closes the poll, `cancelled` abandons it. This previously advertised `inactive` and `ended`, neither of which exists in that enum \u2014 sending either raised `invalid input value for enum poll_status` and 500d, leaving `active` as the only value that worked, which is also the only one that can reopen a closed poll. A poll whose results are finalized cannot be moved back to `active`."
   ),
   scopedUnitIds: multipartArray(uuidSchema).optional().describe("Replacement list of scoped unit UUIDs. Empty array clears scoping."),
   scopedOwnerIds: multipartArray(uuidSchema).optional().describe("Replacement list of scoped owner UUIDs. Empty array clears explicit-owner scoping."),
@@ -1788,24 +1788,24 @@ var aiUsageResponseSchema = zod.z.looseObject({
   )
 }).describe("AI chat budget usage for one building in the current monthly period.");
 var ARCHIVE_TYPES = [
-  "apartments",
   "blog_posts",
   "board_cards",
   "boards",
+  "bug_reports",
   "building_join_requests",
   "buildings",
+  "business_partners",
   "comments",
   "events",
+  "expense_transactions",
   "failure_reports",
   "faqs",
   "files",
-  "garages",
   "income_transactions",
   "notices",
   "organizations",
+  "owners",
   "polls",
-  "recurring_templates",
-  "storage_units",
   "transaction_categories",
   "units"
 ];
@@ -1816,14 +1816,16 @@ var BUILDING_ARCHIVE_TYPES = [
   "building_join_requests",
   "comments",
   "events",
+  "expense_transactions",
   "failure_reports",
   "faqs",
   "files",
   "income_transactions",
   "notices",
+  "owners",
   "polls",
-  "units",
-  "transaction_categories"
+  "transaction_categories",
+  "units"
 ];
 var buildingArchiveTypeSchema = zod.z.enum(BUILDING_ARCHIVE_TYPES).describe("Building-scoped archive type; the subset restorable by building managers.");
 var archivedItemSchema = zod.z.looseObject({
@@ -2231,7 +2233,9 @@ var documentResponseSchema = zod.z.looseObject({
   description: zod.z.string().optional().nullable().describe("Optional description; null when not provided."),
   documentUrl: zod.z.string().optional().nullable().describe("Legacy single-file URL; null for multi-file documents."),
   files: zod.z.array(documentFileSchema).optional().default([]).describe("File attachments; empty array when no files are attached."),
-  uploadedBy: zod.z.string().uuid().describe("UUID of the user who uploaded the document."),
+  uploadedBy: zod.z.string().uuid().nullable().describe(
+    "UUID of the user who uploaded the document; null once that user is deleted \u2014 `files.uploaded_by` is ON DELETE SET NULL."
+  ),
   uploadedByName: zod.z.string().describe("Display name of the uploader."),
   createdAt: zod.z.union([zod.z.string(), zod.z.date()]).describe("ISO-8601 timestamp when the document was created."),
   updatedAt: zod.z.union([zod.z.string(), zod.z.date()]).nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited."),
@@ -2893,7 +2897,9 @@ var pollResultsSchema = zod.z.looseObject({
   buildingId: zod.z.string().uuid().describe("UUID of the building this poll belongs to."),
   question: zod.z.string().describe("Poll question displayed to voters."),
   options: zod.z.array(zod.z.string()).describe("Answer options in display order."),
-  createdBy: zod.z.string().describe("UUID of the user who created the poll."),
+  createdBy: zod.z.string().nullable().describe(
+    "UUID of the user who created the poll; null once that user is deleted \u2014 `polls.created_by` is ON DELETE SET NULL, so this is a normal state, not an anomaly."
+  ),
   createdAt: zod.z.string().describe("ISO-8601 timestamp when the poll was created."),
   deadline: zod.z.string().optional().describe("ISO-8601 datetime after which votes are rejected. Absent for open-ended polls."),
   pollType: pollTypeSchema.describe("`COMMUNITY` for majority polls, `CONSENSUS` for weighted."),
@@ -2999,8 +3005,8 @@ var repUserBuildingSchema = zod.z.looseObject({
   buildingName: zod.z.string().describe("Display name of the associated building."),
   buildingAddress: zod.z.string().describe("Full postal address of the associated building."),
   roleType: repUserRoleSchema,
-  buildingSurfacePercentage: zod.z.string().describe(
-    'The user\u2019s ownership share of the building surface, serialized as a decimal string (e.g. "12.50").'
+  buildingSurfacePercentage: zod.z.string().nullable().describe(
+    'The user\u2019s ownership share of the building surface, serialized as a decimal string (e.g. "12.50"). Null when no share is recorded, which is the normal state for a non-owner member \u2014 the column is nullable and has no default.'
   ),
   createdAt: zod.z.string().describe("ISO-8601 timestamp when the user joined this building."),
   canEdit: zod.z.boolean().describe("True when the caller may edit this association (role, surface share)."),
@@ -3398,5 +3404,5 @@ exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
 exports.voteWithIdCardSchema = voteWithIdCardSchema;
-//# sourceMappingURL=chunk-XAUUSHDL.cjs.map
-//# sourceMappingURL=chunk-XAUUSHDL.cjs.map
+//# sourceMappingURL=chunk-ZI536366.cjs.map
+//# sourceMappingURL=chunk-ZI536366.cjs.map

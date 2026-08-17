@@ -79,7 +79,13 @@ export const documentResponseSchema = z
       .optional()
       .default([])
       .describe('File attachments; empty array when no files are attached.'),
-    uploadedBy: z.string().uuid().describe('UUID of the user who uploaded the document.'),
+    uploadedBy: z
+      .string()
+      .uuid()
+      .nullable()
+      .describe(
+        'UUID of the user who uploaded the document; null once that user is deleted — `files.uploaded_by` is ON DELETE SET NULL.',
+      ),
     uploadedByName: z.string().describe('Display name of the uploader.'),
     createdAt: z
       .union([z.string(), z.date()])

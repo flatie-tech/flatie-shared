@@ -34,8 +34,9 @@ export const repUserBuildingSchema = z
     roleType: repUserRoleSchema,
     buildingSurfacePercentage: z
       .string()
+      .nullable()
       .describe(
-        'The user’s ownership share of the building surface, serialized as a decimal string (e.g. "12.50").',
+        'The user’s ownership share of the building surface, serialized as a decimal string (e.g. "12.50"). Null when no share is recorded, which is the normal state for a non-owner member — the column is nullable and has no default.',
       ),
     createdAt: z.string().describe('ISO-8601 timestamp when the user joined this building.'),
     canEdit: z

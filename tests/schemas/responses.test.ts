@@ -479,7 +479,7 @@ describe('Archive response schemas', () => {
   it('parses a valid archived-item payload', () => {
     const payload = {
       id: APARTMENT_ID,
-      type: 'apartments',
+      type: 'units',
       label: 'Apartment 4B',
       buildingId: BUILDING_ID,
       archivedAt: TIMESTAMP,
@@ -487,7 +487,29 @@ describe('Archive response schemas', () => {
       archivedByName: 'Iva Ivić',
       daysUntilPurge: 12,
     };
-    expect(archivedItemSchema.parse(payload).type).toBe('apartments');
+    expect(archivedItemSchema.parse(payload).type).toBe('units');
+  });
+
+  // These four are emitted by the backend registry but were absent from
+  // ARCHIVE_TYPES, so a single such row made the whole archive response fail
+  // validation and the page render as an error rather than a list.
+  it.each([
+    'business_partners',
+    'bug_reports',
+    'expense_transactions',
+    'owners',
+  ])('parses an archived %s, which the type list used to reject', (type) => {
+    const payload = {
+      id: APARTMENT_ID,
+      type,
+      label: 'Something archived',
+      buildingId: BUILDING_ID,
+      archivedAt: TIMESTAMP,
+      archivedBy: USER_ID,
+      archivedByName: 'Iva Ivić',
+      daysUntilPurge: 3,
+    };
+    expect(archivedItemSchema.parse(payload).type).toBe(type);
   });
 
   it('allows null buildingId for global entities like organizations', () => {

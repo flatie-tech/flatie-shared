@@ -1586,8 +1586,8 @@ var updatePollSchema = z.object({
   requiredConsensusPercentage: z.coerce.number().min(POLL_LIMITS.CONSENSUS_PERCENTAGE_MIN).max(POLL_LIMITS.CONSENSUS_PERCENTAGE_MAX).optional().describe("Revised ownership-weighted approval threshold (10\u2013100) for consensus polls."),
   consensusCategory: z.string().max(100).optional().describe('Revised classification of the consensus decision (e.g. "fundUsage", "houseRules").'),
   legalBasis: z.string().max(100).optional().describe("Revised reference to the legal article or statute that authorises the vote."),
-  status: z.enum(["active", "inactive", "ended"]).optional().describe(
-    "Lifecycle override: `active` accepts votes, `inactive` pauses the poll, `ended` seals it."
+  status: z.enum(["active", "completed", "cancelled"]).optional().describe(
+    "Lifecycle override. Must be one of the three values the `poll_status` database enum defines: `active` accepts votes, `completed` closes the poll, `cancelled` abandons it. This previously advertised `inactive` and `ended`, neither of which exists in that enum \u2014 sending either raised `invalid input value for enum poll_status` and 500d, leaving `active` as the only value that worked, which is also the only one that can reopen a closed poll. A poll whose results are finalized cannot be moved back to `active`."
   ),
   scopedUnitIds: multipartArray(uuidSchema).optional().describe("Replacement list of scoped unit UUIDs. Empty array clears scoping."),
   scopedOwnerIds: multipartArray(uuidSchema).optional().describe("Replacement list of scoped owner UUIDs. Empty array clears explicit-owner scoping."),
@@ -1786,24 +1786,24 @@ var aiUsageResponseSchema = z.looseObject({
   )
 }).describe("AI chat budget usage for one building in the current monthly period.");
 var ARCHIVE_TYPES = [
-  "apartments",
   "blog_posts",
   "board_cards",
   "boards",
+  "bug_reports",
   "building_join_requests",
   "buildings",
+  "business_partners",
   "comments",
   "events",
+  "expense_transactions",
   "failure_reports",
   "faqs",
   "files",
-  "garages",
   "income_transactions",
   "notices",
   "organizations",
+  "owners",
   "polls",
-  "recurring_templates",
-  "storage_units",
   "transaction_categories",
   "units"
 ];
@@ -1814,14 +1814,16 @@ var BUILDING_ARCHIVE_TYPES = [
   "building_join_requests",
   "comments",
   "events",
+  "expense_transactions",
   "failure_reports",
   "faqs",
   "files",
   "income_transactions",
   "notices",
+  "owners",
   "polls",
-  "units",
-  "transaction_categories"
+  "transaction_categories",
+  "units"
 ];
 var buildingArchiveTypeSchema = z.enum(BUILDING_ARCHIVE_TYPES).describe("Building-scoped archive type; the subset restorable by building managers.");
 var archivedItemSchema = z.looseObject({
@@ -2229,7 +2231,9 @@ var documentResponseSchema = z.looseObject({
   description: z.string().optional().nullable().describe("Optional description; null when not provided."),
   documentUrl: z.string().optional().nullable().describe("Legacy single-file URL; null for multi-file documents."),
   files: z.array(documentFileSchema).optional().default([]).describe("File attachments; empty array when no files are attached."),
-  uploadedBy: z.string().uuid().describe("UUID of the user who uploaded the document."),
+  uploadedBy: z.string().uuid().nullable().describe(
+    "UUID of the user who uploaded the document; null once that user is deleted \u2014 `files.uploaded_by` is ON DELETE SET NULL."
+  ),
   uploadedByName: z.string().describe("Display name of the uploader."),
   createdAt: z.union([z.string(), z.date()]).describe("ISO-8601 timestamp when the document was created."),
   updatedAt: z.union([z.string(), z.date()]).nullable().optional().describe("ISO-8601 timestamp of the last edit; null when never edited."),
@@ -2891,7 +2895,9 @@ var pollResultsSchema = z.looseObject({
   buildingId: z.string().uuid().describe("UUID of the building this poll belongs to."),
   question: z.string().describe("Poll question displayed to voters."),
   options: z.array(z.string()).describe("Answer options in display order."),
-  createdBy: z.string().describe("UUID of the user who created the poll."),
+  createdBy: z.string().nullable().describe(
+    "UUID of the user who created the poll; null once that user is deleted \u2014 `polls.created_by` is ON DELETE SET NULL, so this is a normal state, not an anomaly."
+  ),
   createdAt: z.string().describe("ISO-8601 timestamp when the poll was created."),
   deadline: z.string().optional().describe("ISO-8601 datetime after which votes are rejected. Absent for open-ended polls."),
   pollType: pollTypeSchema.describe("`COMMUNITY` for majority polls, `CONSENSUS` for weighted."),
@@ -2997,8 +3003,8 @@ var repUserBuildingSchema = z.looseObject({
   buildingName: z.string().describe("Display name of the associated building."),
   buildingAddress: z.string().describe("Full postal address of the associated building."),
   roleType: repUserRoleSchema,
-  buildingSurfacePercentage: z.string().describe(
-    'The user\u2019s ownership share of the building surface, serialized as a decimal string (e.g. "12.50").'
+  buildingSurfacePercentage: z.string().nullable().describe(
+    'The user\u2019s ownership share of the building surface, serialized as a decimal string (e.g. "12.50"). Null when no share is recorded, which is the normal state for a non-owner member \u2014 the column is nullable and has no default.'
   ),
   createdAt: z.string().describe("ISO-8601 timestamp when the user joined this building."),
   canEdit: z.boolean().describe("True when the caller may edit this association (role, surface share)."),
@@ -3109,5 +3115,5 @@ var repDashboardSummaryResponseSchema = z.looseObject({
 }).describe("Payload of `GET /representatives/dashboard/summary`.");
 
 export { ARCHIVE_TYPES, AUDIT_DENIAL_TARGET_TYPE, ApprovalStatusSchema, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUG_REPORT_LIMITS, BUG_REPORT_STATUSES, BUILDING_ARCHIVE_TYPES, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, ConversationType, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, EMAIL_LIMITS, ENTITY_LINK_TYPES, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, LINKABLE_ENTITY_TYPES, NOTICE_LIMITS, ORGANIZATION_LIMITS, OrgInvitationStatus, POLL_LIMITS, POLL_TYPES, PricuvaDeliveryChannel, PricuvaDeliveryStatus, PrioritySchema, RECURRENCE_TYPES, REP_RECENT_ACTIVITY_TYPES, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, auditLogResponseSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, booleanish, bugReportResponseSchema, bugReportStatusSchema, buildingArchiveTypeSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingOwnerAssignmentSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBugReportSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createDsarEventSchema, createDsarRequestSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createEventSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createNoticeSchema, createOrgBroadcastSchema, createOrganizationSchema, createOwnerSchema, createPlatformSubscriptionSchema, createPollSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, dsarErasureSchema, dsarEventResponseSchema, dsarRequestResponseSchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, emailUnreadCountResponseSchema, enterpriseRequestResponseSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportEventWithDateOrderSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, featureFlagsResponseSchema, finalizePollSchema, forgotPasswordSchema, getAuditLogsQuerySchema, getDsarRequestsQuerySchema, getEnterpriseRequestsQuerySchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getNotificationDataSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getPlatformSubscriptionsQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, idCardVerificationStatusSchema, inviteOrgMemberSchema, inviteOwnerSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, listBugReportsResponseSchema, loginSchema, mapPricuvaRefResponseSchema, mapPricuvaRefSchema, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeEventWithDateOrderSchema, noticeResponseSchema, notificationDataSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgAiImportAddressCandidateSchema, orgAiImportBuildingSchema, orgAiImportCommitResponseSchema, orgAiImportCommitSchema, orgAiImportExtractResponseSchema, orgAiImportSkippedRowSchema, orgBroadcastResponseSchema, orgBuildingFundsRowSchema, orgFundsOverviewResponseSchema, orgInvitationResponseSchema, orgStatementImportResponseSchema, orgStatementImportResultSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, platformFeatureFlagSchema, platformFeatureFlagsResponseSchema, platformSubscriptionResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, postPricuvaChargesResponseSchema, pricuvaDeliveriesResponseSchema, pricuvaDeliveryRowSchema, pricuvaOpeningBalanceRowSchema, pricuvaOpeningBalancesResponseSchema, priorityOptions, publicOrgInvitationSchema, recordDsarRectificationSchema, recordOfflineVotesSchema, recurrenceTypeSchema, registerSchema, rejectIdCardVerificationSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, revenueMetricsResponseSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, setDsarRestrictionSchema, signedMoneyStringSchema, strongPasswordSchema, submitIdCardVerificationSchema, timeSchema, unitKindSchema, unitSchema, unmatchedPricuvaRefRowSchema, unmatchedPricuvaRefsResponseSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBugReportSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateDsarRequestSchema, updateEnterpriseRequestSchema, updateEventSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgBuildingContractSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePlatformFeatureRequestSchema, updatePlatformSubscriptionSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, upsertPricuvaOpeningBalancesSchema, userEntitySchema, uuidSchema, verifyOtpSchema, votePollSchema, voteWithIdCardSchema };
-//# sourceMappingURL=chunk-5VGU3Y22.js.map
-//# sourceMappingURL=chunk-5VGU3Y22.js.map
+//# sourceMappingURL=chunk-36QNMN47.js.map
+//# sourceMappingURL=chunk-36QNMN47.js.map
