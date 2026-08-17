@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.125.0
+
+### Changes
+
+- Correct archive type lists, nullable owner/creator fields, and the poll status enum to match the backend
+
 ## 0.124.0
 
 ### Changes
