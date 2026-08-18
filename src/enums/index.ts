@@ -10,6 +10,11 @@ export {
   DsarRequestStatus,
   DsarRequestType,
 } from './dsar.enum';
+export {
+  DUNNING_CLOSED_STATUSES,
+  DunningCaseStatus,
+  DunningLevel,
+} from './dunning.enum';
 export { EnterpriseRequestStatus } from './enterprise-request.enum';
 export { EntityLinkType, LinkableEntityType } from './entity-link.enum';
 export {

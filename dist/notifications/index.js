@@ -1,4 +1,4 @@
-import { BuildingRole, OrgRole, NotificationType } from '../chunk-7OVJB72E.js';
+import { BuildingRole, OrgRole, NotificationType } from '../chunk-HC7CBODS.js';
 
 // src/notifications/labels.ts
 var SUPPORTED_LOCALES = ["hr", "en", "de"];
@@ -524,6 +524,23 @@ var NOTIFICATION_TEMPLATES = {
       hr: "\u0160alje se kada dospijeva pla\u0107anje",
       en: "Sent when a payment is due",
       de: "Wird gesendet, wenn eine Zahlung f\xE4llig ist"
+    }
+  },
+  [NotificationType.DUNNING_NOTICE_ISSUED]: {
+    title: {
+      hr: "Opomena za pri\u010Duvu",
+      en: "Reserve-fund reminder issued",
+      de: "Mahnung f\xFCr die R\xFCcklage"
+    },
+    body: {
+      hr: "Za zgradu {{buildingName}} izdana vam je {{levelLabel}} na iznos od {{amount}}. Rok za uplatu: {{deadline}}.",
+      en: "A {{levelLabel}} for {{amount}} was issued to you for {{buildingName}}. Payment deadline: {{deadline}}.",
+      de: "F\xFCr {{buildingName}} wurde Ihnen eine {{levelLabel}} \xFCber {{amount}} ausgestellt. Zahlungsfrist: {{deadline}}."
+    },
+    description: {
+      hr: "\u0160alje se suvlasniku kada mu upravitelj ili predstavnik izda opomenu za dospjelu pri\u010Duvu",
+      en: "Sent to a co-owner when the manager or representative issues a reserve-fund arrears notice",
+      de: "Wird an einen Miteigent\xFCmer gesendet, wenn der Verwalter eine Mahnung wegen R\xFCcklagenr\xFCckstand ausstellt"
     }
   },
   [NotificationType.PAYMENT_RECEIVED]: {

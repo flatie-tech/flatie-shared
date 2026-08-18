@@ -82,6 +82,30 @@ export const buildingSettingsResponseSchema = z
       .boolean()
       .optional()
       .describe('Whether the 5 GB storage add-on is enabled.'),
+    dunningEnabled: z.boolean().optional().describe('Collections ladder switched on.'),
+    dunningReminderAfterDays: z
+      .number()
+      .int()
+      .optional()
+      .describe('Days past due before a reminder (opomena) is suggested.'),
+    dunningFinalAfterDays: z
+      .number()
+      .int()
+      .optional()
+      .describe('Days after an unpaid reminder before the final notice is suggested.'),
+    dunningPaymentDeadlineDays: z
+      .number()
+      .int()
+      .optional()
+      .describe('Payment deadline printed on letters, days from issue.'),
+    dunningMinDebt: z
+      .number()
+      .optional()
+      .describe('Minimum balance (EUR) before a letter is suggested.'),
+    dunningInterestEnabled: z
+      .boolean()
+      .optional()
+      .describe('Statutory default interest shown and claimed on letters/statements.'),
     createdAt: z.string().nullable().optional(),
     updatedAt: z.string().nullable().optional(),
   })

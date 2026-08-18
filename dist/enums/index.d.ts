@@ -1,6 +1,6 @@
 export { A as ApprovalStatus, B as BuildingType, C as CommonStatus, F as FailureStatus, a as FailureType, b as FileCategory, c as Frequency, P as PollType, d as Priority, T as TransactionCategory, e as TransactionType } from '../status.enum-POCdxmgc.js';
 export { E as EntityLinkType, L as LinkableEntityType } from '../entity-link.enum-D2At-V8D.js';
-export { C as CO_OWNER_VISIBLE_SYSTEM_TYPES, D as DevicePlatform, a as NOTIFICATION_TYPE_CATEGORY, b as NotificationCategory, c as NotificationChannel, d as NotificationDeliveryStatus, N as NotificationType, R as RESIDENT_VISIBLE_SYSTEM_TYPES, U as UNIMPLEMENTED_NOTIFICATION_TYPES, W as WASTE_SUBTYPE_NOTIFICATION_MAP } from '../notification.enum-BtF7QI0-.js';
+export { C as CO_OWNER_VISIBLE_SYSTEM_TYPES, D as DevicePlatform, a as NOTIFICATION_TYPE_CATEGORY, b as NotificationCategory, c as NotificationChannel, d as NotificationDeliveryStatus, N as NotificationType, R as RESIDENT_VISIBLE_SYSTEM_TYPES, U as UNIMPLEMENTED_NOTIFICATION_TYPES, W as WASTE_SUBTYPE_NOTIFICATION_MAP } from '../notification.enum-C1IHyJHj.js';
 export { A as APPROVE_PERMISSIONS, B as BUILDING_ROLE_RANK, e as BuildingRole, O as ORG_ROLE_RANK, i as OrgRole, j as PLATFORM_ROLE_RANK, P as Permission, k as PlatformRole, S as SCOPED_DOMAINS, a as SCOPED_PERMISSIONS, b as ScopedAction, c as ScopedDomain, f as canAssignOrgRole, g as canAssignPlatformRole, h as canAssignRole, d as domainPermissions } from '../role.enum-DoYck3g6.js';
 export { B as BuildingFeatureSettingKey, b as PLATFORM_FEATURES, a as PLATFORM_FEATURE_META, c as PlatformFeature, P as PlatformFeatureMeta, g as getBuildingFeatureDefault } from '../platform-feature.enum-6TI7valI.js';
 
@@ -80,6 +80,44 @@ declare const DSAR_MAX_EXTENSION_DAYS = 60;
  * Basis: Art. 5(2) accountability + the limitation period for legal claims.
  */
 declare const DSAR_RETENTION_YEARS = 3;
+
+/**
+ * Pričuva collections ("naplata") — the dunning ladder a manager walks
+ * when a co-owner falls behind: reminder → final notice → hand-over to
+ * enforcement (ovrha). Modelled on Croatian upravitelj practice under
+ * ZUOZ (NN 152/2024) čl. 52 t. 10–11: the manager collects the pričuva,
+ * notifies the representative and, if needed, pursues enforcement of
+ * overdue instalments.
+ *
+ * Levels are the letters that leave the system. Anything after
+ * `final_notice` (the ovrha itself) is tracked as a case status, not a
+ * letter — Flatie records that a case was handed over, it does not draft
+ * enforcement filings.
+ */
+declare const DunningLevel: {
+    /** "Opomena" — first written reminder with the outstanding balance. */
+    readonly REMINDER: "reminder";
+    /** "Opomena pred ovrhu" — last notice before enforcement, with default interest. */
+    readonly FINAL_NOTICE: "final_notice";
+};
+type DunningLevel = (typeof DunningLevel)[keyof typeof DunningLevel];
+/**
+ * A case is one owner's open collection thread on one building. At most
+ * one case is `open` per owner; it closes when the balance is settled or
+ * the manager decides the debt is uncollectible.
+ */
+declare const DunningCaseStatus: {
+    readonly OPEN: "open";
+    /** Balance reached zero (or credit) — closed automatically by the nightly sweep. */
+    readonly SETTLED: "settled";
+    /** Handed to a lawyer / notary / court for ovrha; the enforcement reference is kept. */
+    readonly HANDED_TO_ENFORCEMENT: "handed_to_enforcement";
+    /** Manager decided not to pursue. The arrears stay on the ledger; only the case closes. */
+    readonly WRITTEN_OFF: "written_off";
+};
+type DunningCaseStatus = (typeof DunningCaseStatus)[keyof typeof DunningCaseStatus];
+/** Case statuses that terminate the thread. */
+declare const DUNNING_CLOSED_STATUSES: ReadonlySet<DunningCaseStatus>;
 
 /**
  * Lifecycle of an inbound "request enterprise pricing" lead.
@@ -323,4 +361,4 @@ declare function deriveVotingStrength(user: {
     verificationTier?: number | null;
 }): VotingStrength;
 
-export { BoardVisibility, BuildingOtpExpiry, BuildingStatus, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DsarRequestStatus, DsarRequestType, EnterpriseRequestStatus, FailureFundingSource, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, JoinRequestStatus, OrgStatus, OrgType, POLL_CANNOT_VOTE_REASON_KEY, PollCannotVoteReason, PollStatus, PollVoteStatus, PricuvaRefMode, TransactionSource, UnitType, VerificationTier, VotingStrength, deriveVotingStrength, methodToTier };
+export { BoardVisibility, BuildingOtpExpiry, BuildingStatus, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DUNNING_CLOSED_STATUSES, DsarRequestStatus, DsarRequestType, DunningCaseStatus, DunningLevel, EnterpriseRequestStatus, FailureFundingSource, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, JoinRequestStatus, OrgStatus, OrgType, POLL_CANNOT_VOTE_REASON_KEY, PollCannotVoteReason, PollStatus, PollVoteStatus, PricuvaRefMode, TransactionSource, UnitType, VerificationTier, VotingStrength, deriveVotingStrength, methodToTier };

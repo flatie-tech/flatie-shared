@@ -1,64 +1,64 @@
 'use strict';
 
-var chunkI2YOJMQL_cjs = require('./chunk-I2YOJMQL.cjs');
-var chunkXOQU25DL_cjs = require('./chunk-XOQU25DL.cjs');
+var chunk6YLWH72I_cjs = require('./chunk-6YLWH72I.cjs');
+var chunkQH2HBDHO_cjs = require('./chunk-QH2HBDHO.cjs');
 var chunkQKHLAIRE_cjs = require('./chunk-QKHLAIRE.cjs');
 
 // src/utils/role-helpers.ts
 var MANAGERIAL_BUILDING_ROLES = [
-  chunkI2YOJMQL_cjs.BuildingRole.OWNER_REPRESENTATIVE,
-  chunkI2YOJMQL_cjs.BuildingRole.DEPUTY_REPRESENTATIVE
+  chunk6YLWH72I_cjs.BuildingRole.OWNER_REPRESENTATIVE,
+  chunk6YLWH72I_cjs.BuildingRole.DEPUTY_REPRESENTATIVE
 ];
 function isManagerialRole(role) {
   return MANAGERIAL_BUILDING_ROLES.includes(role);
 }
 var ROLE_TRANSLATION_KEYS = {
   // Building roles
-  [chunkI2YOJMQL_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
-  [chunkI2YOJMQL_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
-  [chunkI2YOJMQL_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER",
-  [chunkI2YOJMQL_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT",
+  [chunk6YLWH72I_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
+  [chunk6YLWH72I_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
+  [chunk6YLWH72I_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER",
+  [chunk6YLWH72I_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT",
   // Org roles
-  [chunkI2YOJMQL_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
-  [chunkI2YOJMQL_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
-  [chunkI2YOJMQL_cjs.OrgRole.REFERENT]: "roles.REFERENT",
-  [chunkI2YOJMQL_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE",
+  [chunk6YLWH72I_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
+  [chunk6YLWH72I_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
+  [chunk6YLWH72I_cjs.OrgRole.REFERENT]: "roles.REFERENT",
+  [chunk6YLWH72I_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE",
   // Platform roles
-  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
-  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
-  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
-  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
+  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
+  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
+  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
+  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
 };
 var ROLE_DESCRIPTION_KEYS = {
-  [chunkI2YOJMQL_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
-  [chunkI2YOJMQL_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
-  [chunkI2YOJMQL_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
-  [chunkI2YOJMQL_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
-  [chunkI2YOJMQL_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
-  [chunkI2YOJMQL_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
-  [chunkI2YOJMQL_cjs.OrgRole.REFERENT]: "roles.REFERENT_DESC",
-  [chunkI2YOJMQL_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
-  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
-  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
-  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
-  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
+  [chunk6YLWH72I_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
+  [chunk6YLWH72I_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
+  [chunk6YLWH72I_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
+  [chunk6YLWH72I_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
+  [chunk6YLWH72I_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
+  [chunk6YLWH72I_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
+  [chunk6YLWH72I_cjs.OrgRole.REFERENT]: "roles.REFERENT_DESC",
+  [chunk6YLWH72I_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
+  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
+  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
+  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
+  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
 };
 var ROLE_BADGE_COLORS = {
   // Building roles
-  [chunkI2YOJMQL_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "info",
-  [chunkI2YOJMQL_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "success",
-  [chunkI2YOJMQL_cjs.BuildingRole.CO_OWNER]: "warning",
-  [chunkI2YOJMQL_cjs.BuildingRole.RESIDENT]: "neutral",
+  [chunk6YLWH72I_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "info",
+  [chunk6YLWH72I_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "success",
+  [chunk6YLWH72I_cjs.BuildingRole.CO_OWNER]: "warning",
+  [chunk6YLWH72I_cjs.BuildingRole.RESIDENT]: "neutral",
   // Org roles
-  [chunkI2YOJMQL_cjs.OrgRole.ORG_ADMIN]: "purple",
-  [chunkI2YOJMQL_cjs.OrgRole.SUPERVISOR]: "info",
-  [chunkI2YOJMQL_cjs.OrgRole.REFERENT]: "success",
-  [chunkI2YOJMQL_cjs.OrgRole.OPERATIVE]: "amber",
+  [chunk6YLWH72I_cjs.OrgRole.ORG_ADMIN]: "purple",
+  [chunk6YLWH72I_cjs.OrgRole.SUPERVISOR]: "info",
+  [chunk6YLWH72I_cjs.OrgRole.REFERENT]: "success",
+  [chunk6YLWH72I_cjs.OrgRole.OPERATIVE]: "amber",
   // Platform roles
-  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_ADMIN]: "purple",
-  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_MODERATOR]: "info",
-  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_SUPPORT]: "success",
-  [chunkI2YOJMQL_cjs.PlatformRole.PLATFORM_OPERATIVE]: "amber"
+  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_ADMIN]: "purple",
+  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_MODERATOR]: "info",
+  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_SUPPORT]: "success",
+  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_OPERATIVE]: "amber"
 };
 function getRoleBadge(role) {
   const known = role;
@@ -175,7 +175,7 @@ function isFeatureAvailable({
   buildingSettings,
   loading = false
 }) {
-  const meta = chunkI2YOJMQL_cjs.PLATFORM_FEATURE_META[feature];
+  const meta = chunk6YLWH72I_cjs.PLATFORM_FEATURE_META[feature];
   if (!meta) return false;
   const platformState = platformFlags?.[feature];
   if (loading || platformState === void 0) {
@@ -276,7 +276,7 @@ var parseApiError = (error) => {
   const response = readProp(error, "response");
   const data = readProp(response, "data");
   const rawCode = readProp(data, "code");
-  const code = chunkXOQU25DL_cjs.isBackendErrorCode(rawCode) ? rawCode : null;
+  const code = chunkQH2HBDHO_cjs.isBackendErrorCode(rawCode) ? rawCode : null;
   const dataMessage = readProp(data, "message");
   const errorMessage = readProp(error, "message");
   const message = typeof dataMessage === "string" && dataMessage.length > 0 && dataMessage || typeof errorMessage === "string" && errorMessage.length > 0 && errorMessage || "Unknown error";
@@ -290,13 +290,13 @@ function canDo(subject, permission) {
   return subject.permissions.includes(permission);
 }
 function canDoOnResource(subject, domain, action, resourceOwnerId) {
-  const scopedPerms = chunkI2YOJMQL_cjs.SCOPED_PERMISSIONS[domain]?.[action];
+  const scopedPerms = chunk6YLWH72I_cjs.SCOPED_PERMISSIONS[domain]?.[action];
   if (!scopedPerms) return false;
   if (subject.permissions.includes(scopedPerms.any)) return true;
   return subject.permissions.includes(scopedPerms.own) && resourceOwnerId === subject.userId;
 }
 function computeActionFlags(subject, domain, resourceOwnerId) {
-  const approvePermission = chunkI2YOJMQL_cjs.APPROVE_PERMISSIONS[domain];
+  const approvePermission = chunk6YLWH72I_cjs.APPROVE_PERMISSIONS[domain];
   return {
     canEdit: canDoOnResource(subject, domain, "update", resourceOwnerId),
     canDelete: canDoOnResource(subject, domain, "delete", resourceOwnerId),
@@ -409,5 +409,5 @@ exports.normalizePaginatedResponse = normalizePaginatedResponse;
 exports.parseApiError = parseApiError;
 exports.parseData = parseData;
 exports.resolveVotingMethods = resolveVotingMethods;
-//# sourceMappingURL=chunk-EE4RQJET.cjs.map
-//# sourceMappingURL=chunk-EE4RQJET.cjs.map
+//# sourceMappingURL=chunk-MCC3KMBF.cjs.map
+//# sourceMappingURL=chunk-MCC3KMBF.cjs.map

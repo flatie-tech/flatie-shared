@@ -67,6 +67,11 @@ export const API_ROUTES = {
     // no unit, and adopt one as a unit's paymentRefCode (relinks history).
     PRICUVA_UNMATCHED_REFS: (id: string) => `/buildings/${id}/pricuva/unmatched-refs`,
     PRICUVA_MAP_REF: (id: string) => `/buildings/${id}/pricuva/map-ref`,
+    // Delivery register: which payers were billed for a period and how.
+    PRICUVA_DELIVERIES: (id: string) => `/buildings/${id}/pricuva/deliveries`,
+    // Co-owner self-service: my own pričuva position(s) with a HUB3 slip.
+    PRICUVA_ME: (id: string) => `/buildings/${id}/pricuva/me`,
+    PRICUVA_ME_SLIP_PDF: (id: string) => `/buildings/${id}/pricuva/me/slip.pdf`,
     SETTINGS: (id: string) => `/buildings/${id}/settings`,
     USERS: (id: string) => `/buildings/${id}/users`,
     OTP: (id: string) => `/buildings/${id}/otp`,
@@ -112,6 +117,26 @@ export const API_ROUTES = {
       `/buildings/${buildingId}/units/${unitId}/owners/${ownerId}`,
     INVITE: (buildingId: string, ownerId: string) =>
       `/buildings/${buildingId}/owners/${ownerId}/invite`,
+  },
+
+  // ── Pričuva collections (dunning: opomene, cases, owner accounts) ────
+  DUNNING: {
+    CANDIDATES: (buildingId: string) => `/buildings/${buildingId}/dunning/candidates`,
+    CASES: (buildingId: string) => `/buildings/${buildingId}/dunning/cases`,
+    CASE: (buildingId: string, caseId: string) =>
+      `/buildings/${buildingId}/dunning/cases/${caseId}`,
+    NOTICES: (buildingId: string) => `/buildings/${buildingId}/dunning/notices`,
+    NOTICES_ZIP: (buildingId: string) => `/buildings/${buildingId}/dunning/notices/zip`,
+    NOTICE_PDF: (buildingId: string, noticeId: string) =>
+      `/buildings/${buildingId}/dunning/notices/${noticeId}/pdf`,
+    NOTICE_RESEND: (buildingId: string, noticeId: string) =>
+      `/buildings/${buildingId}/dunning/notices/${noticeId}/resend`,
+    NOTICE_VOID: (buildingId: string, noticeId: string) =>
+      `/buildings/${buildingId}/dunning/notices/${noticeId}/void`,
+    OWNER_ACCOUNT: (buildingId: string, ownerId: string) =>
+      `/buildings/${buildingId}/dunning/owners/${ownerId}/account`,
+    OWNER_STATEMENT_PDF: (buildingId: string, ownerId: string) =>
+      `/buildings/${buildingId}/dunning/owners/${ownerId}/statement.pdf`,
   },
 
   // ── Notices ───────────────────────────────────────────────────────────
@@ -379,6 +404,8 @@ export const API_ROUTES = {
     DSAR_DETAIL: (id: string) => `/platform/dsar/${id}`,
     DSAR_EVENTS: (id: string) => `/platform/dsar/${id}/events`,
     DSAR_EXPORT: (id: string) => `/platform/dsar/${id}/export`,
+    // Statutory default-interest rate table (ECB reference + 3 pp / + 8 pp).
+    INTEREST_RATES: '/platform/interest-rates',
     DSAR_RESTRICTION: (id: string) => `/platform/dsar/${id}/restriction`,
     DSAR_ERASURE: (id: string) => `/platform/dsar/${id}/erasure`,
     DSAR_RECTIFICATION: (id: string) => `/platform/dsar/${id}/rectification`,

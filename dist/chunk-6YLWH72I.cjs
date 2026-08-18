@@ -67,6 +67,28 @@ var DSAR_SLA_DAYS = 30;
 var DSAR_MAX_EXTENSION_DAYS = 60;
 var DSAR_RETENTION_YEARS = 3;
 
+// src/enums/dunning.enum.ts
+var DunningLevel = {
+  /** "Opomena" — first written reminder with the outstanding balance. */
+  REMINDER: "reminder",
+  /** "Opomena pred ovrhu" — last notice before enforcement, with default interest. */
+  FINAL_NOTICE: "final_notice"
+};
+var DunningCaseStatus = {
+  OPEN: "open",
+  /** Balance reached zero (or credit) — closed automatically by the nightly sweep. */
+  SETTLED: "settled",
+  /** Handed to a lawyer / notary / court for ovrha; the enforcement reference is kept. */
+  HANDED_TO_ENFORCEMENT: "handed_to_enforcement",
+  /** Manager decided not to pursue. The arrears stay on the ledger; only the case closes. */
+  WRITTEN_OFF: "written_off"
+};
+var DUNNING_CLOSED_STATUSES = /* @__PURE__ */ new Set([
+  DunningCaseStatus.SETTLED,
+  DunningCaseStatus.HANDED_TO_ENFORCEMENT,
+  DunningCaseStatus.WRITTEN_OFF
+]);
+
 // src/enums/enterprise-request.enum.ts
 var EnterpriseRequestStatus = {
   OPEN: "open",
@@ -198,6 +220,7 @@ var NotificationType = {
   FAILURE_REPORT_DECLINED: "failure_report_declined",
   PAYMENT_DUE: "payment_due",
   PAYMENT_RECEIVED: "payment_received",
+  DUNNING_NOTICE_ISSUED: "dunning_notice_issued",
   BUILDING_JOIN_REQUEST_RECEIVED: "building_join_request_received",
   BUILDING_JOIN_REQUEST_APPROVED: "building_join_request_approved",
   BUILDING_JOIN_REQUEST_REJECTED: "building_join_request_rejected",
@@ -270,6 +293,7 @@ var NOTIFICATION_TYPE_CATEGORY = {
   [NotificationType.FAILURE_REPORT_DECLINED]: NotificationCategory.MAINTENANCE,
   [NotificationType.PAYMENT_DUE]: NotificationCategory.FINANCIAL,
   [NotificationType.PAYMENT_RECEIVED]: NotificationCategory.FINANCIAL,
+  [NotificationType.DUNNING_NOTICE_ISSUED]: NotificationCategory.FINANCIAL,
   [NotificationType.CHAT_MESSAGE]: NotificationCategory.CHAT,
   [NotificationType.EMAIL_RECEIVED]: NotificationCategory.BUILDING_EMAIL,
   [NotificationType.BUILDING_JOIN_REQUEST_RECEIVED]: NotificationCategory.SYSTEM,
@@ -750,9 +774,12 @@ exports.DSAR_CLOSED_STATUSES = DSAR_CLOSED_STATUSES;
 exports.DSAR_MAX_EXTENSION_DAYS = DSAR_MAX_EXTENSION_DAYS;
 exports.DSAR_RETENTION_YEARS = DSAR_RETENTION_YEARS;
 exports.DSAR_SLA_DAYS = DSAR_SLA_DAYS;
+exports.DUNNING_CLOSED_STATUSES = DUNNING_CLOSED_STATUSES;
 exports.DevicePlatform = DevicePlatform;
 exports.DsarRequestStatus = DsarRequestStatus;
 exports.DsarRequestType = DsarRequestType;
+exports.DunningCaseStatus = DunningCaseStatus;
+exports.DunningLevel = DunningLevel;
 exports.EnterpriseRequestStatus = EnterpriseRequestStatus;
 exports.EntityLinkType = EntityLinkType;
 exports.FailureFundingSource = FailureFundingSource;
@@ -806,5 +833,5 @@ exports.deriveVotingStrength = deriveVotingStrength;
 exports.domainPermissions = domainPermissions;
 exports.getBuildingFeatureDefault = getBuildingFeatureDefault;
 exports.methodToTier = methodToTier;
-//# sourceMappingURL=chunk-I2YOJMQL.cjs.map
-//# sourceMappingURL=chunk-I2YOJMQL.cjs.map
+//# sourceMappingURL=chunk-6YLWH72I.cjs.map
+//# sourceMappingURL=chunk-6YLWH72I.cjs.map

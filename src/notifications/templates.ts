@@ -378,6 +378,23 @@ export const NOTIFICATION_TEMPLATES: Record<NotificationType, LocalizedNotificat
       de: 'Wird gesendet, wenn eine Zahlung fällig ist',
     },
   },
+  [NotificationType.DUNNING_NOTICE_ISSUED]: {
+    title: {
+      hr: 'Opomena za pričuvu',
+      en: 'Reserve-fund reminder issued',
+      de: 'Mahnung für die Rücklage',
+    },
+    body: {
+      hr: 'Za zgradu {{buildingName}} izdana vam je {{levelLabel}} na iznos od {{amount}}. Rok za uplatu: {{deadline}}.',
+      en: 'A {{levelLabel}} for {{amount}} was issued to you for {{buildingName}}. Payment deadline: {{deadline}}.',
+      de: 'Für {{buildingName}} wurde Ihnen eine {{levelLabel}} über {{amount}} ausgestellt. Zahlungsfrist: {{deadline}}.',
+    },
+    description: {
+      hr: 'Šalje se suvlasniku kada mu upravitelj ili predstavnik izda opomenu za dospjelu pričuvu',
+      en: 'Sent to a co-owner when the manager or representative issues a reserve-fund arrears notice',
+      de: 'Wird an einen Miteigentümer gesendet, wenn der Verwalter eine Mahnung wegen Rücklagenrückstand ausstellt',
+    },
+  },
   [NotificationType.PAYMENT_RECEIVED]: {
     title: { hr: 'Uplata primljena', en: 'Payment Received', de: 'Zahlung erhalten' },
     body: {

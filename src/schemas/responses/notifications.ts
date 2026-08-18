@@ -181,6 +181,17 @@ const pollVoteSignatureRejectedDataSchema = pollVoteSignatureDataSchema.extend({
   reason: z.string().nullable().optional(),
 });
 
+/** dunning_notice_issued — the owner's copy of an issued opomena. */
+const dunningNoticeIssuedDataSchema = baseNotificationDataSchema.extend({
+  noticeId: z.string().optional(),
+  caseId: z.string().optional(),
+  level: z.string().optional(),
+  levelLabel: z.string().optional(),
+  amount: z.string().optional(),
+  deadline: z.string().optional(),
+  buildingName: z.string().optional(),
+});
+
 /**
  * Unimplemented notification types (no emit sites yet) — shape will be
  * locked down when the triggers ship. Until then we accept the base shape.
@@ -224,6 +235,7 @@ const notificationDataSchemaByType = {
 
   [NotificationType.PAYMENT_DUE]: unimplementedDataSchema,
   [NotificationType.PAYMENT_RECEIVED]: unimplementedDataSchema,
+  [NotificationType.DUNNING_NOTICE_ISSUED]: dunningNoticeIssuedDataSchema,
 
   [NotificationType.BUILDING_JOIN_REQUEST_RECEIVED]: buildingJoinRequestReceivedDataSchema,
   [NotificationType.BUILDING_JOIN_REQUEST_APPROVED]: buildingJoinRequestDecidedDataSchema,

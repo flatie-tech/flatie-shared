@@ -65,6 +65,28 @@ var DSAR_SLA_DAYS = 30;
 var DSAR_MAX_EXTENSION_DAYS = 60;
 var DSAR_RETENTION_YEARS = 3;
 
+// src/enums/dunning.enum.ts
+var DunningLevel = {
+  /** "Opomena" — first written reminder with the outstanding balance. */
+  REMINDER: "reminder",
+  /** "Opomena pred ovrhu" — last notice before enforcement, with default interest. */
+  FINAL_NOTICE: "final_notice"
+};
+var DunningCaseStatus = {
+  OPEN: "open",
+  /** Balance reached zero (or credit) — closed automatically by the nightly sweep. */
+  SETTLED: "settled",
+  /** Handed to a lawyer / notary / court for ovrha; the enforcement reference is kept. */
+  HANDED_TO_ENFORCEMENT: "handed_to_enforcement",
+  /** Manager decided not to pursue. The arrears stay on the ledger; only the case closes. */
+  WRITTEN_OFF: "written_off"
+};
+var DUNNING_CLOSED_STATUSES = /* @__PURE__ */ new Set([
+  DunningCaseStatus.SETTLED,
+  DunningCaseStatus.HANDED_TO_ENFORCEMENT,
+  DunningCaseStatus.WRITTEN_OFF
+]);
+
 // src/enums/enterprise-request.enum.ts
 var EnterpriseRequestStatus = {
   OPEN: "open",
@@ -196,6 +218,7 @@ var NotificationType = {
   FAILURE_REPORT_DECLINED: "failure_report_declined",
   PAYMENT_DUE: "payment_due",
   PAYMENT_RECEIVED: "payment_received",
+  DUNNING_NOTICE_ISSUED: "dunning_notice_issued",
   BUILDING_JOIN_REQUEST_RECEIVED: "building_join_request_received",
   BUILDING_JOIN_REQUEST_APPROVED: "building_join_request_approved",
   BUILDING_JOIN_REQUEST_REJECTED: "building_join_request_rejected",
@@ -268,6 +291,7 @@ var NOTIFICATION_TYPE_CATEGORY = {
   [NotificationType.FAILURE_REPORT_DECLINED]: NotificationCategory.MAINTENANCE,
   [NotificationType.PAYMENT_DUE]: NotificationCategory.FINANCIAL,
   [NotificationType.PAYMENT_RECEIVED]: NotificationCategory.FINANCIAL,
+  [NotificationType.DUNNING_NOTICE_ISSUED]: NotificationCategory.FINANCIAL,
   [NotificationType.CHAT_MESSAGE]: NotificationCategory.CHAT,
   [NotificationType.EMAIL_RECEIVED]: NotificationCategory.BUILDING_EMAIL,
   [NotificationType.BUILDING_JOIN_REQUEST_RECEIVED]: NotificationCategory.SYSTEM,
@@ -734,6 +758,6 @@ function deriveVotingStrength(user) {
   return VotingStrength.NONE;
 }
 
-export { APPROVE_PERMISSIONS, ApprovalStatus, BUILDING_ROLE_RANK, BoardVisibility, BuildingOtpExpiry, BuildingRole, BuildingStatus, BuildingType, CO_OWNER_VISIBLE_SYSTEM_TYPES, CommonStatus, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DevicePlatform, DsarRequestStatus, DsarRequestType, EnterpriseRequestStatus, EntityLinkType, FailureFundingSource, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, IdentityVerificationMethod, JoinRequestStatus, LinkableEntityType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_ROLE_RANK, OrgRole, OrgStatus, OrgType, PLATFORM_FEATURES, PLATFORM_FEATURE_META, PLATFORM_ROLE_RANK, POLL_CANNOT_VOTE_REASON_KEY, Permission, PlatformFeature, PlatformRole, PollCannotVoteReason, PollStatus, PollType, PollVoteStatus, PricuvaRefMode, Priority, RESIDENT_VISIBLE_SYSTEM_TYPES, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, VotingStrength, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, deriveVotingStrength, domainPermissions, getBuildingFeatureDefault, methodToTier };
-//# sourceMappingURL=chunk-7OVJB72E.js.map
-//# sourceMappingURL=chunk-7OVJB72E.js.map
+export { APPROVE_PERMISSIONS, ApprovalStatus, BUILDING_ROLE_RANK, BoardVisibility, BuildingOtpExpiry, BuildingRole, BuildingStatus, BuildingType, CO_OWNER_VISIBLE_SYSTEM_TYPES, CommonStatus, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DUNNING_CLOSED_STATUSES, DevicePlatform, DsarRequestStatus, DsarRequestType, DunningCaseStatus, DunningLevel, EnterpriseRequestStatus, EntityLinkType, FailureFundingSource, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, IdentityVerificationMethod, JoinRequestStatus, LinkableEntityType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_ROLE_RANK, OrgRole, OrgStatus, OrgType, PLATFORM_FEATURES, PLATFORM_FEATURE_META, PLATFORM_ROLE_RANK, POLL_CANNOT_VOTE_REASON_KEY, Permission, PlatformFeature, PlatformRole, PollCannotVoteReason, PollStatus, PollType, PollVoteStatus, PricuvaRefMode, Priority, RESIDENT_VISIBLE_SYSTEM_TYPES, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, VotingStrength, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, deriveVotingStrength, domainPermissions, getBuildingFeatureDefault, methodToTier };
+//# sourceMappingURL=chunk-HC7CBODS.js.map
+//# sourceMappingURL=chunk-HC7CBODS.js.map

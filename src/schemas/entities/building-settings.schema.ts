@@ -60,6 +60,42 @@ export const updateBuildingSettingsSchema = z.object({
     ),
   addonAiEnabled: z.boolean().optional(),
   addonStorage5gbEnabled: z.boolean().optional(),
+  // ── Pričuva collections (dunning) policy ─────────────────────────────
+  dunningEnabled: z
+    .boolean()
+    .optional()
+    .describe('Master switch for the collections ladder (opomene). Off by default.'),
+  dunningReminderAfterDays: z
+    .number()
+    .int()
+    .min(1)
+    .max(365)
+    .optional()
+    .describe('Days a charge must be past due before a reminder (opomena) is suggested.'),
+  dunningFinalAfterDays: z
+    .number()
+    .int()
+    .min(1)
+    .max(365)
+    .optional()
+    .describe('Days after an unpaid reminder before the final notice (pred ovrhu) is suggested.'),
+  dunningPaymentDeadlineDays: z
+    .number()
+    .int()
+    .min(1)
+    .max(90)
+    .optional()
+    .describe('Payment deadline printed on every letter, in days from issue.'),
+  dunningMinDebt: z
+    .number()
+    .min(0)
+    .max(100000)
+    .optional()
+    .describe('Minimum balance (EUR) before an owner is suggested for a letter.'),
+  dunningInterestEnabled: z
+    .boolean()
+    .optional()
+    .describe('Show and claim statutory default interest on letters and statements.'),
 });
 
 export type UpdateBuildingSettingsSchema = z.infer<typeof updateBuildingSettingsSchema>;

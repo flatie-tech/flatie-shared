@@ -45,6 +45,9 @@ declare const API_ROUTES: {
         readonly PRICUVA_POST_CHARGES: (id: string) => string;
         readonly PRICUVA_UNMATCHED_REFS: (id: string) => string;
         readonly PRICUVA_MAP_REF: (id: string) => string;
+        readonly PRICUVA_DELIVERIES: (id: string) => string;
+        readonly PRICUVA_ME: (id: string) => string;
+        readonly PRICUVA_ME_SLIP_PDF: (id: string) => string;
         readonly SETTINGS: (id: string) => string;
         readonly USERS: (id: string) => string;
         readonly OTP: (id: string) => string;
@@ -80,6 +83,18 @@ declare const API_ROUTES: {
         readonly UNIT_ASSIGNMENTS: (buildingId: string, unitId: string) => string;
         readonly UNIT_ASSIGNMENT_DETAIL: (buildingId: string, unitId: string, ownerId: string) => string;
         readonly INVITE: (buildingId: string, ownerId: string) => string;
+    };
+    readonly DUNNING: {
+        readonly CANDIDATES: (buildingId: string) => string;
+        readonly CASES: (buildingId: string) => string;
+        readonly CASE: (buildingId: string, caseId: string) => string;
+        readonly NOTICES: (buildingId: string) => string;
+        readonly NOTICES_ZIP: (buildingId: string) => string;
+        readonly NOTICE_PDF: (buildingId: string, noticeId: string) => string;
+        readonly NOTICE_RESEND: (buildingId: string, noticeId: string) => string;
+        readonly NOTICE_VOID: (buildingId: string, noticeId: string) => string;
+        readonly OWNER_ACCOUNT: (buildingId: string, ownerId: string) => string;
+        readonly OWNER_STATEMENT_PDF: (buildingId: string, ownerId: string) => string;
     };
     readonly NOTICES: {
         readonly LIST: (buildingId: string) => string;
@@ -258,6 +273,7 @@ declare const API_ROUTES: {
         readonly DSAR_DETAIL: (id: string) => string;
         readonly DSAR_EVENTS: (id: string) => string;
         readonly DSAR_EXPORT: (id: string) => string;
+        readonly INTEREST_RATES: "/platform/interest-rates";
         readonly DSAR_RESTRICTION: (id: string) => string;
         readonly DSAR_ERASURE: (id: string) => string;
         readonly DSAR_RECTIFICATION: (id: string) => string;

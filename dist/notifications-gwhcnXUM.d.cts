@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { N as NotificationType } from './notification.enum-BtF7QI0-.cjs';
+import { N as NotificationType } from './notification.enum-C1IHyJHj.cjs';
 
 /**
  * Recursively strips the `[k: string]: unknown` index signature that
@@ -246,6 +246,20 @@ declare const notificationDataSchemaByType: {
         actorId: z.ZodOptional<z.ZodString>;
         actorName: z.ZodOptional<z.ZodString>;
         actionUrl: z.ZodOptional<z.ZodString>;
+    }, z.core.$strip>;
+    readonly dunning_notice_issued: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        noticeId: z.ZodOptional<z.ZodString>;
+        caseId: z.ZodOptional<z.ZodString>;
+        level: z.ZodOptional<z.ZodString>;
+        levelLabel: z.ZodOptional<z.ZodString>;
+        amount: z.ZodOptional<z.ZodString>;
+        deadline: z.ZodOptional<z.ZodString>;
+        buildingName: z.ZodOptional<z.ZodString>;
     }, z.core.$strip>;
     readonly building_join_request_received: z.ZodObject<{
         entityType: z.ZodOptional<z.ZodString>;
@@ -654,6 +668,7 @@ declare const notificationResponseSchema: z.ZodObject<{
         failure_report_declined: "failure_report_declined";
         payment_due: "payment_due";
         payment_received: "payment_received";
+        dunning_notice_issued: "dunning_notice_issued";
         building_join_request_received: "building_join_request_received";
         building_join_request_approved: "building_join_request_approved";
         building_join_request_rejected: "building_join_request_rejected";

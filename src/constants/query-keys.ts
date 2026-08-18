@@ -137,6 +137,36 @@ export const fundsKeys = {
     [...fundsKeys.all, 'transactions', buildingId, { ...filters }] as const,
 };
 
+export const pricuvaKeys = {
+  all: ['pricuva'] as const,
+  me: (buildingId: string) => [...pricuvaKeys.all, 'me', buildingId] as const,
+  deliveries: (buildingId: string, period: string) =>
+    [...pricuvaKeys.all, 'deliveries', buildingId, period] as const,
+  openingBalances: (buildingId: string) =>
+    [...pricuvaKeys.all, 'opening-balances', buildingId] as const,
+  unmatchedRefs: (buildingId: string) =>
+    [...pricuvaKeys.all, 'unmatched-refs', buildingId] as const,
+};
+
+export const dunningKeys = {
+  all: ['dunning'] as const,
+  building: (buildingId: string) => [...dunningKeys.all, buildingId] as const,
+  candidates: (buildingId: string, asOf?: string) =>
+    [...dunningKeys.building(buildingId), 'candidates', asOf ?? 'today'] as const,
+  cases: (buildingId: string, filters: Record<string, unknown> = {}) =>
+    [...dunningKeys.building(buildingId), 'cases', { ...filters }] as const,
+  case: (buildingId: string, caseId: string) =>
+    [...dunningKeys.building(buildingId), 'case', caseId] as const,
+  notices: (buildingId: string, filters: Record<string, unknown> = {}) =>
+    [...dunningKeys.building(buildingId), 'notices', { ...filters }] as const,
+  ownerAccount: (buildingId: string, ownerId: string, asOf?: string) =>
+    [...dunningKeys.building(buildingId), 'owner-account', ownerId, asOf ?? 'today'] as const,
+};
+
+export const interestRateKeys = {
+  all: ['interest-rates'] as const,
+};
+
 export const incomeKeys = {
   all: ['income'] as const,
   lists: () => [...incomeKeys.all, 'list'] as const,

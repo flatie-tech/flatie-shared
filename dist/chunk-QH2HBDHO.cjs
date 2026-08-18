@@ -1,3 +1,5 @@
+'use strict';
+
 // src/errors/index.ts
 var BACKEND_ERROR_CODES = {
   // Auth
@@ -89,6 +91,14 @@ var BACKEND_ERROR_CODES = {
   // Resource not found — second wave
   INCOME_TRANSACTION_NOT_FOUND: "INCOME_TRANSACTION_NOT_FOUND",
   RECURRING_TEMPLATE_NOT_FOUND: "RECURRING_TEMPLATE_NOT_FOUND",
+  // Pričuva collections (dunning)
+  DUNNING_NOT_ENABLED: "DUNNING_NOT_ENABLED",
+  DUNNING_OWNER_NOT_ELIGIBLE: "DUNNING_OWNER_NOT_ELIGIBLE",
+  DUNNING_NEVER_BILLED: "DUNNING_NEVER_BILLED",
+  OWNER_NOT_FOUND: "OWNER_NOT_FOUND",
+  DUNNING_CASE_NOT_FOUND: "DUNNING_CASE_NOT_FOUND",
+  DUNNING_NOTICE_NOT_FOUND: "DUNNING_NOTICE_NOT_FOUND",
+  DUNNING_NOTICE_NOT_VOIDABLE: "DUNNING_NOTICE_NOT_VOIDABLE",
   INVOICE_NOT_FOUND: "INVOICE_NOT_FOUND",
   BLOG_POST_NOT_FOUND: "BLOG_POST_NOT_FOUND",
   // Subscription / billing
@@ -168,6 +178,7 @@ function isBackendErrorCode(code) {
   return typeof code === "string" && Object.values(BACKEND_ERROR_CODES).includes(code);
 }
 
-export { BACKEND_ERROR_CODES, isBackendErrorCode };
-//# sourceMappingURL=chunk-FJGH2CTJ.js.map
-//# sourceMappingURL=chunk-FJGH2CTJ.js.map
+exports.BACKEND_ERROR_CODES = BACKEND_ERROR_CODES;
+exports.isBackendErrorCode = isBackendErrorCode;
+//# sourceMappingURL=chunk-QH2HBDHO.cjs.map
+//# sourceMappingURL=chunk-QH2HBDHO.cjs.map

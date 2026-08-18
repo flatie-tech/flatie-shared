@@ -2,9 +2,9 @@ import * as zod from 'zod';
 import { z } from 'zod';
 export { C as CreatePollSchema, b as EVENT_COLORS, e as EVENT_TYPES, d as EVENT_TYPE_COLOR_MAP, E as EventColorOption, a as EventTypeOption, F as FinalizePollSchema, P as POLL_LIMITS, m as POLL_TYPES, h as RECURRENCE_TYPES, i as RecordOfflineVotesSchema, R as RecurrenceTypeOption, U as UpdatePollSchema, V as VotePollSchema, j as VoteWithIdCardSchema, c as createEventSchema, k as createPollSchema, f as eventColorSchema, g as eventTypeSchema, l as finalizePollSchema, p as pollTypeSchema, n as recordOfflineVotesSchema, r as recurrenceTypeSchema, t as timeSchema, u as updateEventSchema, o as updatePollSchema, v as votePollSchema, q as voteWithIdCardSchema } from '../poll.schema-CaGhYa4I.cjs';
 import * as zod_v4_core from 'zod/v4/core';
-import { S as Strict } from '../notifications-BRW4RL7H.cjs';
-export { N as NotificationPreferenceCategory, a as NotificationPreferenceItem, b as NotificationResponse, g as getNotificationDataSchema, n as notificationDataSchema, c as notificationPreferenceCategorySchema, d as notificationPreferenceItemSchema, e as notificationResponseSchema } from '../notifications-BRW4RL7H.cjs';
-import '../notification.enum-BtF7QI0-.cjs';
+import { S as Strict } from '../notifications-gwhcnXUM.cjs';
+export { N as NotificationPreferenceCategory, a as NotificationPreferenceItem, b as NotificationResponse, g as getNotificationDataSchema, n as notificationDataSchema, c as notificationPreferenceCategorySchema, d as notificationPreferenceItemSchema, e as notificationResponseSchema } from '../notifications-gwhcnXUM.cjs';
+import '../notification.enum-C1IHyJHj.cjs';
 
 /**
  * API error response envelope.
@@ -531,6 +531,564 @@ type CreateConversationSchema = z.infer<typeof createConversationSchema>;
 type UpdateConversationSchema = z.infer<typeof updateConversationSchema>;
 type CursorQuerySchema = z.infer<typeof cursorQuerySchema>;
 
+declare const dunningLevelSchema: z.ZodEnum<{
+    reminder: "reminder";
+    final_notice: "final_notice";
+}>;
+declare const dunningCaseStatusSchema: z.ZodEnum<{
+    open: "open";
+    settled: "settled";
+    handed_to_enforcement: "handed_to_enforcement";
+    written_off: "written_off";
+}>;
+declare const ownerAccountUnitSchema: z.ZodObject<{
+    unitId: z.ZodString;
+    label: z.ZodNullable<z.ZodString>;
+    kind: z.ZodString;
+    area: z.ZodNullable<z.ZodNumber>;
+    sharePercentage: z.ZodNullable<z.ZodNumber>;
+}, z.core.$strip>;
+/** One posted monthly charge and how much of it payments have covered (FIFO). */
+declare const ownerAccountChargeSchema: z.ZodObject<{
+    period: z.ZodString;
+    dueDate: z.ZodString;
+    amount: z.ZodNumber;
+    paidAmount: z.ZodNumber;
+    outstanding: z.ZodNumber;
+    settledOn: z.ZodNullable<z.ZodString>;
+    daysOverdue: z.ZodNumber;
+    interest: z.ZodNumber;
+}, z.core.$strip>;
+declare const ownerAccountPaymentSchema: z.ZodObject<{
+    id: z.ZodString;
+    date: z.ZodString;
+    period: z.ZodNullable<z.ZodString>;
+    amount: z.ZodNumber;
+    source: z.ZodEnum<{
+        manual: "manual";
+        camt: "camt";
+    }>;
+    description: z.ZodNullable<z.ZodString>;
+}, z.core.$strip>;
+declare const dunningNoticeSchema: z.ZodObject<{
+    id: z.ZodString;
+    caseId: z.ZodString;
+    ownerId: z.ZodString;
+    ownerName: z.ZodString;
+    level: z.ZodEnum<{
+        reminder: "reminder";
+        final_notice: "final_notice";
+    }>;
+    issuedAt: z.ZodString;
+    asOfDate: z.ZodString;
+    deadlineDate: z.ZodString;
+    principalAmount: z.ZodNumber;
+    interestAmount: z.ZodNumber;
+    totalAmount: z.ZodNumber;
+    channel: z.ZodEnum<{
+        email: "email";
+        download: "download";
+    }>;
+    deliveryStatus: z.ZodEnum<{
+        sent: "sent";
+        failed: "failed";
+        skipped: "skipped";
+        generated: "generated";
+    }>;
+    deliveryReason: z.ZodNullable<z.ZodString>;
+    recipientEmail: z.ZodNullable<z.ZodString>;
+    fileId: z.ZodNullable<z.ZodString>;
+    batchId: z.ZodString;
+    actorName: z.ZodNullable<z.ZodString>;
+    voidedAt: z.ZodNullable<z.ZodString>;
+    voidReason: z.ZodNullable<z.ZodString>;
+    canVoid: z.ZodBoolean;
+    canResend: z.ZodBoolean;
+}, z.core.$strip>;
+declare const dunningCaseSchema: z.ZodObject<{
+    id: z.ZodString;
+    buildingId: z.ZodString;
+    ownerId: z.ZodString;
+    ownerName: z.ZodString;
+    linkedUserId: z.ZodNullable<z.ZodString>;
+    status: z.ZodEnum<{
+        open: "open";
+        settled: "settled";
+        handed_to_enforcement: "handed_to_enforcement";
+        written_off: "written_off";
+    }>;
+    openedAt: z.ZodString;
+    closedAt: z.ZodNullable<z.ZodString>;
+    enforcementRef: z.ZodNullable<z.ZodString>;
+    enforcementAt: z.ZodNullable<z.ZodString>;
+    note: z.ZodNullable<z.ZodString>;
+    currentBalance: z.ZodNumber;
+    noticeCount: z.ZodNumber;
+    lastNoticeLevel: z.ZodNullable<z.ZodEnum<{
+        reminder: "reminder";
+        final_notice: "final_notice";
+    }>>;
+    lastNoticeAt: z.ZodNullable<z.ZodString>;
+    canManage: z.ZodBoolean;
+}, z.core.$strip>;
+declare const ownerAccountResponseSchema: z.ZodObject<{
+    buildingId: z.ZodString;
+    ownerId: z.ZodString;
+    ownerName: z.ZodString;
+    linkedUserId: z.ZodNullable<z.ZodString>;
+    email: z.ZodNullable<z.ZodString>;
+    address: z.ZodNullable<z.ZodString>;
+    paymentRefCode: z.ZodNullable<z.ZodString>;
+    units: z.ZodArray<z.ZodObject<{
+        unitId: z.ZodString;
+        label: z.ZodNullable<z.ZodString>;
+        kind: z.ZodString;
+        area: z.ZodNullable<z.ZodNumber>;
+        sharePercentage: z.ZodNullable<z.ZodNumber>;
+    }, z.core.$strip>>;
+    asOf: z.ZodString;
+    trackingFrom: z.ZodNullable<z.ZodString>;
+    trackingActive: z.ZodBoolean;
+    openingBalance: z.ZodNumber;
+    chargedTotal: z.ZodNumber;
+    paidTotal: z.ZodNumber;
+    balance: z.ZodNumber;
+    interestToDate: z.ZodNumber;
+    interestEnabled: z.ZodBoolean;
+    interestRateNote: z.ZodNullable<z.ZodString>;
+    charges: z.ZodArray<z.ZodObject<{
+        period: z.ZodString;
+        dueDate: z.ZodString;
+        amount: z.ZodNumber;
+        paidAmount: z.ZodNumber;
+        outstanding: z.ZodNumber;
+        settledOn: z.ZodNullable<z.ZodString>;
+        daysOverdue: z.ZodNumber;
+        interest: z.ZodNumber;
+    }, z.core.$strip>>;
+    payments: z.ZodArray<z.ZodObject<{
+        id: z.ZodString;
+        date: z.ZodString;
+        period: z.ZodNullable<z.ZodString>;
+        amount: z.ZodNumber;
+        source: z.ZodEnum<{
+            manual: "manual";
+            camt: "camt";
+        }>;
+        description: z.ZodNullable<z.ZodString>;
+    }, z.core.$strip>>;
+    openCase: z.ZodNullable<z.ZodObject<{
+        id: z.ZodString;
+        buildingId: z.ZodString;
+        ownerId: z.ZodString;
+        ownerName: z.ZodString;
+        linkedUserId: z.ZodNullable<z.ZodString>;
+        status: z.ZodEnum<{
+            open: "open";
+            settled: "settled";
+            handed_to_enforcement: "handed_to_enforcement";
+            written_off: "written_off";
+        }>;
+        openedAt: z.ZodString;
+        closedAt: z.ZodNullable<z.ZodString>;
+        enforcementRef: z.ZodNullable<z.ZodString>;
+        enforcementAt: z.ZodNullable<z.ZodString>;
+        note: z.ZodNullable<z.ZodString>;
+        currentBalance: z.ZodNumber;
+        noticeCount: z.ZodNumber;
+        lastNoticeLevel: z.ZodNullable<z.ZodEnum<{
+            reminder: "reminder";
+            final_notice: "final_notice";
+        }>>;
+        lastNoticeAt: z.ZodNullable<z.ZodString>;
+        canManage: z.ZodBoolean;
+    }, z.core.$strip>>;
+    notices: z.ZodArray<z.ZodObject<{
+        id: z.ZodString;
+        caseId: z.ZodString;
+        ownerId: z.ZodString;
+        ownerName: z.ZodString;
+        level: z.ZodEnum<{
+            reminder: "reminder";
+            final_notice: "final_notice";
+        }>;
+        issuedAt: z.ZodString;
+        asOfDate: z.ZodString;
+        deadlineDate: z.ZodString;
+        principalAmount: z.ZodNumber;
+        interestAmount: z.ZodNumber;
+        totalAmount: z.ZodNumber;
+        channel: z.ZodEnum<{
+            email: "email";
+            download: "download";
+        }>;
+        deliveryStatus: z.ZodEnum<{
+            sent: "sent";
+            failed: "failed";
+            skipped: "skipped";
+            generated: "generated";
+        }>;
+        deliveryReason: z.ZodNullable<z.ZodString>;
+        recipientEmail: z.ZodNullable<z.ZodString>;
+        fileId: z.ZodNullable<z.ZodString>;
+        batchId: z.ZodString;
+        actorName: z.ZodNullable<z.ZodString>;
+        voidedAt: z.ZodNullable<z.ZodString>;
+        voidReason: z.ZodNullable<z.ZodString>;
+        canVoid: z.ZodBoolean;
+        canResend: z.ZodBoolean;
+    }, z.core.$strip>>;
+    canManage: z.ZodBoolean;
+}, z.core.$strip>;
+declare const ownerAccountQuerySchema: z.ZodObject<{
+    asOf: z.ZodOptional<z.ZodString>;
+}, z.core.$strip>;
+/** Why an owner with a positive balance is not (yet) suggested for a letter. */
+declare const DunningHoldReason: {
+    /** Collections are switched off for the building. */
+    readonly DISABLED: "disabled";
+    /** Balance below the building’s minimum debt threshold. */
+    readonly BELOW_MIN_DEBT: "below_min_debt";
+    /** Oldest unpaid charge is not yet past the reminder grace period. */
+    readonly NOT_YET_OVERDUE: "not_yet_overdue";
+    /** A reminder is out; the final-notice waiting period has not elapsed. */
+    readonly AWAITING_FINAL_WINDOW: "awaiting_final_window";
+    /** A final notice was already issued — next step is manual hand-over. */
+    readonly FINAL_ISSUED: "final_issued";
+    /** The case is closed as handed over / written off; reopen it first. */
+    readonly CASE_CLOSED: "case_closed";
+};
+type DunningHoldReason = (typeof DunningHoldReason)[keyof typeof DunningHoldReason];
+declare const dunningCandidateSchema: z.ZodObject<{
+    ownerId: z.ZodString;
+    ownerName: z.ZodString;
+    linkedUserId: z.ZodNullable<z.ZodString>;
+    email: z.ZodNullable<z.ZodString>;
+    unitsLabel: z.ZodNullable<z.ZodString>;
+    balance: z.ZodNumber;
+    oldestDueDate: z.ZodNullable<z.ZodString>;
+    daysOverdue: z.ZodNumber;
+    interestToDate: z.ZodNumber;
+    lastBilledAt: z.ZodNullable<z.ZodString>;
+    neverBilled: z.ZodBoolean;
+    caseId: z.ZodNullable<z.ZodString>;
+    caseStatus: z.ZodNullable<z.ZodEnum<{
+        open: "open";
+        settled: "settled";
+        handed_to_enforcement: "handed_to_enforcement";
+        written_off: "written_off";
+    }>>;
+    lastNoticeLevel: z.ZodNullable<z.ZodEnum<{
+        reminder: "reminder";
+        final_notice: "final_notice";
+    }>>;
+    lastNoticeAt: z.ZodNullable<z.ZodString>;
+    suggestedLevel: z.ZodNullable<z.ZodEnum<{
+        reminder: "reminder";
+        final_notice: "final_notice";
+    }>>;
+    holdReason: z.ZodNullable<z.ZodEnum<{
+        disabled: "disabled";
+        below_min_debt: "below_min_debt";
+        not_yet_overdue: "not_yet_overdue";
+        awaiting_final_window: "awaiting_final_window";
+        final_issued: "final_issued";
+        case_closed: "case_closed";
+    }>>;
+}, z.core.$strip>;
+declare const dunningSettingsSnapshotSchema: z.ZodObject<{
+    enabled: z.ZodBoolean;
+    reminderAfterDays: z.ZodNumber;
+    finalAfterDays: z.ZodNumber;
+    paymentDeadlineDays: z.ZodNumber;
+    minDebt: z.ZodNumber;
+    interestEnabled: z.ZodBoolean;
+}, z.core.$strip>;
+declare const dunningSummarySchema: z.ZodObject<{
+    totalOverdue: z.ZodNumber;
+    debtors: z.ZodNumber;
+    readyForNotice: z.ZodNumber;
+    openCases: z.ZodNumber;
+    inEnforcement: z.ZodNumber;
+}, z.core.$strip>;
+declare const dunningCandidatesResponseSchema: z.ZodObject<{
+    buildingId: z.ZodString;
+    asOf: z.ZodString;
+    trackingActive: z.ZodBoolean;
+    settings: z.ZodObject<{
+        enabled: z.ZodBoolean;
+        reminderAfterDays: z.ZodNumber;
+        finalAfterDays: z.ZodNumber;
+        paymentDeadlineDays: z.ZodNumber;
+        minDebt: z.ZodNumber;
+        interestEnabled: z.ZodBoolean;
+    }, z.core.$strip>;
+    summary: z.ZodObject<{
+        totalOverdue: z.ZodNumber;
+        debtors: z.ZodNumber;
+        readyForNotice: z.ZodNumber;
+        openCases: z.ZodNumber;
+        inEnforcement: z.ZodNumber;
+    }, z.core.$strip>;
+    rows: z.ZodArray<z.ZodObject<{
+        ownerId: z.ZodString;
+        ownerName: z.ZodString;
+        linkedUserId: z.ZodNullable<z.ZodString>;
+        email: z.ZodNullable<z.ZodString>;
+        unitsLabel: z.ZodNullable<z.ZodString>;
+        balance: z.ZodNumber;
+        oldestDueDate: z.ZodNullable<z.ZodString>;
+        daysOverdue: z.ZodNumber;
+        interestToDate: z.ZodNumber;
+        lastBilledAt: z.ZodNullable<z.ZodString>;
+        neverBilled: z.ZodBoolean;
+        caseId: z.ZodNullable<z.ZodString>;
+        caseStatus: z.ZodNullable<z.ZodEnum<{
+            open: "open";
+            settled: "settled";
+            handed_to_enforcement: "handed_to_enforcement";
+            written_off: "written_off";
+        }>>;
+        lastNoticeLevel: z.ZodNullable<z.ZodEnum<{
+            reminder: "reminder";
+            final_notice: "final_notice";
+        }>>;
+        lastNoticeAt: z.ZodNullable<z.ZodString>;
+        suggestedLevel: z.ZodNullable<z.ZodEnum<{
+            reminder: "reminder";
+            final_notice: "final_notice";
+        }>>;
+        holdReason: z.ZodNullable<z.ZodEnum<{
+            disabled: "disabled";
+            below_min_debt: "below_min_debt";
+            not_yet_overdue: "not_yet_overdue";
+            awaiting_final_window: "awaiting_final_window";
+            final_issued: "final_issued";
+            case_closed: "case_closed";
+        }>>;
+    }, z.core.$strip>>;
+    canManage: z.ZodBoolean;
+}, z.core.$strip>;
+declare const dunningCandidatesQuerySchema: z.ZodObject<{
+    asOf: z.ZodOptional<z.ZodString>;
+}, z.core.$strip>;
+declare const issueDunningNoticesSchema: z.ZodObject<{
+    ownerIds: z.ZodArray<z.ZodString>;
+    channel: z.ZodEnum<{
+        email: "email";
+        download: "download";
+    }>;
+    asOfDate: z.ZodOptional<z.ZodString>;
+    overrideNeverBilled: z.ZodOptional<z.ZodBoolean>;
+    note: z.ZodOptional<z.ZodString>;
+}, z.core.$strip>;
+type IssueDunningNoticesSchema = z.infer<typeof issueDunningNoticesSchema>;
+declare const issueDunningNoticesResponseSchema: z.ZodObject<{
+    batchId: z.ZodString;
+    channel: z.ZodEnum<{
+        email: "email";
+        download: "download";
+    }>;
+    issued: z.ZodArray<z.ZodObject<{
+        ownerId: z.ZodString;
+        noticeId: z.ZodString;
+        level: z.ZodEnum<{
+            reminder: "reminder";
+            final_notice: "final_notice";
+        }>;
+        totalAmount: z.ZodNumber;
+        deliveryStatus: z.ZodEnum<{
+            sent: "sent";
+            failed: "failed";
+            skipped: "skipped";
+            generated: "generated";
+        }>;
+        deliveryReason: z.ZodNullable<z.ZodString>;
+    }, z.core.$strip>>;
+    skipped: z.ZodArray<z.ZodObject<{
+        ownerId: z.ZodString;
+        ownerName: z.ZodString;
+        reason: z.ZodString;
+    }, z.core.$strip>>;
+}, z.core.$strip>;
+declare const voidDunningNoticeSchema: z.ZodObject<{
+    reason: z.ZodString;
+}, z.core.$strip>;
+declare const updateDunningCaseSchema: z.ZodObject<{
+    status: z.ZodEnum<{
+        open: "open";
+        handed_to_enforcement: "handed_to_enforcement";
+        written_off: "written_off";
+    }>;
+    enforcementRef: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    enforcementAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    note: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+}, z.core.$strip>;
+type UpdateDunningCaseSchema = z.infer<typeof updateDunningCaseSchema>;
+declare const dunningCasesQuerySchema: z.ZodObject<{
+    status: z.ZodOptional<z.ZodEnum<{
+        open: "open";
+        settled: "settled";
+        handed_to_enforcement: "handed_to_enforcement";
+        written_off: "written_off";
+    }>>;
+}, z.core.$strip>;
+declare const dunningCasesResponseSchema: z.ZodObject<{
+    buildingId: z.ZodString;
+    rows: z.ZodArray<z.ZodObject<{
+        id: z.ZodString;
+        buildingId: z.ZodString;
+        ownerId: z.ZodString;
+        ownerName: z.ZodString;
+        linkedUserId: z.ZodNullable<z.ZodString>;
+        status: z.ZodEnum<{
+            open: "open";
+            settled: "settled";
+            handed_to_enforcement: "handed_to_enforcement";
+            written_off: "written_off";
+        }>;
+        openedAt: z.ZodString;
+        closedAt: z.ZodNullable<z.ZodString>;
+        enforcementRef: z.ZodNullable<z.ZodString>;
+        enforcementAt: z.ZodNullable<z.ZodString>;
+        note: z.ZodNullable<z.ZodString>;
+        currentBalance: z.ZodNumber;
+        noticeCount: z.ZodNumber;
+        lastNoticeLevel: z.ZodNullable<z.ZodEnum<{
+            reminder: "reminder";
+            final_notice: "final_notice";
+        }>>;
+        lastNoticeAt: z.ZodNullable<z.ZodString>;
+        canManage: z.ZodBoolean;
+    }, z.core.$strip>>;
+}, z.core.$strip>;
+declare const dunningCaseDetailResponseSchema: z.ZodObject<{
+    id: z.ZodString;
+    buildingId: z.ZodString;
+    ownerId: z.ZodString;
+    ownerName: z.ZodString;
+    linkedUserId: z.ZodNullable<z.ZodString>;
+    status: z.ZodEnum<{
+        open: "open";
+        settled: "settled";
+        handed_to_enforcement: "handed_to_enforcement";
+        written_off: "written_off";
+    }>;
+    openedAt: z.ZodString;
+    closedAt: z.ZodNullable<z.ZodString>;
+    enforcementRef: z.ZodNullable<z.ZodString>;
+    enforcementAt: z.ZodNullable<z.ZodString>;
+    note: z.ZodNullable<z.ZodString>;
+    currentBalance: z.ZodNumber;
+    noticeCount: z.ZodNumber;
+    lastNoticeLevel: z.ZodNullable<z.ZodEnum<{
+        reminder: "reminder";
+        final_notice: "final_notice";
+    }>>;
+    lastNoticeAt: z.ZodNullable<z.ZodString>;
+    canManage: z.ZodBoolean;
+    notices: z.ZodArray<z.ZodObject<{
+        id: z.ZodString;
+        caseId: z.ZodString;
+        ownerId: z.ZodString;
+        ownerName: z.ZodString;
+        level: z.ZodEnum<{
+            reminder: "reminder";
+            final_notice: "final_notice";
+        }>;
+        issuedAt: z.ZodString;
+        asOfDate: z.ZodString;
+        deadlineDate: z.ZodString;
+        principalAmount: z.ZodNumber;
+        interestAmount: z.ZodNumber;
+        totalAmount: z.ZodNumber;
+        channel: z.ZodEnum<{
+            email: "email";
+            download: "download";
+        }>;
+        deliveryStatus: z.ZodEnum<{
+            sent: "sent";
+            failed: "failed";
+            skipped: "skipped";
+            generated: "generated";
+        }>;
+        deliveryReason: z.ZodNullable<z.ZodString>;
+        recipientEmail: z.ZodNullable<z.ZodString>;
+        fileId: z.ZodNullable<z.ZodString>;
+        batchId: z.ZodString;
+        actorName: z.ZodNullable<z.ZodString>;
+        voidedAt: z.ZodNullable<z.ZodString>;
+        voidReason: z.ZodNullable<z.ZodString>;
+        canVoid: z.ZodBoolean;
+        canResend: z.ZodBoolean;
+    }, z.core.$strip>>;
+}, z.core.$strip>;
+declare const dunningNoticesQuerySchema: z.ZodObject<{
+    level: z.ZodOptional<z.ZodEnum<{
+        reminder: "reminder";
+        final_notice: "final_notice";
+    }>>;
+    ownerId: z.ZodOptional<z.ZodString>;
+    includeVoided: z.ZodOptional<z.ZodCoercedBoolean<unknown>>;
+    issuedFrom: z.ZodOptional<z.ZodString>;
+    issuedTo: z.ZodOptional<z.ZodString>;
+    batchId: z.ZodOptional<z.ZodString>;
+}, z.core.$strip>;
+declare const dunningNoticesResponseSchema: z.ZodObject<{
+    buildingId: z.ZodString;
+    rows: z.ZodArray<z.ZodObject<{
+        id: z.ZodString;
+        caseId: z.ZodString;
+        ownerId: z.ZodString;
+        ownerName: z.ZodString;
+        level: z.ZodEnum<{
+            reminder: "reminder";
+            final_notice: "final_notice";
+        }>;
+        issuedAt: z.ZodString;
+        asOfDate: z.ZodString;
+        deadlineDate: z.ZodString;
+        principalAmount: z.ZodNumber;
+        interestAmount: z.ZodNumber;
+        totalAmount: z.ZodNumber;
+        channel: z.ZodEnum<{
+            email: "email";
+            download: "download";
+        }>;
+        deliveryStatus: z.ZodEnum<{
+            sent: "sent";
+            failed: "failed";
+            skipped: "skipped";
+            generated: "generated";
+        }>;
+        deliveryReason: z.ZodNullable<z.ZodString>;
+        recipientEmail: z.ZodNullable<z.ZodString>;
+        fileId: z.ZodNullable<z.ZodString>;
+        batchId: z.ZodString;
+        actorName: z.ZodNullable<z.ZodString>;
+        voidedAt: z.ZodNullable<z.ZodString>;
+        voidReason: z.ZodNullable<z.ZodString>;
+        canVoid: z.ZodBoolean;
+        canResend: z.ZodBoolean;
+    }, z.core.$strip>>;
+}, z.core.$strip>;
+type OwnerAccountUnit = z.infer<typeof ownerAccountUnitSchema>;
+type OwnerAccountCharge = z.infer<typeof ownerAccountChargeSchema>;
+type OwnerAccountPayment = z.infer<typeof ownerAccountPaymentSchema>;
+type OwnerAccountResponse = z.infer<typeof ownerAccountResponseSchema>;
+type DunningNotice = z.infer<typeof dunningNoticeSchema>;
+type DunningCase = z.infer<typeof dunningCaseSchema>;
+type DunningCandidate = z.infer<typeof dunningCandidateSchema>;
+type DunningSummary = z.infer<typeof dunningSummarySchema>;
+type DunningSettingsSnapshot = z.infer<typeof dunningSettingsSnapshotSchema>;
+type DunningCandidatesResponse = z.infer<typeof dunningCandidatesResponseSchema>;
+type IssueDunningNoticesResponse = z.infer<typeof issueDunningNoticesResponseSchema>;
+type DunningCasesResponse = z.infer<typeof dunningCasesResponseSchema>;
+type DunningCaseDetailResponse = z.infer<typeof dunningCaseDetailResponseSchema>;
+type DunningNoticesResponse = z.infer<typeof dunningNoticesResponseSchema>;
+type DunningNoticesQuery = z.infer<typeof dunningNoticesQuerySchema>;
+type DunningCasesQuery = z.infer<typeof dunningCasesQuerySchema>;
+
 /**
  * Validation constants for FAQs
  */
@@ -570,6 +1128,30 @@ type CreateFaqSchema = z.infer<typeof createFaqSchema>;
 type UpdateFaqSchema = z.infer<typeof updateFaqSchema>;
 type ReorderFaqsSchema = z.infer<typeof reorderFaqsSchema>;
 type CopyFaqsSchema = z.infer<typeof copyFaqsSchema>;
+
+declare const interestRateSchema: z.ZodObject<{
+    validFrom: z.ZodString;
+    rateConsumer: z.ZodNumber;
+    rateCommercial: z.ZodNumber;
+    source: z.ZodNullable<z.ZodString>;
+}, z.core.$strip>;
+declare const createInterestRateSchema: z.ZodObject<{
+    validFrom: z.ZodString;
+    rateConsumer: z.ZodNumber;
+    rateCommercial: z.ZodNumber;
+    source: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+}, z.core.$strip>;
+declare const interestRatesResponseSchema: z.ZodObject<{
+    rows: z.ZodArray<z.ZodObject<{
+        validFrom: z.ZodString;
+        rateConsumer: z.ZodNumber;
+        rateCommercial: z.ZodNumber;
+        source: z.ZodNullable<z.ZodString>;
+    }, z.core.$strip>>;
+}, z.core.$strip>;
+type InterestRate = z.infer<typeof interestRateSchema>;
+type CreateInterestRateSchema = z.infer<typeof createInterestRateSchema>;
+type InterestRatesResponse = z.infer<typeof interestRatesResponseSchema>;
 
 /**
  * Org-level AI building import: upload the founding documents
@@ -1092,6 +1674,178 @@ declare const orgFundsOverviewResponseSchema: z.ZodObject<{
 }, z.core.$strip>;
 type OrgFundsOverviewResponse = z.infer<typeof orgFundsOverviewResponseSchema>;
 
+/** What the owner sees as their headline state for the current period. */
+declare const MyPricuvaStatus: {
+    /** Charges are not configured / tracking is off — nothing to pay through Flatie yet. */
+    readonly NOT_CONFIGURED: "not_configured";
+    /** Current period fully covered, no arrears. */
+    readonly PAID: "paid";
+    /** Current period not yet covered, no older arrears. */
+    readonly OPEN: "open";
+    /** Older periods outstanding (balance > this period’s expected). */
+    readonly IN_ARREARS: "in_arrears";
+    /** Prepaid — balance is negative. */
+    readonly CREDIT: "credit";
+};
+type MyPricuvaStatus = (typeof MyPricuvaStatus)[keyof typeof MyPricuvaStatus];
+/** HUB3 payment slip data — enough to render the barcode and the copy rows. */
+declare const paymentSlipSchema: z.ZodObject<{
+    payeeName: z.ZodString;
+    payeeIban: z.ZodString;
+    model: z.ZodString;
+    reference: z.ZodString;
+    amount: z.ZodNumber;
+    description: z.ZodString;
+    dueDate: z.ZodNullable<z.ZodString>;
+    barcodePng: z.ZodString;
+}, z.core.$strip>;
+declare const myPricuvaOwnerSchema: z.ZodObject<{
+    ownerId: z.ZodString;
+    ownerName: z.ZodString;
+    paymentRefCode: z.ZodNullable<z.ZodString>;
+    units: z.ZodArray<z.ZodObject<{
+        unitId: z.ZodString;
+        label: z.ZodNullable<z.ZodString>;
+        kind: z.ZodString;
+        area: z.ZodNullable<z.ZodNumber>;
+        sharePercentage: z.ZodNullable<z.ZodNumber>;
+    }, z.core.$strip>>;
+    period: z.ZodString;
+    expected: z.ZodNumber;
+    paidThisPeriod: z.ZodNumber;
+    balance: z.ZodNumber;
+    interestToDate: z.ZodNumber;
+    status: z.ZodEnum<{
+        open: "open";
+        not_configured: "not_configured";
+        paid: "paid";
+        in_arrears: "in_arrears";
+        credit: "credit";
+    }>;
+    slip: z.ZodNullable<z.ZodObject<{
+        payeeName: z.ZodString;
+        payeeIban: z.ZodString;
+        model: z.ZodString;
+        reference: z.ZodString;
+        amount: z.ZodNumber;
+        description: z.ZodString;
+        dueDate: z.ZodNullable<z.ZodString>;
+        barcodePng: z.ZodString;
+    }, z.core.$strip>>;
+    balanceSlip: z.ZodNullable<z.ZodObject<{
+        payeeName: z.ZodString;
+        payeeIban: z.ZodString;
+        model: z.ZodString;
+        reference: z.ZodString;
+        amount: z.ZodNumber;
+        description: z.ZodString;
+        dueDate: z.ZodNullable<z.ZodString>;
+        barcodePng: z.ZodString;
+    }, z.core.$strip>>;
+    recentMonths: z.ZodArray<z.ZodObject<{
+        period: z.ZodString;
+        charged: z.ZodNumber;
+        paid: z.ZodNumber;
+    }, z.core.$strip>>;
+    notices: z.ZodArray<z.ZodObject<{
+        id: z.ZodString;
+        level: z.ZodEnum<{
+            reminder: "reminder";
+            final_notice: "final_notice";
+        }>;
+        issuedAt: z.ZodString;
+        deadlineDate: z.ZodString;
+        totalAmount: z.ZodNumber;
+    }, z.core.$strip>>;
+    openCaseStatus: z.ZodNullable<z.ZodEnum<{
+        open: "open";
+        settled: "settled";
+        handed_to_enforcement: "handed_to_enforcement";
+        written_off: "written_off";
+    }>>;
+}, z.core.$strip>;
+declare const myPricuvaResponseSchema: z.ZodObject<{
+    buildingId: z.ZodString;
+    trackingFrom: z.ZodNullable<z.ZodString>;
+    owners: z.ZodArray<z.ZodObject<{
+        ownerId: z.ZodString;
+        ownerName: z.ZodString;
+        paymentRefCode: z.ZodNullable<z.ZodString>;
+        units: z.ZodArray<z.ZodObject<{
+            unitId: z.ZodString;
+            label: z.ZodNullable<z.ZodString>;
+            kind: z.ZodString;
+            area: z.ZodNullable<z.ZodNumber>;
+            sharePercentage: z.ZodNullable<z.ZodNumber>;
+        }, z.core.$strip>>;
+        period: z.ZodString;
+        expected: z.ZodNumber;
+        paidThisPeriod: z.ZodNumber;
+        balance: z.ZodNumber;
+        interestToDate: z.ZodNumber;
+        status: z.ZodEnum<{
+            open: "open";
+            not_configured: "not_configured";
+            paid: "paid";
+            in_arrears: "in_arrears";
+            credit: "credit";
+        }>;
+        slip: z.ZodNullable<z.ZodObject<{
+            payeeName: z.ZodString;
+            payeeIban: z.ZodString;
+            model: z.ZodString;
+            reference: z.ZodString;
+            amount: z.ZodNumber;
+            description: z.ZodString;
+            dueDate: z.ZodNullable<z.ZodString>;
+            barcodePng: z.ZodString;
+        }, z.core.$strip>>;
+        balanceSlip: z.ZodNullable<z.ZodObject<{
+            payeeName: z.ZodString;
+            payeeIban: z.ZodString;
+            model: z.ZodString;
+            reference: z.ZodString;
+            amount: z.ZodNumber;
+            description: z.ZodString;
+            dueDate: z.ZodNullable<z.ZodString>;
+            barcodePng: z.ZodString;
+        }, z.core.$strip>>;
+        recentMonths: z.ZodArray<z.ZodObject<{
+            period: z.ZodString;
+            charged: z.ZodNumber;
+            paid: z.ZodNumber;
+        }, z.core.$strip>>;
+        notices: z.ZodArray<z.ZodObject<{
+            id: z.ZodString;
+            level: z.ZodEnum<{
+                reminder: "reminder";
+                final_notice: "final_notice";
+            }>;
+            issuedAt: z.ZodString;
+            deadlineDate: z.ZodString;
+            totalAmount: z.ZodNumber;
+        }, z.core.$strip>>;
+        openCaseStatus: z.ZodNullable<z.ZodEnum<{
+            open: "open";
+            settled: "settled";
+            handed_to_enforcement: "handed_to_enforcement";
+            written_off: "written_off";
+        }>>;
+    }, z.core.$strip>>;
+}, z.core.$strip>;
+declare const myPricuvaSlipQuerySchema: z.ZodObject<{
+    ownerId: z.ZodOptional<z.ZodString>;
+    period: z.ZodOptional<z.ZodString>;
+    amount: z.ZodOptional<z.ZodEnum<{
+        balance: "balance";
+        period: "period";
+    }>>;
+}, z.core.$strip>;
+type PaymentSlip = z.infer<typeof paymentSlipSchema>;
+type MyPricuvaOwner = z.infer<typeof myPricuvaOwnerSchema>;
+type MyPricuvaResponse = z.infer<typeof myPricuvaResponseSchema>;
+type MyPricuvaSlipQuery = z.infer<typeof myPricuvaSlipQuerySchema>;
+
 /**
  * Unified building unit. Replaces the former apartment / garage /
  * storage-unit triplet — one table, one schema, a `kind` discriminant.
@@ -1187,8 +1941,8 @@ declare const updateUnitSchema: z.ZodObject<{
     }>>>;
     paymentRefCode: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
     label: z.ZodOptional<z.ZodString>;
-    floor: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
     area: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodCoercedNumber<unknown>>>>;
+    floor: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
     surnameOnDoor: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
     surnameOnIntercom: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
 }, z.core.$strip>;
@@ -1402,6 +2156,12 @@ declare const updateBuildingSettingsSchema: z.ZodObject<{
     minVotingStrengthForConsensus: z.ZodOptional<z.ZodNumber>;
     addonAiEnabled: z.ZodOptional<z.ZodBoolean>;
     addonStorage5gbEnabled: z.ZodOptional<z.ZodBoolean>;
+    dunningEnabled: z.ZodOptional<z.ZodBoolean>;
+    dunningReminderAfterDays: z.ZodOptional<z.ZodNumber>;
+    dunningFinalAfterDays: z.ZodOptional<z.ZodNumber>;
+    dunningPaymentDeadlineDays: z.ZodOptional<z.ZodNumber>;
+    dunningMinDebt: z.ZodOptional<z.ZodNumber>;
+    dunningInterestEnabled: z.ZodOptional<z.ZodBoolean>;
 }, z.core.$strip>;
 type UpdateBuildingSettingsSchema = z.infer<typeof updateBuildingSettingsSchema>;
 
@@ -2755,6 +3515,7 @@ declare const archiveTypeSchema: z.ZodEnum<{
     buildings: "buildings";
     boards: "boards";
     units: "units";
+    owners: "owners";
     blog_posts: "blog_posts";
     board_cards: "board_cards";
     bug_reports: "bug_reports";
@@ -2767,7 +3528,6 @@ declare const archiveTypeSchema: z.ZodEnum<{
     files: "files";
     income_transactions: "income_transactions";
     organizations: "organizations";
-    owners: "owners";
     transaction_categories: "transaction_categories";
 }>;
 /**
@@ -2788,6 +3548,7 @@ declare const buildingArchiveTypeSchema: z.ZodEnum<{
     events: "events";
     boards: "boards";
     units: "units";
+    owners: "owners";
     board_cards: "board_cards";
     building_join_requests: "building_join_requests";
     comments: "comments";
@@ -2796,7 +3557,6 @@ declare const buildingArchiveTypeSchema: z.ZodEnum<{
     faqs: "faqs";
     files: "files";
     income_transactions: "income_transactions";
-    owners: "owners";
     transaction_categories: "transaction_categories";
 }>;
 declare const archivedItemSchema: z.ZodObject<{
@@ -2808,6 +3568,7 @@ declare const archivedItemSchema: z.ZodObject<{
         buildings: "buildings";
         boards: "boards";
         units: "units";
+        owners: "owners";
         blog_posts: "blog_posts";
         board_cards: "board_cards";
         bug_reports: "bug_reports";
@@ -2820,7 +3581,6 @@ declare const archivedItemSchema: z.ZodObject<{
         files: "files";
         income_transactions: "income_transactions";
         organizations: "organizations";
-        owners: "owners";
         transaction_categories: "transaction_categories";
     }>;
     label: z.ZodString;
@@ -2840,6 +3600,7 @@ declare const listArchivedResponseSchema: z.ZodObject<{
             buildings: "buildings";
             boards: "boards";
             units: "units";
+            owners: "owners";
             blog_posts: "blog_posts";
             board_cards: "board_cards";
             bug_reports: "bug_reports";
@@ -2852,7 +3613,6 @@ declare const listArchivedResponseSchema: z.ZodObject<{
             files: "files";
             income_transactions: "income_transactions";
             organizations: "organizations";
-            owners: "owners";
             transaction_categories: "transaction_categories";
         }>;
         label: z.ZodString;
@@ -3255,6 +4015,12 @@ declare const buildingSettingsResponseSchema: z.ZodObject<{
     minVotingStrengthForConsensus: z.ZodOptional<z.ZodNumber>;
     addonAiEnabled: z.ZodOptional<z.ZodBoolean>;
     addonStorage5gbEnabled: z.ZodOptional<z.ZodBoolean>;
+    dunningEnabled: z.ZodOptional<z.ZodBoolean>;
+    dunningReminderAfterDays: z.ZodOptional<z.ZodNumber>;
+    dunningFinalAfterDays: z.ZodOptional<z.ZodNumber>;
+    dunningPaymentDeadlineDays: z.ZodOptional<z.ZodNumber>;
+    dunningMinDebt: z.ZodOptional<z.ZodNumber>;
+    dunningInterestEnabled: z.ZodOptional<z.ZodBoolean>;
     createdAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     updatedAt: z.ZodOptional<z.ZodNullable<z.ZodString>>;
 }, z.core.$loose>;
@@ -4628,4 +5394,4 @@ declare const PrioritySchema: z.ZodEnum<{
     urgent: "urgent";
 }>;
 
-export { ARCHIVE_TYPES, AUDIT_DENIAL_TARGET_TYPE, type AddOrgMemberSchema, type AiUsageResponse, type ApiError, type ApiErrorResponse, ApprovalStatusSchema, type ApproveFailureReportSchema, type ApproveNoticeSchema, type ArchiveType, type ArchivedItem, type AssignOrgBuildingSchema, type AssignOrgMemberBuildingSchema, type AssignOwnerInput, type AuditLogResponse, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUG_REPORT_LIMITS, BUG_REPORT_STATUSES, BUILDING_ARCHIVE_TYPES, BUILDING_LIMITS, BUILDING_TYPES, type BugReportResponse, type BugReportStatus, type BuildingArchiveType, type BuildingDetailResponse, type BuildingFundsLedgerResponse, type BuildingFundsLedgerRow, type BuildingOwnerAssignment, type BuildingResponse, type BuildingSettingsResponse, type BusinessPartnerResponse, CHAT_LIMITS, type CamtImportResponse, type ChatMessageResponse, type CommentResponse, CommonStatusSchema, type ConversationLastMessage, type ConversationParticipant, type ConversationResponse, ConversationType, type ConversationsListResponse, type CopyFaqsSchema, type CopyTransactionCategoriesSchema, type CreateBoardCardSchema, type CreateBoardColumnSchema, type CreateBoardSchema, type CreateBugReportSchema, type CreateBuildingSchema, type CreateBusinessPartnerInput, type CreateConversationSchema, type CreateDocumentSchema, type CreateDsarEventSchema, type CreateDsarRequestSchema, type CreateEmailThreadRequestPayload, type CreateEntityLinkRequest, type CreateFailureReportSchema, type CreateFaqSchema, type CreateIncomeSchema, type CreateNoticeSchema, type CreateOrgBroadcastSchema, type CreateOrganizationSchema, type CreateOwnerInput, type CreatePlatformSubscriptionSchema, type CreateTransactionCategorySchema, type CreateUnitInput, type CursorQuerySchema, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, type DeleteEntityLinkQuery, type DocumentFile, type DocumentLinkedRecord, type DocumentResponse, type DsarErasureSchema, type DsarEventResponse, type DsarRequestResponse, EMAIL_LIMITS, ENTITY_LINK_TYPES, type EmailAttachment, type EmailMessage, type EmailThread, type EmailThreadDetail, type EmailUnreadCountResponse, type EnterpriseRequestResponse, type EntityLinkCountsResponse, type EntityLinkMetadata, type EntityLinkReference, type EntityLinksResponse, type EventResponse, FAILURE_REPORT_LIMITS, FAQ_LIMITS, type FailureReportEventSchema, type FailureReportResponse, FailureStatusSchema, type FaqResponse, type FeatureFlagsResponse, type GetAuditLogsQuerySchema, type GetDsarRequestsQuerySchema, type GetEnterpriseRequestsQuerySchema, type GetEntityLinkCountsQuery, type GetEntityLinksQuery, type GetOrgBuildingsQuerySchema, type GetOrgMembersQuerySchema, type GetPlatformSubscriptionsQuerySchema, type GetTransactionCategoriesQuerySchema, type IdCardVerificationStatus, type InviteOrgMemberSchema, type InviteOwnerInput, type JoinBuildingWithOtpSchema, LINKABLE_ENTITY_TYPES, type ListArchivedResponse, type ListBugReportsResponse, type MapPricuvaRefResponse, type MapPricuvaRefSchema, type MessageResponse, type MessagesListResponse, type MoveBoardCardSchema, NOTICE_LIMITS, type NoticeEventSchema, type NoticeResponse, ORGANIZATION_LIMITS, type OrgAiImportBuilding, type OrgAiImportCommitResponse, type OrgAiImportCommitSchema, type OrgAiImportExtractResponse, type OrgBroadcastResponse, type OrgBuildingFundsRow, type OrgFundsOverviewResponse, type OrgInvitationResponse, OrgInvitationStatus, type OrgStatementImportResponse, type OrgStatementImportResult, type OwnerResponse, type PaginatedBuildingsResponse, type PaginatedDocumentsResponse, type PaginatedEmailThreadsResponse, type PaginatedEventsResponse, type PaginatedFailureReportsResponse, type PaginatedNoticesResponse, type PaginatedPollsResponse, type PaginatedUnitsResponse, type PermissionsResponseSchema, type PlatformFeatureFlag, type PlatformFeatureFlagsResponse, type PlatformSubscriptionResponse, type PollEligibleVoter, type PollEligibleVotersResponse, type PollResponse, type PollResults, type PollVotersResponse, type PostPricuvaChargesResponse, type PricuvaDeliveriesResponse, PricuvaDeliveryChannel, type PricuvaDeliveryRow, PricuvaDeliveryStatus, type PricuvaOpeningBalanceRow, type PricuvaOpeningBalancesResponse, PrioritySchema, type PublicOrgInvitation, REP_RECENT_ACTIVITY_TYPES, type RecordDsarRectificationSchema, type RejectIdCardVerificationSchema, type ReorderBoardColumnsSchema, type ReorderFaqsSchema, type RepBuildingActivity, type RepBuildingItem, type RepDashboardSummaryResponse, type RepRecentActivity, type RepUserBuilding, type ReplyEmailThreadRequestPayload, type RevenueMetricsResponse, type SearchUsersQuerySchema, type SendMessageSchema, type SetDsarRestrictionSchema, type SubmitIdCardVerificationSchema, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, type Unit, type UnitKind, type UnmatchedPricuvaRefsResponse, type UnreadCountResponse, type UpdateBoardCardSchema, type UpdateBoardColumnSchema, type UpdateBoardSchema, type UpdateBugReportSchema, type UpdateBuildingSchema, type UpdateBuildingSettingsSchema, type UpdateBusinessPartnerInput, type UpdateConversationSchema, type UpdateDocumentSchema, type UpdateDsarRequestSchema, type UpdateEnterpriseRequestSchema, type UpdateExpenseSchema, type UpdateFailureReportSchema, type UpdateFaqSchema, type UpdateIncomeSchema, type UpdateNoticeSchema, type UpdateOrgBuildingContractSchema, type UpdateOrgMemberRoleSchema, type UpdateOrganizationSchema, type UpdateOwnerInput, type UpdatePlatformFeatureRequestPayload, type UpdatePlatformSubscriptionSchema, type UpdateTransactionCategorySchema, type UpdateUnitInput, type UpdateUserBuildingRoleSchema, type UpsertPricuvaOpeningBalancesSchema, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, auditLogResponseSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, booleanish, bugReportResponseSchema, bugReportStatusSchema, buildingArchiveTypeSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingOwnerAssignmentSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBugReportSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createDsarEventSchema, createDsarRequestSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createNoticeSchema, createOrgBroadcastSchema, createOrganizationSchema, createOwnerSchema, createPlatformSubscriptionSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, dsarErasureSchema, dsarEventResponseSchema, dsarRequestResponseSchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, emailUnreadCountResponseSchema, enterpriseRequestResponseSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventResponseSchema, failureReportEventSchema, failureReportEventWithDateOrderSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, featureFlagsResponseSchema, forgotPasswordSchema, getAuditLogsQuerySchema, getDsarRequestsQuerySchema, getEnterpriseRequestsQuerySchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getPlatformSubscriptionsQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, idCardVerificationStatusSchema, inviteOrgMemberSchema, inviteOwnerSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, listBugReportsResponseSchema, loginSchema, mapPricuvaRefResponseSchema, mapPricuvaRefSchema, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, noticeEventSchema, noticeEventWithDateOrderSchema, noticeResponseSchema, optionalDateTimeSchema, orgAiImportAddressCandidateSchema, orgAiImportBuildingSchema, orgAiImportCommitResponseSchema, orgAiImportCommitSchema, orgAiImportExtractResponseSchema, orgAiImportSkippedRowSchema, orgBroadcastResponseSchema, orgBuildingFundsRowSchema, orgFundsOverviewResponseSchema, orgInvitationResponseSchema, orgStatementImportResponseSchema, orgStatementImportResultSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, permissionFieldsSchema, permissionsResponseSchema, platformFeatureFlagSchema, platformFeatureFlagsResponseSchema, platformSubscriptionResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollVotersResponseSchema, postPricuvaChargesResponseSchema, pricuvaDeliveriesResponseSchema, pricuvaDeliveryRowSchema, pricuvaOpeningBalanceRowSchema, pricuvaOpeningBalancesResponseSchema, priorityOptions, publicOrgInvitationSchema, recordDsarRectificationSchema, registerSchema, rejectIdCardVerificationSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, revenueMetricsResponseSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, setDsarRestrictionSchema, signedMoneyStringSchema, strongPasswordSchema, submitIdCardVerificationSchema, unitKindSchema, unitSchema, unmatchedPricuvaRefRowSchema, unmatchedPricuvaRefsResponseSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBugReportSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateDsarRequestSchema, updateEnterpriseRequestSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgBuildingContractSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePlatformFeatureRequestSchema, updatePlatformSubscriptionSchema, updatePollRequestSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, upsertPricuvaOpeningBalancesSchema, userEntitySchema, uuidSchema, verifyOtpSchema };
+export { ARCHIVE_TYPES, AUDIT_DENIAL_TARGET_TYPE, type AddOrgMemberSchema, type AiUsageResponse, type ApiError, type ApiErrorResponse, ApprovalStatusSchema, type ApproveFailureReportSchema, type ApproveNoticeSchema, type ArchiveType, type ArchivedItem, type AssignOrgBuildingSchema, type AssignOrgMemberBuildingSchema, type AssignOwnerInput, type AuditLogResponse, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUG_REPORT_LIMITS, BUG_REPORT_STATUSES, BUILDING_ARCHIVE_TYPES, BUILDING_LIMITS, BUILDING_TYPES, type BugReportResponse, type BugReportStatus, type BuildingArchiveType, type BuildingDetailResponse, type BuildingFundsLedgerResponse, type BuildingFundsLedgerRow, type BuildingOwnerAssignment, type BuildingResponse, type BuildingSettingsResponse, type BusinessPartnerResponse, CHAT_LIMITS, type CamtImportResponse, type ChatMessageResponse, type CommentResponse, CommonStatusSchema, type ConversationLastMessage, type ConversationParticipant, type ConversationResponse, ConversationType, type ConversationsListResponse, type CopyFaqsSchema, type CopyTransactionCategoriesSchema, type CreateBoardCardSchema, type CreateBoardColumnSchema, type CreateBoardSchema, type CreateBugReportSchema, type CreateBuildingSchema, type CreateBusinessPartnerInput, type CreateConversationSchema, type CreateDocumentSchema, type CreateDsarEventSchema, type CreateDsarRequestSchema, type CreateEmailThreadRequestPayload, type CreateEntityLinkRequest, type CreateFailureReportSchema, type CreateFaqSchema, type CreateIncomeSchema, type CreateInterestRateSchema, type CreateNoticeSchema, type CreateOrgBroadcastSchema, type CreateOrganizationSchema, type CreateOwnerInput, type CreatePlatformSubscriptionSchema, type CreateTransactionCategorySchema, type CreateUnitInput, type CursorQuerySchema, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, type DeleteEntityLinkQuery, type DocumentFile, type DocumentLinkedRecord, type DocumentResponse, type DsarErasureSchema, type DsarEventResponse, type DsarRequestResponse, type DunningCandidate, type DunningCandidatesResponse, type DunningCase, type DunningCaseDetailResponse, type DunningCasesQuery, type DunningCasesResponse, DunningHoldReason, type DunningNotice, type DunningNoticesQuery, type DunningNoticesResponse, type DunningSettingsSnapshot, type DunningSummary, EMAIL_LIMITS, ENTITY_LINK_TYPES, type EmailAttachment, type EmailMessage, type EmailThread, type EmailThreadDetail, type EmailUnreadCountResponse, type EnterpriseRequestResponse, type EntityLinkCountsResponse, type EntityLinkMetadata, type EntityLinkReference, type EntityLinksResponse, type EventResponse, FAILURE_REPORT_LIMITS, FAQ_LIMITS, type FailureReportEventSchema, type FailureReportResponse, FailureStatusSchema, type FaqResponse, type FeatureFlagsResponse, type GetAuditLogsQuerySchema, type GetDsarRequestsQuerySchema, type GetEnterpriseRequestsQuerySchema, type GetEntityLinkCountsQuery, type GetEntityLinksQuery, type GetOrgBuildingsQuerySchema, type GetOrgMembersQuerySchema, type GetPlatformSubscriptionsQuerySchema, type GetTransactionCategoriesQuerySchema, type IdCardVerificationStatus, type InterestRate, type InterestRatesResponse, type InviteOrgMemberSchema, type InviteOwnerInput, type IssueDunningNoticesResponse, type IssueDunningNoticesSchema, type JoinBuildingWithOtpSchema, LINKABLE_ENTITY_TYPES, type ListArchivedResponse, type ListBugReportsResponse, type MapPricuvaRefResponse, type MapPricuvaRefSchema, type MessageResponse, type MessagesListResponse, type MoveBoardCardSchema, type MyPricuvaOwner, type MyPricuvaResponse, type MyPricuvaSlipQuery, MyPricuvaStatus, NOTICE_LIMITS, type NoticeEventSchema, type NoticeResponse, ORGANIZATION_LIMITS, type OrgAiImportBuilding, type OrgAiImportCommitResponse, type OrgAiImportCommitSchema, type OrgAiImportExtractResponse, type OrgBroadcastResponse, type OrgBuildingFundsRow, type OrgFundsOverviewResponse, type OrgInvitationResponse, OrgInvitationStatus, type OrgStatementImportResponse, type OrgStatementImportResult, type OwnerAccountCharge, type OwnerAccountPayment, type OwnerAccountResponse, type OwnerAccountUnit, type OwnerResponse, type PaginatedBuildingsResponse, type PaginatedDocumentsResponse, type PaginatedEmailThreadsResponse, type PaginatedEventsResponse, type PaginatedFailureReportsResponse, type PaginatedNoticesResponse, type PaginatedPollsResponse, type PaginatedUnitsResponse, type PaymentSlip, type PermissionsResponseSchema, type PlatformFeatureFlag, type PlatformFeatureFlagsResponse, type PlatformSubscriptionResponse, type PollEligibleVoter, type PollEligibleVotersResponse, type PollResponse, type PollResults, type PollVotersResponse, type PostPricuvaChargesResponse, type PricuvaDeliveriesResponse, PricuvaDeliveryChannel, type PricuvaDeliveryRow, PricuvaDeliveryStatus, type PricuvaOpeningBalanceRow, type PricuvaOpeningBalancesResponse, PrioritySchema, type PublicOrgInvitation, REP_RECENT_ACTIVITY_TYPES, type RecordDsarRectificationSchema, type RejectIdCardVerificationSchema, type ReorderBoardColumnsSchema, type ReorderFaqsSchema, type RepBuildingActivity, type RepBuildingItem, type RepDashboardSummaryResponse, type RepRecentActivity, type RepUserBuilding, type ReplyEmailThreadRequestPayload, type RevenueMetricsResponse, type SearchUsersQuerySchema, type SendMessageSchema, type SetDsarRestrictionSchema, type SubmitIdCardVerificationSchema, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, type Unit, type UnitKind, type UnmatchedPricuvaRefsResponse, type UnreadCountResponse, type UpdateBoardCardSchema, type UpdateBoardColumnSchema, type UpdateBoardSchema, type UpdateBugReportSchema, type UpdateBuildingSchema, type UpdateBuildingSettingsSchema, type UpdateBusinessPartnerInput, type UpdateConversationSchema, type UpdateDocumentSchema, type UpdateDsarRequestSchema, type UpdateDunningCaseSchema, type UpdateEnterpriseRequestSchema, type UpdateExpenseSchema, type UpdateFailureReportSchema, type UpdateFaqSchema, type UpdateIncomeSchema, type UpdateNoticeSchema, type UpdateOrgBuildingContractSchema, type UpdateOrgMemberRoleSchema, type UpdateOrganizationSchema, type UpdateOwnerInput, type UpdatePlatformFeatureRequestPayload, type UpdatePlatformSubscriptionSchema, type UpdateTransactionCategorySchema, type UpdateUnitInput, type UpdateUserBuildingRoleSchema, type UpsertPricuvaOpeningBalancesSchema, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, auditLogResponseSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, booleanish, bugReportResponseSchema, bugReportStatusSchema, buildingArchiveTypeSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingOwnerAssignmentSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBugReportSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createDsarEventSchema, createDsarRequestSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createInterestRateSchema, createNoticeSchema, createOrgBroadcastSchema, createOrganizationSchema, createOwnerSchema, createPlatformSubscriptionSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, dsarErasureSchema, dsarEventResponseSchema, dsarRequestResponseSchema, dunningCandidateSchema, dunningCandidatesQuerySchema, dunningCandidatesResponseSchema, dunningCaseDetailResponseSchema, dunningCaseSchema, dunningCaseStatusSchema, dunningCasesQuerySchema, dunningCasesResponseSchema, dunningLevelSchema, dunningNoticeSchema, dunningNoticesQuerySchema, dunningNoticesResponseSchema, dunningSettingsSnapshotSchema, dunningSummarySchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, emailUnreadCountResponseSchema, enterpriseRequestResponseSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventResponseSchema, failureReportEventSchema, failureReportEventWithDateOrderSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, featureFlagsResponseSchema, forgotPasswordSchema, getAuditLogsQuerySchema, getDsarRequestsQuerySchema, getEnterpriseRequestsQuerySchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getPlatformSubscriptionsQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, idCardVerificationStatusSchema, interestRateSchema, interestRatesResponseSchema, inviteOrgMemberSchema, inviteOwnerSchema, issueDunningNoticesResponseSchema, issueDunningNoticesSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, listBugReportsResponseSchema, loginSchema, mapPricuvaRefResponseSchema, mapPricuvaRefSchema, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, myPricuvaOwnerSchema, myPricuvaResponseSchema, myPricuvaSlipQuerySchema, noticeEventSchema, noticeEventWithDateOrderSchema, noticeResponseSchema, optionalDateTimeSchema, orgAiImportAddressCandidateSchema, orgAiImportBuildingSchema, orgAiImportCommitResponseSchema, orgAiImportCommitSchema, orgAiImportExtractResponseSchema, orgAiImportSkippedRowSchema, orgBroadcastResponseSchema, orgBuildingFundsRowSchema, orgFundsOverviewResponseSchema, orgInvitationResponseSchema, orgStatementImportResponseSchema, orgStatementImportResultSchema, ownerAccountChargeSchema, ownerAccountPaymentSchema, ownerAccountQuerySchema, ownerAccountResponseSchema, ownerAccountUnitSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, paymentSlipSchema, permissionFieldsSchema, permissionsResponseSchema, platformFeatureFlagSchema, platformFeatureFlagsResponseSchema, platformSubscriptionResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollVotersResponseSchema, postPricuvaChargesResponseSchema, pricuvaDeliveriesResponseSchema, pricuvaDeliveryRowSchema, pricuvaOpeningBalanceRowSchema, pricuvaOpeningBalancesResponseSchema, priorityOptions, publicOrgInvitationSchema, recordDsarRectificationSchema, registerSchema, rejectIdCardVerificationSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, revenueMetricsResponseSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, setDsarRestrictionSchema, signedMoneyStringSchema, strongPasswordSchema, submitIdCardVerificationSchema, unitKindSchema, unitSchema, unmatchedPricuvaRefRowSchema, unmatchedPricuvaRefsResponseSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBugReportSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateDsarRequestSchema, updateDunningCaseSchema, updateEnterpriseRequestSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgBuildingContractSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePlatformFeatureRequestSchema, updatePlatformSubscriptionSchema, updatePollRequestSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, upsertPricuvaOpeningBalancesSchema, userEntitySchema, uuidSchema, verifyOtpSchema, voidDunningNoticeSchema };

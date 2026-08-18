@@ -62,6 +62,53 @@ export {
   sendMessageSchema,
   updateConversationSchema,
 } from './chat.schema';
+// Pričuva collections (dunning): owner accounts, candidates, cases, notices
+export type {
+  DunningCandidate,
+  DunningCandidatesResponse,
+  DunningCase,
+  DunningCaseDetailResponse,
+  DunningCasesQuery,
+  DunningCasesResponse,
+  DunningNotice,
+  DunningNoticesQuery,
+  DunningNoticesResponse,
+  DunningSettingsSnapshot,
+  DunningSummary,
+  IssueDunningNoticesResponse,
+  IssueDunningNoticesSchema,
+  OwnerAccountCharge,
+  OwnerAccountPayment,
+  OwnerAccountResponse,
+  OwnerAccountUnit,
+  UpdateDunningCaseSchema,
+} from './dunning.schema';
+export {
+  DunningHoldReason,
+  dunningCandidateSchema,
+  dunningCandidatesQuerySchema,
+  dunningCandidatesResponseSchema,
+  dunningCaseDetailResponseSchema,
+  dunningCaseSchema,
+  dunningCaseStatusSchema,
+  dunningCasesQuerySchema,
+  dunningCasesResponseSchema,
+  dunningLevelSchema,
+  dunningNoticeSchema,
+  dunningNoticesQuerySchema,
+  dunningNoticesResponseSchema,
+  dunningSettingsSnapshotSchema,
+  dunningSummarySchema,
+  issueDunningNoticesResponseSchema,
+  issueDunningNoticesSchema,
+  ownerAccountChargeSchema,
+  ownerAccountPaymentSchema,
+  ownerAccountQuerySchema,
+  ownerAccountResponseSchema,
+  ownerAccountUnitSchema,
+  updateDunningCaseSchema,
+  voidDunningNoticeSchema,
+} from './dunning.schema';
 // FAQ schemas
 export type {
   CopyFaqsSchema,
@@ -76,6 +123,17 @@ export {
   reorderFaqsSchema,
   updateFaqSchema,
 } from './faq.schema';
+// Statutory default-interest rate table (platform-wide)
+export type {
+  CreateInterestRateSchema,
+  InterestRate,
+  InterestRatesResponse,
+} from './interest-rate.schema';
+export {
+  createInterestRateSchema,
+  interestRateSchema,
+  interestRatesResponseSchema,
+} from './interest-rate.schema';
 // Org-level AI building import
 export type {
   OrgAiImportBuilding,
@@ -158,6 +216,20 @@ export {
   pricuvaDeliveriesResponseSchema,
   pricuvaDeliveryRowSchema,
 } from './pricuva-delivery.schema';
+// Co-owner self-service pričuva view + HUB3 slip
+export type {
+  MyPricuvaOwner,
+  MyPricuvaResponse,
+  MyPricuvaSlipQuery,
+  PaymentSlip,
+} from './pricuva-me.schema';
+export {
+  MyPricuvaStatus,
+  myPricuvaOwnerSchema,
+  myPricuvaResponseSchema,
+  myPricuvaSlipQuerySchema,
+  paymentSlipSchema,
+} from './pricuva-me.schema';
 export type {
   CreateUnitInput,
   PaginatedUnitsResponse,

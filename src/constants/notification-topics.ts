@@ -112,6 +112,13 @@ export const NOTIFICATION_TOPICS: readonly NotificationTopic[] = [
     types: [NotificationType.FAILURE_REPORT_APPROVED, NotificationType.FAILURE_REPORT_DECLINED],
   },
 
+  // ── Finance ──────────────────────────────────────────────────────────────
+  {
+    id: 'pricuva_dunning',
+    kind: 'single',
+    types: [NotificationType.DUNNING_NOTICE_ISSUED],
+  },
+
   // ── Chat / mailbox ───────────────────────────────────────────────────────
   { id: 'chat_new_message', kind: 'single', types: [NotificationType.CHAT_MESSAGE] },
   { id: 'mailbox_new_message', kind: 'single', types: [NotificationType.EMAIL_RECEIVED] },
