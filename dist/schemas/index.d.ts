@@ -3892,6 +3892,7 @@ declare const camtImportResponseSchema: z.ZodObject<{
         bankRef: z.ZodNullable<z.ZodString>;
         reason: z.ZodString;
     }, z.core.$loose>>;
+    pricuvaTrackingFromSeeded: z.ZodOptional<z.ZodNullable<z.ZodString>>;
 }, z.core.$loose>;
 type CamtImportResponse = Strict<z.infer<typeof camtImportResponseSchema>>;
 /**

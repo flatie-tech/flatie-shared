@@ -2488,7 +2488,10 @@ var camtImportResponseSchema = zod.z.looseObject({
   ),
   errorCount: zod.z.number().int().nonnegative().describe("Number of CAMT entries that were rejected for the reasons listed in `errors`."),
   imported: zod.z.array(camtImportedEntrySchema).describe("Detail rows for each newly persisted transaction."),
-  errors: zod.z.array(camtImportErrorSchema).describe("Detail rows for each rejected entry, matched 1:1 against `errorCount`.")
+  errors: zod.z.array(camtImportErrorSchema).describe("Detail rows for each rejected entry, matched 1:1 against `errorCount`."),
+  pricuvaTrackingFromSeeded: zod.z.string().regex(/^\d{4}-\d{2}$/).nullable().optional().describe(
+    "Set (YYYY-MM) only when this import switched per-owner pri\u010Duva arrears tracking ON for a building that had none \u2014 `buildings.pricuva_tracking_from` was NULL and is now this month, the first the statement data fully covers. Null/absent when tracking was already configured or nothing was imported. Present so the UI can tell the representative their import changed how balances are computed, instead of it happening silently."
+  )
 }).describe("Outcome summary for a CAMT.053 statement import.");
 var orgStatementImportResultSchema = zod.z.object({
   buildingId: zod.z.string().uuid().describe("Building the statements were routed to."),
@@ -3404,5 +3407,5 @@ exports.uuidSchema = uuidSchema;
 exports.verifyOtpSchema = verifyOtpSchema;
 exports.votePollSchema = votePollSchema;
 exports.voteWithIdCardSchema = voteWithIdCardSchema;
-//# sourceMappingURL=chunk-ZI536366.cjs.map
-//# sourceMappingURL=chunk-ZI536366.cjs.map
+//# sourceMappingURL=chunk-PGXGDL6V.cjs.map
+//# sourceMappingURL=chunk-PGXGDL6V.cjs.map

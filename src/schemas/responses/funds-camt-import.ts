@@ -110,6 +110,14 @@ export const camtImportResponseSchema = z
     errors: z
       .array(camtImportErrorSchema)
       .describe('Detail rows for each rejected entry, matched 1:1 against `errorCount`.'),
+    pricuvaTrackingFromSeeded: z
+      .string()
+      .regex(/^\d{4}-\d{2}$/)
+      .nullable()
+      .optional()
+      .describe(
+        'Set (YYYY-MM) only when this import switched per-owner pričuva arrears tracking ON for a building that had none — `buildings.pricuva_tracking_from` was NULL and is now this month, the first the statement data fully covers. Null/absent when tracking was already configured or nothing was imported. Present so the UI can tell the representative their import changed how balances are computed, instead of it happening silently.',
+      ),
   })
   .describe('Outcome summary for a CAMT.053 statement import.');
 
