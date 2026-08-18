@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.125.1
+
+### Changes
+
+- feat(funds): report the pričuva tracking month an import seeded
+
 ## 0.125.0
 
 ### Changes
