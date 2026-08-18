@@ -1,4 +1,4 @@
-import { BuildingRole, OrgRole, NotificationType } from '../chunk-HC7CBODS.js';
+import { BuildingRole, OrgRole, NotificationType } from '../chunk-367LF2PU.js';
 
 // src/notifications/labels.ts
 var SUPPORTED_LOCALES = ["hr", "en", "de"];
@@ -541,6 +541,23 @@ var NOTIFICATION_TEMPLATES = {
       hr: "\u0160alje se suvlasniku kada mu upravitelj ili predstavnik izda opomenu za dospjelu pri\u010Duvu",
       en: "Sent to a co-owner when the manager or representative issues a reserve-fund arrears notice",
       de: "Wird an einen Miteigent\xFCmer gesendet, wenn der Verwalter eine Mahnung wegen R\xFCcklagenr\xFCckstand ausstellt"
+    }
+  },
+  [NotificationType.MANAGEMENT_INVOICE_ISSUED]: {
+    title: {
+      hr: "Ra\u010Dun upravitelja",
+      en: "Manager\u2019s invoice",
+      de: "Rechnung des Verwalters"
+    },
+    body: {
+      hr: "{{orgName}} je izdao ra\u010Dun br. {{invoiceNumber}} za {{buildingName}} na iznos od {{amount}}, dospije\u0107e {{dueDate}}.",
+      en: "{{orgName}} issued invoice no. {{invoiceNumber}} to {{buildingName}} for {{amount}}, due {{dueDate}}.",
+      de: "{{orgName}} hat f\xFCr {{buildingName}} die Rechnung Nr. {{invoiceNumber}} \xFCber {{amount}} ausgestellt, f\xE4llig am {{dueDate}}."
+    },
+    description: {
+      hr: "\u0160alje se predstavnicima kada upravitelj izda mjese\u010Dni ra\u010Dun za naknadu upravljanja",
+      en: "Sent to representatives when the management firm issues its monthly fee invoice",
+      de: "Wird an Vertreter gesendet, wenn der Verwalter seine monatliche Geb\xFChrenrechnung ausstellt"
     }
   },
   [NotificationType.PAYMENT_RECEIVED]: {

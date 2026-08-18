@@ -97,6 +97,8 @@ declare const Permission: {
     readonly ORG_VIEW_PARTNERS: "org:view_partners";
     readonly ORG_MANAGE_PARTNERS: "org:manage_partners";
     readonly ORG_BROADCAST: "org:broadcast";
+    readonly ORG_VIEW_INVOICING: "org:view_invoicing";
+    readonly ORG_MANAGE_INVOICING: "org:manage_invoicing";
     readonly PLATFORM_APPROVE_BUILDINGS: "platform:approve_buildings";
     readonly PLATFORM_MANAGE_USERS: "platform:manage_users";
     readonly PLATFORM_MANAGE_ORGS: "platform:manage_orgs";

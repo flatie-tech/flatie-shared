@@ -29,6 +29,7 @@ export {
   VerificationTier,
 } from './identity-verification.enum';
 export { JoinRequestStatus } from './join-request-status.enum';
+export { FeeModel, ManagementInvoiceStatus } from './management-invoice.enum';
 export {
   CO_OWNER_VISIBLE_SYSTEM_TYPES,
   DevicePlatform,

@@ -1,3 +1,5 @@
+'use strict';
+
 // src/errors/index.ts
 var BACKEND_ERROR_CODES = {
   // Auth
@@ -98,6 +100,13 @@ var BACKEND_ERROR_CODES = {
   DUNNING_NOTICE_NOT_FOUND: "DUNNING_NOTICE_NOT_FOUND",
   DUNNING_NOTICE_NOT_VOIDABLE: "DUNNING_NOTICE_NOT_VOIDABLE",
   INVOICE_NOT_FOUND: "INVOICE_NOT_FOUND",
+  // Naknada upravitelja (org → building invoicing)
+  INVOICE_ORG_IDENTITY_INCOMPLETE: "INVOICE_ORG_IDENTITY_INCOMPLETE",
+  INVOICE_CONTRACT_FEE_MISSING: "INVOICE_CONTRACT_FEE_MISSING",
+  INVOICE_BUILDING_OIB_MISSING: "INVOICE_BUILDING_OIB_MISSING",
+  INVOICE_ALREADY_ISSUED: "INVOICE_ALREADY_ISSUED",
+  INVOICE_NOT_CANCELLABLE: "INVOICE_NOT_CANCELLABLE",
+  INVOICE_ERACUN_NOT_CONFIGURED: "INVOICE_ERACUN_NOT_CONFIGURED",
   BLOG_POST_NOT_FOUND: "BLOG_POST_NOT_FOUND",
   // Subscription / billing
   INVOICE_ALREADY_PAID: "INVOICE_ALREADY_PAID",
@@ -176,6 +185,7 @@ function isBackendErrorCode(code) {
   return typeof code === "string" && Object.values(BACKEND_ERROR_CODES).includes(code);
 }
 
-export { BACKEND_ERROR_CODES, isBackendErrorCode };
-//# sourceMappingURL=chunk-7OHDTTJO.js.map
-//# sourceMappingURL=chunk-7OHDTTJO.js.map
+exports.BACKEND_ERROR_CODES = BACKEND_ERROR_CODES;
+exports.isBackendErrorCode = isBackendErrorCode;
+//# sourceMappingURL=chunk-UF3JI7WZ.cjs.map
+//# sourceMappingURL=chunk-UF3JI7WZ.cjs.map

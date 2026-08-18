@@ -28,6 +28,7 @@ export const NotificationType = {
   PAYMENT_DUE: 'payment_due',
   PAYMENT_RECEIVED: 'payment_received',
   DUNNING_NOTICE_ISSUED: 'dunning_notice_issued',
+  MANAGEMENT_INVOICE_ISSUED: 'management_invoice_issued',
 
   BUILDING_JOIN_REQUEST_RECEIVED: 'building_join_request_received',
   BUILDING_JOIN_REQUEST_APPROVED: 'building_join_request_approved',
@@ -134,6 +135,7 @@ export const NOTIFICATION_TYPE_CATEGORY: Record<NotificationType, NotificationCa
   [NotificationType.PAYMENT_DUE]: NotificationCategory.FINANCIAL,
   [NotificationType.PAYMENT_RECEIVED]: NotificationCategory.FINANCIAL,
   [NotificationType.DUNNING_NOTICE_ISSUED]: NotificationCategory.FINANCIAL,
+  [NotificationType.MANAGEMENT_INVOICE_ISSUED]: NotificationCategory.FINANCIAL,
 
   [NotificationType.CHAT_MESSAGE]: NotificationCategory.CHAT,
 

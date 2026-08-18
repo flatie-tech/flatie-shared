@@ -1,7 +1,7 @@
 export { A as ApprovalStatus, B as BuildingType, C as CommonStatus, F as FailureStatus, a as FailureType, b as FileCategory, c as Frequency, P as PollType, d as Priority, T as TransactionCategory, e as TransactionType } from '../status.enum-POCdxmgc.js';
 export { E as EntityLinkType, L as LinkableEntityType } from '../entity-link.enum-D2At-V8D.js';
-export { C as CO_OWNER_VISIBLE_SYSTEM_TYPES, D as DevicePlatform, a as NOTIFICATION_TYPE_CATEGORY, b as NotificationCategory, c as NotificationChannel, d as NotificationDeliveryStatus, N as NotificationType, R as RESIDENT_VISIBLE_SYSTEM_TYPES, U as UNIMPLEMENTED_NOTIFICATION_TYPES, W as WASTE_SUBTYPE_NOTIFICATION_MAP } from '../notification.enum-C1IHyJHj.js';
-export { A as APPROVE_PERMISSIONS, B as BUILDING_ROLE_RANK, e as BuildingRole, O as ORG_ROLE_RANK, i as OrgRole, j as PLATFORM_ROLE_RANK, P as Permission, k as PlatformRole, S as SCOPED_DOMAINS, a as SCOPED_PERMISSIONS, b as ScopedAction, c as ScopedDomain, f as canAssignOrgRole, g as canAssignPlatformRole, h as canAssignRole, d as domainPermissions } from '../role.enum-DoYck3g6.js';
+export { C as CO_OWNER_VISIBLE_SYSTEM_TYPES, D as DevicePlatform, a as NOTIFICATION_TYPE_CATEGORY, b as NotificationCategory, c as NotificationChannel, d as NotificationDeliveryStatus, N as NotificationType, R as RESIDENT_VISIBLE_SYSTEM_TYPES, U as UNIMPLEMENTED_NOTIFICATION_TYPES, W as WASTE_SUBTYPE_NOTIFICATION_MAP } from '../notification.enum-PAMm0M-t.js';
+export { A as APPROVE_PERMISSIONS, B as BUILDING_ROLE_RANK, e as BuildingRole, O as ORG_ROLE_RANK, i as OrgRole, j as PLATFORM_ROLE_RANK, P as Permission, k as PlatformRole, S as SCOPED_DOMAINS, a as SCOPED_PERMISSIONS, b as ScopedAction, c as ScopedDomain, f as canAssignOrgRole, g as canAssignPlatformRole, h as canAssignRole, d as domainPermissions } from '../role.enum-CNU5i4rc.js';
 export { B as BuildingFeatureSettingKey, b as PLATFORM_FEATURES, a as PLATFORM_FEATURE_META, c as PlatformFeature, P as PlatformFeatureMeta, g as getBuildingFeatureDefault } from '../platform-feature.enum-6TI7valI.js';
 
 /**
@@ -230,6 +230,32 @@ declare const JoinRequestStatus: {
 };
 type JoinRequestStatus = (typeof JoinRequestStatus)[keyof typeof JoinRequestStatus];
 
+/**
+ * Naknada upravitelja — the management firm's monthly fee to each
+ * building it manages, invoiced through Flatie.
+ */
+/** How the contract prices the fee. Amounts are EUR excl. VAT, per month. */
+declare const FeeModel: {
+    /** `feeAmount` × billable units (apartments + commercial units). */
+    readonly PER_UNIT: "per_unit";
+    /** `feeAmount` × Σ unit area (m²). */
+    readonly PER_SQM: "per_sqm";
+    /** `feeAmount` per building per month. */
+    readonly FLAT: "flat";
+};
+type FeeModel = (typeof FeeModel)[keyof typeof FeeModel];
+/**
+ * Invoice lifecycle. `overdue` is derived (issued + past due), never stored.
+ * A cancelled invoice keeps its number — Croatian numbering is a gapless
+ * sequence, so cancellation is a state, not a deletion.
+ */
+declare const ManagementInvoiceStatus: {
+    readonly ISSUED: "issued";
+    readonly PAID: "paid";
+    readonly CANCELLED: "cancelled";
+};
+type ManagementInvoiceStatus = (typeof ManagementInvoiceStatus)[keyof typeof ManagementInvoiceStatus];
+
 declare const OrgType: {
     readonly MANAGEMENT_FIRM: "management_firm";
     readonly PLATFORM: "platform";
@@ -361,4 +387,4 @@ declare function deriveVotingStrength(user: {
     verificationTier?: number | null;
 }): VotingStrength;
 
-export { BoardVisibility, BuildingOtpExpiry, BuildingStatus, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DUNNING_CLOSED_STATUSES, DsarRequestStatus, DsarRequestType, DunningCaseStatus, DunningLevel, EnterpriseRequestStatus, FailureFundingSource, FailureLocationType, FailureUnitType, FundsSource, IdentityVerificationMethod, JoinRequestStatus, OrgStatus, OrgType, POLL_CANNOT_VOTE_REASON_KEY, PollCannotVoteReason, PollStatus, PollVoteStatus, PricuvaRefMode, TransactionSource, UnitType, VerificationTier, VotingStrength, deriveVotingStrength, methodToTier };
+export { BoardVisibility, BuildingOtpExpiry, BuildingStatus, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DUNNING_CLOSED_STATUSES, DsarRequestStatus, DsarRequestType, DunningCaseStatus, DunningLevel, EnterpriseRequestStatus, FailureFundingSource, FailureLocationType, FailureUnitType, FeeModel, FundsSource, IdentityVerificationMethod, JoinRequestStatus, ManagementInvoiceStatus, OrgStatus, OrgType, POLL_CANNOT_VOTE_REASON_KEY, PollCannotVoteReason, PollStatus, PollVoteStatus, PricuvaRefMode, TransactionSource, UnitType, VerificationTier, VotingStrength, deriveVotingStrength, methodToTier };

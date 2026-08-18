@@ -1,7 +1,7 @@
 import { L as LinkableEntityType, E as EntityLinkType } from '../entity-link.enum-D2At-V8D.js';
-import { a as NotificationPreferenceItem } from '../notifications-DX7mxkt8.js';
-import { N as NotificationType } from '../notification.enum-C1IHyJHj.js';
-import { P as Permission, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-DoYck3g6.js';
+import { a as NotificationPreferenceItem } from '../notifications-CmAQL_ly.js';
+import { N as NotificationType } from '../notification.enum-PAMm0M-t.js';
+import { P as Permission, e as BuildingRole, i as OrgRole, k as PlatformRole } from '../role.enum-CNU5i4rc.js';
 import 'zod';
 
 declare const AI_CHAT_LIMITS: {
@@ -303,6 +303,11 @@ declare const organizationKeys: {
     details: () => readonly ["organization", "detail"];
     detail: (id: string) => readonly ["organization", "detail", string];
     quotas: (id: string) => readonly ["organization", "quotas", string];
+    invoices: (id: string, filters?: Record<string, unknown>) => readonly ["organization", "invoices", string, {
+        readonly [x: string]: unknown;
+    }];
+    invoicesSummary: (id: string) => readonly ["organization", "invoices-summary", string];
+    invoicePreview: (id: string, period: string) => readonly ["organization", "invoice-preview", string, string];
 };
 declare const buildingKeys: {
     all: readonly ["building"];
@@ -416,6 +421,10 @@ declare const dunningKeys: {
         readonly [x: string]: unknown;
     }];
     ownerAccount: (buildingId: string, ownerId: string, asOf?: string) => readonly ["dunning", string, "owner-account", string, string];
+};
+declare const managementInvoiceKeys: {
+    all: readonly ["management-invoices"];
+    building: (buildingId: string) => readonly ["management-invoices", "building", string];
 };
 declare const interestRateKeys: {
     all: readonly ["interest-rates"];
@@ -1003,4 +1012,4 @@ declare const ZUOZ_ADJACENT_CONSENT_CATEGORIES: readonly ["noisyActivityConsent"
 type ZuozAdjacentConsentCategory = (typeof ZUOZ_ADJACENT_CONSENT_CATEGORIES)[number];
 declare function isZuozAdjacentConsentCategory(category: string | null | undefined): category is ZuozAdjacentConsentCategory;
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, AI_CHAT_LIMITS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, ALWAYS_ON_NOTIFICATION_TYPES, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, ENTITY_LINK_TYPE_META, type EntityLinkRule, type EntityLinkTypeMeta, type LeadTime, MANAGERIAL_NOTIFICATION_TYPES, MAX_PAGINATION_LIMIT, NOTIFICATION_TOPICS, type NotificationTopic, ORG_ROLE_PERMISSIONS, ORG_SCOPED_NOTIFICATION_TYPES, OWNERSHIP_DERIVED_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, type PreferenceWrite, RELATED_TO_LINKABLE_TYPES, SELECTABLE_CHANNELS, STANDARD_UNIT_PRICE_CENTS, type SelectableChannel, type TopicState, ZUOZ_ADJACENT_CONSENT_CATEGORIES, type ZuozAdjacentConsentCategory, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, auditLogKeys, blogKeys, boardKeys, buildLeadTimeWrites, buildTopicStates, buildTopicWrites, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, dsarKeys, dunningKeys, enterpriseRequestKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, featureFlagKeys, fundsKeys, garageKeys, getLeadTime, getNotificationTopic, getUngroupedNotificationTypes, incomeKeys, interestRateKeys, isEntityLinkAllowed, isZuozAdjacentConsentCategory, layoutKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, platformFeatureKeys, platformSubscriptionKeys, pollKeys, pricuvaKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, toggleChannel, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, AI_CHAT_LIMITS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, ALWAYS_ON_NOTIFICATION_TYPES, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, ENTITY_LINK_TYPE_META, type EntityLinkRule, type EntityLinkTypeMeta, type LeadTime, MANAGERIAL_NOTIFICATION_TYPES, MAX_PAGINATION_LIMIT, NOTIFICATION_TOPICS, type NotificationTopic, ORG_ROLE_PERMISSIONS, ORG_SCOPED_NOTIFICATION_TYPES, OWNERSHIP_DERIVED_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, type PreferenceWrite, RELATED_TO_LINKABLE_TYPES, SELECTABLE_CHANNELS, STANDARD_UNIT_PRICE_CENTS, type SelectableChannel, type TopicState, ZUOZ_ADJACENT_CONSENT_CATEGORIES, type ZuozAdjacentConsentCategory, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, auditLogKeys, blogKeys, boardKeys, buildLeadTimeWrites, buildTopicStates, buildTopicWrites, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, dsarKeys, dunningKeys, enterpriseRequestKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, featureFlagKeys, fundsKeys, garageKeys, getLeadTime, getNotificationTopic, getUngroupedNotificationTypes, incomeKeys, interestRateKeys, isEntityLinkAllowed, isZuozAdjacentConsentCategory, layoutKeys, managementInvoiceKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, platformFeatureKeys, platformSubscriptionKeys, pollKeys, pricuvaKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, toggleChannel, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };

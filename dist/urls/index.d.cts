@@ -48,6 +48,8 @@ declare const API_ROUTES: {
         readonly PRICUVA_DELIVERIES: (id: string) => string;
         readonly PRICUVA_ME: (id: string) => string;
         readonly PRICUVA_ME_SLIP_PDF: (id: string) => string;
+        readonly MANAGEMENT_INVOICES: (id: string) => string;
+        readonly MANAGEMENT_INVOICE_PDF: (id: string, invoiceId: string) => string;
         readonly SETTINGS: (id: string) => string;
         readonly USERS: (id: string) => string;
         readonly OTP: (id: string) => string;
@@ -211,6 +213,15 @@ declare const API_ROUTES: {
     };
     readonly ORGANIZATIONS: {
         readonly STATEMENT_IMPORT: (orgId: string) => string;
+        readonly INVOICES: (orgId: string) => string;
+        readonly INVOICES_SUMMARY: (orgId: string) => string;
+        readonly INVOICES_PREVIEW: (orgId: string) => string;
+        readonly INVOICE: (orgId: string, invoiceId: string) => string;
+        readonly INVOICE_PDF: (orgId: string, invoiceId: string) => string;
+        readonly INVOICE_SEND_EMAIL: (orgId: string, invoiceId: string) => string;
+        readonly INVOICE_SEND_ERACUN: (orgId: string, invoiceId: string) => string;
+        readonly INVOICE_MARK_PAID: (orgId: string, invoiceId: string) => string;
+        readonly INVOICE_CANCEL: (orgId: string, invoiceId: string) => string;
         readonly AI_IMPORT_EXTRACT: (orgId: string) => string;
         readonly AI_IMPORT_COMMIT: (orgId: string) => string;
         readonly BASE: "/organizations";

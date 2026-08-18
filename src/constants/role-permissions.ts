@@ -184,6 +184,8 @@ const ORG_ADMIN_ORG_PERMISSIONS = [
   'org:view_partners',
   'org:manage_partners',
   'org:broadcast',
+  'org:view_invoicing',
+  'org:manage_invoicing',
 ];
 
 const SUPERVISOR_ORG_PERMISSIONS = [
@@ -192,6 +194,7 @@ const SUPERVISOR_ORG_PERMISSIONS = [
   'org:view_partners',
   'org:manage_partners',
   'org:broadcast',
+  'org:view_invoicing',
 ];
 
 const REFERENT_ORG_PERMISSIONS = ['org:view_buildings', 'org:view_partners'];

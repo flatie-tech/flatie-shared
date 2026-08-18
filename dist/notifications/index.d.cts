@@ -1,4 +1,4 @@
-import { N as NotificationType } from '../notification.enum-C1IHyJHj.cjs';
+import { N as NotificationType } from '../notification.enum-PAMm0M-t.cjs';
 
 /**
  * Locale-bound label maps for machine values that appear inside notification

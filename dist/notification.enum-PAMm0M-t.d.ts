@@ -23,6 +23,7 @@ declare const NotificationType: {
     readonly PAYMENT_DUE: "payment_due";
     readonly PAYMENT_RECEIVED: "payment_received";
     readonly DUNNING_NOTICE_ISSUED: "dunning_notice_issued";
+    readonly MANAGEMENT_INVOICE_ISSUED: "management_invoice_issued";
     readonly BUILDING_JOIN_REQUEST_RECEIVED: "building_join_request_received";
     readonly BUILDING_JOIN_REQUEST_APPROVED: "building_join_request_approved";
     readonly BUILDING_JOIN_REQUEST_REJECTED: "building_join_request_rejected";

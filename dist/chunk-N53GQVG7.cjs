@@ -195,6 +195,21 @@ var JoinRequestStatus = {
   REJECTED: "rejected"
 };
 
+// src/enums/management-invoice.enum.ts
+var FeeModel = {
+  /** `feeAmount` × billable units (apartments + commercial units). */
+  PER_UNIT: "per_unit",
+  /** `feeAmount` × Σ unit area (m²). */
+  PER_SQM: "per_sqm",
+  /** `feeAmount` per building per month. */
+  FLAT: "flat"
+};
+var ManagementInvoiceStatus = {
+  ISSUED: "issued",
+  PAID: "paid",
+  CANCELLED: "cancelled"
+};
+
 // src/enums/notification.enum.ts
 var NotificationType = {
   NOTICE_CREATED: "notice_created",
@@ -221,6 +236,7 @@ var NotificationType = {
   PAYMENT_DUE: "payment_due",
   PAYMENT_RECEIVED: "payment_received",
   DUNNING_NOTICE_ISSUED: "dunning_notice_issued",
+  MANAGEMENT_INVOICE_ISSUED: "management_invoice_issued",
   BUILDING_JOIN_REQUEST_RECEIVED: "building_join_request_received",
   BUILDING_JOIN_REQUEST_APPROVED: "building_join_request_approved",
   BUILDING_JOIN_REQUEST_REJECTED: "building_join_request_rejected",
@@ -294,6 +310,7 @@ var NOTIFICATION_TYPE_CATEGORY = {
   [NotificationType.PAYMENT_DUE]: NotificationCategory.FINANCIAL,
   [NotificationType.PAYMENT_RECEIVED]: NotificationCategory.FINANCIAL,
   [NotificationType.DUNNING_NOTICE_ISSUED]: NotificationCategory.FINANCIAL,
+  [NotificationType.MANAGEMENT_INVOICE_ISSUED]: NotificationCategory.FINANCIAL,
   [NotificationType.CHAT_MESSAGE]: NotificationCategory.CHAT,
   [NotificationType.EMAIL_RECEIVED]: NotificationCategory.BUILDING_EMAIL,
   [NotificationType.BUILDING_JOIN_REQUEST_RECEIVED]: NotificationCategory.SYSTEM,
@@ -471,6 +488,9 @@ var Permission = {
   ORG_MANAGE_PARTNERS: "org:manage_partners",
   // Publish one notice to many/all managed buildings at once.
   ORG_BROADCAST: "org:broadcast",
+  // Naknada upravitelja — issuing / reading the firm's fee invoices to its buildings.
+  ORG_VIEW_INVOICING: "org:view_invoicing",
+  ORG_MANAGE_INVOICING: "org:manage_invoicing",
   // Platform (global scope)
   PLATFORM_APPROVE_BUILDINGS: "platform:approve_buildings",
   PLATFORM_MANAGE_USERS: "platform:manage_users",
@@ -787,12 +807,14 @@ exports.FailureLocationType = FailureLocationType;
 exports.FailureStatus = FailureStatus;
 exports.FailureType = FailureType;
 exports.FailureUnitType = FailureUnitType;
+exports.FeeModel = FeeModel;
 exports.FileCategory = FileCategory;
 exports.Frequency = Frequency;
 exports.FundsSource = FundsSource;
 exports.IdentityVerificationMethod = IdentityVerificationMethod;
 exports.JoinRequestStatus = JoinRequestStatus;
 exports.LinkableEntityType = LinkableEntityType;
+exports.ManagementInvoiceStatus = ManagementInvoiceStatus;
 exports.NOTIFICATION_TYPE_CATEGORY = NOTIFICATION_TYPE_CATEGORY;
 exports.NotificationCategory = NotificationCategory;
 exports.NotificationChannel = NotificationChannel;
@@ -833,5 +855,5 @@ exports.deriveVotingStrength = deriveVotingStrength;
 exports.domainPermissions = domainPermissions;
 exports.getBuildingFeatureDefault = getBuildingFeatureDefault;
 exports.methodToTier = methodToTier;
-//# sourceMappingURL=chunk-6YLWH72I.cjs.map
-//# sourceMappingURL=chunk-6YLWH72I.cjs.map
+//# sourceMappingURL=chunk-N53GQVG7.cjs.map
+//# sourceMappingURL=chunk-N53GQVG7.cjs.map

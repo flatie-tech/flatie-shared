@@ -1,64 +1,62 @@
-'use strict';
-
-var chunk6YLWH72I_cjs = require('./chunk-6YLWH72I.cjs');
-var chunkQH2HBDHO_cjs = require('./chunk-QH2HBDHO.cjs');
-var chunkQKHLAIRE_cjs = require('./chunk-QKHLAIRE.cjs');
+import { BuildingRole, PlatformRole, OrgRole, PLATFORM_FEATURE_META, SCOPED_PERMISSIONS, APPROVE_PERMISSIONS } from './chunk-367LF2PU.js';
+import { isBackendErrorCode } from './chunk-WHCWJXEO.js';
+import { createPaginatedResponse } from './chunk-K2CKX6IH.js';
 
 // src/utils/role-helpers.ts
 var MANAGERIAL_BUILDING_ROLES = [
-  chunk6YLWH72I_cjs.BuildingRole.OWNER_REPRESENTATIVE,
-  chunk6YLWH72I_cjs.BuildingRole.DEPUTY_REPRESENTATIVE
+  BuildingRole.OWNER_REPRESENTATIVE,
+  BuildingRole.DEPUTY_REPRESENTATIVE
 ];
 function isManagerialRole(role) {
   return MANAGERIAL_BUILDING_ROLES.includes(role);
 }
 var ROLE_TRANSLATION_KEYS = {
   // Building roles
-  [chunk6YLWH72I_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
-  [chunk6YLWH72I_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
-  [chunk6YLWH72I_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER",
-  [chunk6YLWH72I_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT",
+  [BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE",
+  [BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE",
+  [BuildingRole.CO_OWNER]: "roles.CO_OWNER",
+  [BuildingRole.RESIDENT]: "roles.RESIDENT",
   // Org roles
-  [chunk6YLWH72I_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
-  [chunk6YLWH72I_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
-  [chunk6YLWH72I_cjs.OrgRole.REFERENT]: "roles.REFERENT",
-  [chunk6YLWH72I_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE",
+  [OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN",
+  [OrgRole.SUPERVISOR]: "roles.SUPERVISOR",
+  [OrgRole.REFERENT]: "roles.REFERENT",
+  [OrgRole.OPERATIVE]: "roles.OPERATIVE",
   // Platform roles
-  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
-  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
-  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
-  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
+  [PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN",
+  [PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR",
+  [PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT",
+  [PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE"
 };
 var ROLE_DESCRIPTION_KEYS = {
-  [chunk6YLWH72I_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
-  [chunk6YLWH72I_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
-  [chunk6YLWH72I_cjs.BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
-  [chunk6YLWH72I_cjs.BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
-  [chunk6YLWH72I_cjs.OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
-  [chunk6YLWH72I_cjs.OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
-  [chunk6YLWH72I_cjs.OrgRole.REFERENT]: "roles.REFERENT_DESC",
-  [chunk6YLWH72I_cjs.OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
-  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
-  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
-  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
-  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
+  [BuildingRole.OWNER_REPRESENTATIVE]: "roles.OWNER_REPRESENTATIVE_DESC",
+  [BuildingRole.DEPUTY_REPRESENTATIVE]: "roles.DEPUTY_REPRESENTATIVE_DESC",
+  [BuildingRole.CO_OWNER]: "roles.CO_OWNER_DESC",
+  [BuildingRole.RESIDENT]: "roles.RESIDENT_DESC",
+  [OrgRole.ORG_ADMIN]: "roles.ORG_ADMIN_DESC",
+  [OrgRole.SUPERVISOR]: "roles.SUPERVISOR_DESC",
+  [OrgRole.REFERENT]: "roles.REFERENT_DESC",
+  [OrgRole.OPERATIVE]: "roles.OPERATIVE_DESC",
+  [PlatformRole.PLATFORM_ADMIN]: "roles.PLATFORM_ADMIN_DESC",
+  [PlatformRole.PLATFORM_MODERATOR]: "roles.PLATFORM_MODERATOR_DESC",
+  [PlatformRole.PLATFORM_SUPPORT]: "roles.PLATFORM_SUPPORT_DESC",
+  [PlatformRole.PLATFORM_OPERATIVE]: "roles.PLATFORM_OPERATIVE_DESC"
 };
 var ROLE_BADGE_COLORS = {
   // Building roles
-  [chunk6YLWH72I_cjs.BuildingRole.OWNER_REPRESENTATIVE]: "info",
-  [chunk6YLWH72I_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: "success",
-  [chunk6YLWH72I_cjs.BuildingRole.CO_OWNER]: "warning",
-  [chunk6YLWH72I_cjs.BuildingRole.RESIDENT]: "neutral",
+  [BuildingRole.OWNER_REPRESENTATIVE]: "info",
+  [BuildingRole.DEPUTY_REPRESENTATIVE]: "success",
+  [BuildingRole.CO_OWNER]: "warning",
+  [BuildingRole.RESIDENT]: "neutral",
   // Org roles
-  [chunk6YLWH72I_cjs.OrgRole.ORG_ADMIN]: "purple",
-  [chunk6YLWH72I_cjs.OrgRole.SUPERVISOR]: "info",
-  [chunk6YLWH72I_cjs.OrgRole.REFERENT]: "success",
-  [chunk6YLWH72I_cjs.OrgRole.OPERATIVE]: "amber",
+  [OrgRole.ORG_ADMIN]: "purple",
+  [OrgRole.SUPERVISOR]: "info",
+  [OrgRole.REFERENT]: "success",
+  [OrgRole.OPERATIVE]: "amber",
   // Platform roles
-  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_ADMIN]: "purple",
-  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_MODERATOR]: "info",
-  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_SUPPORT]: "success",
-  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_OPERATIVE]: "amber"
+  [PlatformRole.PLATFORM_ADMIN]: "purple",
+  [PlatformRole.PLATFORM_MODERATOR]: "info",
+  [PlatformRole.PLATFORM_SUPPORT]: "success",
+  [PlatformRole.PLATFORM_OPERATIVE]: "amber"
 };
 function getRoleBadge(role) {
   const known = role;
@@ -175,7 +173,7 @@ function isFeatureAvailable({
   buildingSettings,
   loading = false
 }) {
-  const meta = chunk6YLWH72I_cjs.PLATFORM_FEATURE_META[feature];
+  const meta = PLATFORM_FEATURE_META[feature];
   if (!meta) return false;
   const platformState = platformFlags?.[feature];
   if (loading || platformState === void 0) {
@@ -233,7 +231,7 @@ function getInitials(name) {
 // src/utils/pagination.ts
 function normalizePaginatedResponse(input, fallbackLimit = 10) {
   if (Array.isArray(input)) {
-    return chunkQKHLAIRE_cjs.createPaginatedResponse(input, input.length, 0, input.length);
+    return createPaginatedResponse(input, input.length, 0, input.length);
   }
   if (input && typeof input === "object") {
     const response = input;
@@ -242,9 +240,9 @@ function normalizePaginatedResponse(input, fallbackLimit = 10) {
     const count = response.count ?? response.total ?? response.totalCount ?? (Array.isArray(data) ? data.length : 0);
     const page = response.page ?? response.currentPage ?? (response.offset !== void 0 && limit ? Math.floor(response.offset / limit) + 1 : 1);
     const offset = response.offset !== void 0 ? response.offset : limit && page ? (page - 1) * limit : 0;
-    return chunkQKHLAIRE_cjs.createPaginatedResponse(Array.isArray(data) ? data : [], count, offset, limit);
+    return createPaginatedResponse(Array.isArray(data) ? data : [], count, offset, limit);
   }
-  return chunkQKHLAIRE_cjs.createPaginatedResponse([], 0, 0, fallbackLimit);
+  return createPaginatedResponse([], 0, 0, fallbackLimit);
 }
 
 // src/utils/parse.ts
@@ -276,7 +274,7 @@ var parseApiError = (error) => {
   const response = readProp(error, "response");
   const data = readProp(response, "data");
   const rawCode = readProp(data, "code");
-  const code = chunkQH2HBDHO_cjs.isBackendErrorCode(rawCode) ? rawCode : null;
+  const code = isBackendErrorCode(rawCode) ? rawCode : null;
   const dataMessage = readProp(data, "message");
   const errorMessage = readProp(error, "message");
   const message = typeof dataMessage === "string" && dataMessage.length > 0 && dataMessage || typeof errorMessage === "string" && errorMessage.length > 0 && errorMessage || "Unknown error";
@@ -290,13 +288,13 @@ function canDo(subject, permission) {
   return subject.permissions.includes(permission);
 }
 function canDoOnResource(subject, domain, action, resourceOwnerId) {
-  const scopedPerms = chunk6YLWH72I_cjs.SCOPED_PERMISSIONS[domain]?.[action];
+  const scopedPerms = SCOPED_PERMISSIONS[domain]?.[action];
   if (!scopedPerms) return false;
   if (subject.permissions.includes(scopedPerms.any)) return true;
   return subject.permissions.includes(scopedPerms.own) && resourceOwnerId === subject.userId;
 }
 function computeActionFlags(subject, domain, resourceOwnerId) {
-  const approvePermission = chunk6YLWH72I_cjs.APPROVE_PERMISSIONS[domain];
+  const approvePermission = APPROVE_PERMISSIONS[domain];
   return {
     canEdit: canDoOnResource(subject, domain, "update", resourceOwnerId),
     canDelete: canDoOnResource(subject, domain, "delete", resourceOwnerId),
@@ -373,41 +371,6 @@ function debounce(func, delay) {
   };
 }
 
-exports.DATETIME_FORMATS = DATETIME_FORMATS;
-exports.DATE_FORMATS = DATE_FORMATS;
-exports.LOCALE_MAP = LOCALE_MAP;
-exports.MANAGERIAL_BUILDING_ROLES = MANAGERIAL_BUILDING_ROLES;
-exports.ParseError = ParseError;
-exports.ROLE_BADGE_COLORS = ROLE_BADGE_COLORS;
-exports.ROLE_DESCRIPTION_KEYS = ROLE_DESCRIPTION_KEYS;
-exports.ROLE_TRANSLATION_KEYS = ROLE_TRANSLATION_KEYS;
-exports.TIME_FORMATS = TIME_FORMATS;
-exports.VOTING_METHOD_SETTINGS = VOTING_METHOD_SETTINGS;
-exports.applyResidentRestriction = applyResidentRestriction;
-exports.applyResidentRestrictionToItem = applyResidentRestrictionToItem;
-exports.buildGoogleCalendarUrl = buildGoogleCalendarUrl;
-exports.canDo = canDo;
-exports.canDoOnResource = canDoOnResource;
-exports.canMessageUser = canMessageUser;
-exports.computeActionFlags = computeActionFlags;
-exports.createPermissionChecker = createPermissionChecker;
-exports.debounce = debounce;
-exports.formatCurrency = formatCurrency;
-exports.formatCurrencyByLocale = formatCurrencyByLocale;
-exports.formatCurrencyEUR = formatCurrencyEUR;
-exports.formatDate = formatDate;
-exports.formatDateTime = formatDateTime;
-exports.formatText = formatText;
-exports.getContextUserId = getContextUserId;
-exports.getDateLocale = getDateLocale;
-exports.getInitials = getInitials;
-exports.getMessageableUsers = getMessageableUsers;
-exports.getRoleBadge = getRoleBadge;
-exports.isFeatureAvailable = isFeatureAvailable;
-exports.isManagerialRole = isManagerialRole;
-exports.normalizePaginatedResponse = normalizePaginatedResponse;
-exports.parseApiError = parseApiError;
-exports.parseData = parseData;
-exports.resolveVotingMethods = resolveVotingMethods;
-//# sourceMappingURL=chunk-MCC3KMBF.cjs.map
-//# sourceMappingURL=chunk-MCC3KMBF.cjs.map
+export { DATETIME_FORMATS, DATE_FORMATS, LOCALE_MAP, MANAGERIAL_BUILDING_ROLES, ParseError, ROLE_BADGE_COLORS, ROLE_DESCRIPTION_KEYS, ROLE_TRANSLATION_KEYS, TIME_FORMATS, VOTING_METHOD_SETTINGS, applyResidentRestriction, applyResidentRestrictionToItem, buildGoogleCalendarUrl, canDo, canDoOnResource, canMessageUser, computeActionFlags, createPermissionChecker, debounce, formatCurrency, formatCurrencyByLocale, formatCurrencyEUR, formatDate, formatDateTime, formatText, getContextUserId, getDateLocale, getInitials, getMessageableUsers, getRoleBadge, isFeatureAvailable, isManagerialRole, normalizePaginatedResponse, parseApiError, parseData, resolveVotingMethods };
+//# sourceMappingURL=chunk-4WUV4P4D.js.map
+//# sourceMappingURL=chunk-4WUV4P4D.js.map

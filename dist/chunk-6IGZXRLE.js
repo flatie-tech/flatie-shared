@@ -1,8 +1,8 @@
 import { normalizeMoney } from './chunk-ZD7YLRHX.js';
 import { optionalIbanSchema } from './chunk-7YKQN43X.js';
 import { isZuozAdjacentConsentCategory, AI_CHAT_LIMITS } from './chunk-XDD32FEC.js';
-import { BoardVisibility, Priority, DunningLevel, DunningCaseStatus, BuildingType, BuildingRole, PricuvaRefMode, FundsSource, OrgRole, OrgType, DsarRequestType, DsarRequestStatus, DSAR_MAX_EXTENSION_DAYS, FailureFundingSource, FailureUnitType, FailureLocationType, FailureStatus, EnterpriseRequestStatus, PollType, TransactionType, PlatformRole, BuildingStatus, CommonStatus, ApprovalStatus, NotificationType, PLATFORM_FEATURES, PollCannotVoteReason } from './chunk-HC7CBODS.js';
-import { BACKEND_ERROR_CODES } from './chunk-7OHDTTJO.js';
+import { BoardVisibility, Priority, DunningLevel, DunningCaseStatus, FeeModel, ManagementInvoiceStatus, BuildingType, BuildingRole, PricuvaRefMode, FundsSource, OrgRole, OrgType, DsarRequestType, DsarRequestStatus, DSAR_MAX_EXTENSION_DAYS, FailureFundingSource, FailureUnitType, FailureLocationType, FailureStatus, EnterpriseRequestStatus, PollType, TransactionType, PlatformRole, BuildingStatus, CommonStatus, ApprovalStatus, NotificationType, PLATFORM_FEATURES, PollCannotVoteReason } from './chunk-367LF2PU.js';
+import { BACKEND_ERROR_CODES } from './chunk-WHCWJXEO.js';
 import { z } from 'zod';
 
 var apiErrorSchema = z.object({
@@ -678,6 +678,163 @@ var createInterestRateSchema = z.object({
 var interestRatesResponseSchema = z.object({
   rows: z.array(interestRateSchema).describe("Ordered by validFrom descending.")
 }).meta({ id: "InterestRatesResponse" });
+var moneyStringSchema = z.union([z.string(), z.number()]).transform((v) => typeof v === "number" ? v.toString() : v.trim()).pipe(
+  z.string().regex(/^\d+(\.\d{1,2})?$/, "must be a non-negative amount with at most 2 decimals").refine((s) => Number(s) <= 9999999999e-2, "amount exceeds the maximum of 99,999,999.99").transform((s) => normalizeMoney(s))
+);
+var signedMoneyStringSchema = z.union([z.string(), z.number()]).transform((v) => typeof v === "number" ? v.toString() : v.trim()).pipe(
+  z.string().regex(/^-?\d+(\.\d{1,2})?$/, "must be an amount with at most 2 decimals").refine((s) => Math.abs(Number(s)) <= 999999999999e-2, "balance exceeds the maximum").transform((s) => normalizeMoney(s))
+);
+var paginationParamsSchema = z.object({
+  offset: z.coerce.number().min(0).optional().default(0),
+  limit: z.coerce.number().min(1).max(100).optional().default(10)
+});
+var paginatedResponseSchema = (itemSchema) => z.object({
+  data: z.array(itemSchema).describe("Items for the current page."),
+  count: z.number().describe("Total number of matching items across all pages."),
+  page: z.number().describe("1-based current page index."),
+  limit: z.number().describe("Page size (items per page, max 100)."),
+  totalPages: z.number().describe("Total number of pages available for this query."),
+  hasNextPage: z.boolean().describe("True when another page follows the current one."),
+  hasPreviousPage: z.boolean().describe("True when a previous page exists.")
+});
+
+// src/schemas/entities/management-invoice.schema.ts
+var periodSchema2 = z.string().regex(/^\d{4}-\d{2}$/, "Period must be YYYY-MM.");
+var isoDateSchema3 = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be YYYY-MM-DD.");
+var feeModelSchema = z.enum([FeeModel.PER_UNIT, FeeModel.PER_SQM, FeeModel.FLAT]);
+var managementInvoiceStatusSchema = z.enum([
+  ManagementInvoiceStatus.ISSUED,
+  ManagementInvoiceStatus.PAID,
+  ManagementInvoiceStatus.CANCELLED
+]);
+var managementInvoiceSchema = z.object({
+  id: uuidSchema,
+  orgId: uuidSchema,
+  buildingId: uuidSchema,
+  buildingName: z.string(),
+  invoiceNumber: z.string().describe('e.g. "12/1/1"'),
+  year: z.number().int(),
+  period: periodSchema2.describe("Service month the fee covers."),
+  issuedAt: z.string().describe("ISO timestamp."),
+  issueDate: isoDateSchema3,
+  dueDate: isoDateSchema3,
+  feeModel: feeModelSchema,
+  quantity: z.string().describe("Units, m\xB2 or 1 \u2014 two decimals as string."),
+  unitPrice: moneyStringSchema,
+  netAmount: moneyStringSchema,
+  vatRate: z.number().describe("Percent."),
+  vatAmount: moneyStringSchema,
+  grossAmount: moneyStringSchema,
+  currency: z.string(),
+  model: z.string().describe("HUB3 model, HR00."),
+  reference: z.string().describe("Poziv na broj: {seq}-{year}."),
+  supplierName: z.string(),
+  supplierOib: z.string().nullable(),
+  supplierAddress: z.string().nullable(),
+  supplierIban: z.string(),
+  customerName: z.string(),
+  customerOib: z.string().nullable(),
+  customerAddress: z.string().nullable(),
+  description: z.string(),
+  status: managementInvoiceStatusSchema,
+  /** Derived: issued and past due. */
+  isOverdue: z.boolean(),
+  paidAt: z.string().nullable(),
+  cancelledAt: z.string().nullable(),
+  cancelReason: z.string().nullable(),
+  fileId: uuidSchema.nullable().describe("Archived PDF on the building."),
+  emailSentAt: z.string().nullable(),
+  eposlovanjeId: z.number().int().nullable(),
+  eposlovanjeStatus: z.number().int().nullable(),
+  sentToEposlovanjeAt: z.string().nullable(),
+  canMarkPaid: z.boolean(),
+  canCancel: z.boolean(),
+  canSendEracun: z.boolean()
+}).meta({ id: "ManagementInvoice" });
+var managementInvoiceListQuerySchema = z.object({
+  status: managementInvoiceStatusSchema.optional(),
+  buildingId: uuidSchema.optional(),
+  year: z.coerce.number().int().min(2e3).max(2100).optional(),
+  period: periodSchema2.optional(),
+  search: z.string().trim().max(100).optional(),
+  page: z.coerce.number().int().min(1).optional(),
+  limit: z.coerce.number().int().min(1).max(100).optional()
+}).meta({ id: "ManagementInvoiceListQuery" });
+var managementInvoiceListResponseSchema = paginatedResponseSchema(
+  managementInvoiceSchema
+).meta({ id: "ManagementInvoiceListResponse" });
+var managementInvoiceSummarySchema = z.object({
+  issuedThisMonth: moneyStringSchema,
+  openTotal: moneyStringSchema.describe("\u03A3 gross of issued (unpaid) invoices."),
+  overdueTotal: moneyStringSchema,
+  paidYtd: moneyStringSchema,
+  openCount: z.number().int(),
+  overdueCount: z.number().int()
+}).meta({ id: "ManagementInvoiceSummary" });
+var previewManagementInvoicesSchema = z.object({
+  period: periodSchema2,
+  buildingIds: z.array(uuidSchema).max(500).optional()
+}).meta({ id: "PreviewManagementInvoices" });
+var InvoiceBlocker = {
+  NO_FEE: "no_fee",
+  BUILDING_OIB_MISSING: "building_oib_missing",
+  ALREADY_ISSUED: "already_issued",
+  ORG_IDENTITY_INCOMPLETE: "org_identity_incomplete",
+  ZERO_QUANTITY: "zero_quantity"
+};
+var managementInvoicePreviewRowSchema = z.object({
+  buildingId: uuidSchema,
+  buildingName: z.string(),
+  feeModel: feeModelSchema.nullable(),
+  quantity: z.string(),
+  unitPrice: moneyStringSchema.nullable(),
+  netAmount: moneyStringSchema,
+  vatRate: z.number(),
+  vatAmount: moneyStringSchema,
+  grossAmount: moneyStringSchema,
+  blocker: z.enum([
+    InvoiceBlocker.NO_FEE,
+    InvoiceBlocker.BUILDING_OIB_MISSING,
+    InvoiceBlocker.ALREADY_ISSUED,
+    InvoiceBlocker.ORG_IDENTITY_INCOMPLETE,
+    InvoiceBlocker.ZERO_QUANTITY
+  ]).nullable(),
+  existingInvoiceId: uuidSchema.nullable()
+}).meta({ id: "ManagementInvoicePreviewRow" });
+var previewManagementInvoicesResponseSchema = z.object({
+  orgId: uuidSchema,
+  period: periodSchema2,
+  identityComplete: z.boolean(),
+  missingIdentityFields: z.array(z.string()),
+  rows: z.array(managementInvoicePreviewRowSchema),
+  issuableCount: z.number().int(),
+  totalGross: moneyStringSchema
+}).meta({ id: "PreviewManagementInvoicesResponse" });
+var issueManagementInvoicesSchema = z.object({
+  period: periodSchema2,
+  buildingIds: z.array(uuidSchema).min(1).max(500),
+  sendEmail: z.boolean().optional().describe("Also email the PDF to the building\u2019s representatives.")
+}).meta({ id: "IssueManagementInvoices" });
+var issueManagementInvoicesResponseSchema = z.object({
+  issued: z.array(managementInvoiceSchema),
+  skipped: z.array(
+    z.object({ buildingId: uuidSchema, buildingName: z.string(), reason: z.string() })
+  )
+}).meta({ id: "IssueManagementInvoicesResponse" });
+var markManagementInvoicePaidSchema = z.object({
+  paidAt: isoDateSchema3.optional().describe("Defaults to today."),
+  recordExpense: z.boolean().optional().describe(
+    "Also book the payment as an expense on the building (manual-mode buildings). Default true."
+  )
+}).meta({ id: "MarkManagementInvoicePaid" });
+var cancelManagementInvoiceSchema = z.object({
+  reason: z.string().trim().min(3).max(500)
+}).meta({ id: "CancelManagementInvoice" });
+var buildingManagementInvoicesResponseSchema = z.object({
+  buildingId: uuidSchema,
+  orgName: z.string().nullable(),
+  rows: z.array(managementInvoiceSchema)
+}).meta({ id: "BuildingManagementInvoicesResponse" });
 var BUILDING_TYPES = [
   BuildingType.RESIDENTIAL,
   BuildingType.COMMERCIAL,
@@ -945,7 +1102,27 @@ var createOrganizationSchema = z.object({
   contactEmail: z.string().email("Invalid email").optional().describe("Public contact email for the organization."),
   contactPhone: z.string().optional().describe("Public contact phone number.")
 });
-var updateOrganizationSchema = z.object({
+var organizationInvoicingIdentitySchema = z.object({
+  street: z.string().trim().max(200).nullable().optional().describe("Street + number."),
+  postalCode: z.string().trim().max(10).nullable().optional(),
+  city: z.string().trim().max(100).nullable().optional(),
+  country: z.string().trim().length(2).optional().describe("ISO 3166-1 alpha-2, default HR."),
+  iban: z.string().trim().regex(/^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/, "IBAN must be uppercase, no spaces").nullable().optional().describe("Account the fee is paid to (payee IBAN on the HUB3 slip)."),
+  isVatPayer: z.boolean().optional().describe("In the PDV system \u2192 25 % VAT on the fee."),
+  vatId: z.string().trim().max(20).nullable().optional().describe("e.g. HR12345678901"),
+  courtRegister: z.string().trim().max(200).nullable().optional().describe("Registration court + MBS, printed in the invoice footer."),
+  invoiceBusinessUnitCode: z.string().trim().max(20).optional().describe(
+    'Oznaka poslovnog prostora in the invoice number ({seq}/{bu}/{device}). Default "1".'
+  ),
+  invoiceDeviceCode: z.string().trim().max(20).optional().describe('Oznaka naplatnog ure\u0111aja. Default "1".'),
+  invoiceDueDays: z.number().int().min(1).max(90).optional().describe("Payment term, days from issue."),
+  invoiceFooter: z.string().trim().max(500).nullable().optional(),
+  eposlovanjeApiKey: z.string().trim().min(8).max(200).nullable().optional().describe(
+    "ePoslovanje.hr API key for sending eRa\u010Dun on the org\u2019s behalf. Write-only; null clears."
+  ),
+  autoIssueInvoices: z.boolean().optional().describe("Issue fee invoices automatically on the 1st for the previous month.")
+});
+var updateOrganizationSchema = organizationInvoicingIdentitySchema.extend({
   name: z.string().min(ORGANIZATION_LIMITS.NAME_MIN).max(ORGANIZATION_LIMITS.NAME_MAX).optional().describe("Revised organization name, 1\u2013200 chars."),
   contactEmail: z.string().email("Invalid email").optional().describe("Revised contact email."),
   contactPhone: z.string().optional().describe("Revised contact phone number."),
@@ -963,7 +1140,14 @@ var inviteOrgMemberSchema = z.object({
   orgRole: orgRoleSchema.describe("Organization role the invitee will receive when they accept."),
   message: z.string().optional().describe("Optional custom message included in the invitation email.")
 });
+var contractFeeFields = {
+  feeModel: z.enum([FeeModel.PER_UNIT, FeeModel.PER_SQM, FeeModel.FLAT]).nullable().optional().describe("How the monthly fee is priced; null = no fee configured."),
+  feeAmount: moneyStringSchema.nullable().optional().describe("EUR excl. VAT \u2014 per unit, per m\xB2 or flat per month depending on feeModel."),
+  feeVatRate: z.number().min(0).max(30).nullable().optional().describe("VAT % applied on the fee (25 for VAT payers, 0 otherwise). Defaults from the org."),
+  feeNote: z.string().trim().max(300).nullable().optional().describe("Printed on the invoice line.")
+};
 var assignOrgBuildingSchema = z.object({
+  ...contractFeeFields,
   buildingId: uuidSchema.describe("UUID of the building to assign to this organization."),
   contractStart: z.string().optional().describe("Contract start date (ISO-8601 date, `YYYY-MM-DD`). Omit for open-ended contracts."),
   contractEnd: z.string().optional().describe("Contract end date (ISO-8601 date, `YYYY-MM-DD`). Omit for open-ended contracts.")
@@ -992,6 +1176,7 @@ var getOrgMembersQuerySchema = z.object({
   sortOrder: z.enum(["asc", "desc"]).optional().describe("Sort direction: `asc` for ascending, `desc` for descending.")
 });
 var updateOrgBuildingContractSchema = z.object({
+  ...contractFeeFields,
   contractStart: z.string().nullable().optional().describe("New contract start date (ISO-8601 `YYYY-MM-DD`); null clears it."),
   contractEnd: z.string().nullable().optional().describe("New contract end date (ISO-8601 `YYYY-MM-DD`); null clears it.")
 });
@@ -1058,8 +1243,8 @@ var postPricuvaChargesResponseSchema = z.object({
   postedPeriods: z.array(z.string().regex(/^\d{4}-\d{2}$/)).describe("Closed months that received charges in this run (already-posted months skip)."),
   chargesPosted: z.number().int().describe("Total charge rows written across those periods.")
 }).meta({ id: "PostPricuvaChargesResponse" });
-var periodSchema2 = z.string().regex(/^\d{4}-\d{2}$/);
-var isoDateSchema3 = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
+var periodSchema3 = z.string().regex(/^\d{4}-\d{2}$/);
+var isoDateSchema4 = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 var MyPricuvaStatus = {
   /** Charges are not configured / tracking is off — nothing to pay through Flatie yet. */
   NOT_CONFIGURED: "not_configured",
@@ -1079,7 +1264,7 @@ var paymentSlipSchema = z.object({
   reference: z.string().describe("Poziv na broj (without the model)."),
   amount: z.number(),
   description: z.string(),
-  dueDate: isoDateSchema3.nullable(),
+  dueDate: isoDateSchema4.nullable(),
   barcodePng: z.string().describe("Base64 PNG of the PDF417 barcode.")
 }).meta({ id: "PaymentSlip" });
 var myPricuvaOwnerSchema = z.object({
@@ -1087,7 +1272,7 @@ var myPricuvaOwnerSchema = z.object({
   ownerName: z.string(),
   paymentRefCode: z.string().nullable(),
   units: z.array(ownerAccountUnitSchema),
-  period: periodSchema2.describe("The current billing period (this month)."),
+  period: periodSchema3.describe("The current billing period (this month)."),
   expected: z.number().describe("Amount due for `period`."),
   paidThisPeriod: z.number(),
   balance: z.number().describe("Cumulative balance; positive = owes."),
@@ -1103,7 +1288,7 @@ var myPricuvaOwnerSchema = z.object({
   balanceSlip: paymentSlipSchema.nullable().describe("Slip for the whole outstanding balance; only when balance > expected."),
   recentMonths: z.array(
     z.object({
-      period: periodSchema2,
+      period: periodSchema3,
       charged: z.number(),
       paid: z.number()
     })
@@ -1113,7 +1298,7 @@ var myPricuvaOwnerSchema = z.object({
       id: uuidSchema,
       level: z.enum([DunningLevel.REMINDER, DunningLevel.FINAL_NOTICE]),
       issuedAt: z.string(),
-      deadlineDate: isoDateSchema3,
+      deadlineDate: isoDateSchema4,
       totalAmount: z.number()
     })
   ),
@@ -1126,29 +1311,14 @@ var myPricuvaOwnerSchema = z.object({
 }).meta({ id: "MyPricuvaOwner" });
 var myPricuvaResponseSchema = z.object({
   buildingId: uuidSchema,
-  trackingFrom: periodSchema2.nullable(),
+  trackingFrom: periodSchema3.nullable(),
   owners: z.array(myPricuvaOwnerSchema)
 }).meta({ id: "MyPricuvaResponse" });
 var myPricuvaSlipQuerySchema = z.object({
   ownerId: uuidSchema.optional().describe("Required when the user maps to several owners."),
-  period: periodSchema2.optional(),
+  period: periodSchema3.optional(),
   amount: z.enum(["period", "balance"]).optional().describe("Which slip: default `period`.")
 }).meta({ id: "MyPricuvaSlipQuery" });
-var paginationParamsSchema = z.object({
-  offset: z.coerce.number().min(0).optional().default(0),
-  limit: z.coerce.number().min(1).max(100).optional().default(10)
-});
-var paginatedResponseSchema = (itemSchema) => z.object({
-  data: z.array(itemSchema).describe("Items for the current page."),
-  count: z.number().describe("Total number of matching items across all pages."),
-  page: z.number().describe("1-based current page index."),
-  limit: z.number().describe("Page size (items per page, max 100)."),
-  totalPages: z.number().describe("Total number of pages available for this query."),
-  hasNextPage: z.boolean().describe("True when another page follows the current one."),
-  hasPreviousPage: z.boolean().describe("True when a previous page exists.")
-});
-
-// src/schemas/entities/unit.schema.ts
 var UNIT_KINDS = ["apartment", "garage", "storage_unit"];
 var unitKindSchema = z.enum(UNIT_KINDS).describe("What the unit physically is: `apartment`, `garage`, or `storage_unit`.");
 var unitSchema = z.looseObject({
@@ -1510,14 +1680,6 @@ var updateEventSchema = z.object({
   minuteTakerId: uuidSchema.optional(),
   fileIds: z.array(uuidSchema).optional()
 });
-var moneyStringSchema = z.union([z.string(), z.number()]).transform((v) => typeof v === "number" ? v.toString() : v.trim()).pipe(
-  z.string().regex(/^\d+(\.\d{1,2})?$/, "must be a non-negative amount with at most 2 decimals").refine((s) => Number(s) <= 9999999999e-2, "amount exceeds the maximum of 99,999,999.99").transform((s) => normalizeMoney(s))
-);
-var signedMoneyStringSchema = z.union([z.string(), z.number()]).transform((v) => typeof v === "number" ? v.toString() : v.trim()).pipe(
-  z.string().regex(/^-?\d+(\.\d{1,2})?$/, "must be an amount with at most 2 decimals").refine((s) => Math.abs(Number(s)) <= 999999999999e-2, "balance exceeds the maximum").transform((s) => normalizeMoney(s))
-);
-
-// src/schemas/entities/expense-transaction.schema.ts
 var expenseAmountSchema = moneyStringSchema.describe(
   'Expense amount in EUR as a two-decimal string (e.g. "120.00").'
 );
@@ -3056,6 +3218,14 @@ var dunningNoticeIssuedDataSchema = baseNotificationDataSchema.extend({
   deadline: z.string().optional(),
   buildingName: z.string().optional()
 });
+var managementInvoiceIssuedDataSchema = baseNotificationDataSchema.extend({
+  invoiceId: z.string().optional(),
+  invoiceNumber: z.string().optional(),
+  orgName: z.string().optional(),
+  buildingName: z.string().optional(),
+  amount: z.string().optional(),
+  dueDate: z.string().optional()
+});
 var unimplementedDataSchema = baseNotificationDataSchema;
 var notificationDataSchemaByType = {
   [NotificationType.NOTICE_CREATED]: noticeCreatedDataSchema,
@@ -3082,6 +3252,7 @@ var notificationDataSchemaByType = {
   [NotificationType.PAYMENT_DUE]: unimplementedDataSchema,
   [NotificationType.PAYMENT_RECEIVED]: unimplementedDataSchema,
   [NotificationType.DUNNING_NOTICE_ISSUED]: dunningNoticeIssuedDataSchema,
+  [NotificationType.MANAGEMENT_INVOICE_ISSUED]: managementInvoiceIssuedDataSchema,
   [NotificationType.BUILDING_JOIN_REQUEST_RECEIVED]: buildingJoinRequestReceivedDataSchema,
   [NotificationType.BUILDING_JOIN_REQUEST_APPROVED]: buildingJoinRequestDecidedDataSchema,
   [NotificationType.BUILDING_JOIN_REQUEST_REJECTED]: buildingJoinRequestDecidedDataSchema,
@@ -3482,6 +3653,6 @@ var repDashboardSummaryResponseSchema = z.looseObject({
   pendingSignatureVotes: z.number().nullable().optional().describe("Printed-signature votes awaiting representative review (rep scope only).")
 }).describe("Payload of `GET /representatives/dashboard/summary`.");
 
-export { ARCHIVE_TYPES, AUDIT_DENIAL_TARGET_TYPE, ApprovalStatusSchema, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUG_REPORT_LIMITS, BUG_REPORT_STATUSES, BUILDING_ARCHIVE_TYPES, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, ConversationType, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, DunningHoldReason, EMAIL_LIMITS, ENTITY_LINK_TYPES, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, LINKABLE_ENTITY_TYPES, MyPricuvaStatus, NOTICE_LIMITS, ORGANIZATION_LIMITS, OrgInvitationStatus, POLL_LIMITS, POLL_TYPES, PricuvaDeliveryChannel, PricuvaDeliveryStatus, PrioritySchema, RECURRENCE_TYPES, REP_RECENT_ACTIVITY_TYPES, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, auditLogResponseSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, booleanish, bugReportResponseSchema, bugReportStatusSchema, buildingArchiveTypeSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingOwnerAssignmentSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBugReportSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createDsarEventSchema, createDsarRequestSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createEventSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createInterestRateSchema, createNoticeSchema, createOrgBroadcastSchema, createOrganizationSchema, createOwnerSchema, createPlatformSubscriptionSchema, createPollSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, dsarErasureSchema, dsarEventResponseSchema, dsarRequestResponseSchema, dunningCandidateSchema, dunningCandidatesQuerySchema, dunningCandidatesResponseSchema, dunningCaseDetailResponseSchema, dunningCaseSchema, dunningCaseStatusSchema, dunningCasesQuerySchema, dunningCasesResponseSchema, dunningLevelSchema, dunningNoticeSchema, dunningNoticesQuerySchema, dunningNoticesResponseSchema, dunningSettingsSnapshotSchema, dunningSummarySchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, emailUnreadCountResponseSchema, enterpriseRequestResponseSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportEventWithDateOrderSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, featureFlagsResponseSchema, finalizePollSchema, forgotPasswordSchema, getAuditLogsQuerySchema, getDsarRequestsQuerySchema, getEnterpriseRequestsQuerySchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getNotificationDataSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getPlatformSubscriptionsQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, idCardVerificationStatusSchema, interestRateSchema, interestRatesResponseSchema, inviteOrgMemberSchema, inviteOwnerSchema, issueDunningNoticesResponseSchema, issueDunningNoticesSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, listBugReportsResponseSchema, loginSchema, mapPricuvaRefResponseSchema, mapPricuvaRefSchema, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, myPricuvaOwnerSchema, myPricuvaResponseSchema, myPricuvaSlipQuerySchema, noticeEventSchema, noticeEventWithDateOrderSchema, noticeResponseSchema, notificationDataSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgAiImportAddressCandidateSchema, orgAiImportBuildingSchema, orgAiImportCommitResponseSchema, orgAiImportCommitSchema, orgAiImportExtractResponseSchema, orgAiImportSkippedRowSchema, orgBroadcastResponseSchema, orgBuildingFundsRowSchema, orgFundsOverviewResponseSchema, orgInvitationResponseSchema, orgStatementImportResponseSchema, orgStatementImportResultSchema, ownerAccountChargeSchema, ownerAccountPaymentSchema, ownerAccountQuerySchema, ownerAccountResponseSchema, ownerAccountUnitSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, paymentSlipSchema, permissionFieldsSchema, permissionsResponseSchema, platformFeatureFlagSchema, platformFeatureFlagsResponseSchema, platformSubscriptionResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, postPricuvaChargesResponseSchema, pricuvaDeliveriesResponseSchema, pricuvaDeliveryRowSchema, pricuvaOpeningBalanceRowSchema, pricuvaOpeningBalancesResponseSchema, priorityOptions, publicOrgInvitationSchema, recordDsarRectificationSchema, recordOfflineVotesSchema, recurrenceTypeSchema, registerSchema, rejectIdCardVerificationSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, revenueMetricsResponseSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, setDsarRestrictionSchema, signedMoneyStringSchema, strongPasswordSchema, submitIdCardVerificationSchema, timeSchema, unitKindSchema, unitSchema, unmatchedPricuvaRefRowSchema, unmatchedPricuvaRefsResponseSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBugReportSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateDsarRequestSchema, updateDunningCaseSchema, updateEnterpriseRequestSchema, updateEventSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgBuildingContractSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePlatformFeatureRequestSchema, updatePlatformSubscriptionSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, upsertPricuvaOpeningBalancesSchema, userEntitySchema, uuidSchema, verifyOtpSchema, voidDunningNoticeSchema, votePollSchema, voteWithIdCardSchema };
-//# sourceMappingURL=chunk-OIUT7LKK.js.map
-//# sourceMappingURL=chunk-OIUT7LKK.js.map
+export { ARCHIVE_TYPES, AUDIT_DENIAL_TARGET_TYPE, ApprovalStatusSchema, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUG_REPORT_LIMITS, BUG_REPORT_STATUSES, BUILDING_ARCHIVE_TYPES, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, ConversationType, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, DunningHoldReason, EMAIL_LIMITS, ENTITY_LINK_TYPES, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, InvoiceBlocker, LINKABLE_ENTITY_TYPES, MyPricuvaStatus, NOTICE_LIMITS, ORGANIZATION_LIMITS, OrgInvitationStatus, POLL_LIMITS, POLL_TYPES, PricuvaDeliveryChannel, PricuvaDeliveryStatus, PrioritySchema, RECURRENCE_TYPES, REP_RECENT_ACTIVITY_TYPES, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, auditLogResponseSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, booleanish, bugReportResponseSchema, bugReportStatusSchema, buildingArchiveTypeSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingManagementInvoicesResponseSchema, buildingOwnerAssignmentSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, cancelManagementInvoiceSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBugReportSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createDsarEventSchema, createDsarRequestSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createEventSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createInterestRateSchema, createNoticeSchema, createOrgBroadcastSchema, createOrganizationSchema, createOwnerSchema, createPlatformSubscriptionSchema, createPollSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, dsarErasureSchema, dsarEventResponseSchema, dsarRequestResponseSchema, dunningCandidateSchema, dunningCandidatesQuerySchema, dunningCandidatesResponseSchema, dunningCaseDetailResponseSchema, dunningCaseSchema, dunningCaseStatusSchema, dunningCasesQuerySchema, dunningCasesResponseSchema, dunningLevelSchema, dunningNoticeSchema, dunningNoticesQuerySchema, dunningNoticesResponseSchema, dunningSettingsSnapshotSchema, dunningSummarySchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, emailUnreadCountResponseSchema, enterpriseRequestResponseSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportEventWithDateOrderSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, featureFlagsResponseSchema, feeModelSchema, finalizePollSchema, forgotPasswordSchema, getAuditLogsQuerySchema, getDsarRequestsQuerySchema, getEnterpriseRequestsQuerySchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getNotificationDataSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getPlatformSubscriptionsQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, idCardVerificationStatusSchema, interestRateSchema, interestRatesResponseSchema, inviteOrgMemberSchema, inviteOwnerSchema, issueDunningNoticesResponseSchema, issueDunningNoticesSchema, issueManagementInvoicesResponseSchema, issueManagementInvoicesSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, listBugReportsResponseSchema, loginSchema, managementInvoiceListQuerySchema, managementInvoiceListResponseSchema, managementInvoicePreviewRowSchema, managementInvoiceSchema, managementInvoiceStatusSchema, managementInvoiceSummarySchema, mapPricuvaRefResponseSchema, mapPricuvaRefSchema, markManagementInvoicePaidSchema, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, myPricuvaOwnerSchema, myPricuvaResponseSchema, myPricuvaSlipQuerySchema, noticeEventSchema, noticeEventWithDateOrderSchema, noticeResponseSchema, notificationDataSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgAiImportAddressCandidateSchema, orgAiImportBuildingSchema, orgAiImportCommitResponseSchema, orgAiImportCommitSchema, orgAiImportExtractResponseSchema, orgAiImportSkippedRowSchema, orgBroadcastResponseSchema, orgBuildingFundsRowSchema, orgFundsOverviewResponseSchema, orgInvitationResponseSchema, orgStatementImportResponseSchema, orgStatementImportResultSchema, organizationInvoicingIdentitySchema, ownerAccountChargeSchema, ownerAccountPaymentSchema, ownerAccountQuerySchema, ownerAccountResponseSchema, ownerAccountUnitSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, paymentSlipSchema, permissionFieldsSchema, permissionsResponseSchema, platformFeatureFlagSchema, platformFeatureFlagsResponseSchema, platformSubscriptionResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, postPricuvaChargesResponseSchema, previewManagementInvoicesResponseSchema, previewManagementInvoicesSchema, pricuvaDeliveriesResponseSchema, pricuvaDeliveryRowSchema, pricuvaOpeningBalanceRowSchema, pricuvaOpeningBalancesResponseSchema, priorityOptions, publicOrgInvitationSchema, recordDsarRectificationSchema, recordOfflineVotesSchema, recurrenceTypeSchema, registerSchema, rejectIdCardVerificationSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, revenueMetricsResponseSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, setDsarRestrictionSchema, signedMoneyStringSchema, strongPasswordSchema, submitIdCardVerificationSchema, timeSchema, unitKindSchema, unitSchema, unmatchedPricuvaRefRowSchema, unmatchedPricuvaRefsResponseSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBugReportSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateDsarRequestSchema, updateDunningCaseSchema, updateEnterpriseRequestSchema, updateEventSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgBuildingContractSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePlatformFeatureRequestSchema, updatePlatformSubscriptionSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, upsertPricuvaOpeningBalancesSchema, userEntitySchema, uuidSchema, verifyOtpSchema, voidDunningNoticeSchema, votePollSchema, voteWithIdCardSchema };
+//# sourceMappingURL=chunk-6IGZXRLE.js.map
+//# sourceMappingURL=chunk-6IGZXRLE.js.map

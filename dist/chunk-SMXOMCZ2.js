@@ -59,6 +59,9 @@ var API_ROUTES = {
     // Co-owner self-service: my own pričuva position(s) with a HUB3 slip.
     PRICUVA_ME: (id) => `/buildings/${id}/pricuva/me`,
     PRICUVA_ME_SLIP_PDF: (id) => `/buildings/${id}/pricuva/me/slip.pdf`,
+    // Naknada upravitelja invoices addressed to this building (read side).
+    MANAGEMENT_INVOICES: (id) => `/buildings/${id}/management-invoices`,
+    MANAGEMENT_INVOICE_PDF: (id, invoiceId) => `/buildings/${id}/management-invoices/${invoiceId}/pdf`,
     SETTINGS: (id) => `/buildings/${id}/settings`,
     USERS: (id) => `/buildings/${id}/users`,
     OTP: (id) => `/buildings/${id}/otp`,
@@ -242,6 +245,16 @@ var API_ROUTES = {
     // Org-wide bank statement import: one FINA/PBZ file carries the whole
     // portfolio; statements route to buildings by IBAN.
     STATEMENT_IMPORT: (orgId) => `/organizations/${orgId}/statement-imports`,
+    // Naknada upravitelja — the firm's fee invoices to its buildings.
+    INVOICES: (orgId) => `/organizations/${orgId}/invoices`,
+    INVOICES_SUMMARY: (orgId) => `/organizations/${orgId}/invoices/summary`,
+    INVOICES_PREVIEW: (orgId) => `/organizations/${orgId}/invoices/preview`,
+    INVOICE: (orgId, invoiceId) => `/organizations/${orgId}/invoices/${invoiceId}`,
+    INVOICE_PDF: (orgId, invoiceId) => `/organizations/${orgId}/invoices/${invoiceId}/pdf`,
+    INVOICE_SEND_EMAIL: (orgId, invoiceId) => `/organizations/${orgId}/invoices/${invoiceId}/send-email`,
+    INVOICE_SEND_ERACUN: (orgId, invoiceId) => `/organizations/${orgId}/invoices/${invoiceId}/send-eracun`,
+    INVOICE_MARK_PAID: (orgId, invoiceId) => `/organizations/${orgId}/invoices/${invoiceId}/mark-paid`,
+    INVOICE_CANCEL: (orgId, invoiceId) => `/organizations/${orgId}/invoices/${invoiceId}/cancel`,
     // Org-level AI building import: extract founding documents for a building
     // not yet on Flatie, then commit = create building + import units/owners.
     AI_IMPORT_EXTRACT: (orgId) => `/organizations/${orgId}/ai-import/extract`,
@@ -340,5 +353,5 @@ var API_ROUTES = {
 };
 
 export { API_ROUTES };
-//# sourceMappingURL=chunk-PCNQPEJW.js.map
-//# sourceMappingURL=chunk-PCNQPEJW.js.map
+//# sourceMappingURL=chunk-SMXOMCZ2.js.map
+//# sourceMappingURL=chunk-SMXOMCZ2.js.map

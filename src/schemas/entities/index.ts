@@ -134,6 +134,37 @@ export {
   interestRateSchema,
   interestRatesResponseSchema,
 } from './interest-rate.schema';
+// Naknada upravitelja — management-fee invoices (org → building)
+export type {
+  BuildingManagementInvoicesResponse,
+  CancelManagementInvoiceSchema,
+  IssueManagementInvoicesResponse,
+  IssueManagementInvoicesSchema,
+  ManagementInvoice,
+  ManagementInvoiceListQuery,
+  ManagementInvoicePreviewRow,
+  ManagementInvoiceSummary,
+  MarkManagementInvoicePaidSchema,
+  PreviewManagementInvoicesResponse,
+  PreviewManagementInvoicesSchema,
+} from './management-invoice.schema';
+export {
+  buildingManagementInvoicesResponseSchema,
+  cancelManagementInvoiceSchema,
+  feeModelSchema,
+  InvoiceBlocker,
+  issueManagementInvoicesResponseSchema,
+  issueManagementInvoicesSchema,
+  managementInvoiceListQuerySchema,
+  managementInvoiceListResponseSchema,
+  managementInvoicePreviewRowSchema,
+  managementInvoiceSchema,
+  managementInvoiceStatusSchema,
+  managementInvoiceSummarySchema,
+  markManagementInvoicePaidSchema,
+  previewManagementInvoicesResponseSchema,
+  previewManagementInvoicesSchema,
+} from './management-invoice.schema';
 // Org-level AI building import
 export type {
   OrgAiImportBuilding,
@@ -178,6 +209,7 @@ export {
   inviteOrgMemberSchema,
   ORGANIZATION_LIMITS,
   OrgInvitationStatus,
+  organizationInvoicingIdentitySchema,
   orgBroadcastResponseSchema,
   orgInvitationResponseSchema,
   publicOrgInvitationSchema,

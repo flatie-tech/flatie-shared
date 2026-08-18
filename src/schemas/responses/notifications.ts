@@ -192,6 +192,16 @@ const dunningNoticeIssuedDataSchema = baseNotificationDataSchema.extend({
   buildingName: z.string().optional(),
 });
 
+/** management_invoice_issued — the firm's fee invoice landed on the building. */
+const managementInvoiceIssuedDataSchema = baseNotificationDataSchema.extend({
+  invoiceId: z.string().optional(),
+  invoiceNumber: z.string().optional(),
+  orgName: z.string().optional(),
+  buildingName: z.string().optional(),
+  amount: z.string().optional(),
+  dueDate: z.string().optional(),
+});
+
 /**
  * Unimplemented notification types (no emit sites yet) — shape will be
  * locked down when the triggers ship. Until then we accept the base shape.
@@ -236,6 +246,7 @@ const notificationDataSchemaByType = {
   [NotificationType.PAYMENT_DUE]: unimplementedDataSchema,
   [NotificationType.PAYMENT_RECEIVED]: unimplementedDataSchema,
   [NotificationType.DUNNING_NOTICE_ISSUED]: dunningNoticeIssuedDataSchema,
+  [NotificationType.MANAGEMENT_INVOICE_ISSUED]: managementInvoiceIssuedDataSchema,
 
   [NotificationType.BUILDING_JOIN_REQUEST_RECEIVED]: buildingJoinRequestReceivedDataSchema,
   [NotificationType.BUILDING_JOIN_REQUEST_APPROVED]: buildingJoinRequestDecidedDataSchema,

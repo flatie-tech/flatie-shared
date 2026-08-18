@@ -118,6 +118,11 @@ export const NOTIFICATION_TOPICS: readonly NotificationTopic[] = [
     kind: 'single',
     types: [NotificationType.DUNNING_NOTICE_ISSUED],
   },
+  {
+    id: 'management_invoice',
+    kind: 'single',
+    types: [NotificationType.MANAGEMENT_INVOICE_ISSUED],
+  },
 
   // ── Chat / mailbox ───────────────────────────────────────────────────────
   { id: 'chat_new_message', kind: 'single', types: [NotificationType.CHAT_MESSAGE] },

@@ -2,9 +2,9 @@ import * as zod from 'zod';
 import { z } from 'zod';
 export { C as CreatePollSchema, b as EVENT_COLORS, e as EVENT_TYPES, d as EVENT_TYPE_COLOR_MAP, E as EventColorOption, a as EventTypeOption, F as FinalizePollSchema, P as POLL_LIMITS, m as POLL_TYPES, h as RECURRENCE_TYPES, i as RecordOfflineVotesSchema, R as RecurrenceTypeOption, U as UpdatePollSchema, V as VotePollSchema, j as VoteWithIdCardSchema, c as createEventSchema, k as createPollSchema, f as eventColorSchema, g as eventTypeSchema, l as finalizePollSchema, p as pollTypeSchema, n as recordOfflineVotesSchema, r as recurrenceTypeSchema, t as timeSchema, u as updateEventSchema, o as updatePollSchema, v as votePollSchema, q as voteWithIdCardSchema } from '../poll.schema-CaGhYa4I.cjs';
 import * as zod_v4_core from 'zod/v4/core';
-import { S as Strict } from '../notifications-gwhcnXUM.cjs';
-export { N as NotificationPreferenceCategory, a as NotificationPreferenceItem, b as NotificationResponse, g as getNotificationDataSchema, n as notificationDataSchema, c as notificationPreferenceCategorySchema, d as notificationPreferenceItemSchema, e as notificationResponseSchema } from '../notifications-gwhcnXUM.cjs';
-import '../notification.enum-C1IHyJHj.cjs';
+import { S as Strict } from '../notifications-BepkLB5r.cjs';
+export { N as NotificationPreferenceCategory, a as NotificationPreferenceItem, b as NotificationResponse, g as getNotificationDataSchema, n as notificationDataSchema, c as notificationPreferenceCategorySchema, d as notificationPreferenceItemSchema, e as notificationResponseSchema } from '../notifications-BepkLB5r.cjs';
+import '../notification.enum-PAMm0M-t.cjs';
 
 /**
  * API error response envelope.
@@ -1153,6 +1153,352 @@ type InterestRate = z.infer<typeof interestRateSchema>;
 type CreateInterestRateSchema = z.infer<typeof createInterestRateSchema>;
 type InterestRatesResponse = z.infer<typeof interestRatesResponseSchema>;
 
+declare const feeModelSchema: z.ZodEnum<{
+    flat: "flat";
+    per_unit: "per_unit";
+    per_sqm: "per_sqm";
+}>;
+declare const managementInvoiceStatusSchema: z.ZodEnum<{
+    cancelled: "cancelled";
+    issued: "issued";
+    paid: "paid";
+}>;
+declare const managementInvoiceSchema: z.ZodObject<{
+    id: z.ZodString;
+    orgId: z.ZodString;
+    buildingId: z.ZodString;
+    buildingName: z.ZodString;
+    invoiceNumber: z.ZodString;
+    year: z.ZodNumber;
+    period: z.ZodString;
+    issuedAt: z.ZodString;
+    issueDate: z.ZodString;
+    dueDate: z.ZodString;
+    feeModel: z.ZodEnum<{
+        flat: "flat";
+        per_unit: "per_unit";
+        per_sqm: "per_sqm";
+    }>;
+    quantity: z.ZodString;
+    unitPrice: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+    netAmount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+    vatRate: z.ZodNumber;
+    vatAmount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+    grossAmount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+    currency: z.ZodString;
+    model: z.ZodString;
+    reference: z.ZodString;
+    supplierName: z.ZodString;
+    supplierOib: z.ZodNullable<z.ZodString>;
+    supplierAddress: z.ZodNullable<z.ZodString>;
+    supplierIban: z.ZodString;
+    customerName: z.ZodString;
+    customerOib: z.ZodNullable<z.ZodString>;
+    customerAddress: z.ZodNullable<z.ZodString>;
+    description: z.ZodString;
+    status: z.ZodEnum<{
+        cancelled: "cancelled";
+        issued: "issued";
+        paid: "paid";
+    }>;
+    isOverdue: z.ZodBoolean;
+    paidAt: z.ZodNullable<z.ZodString>;
+    cancelledAt: z.ZodNullable<z.ZodString>;
+    cancelReason: z.ZodNullable<z.ZodString>;
+    fileId: z.ZodNullable<z.ZodString>;
+    emailSentAt: z.ZodNullable<z.ZodString>;
+    eposlovanjeId: z.ZodNullable<z.ZodNumber>;
+    eposlovanjeStatus: z.ZodNullable<z.ZodNumber>;
+    sentToEposlovanjeAt: z.ZodNullable<z.ZodString>;
+    canMarkPaid: z.ZodBoolean;
+    canCancel: z.ZodBoolean;
+    canSendEracun: z.ZodBoolean;
+}, z.core.$strip>;
+type ManagementInvoice = z.infer<typeof managementInvoiceSchema>;
+declare const managementInvoiceListQuerySchema: z.ZodObject<{
+    status: z.ZodOptional<z.ZodEnum<{
+        cancelled: "cancelled";
+        issued: "issued";
+        paid: "paid";
+    }>>;
+    buildingId: z.ZodOptional<z.ZodString>;
+    year: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    period: z.ZodOptional<z.ZodString>;
+    search: z.ZodOptional<z.ZodString>;
+    page: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    limit: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+}, z.core.$strip>;
+type ManagementInvoiceListQuery = z.infer<typeof managementInvoiceListQuerySchema>;
+declare const managementInvoiceListResponseSchema: z.ZodObject<{
+    data: z.ZodArray<z.ZodObject<{
+        id: z.ZodString;
+        orgId: z.ZodString;
+        buildingId: z.ZodString;
+        buildingName: z.ZodString;
+        invoiceNumber: z.ZodString;
+        year: z.ZodNumber;
+        period: z.ZodString;
+        issuedAt: z.ZodString;
+        issueDate: z.ZodString;
+        dueDate: z.ZodString;
+        feeModel: z.ZodEnum<{
+            flat: "flat";
+            per_unit: "per_unit";
+            per_sqm: "per_sqm";
+        }>;
+        quantity: z.ZodString;
+        unitPrice: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+        netAmount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+        vatRate: z.ZodNumber;
+        vatAmount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+        grossAmount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+        currency: z.ZodString;
+        model: z.ZodString;
+        reference: z.ZodString;
+        supplierName: z.ZodString;
+        supplierOib: z.ZodNullable<z.ZodString>;
+        supplierAddress: z.ZodNullable<z.ZodString>;
+        supplierIban: z.ZodString;
+        customerName: z.ZodString;
+        customerOib: z.ZodNullable<z.ZodString>;
+        customerAddress: z.ZodNullable<z.ZodString>;
+        description: z.ZodString;
+        status: z.ZodEnum<{
+            cancelled: "cancelled";
+            issued: "issued";
+            paid: "paid";
+        }>;
+        isOverdue: z.ZodBoolean;
+        paidAt: z.ZodNullable<z.ZodString>;
+        cancelledAt: z.ZodNullable<z.ZodString>;
+        cancelReason: z.ZodNullable<z.ZodString>;
+        fileId: z.ZodNullable<z.ZodString>;
+        emailSentAt: z.ZodNullable<z.ZodString>;
+        eposlovanjeId: z.ZodNullable<z.ZodNumber>;
+        eposlovanjeStatus: z.ZodNullable<z.ZodNumber>;
+        sentToEposlovanjeAt: z.ZodNullable<z.ZodString>;
+        canMarkPaid: z.ZodBoolean;
+        canCancel: z.ZodBoolean;
+        canSendEracun: z.ZodBoolean;
+    }, z.core.$strip>>;
+    count: z.ZodNumber;
+    page: z.ZodNumber;
+    limit: z.ZodNumber;
+    totalPages: z.ZodNumber;
+    hasNextPage: z.ZodBoolean;
+    hasPreviousPage: z.ZodBoolean;
+}, z.core.$strip>;
+declare const managementInvoiceSummarySchema: z.ZodObject<{
+    issuedThisMonth: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+    openTotal: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+    overdueTotal: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+    paidYtd: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+    openCount: z.ZodNumber;
+    overdueCount: z.ZodNumber;
+}, z.core.$strip>;
+type ManagementInvoiceSummary = z.infer<typeof managementInvoiceSummarySchema>;
+declare const previewManagementInvoicesSchema: z.ZodObject<{
+    period: z.ZodString;
+    buildingIds: z.ZodOptional<z.ZodArray<z.ZodString>>;
+}, z.core.$strip>;
+type PreviewManagementInvoicesSchema = z.infer<typeof previewManagementInvoicesSchema>;
+/** Why a building cannot be invoiced for the period. */
+declare const InvoiceBlocker: {
+    readonly NO_FEE: "no_fee";
+    readonly BUILDING_OIB_MISSING: "building_oib_missing";
+    readonly ALREADY_ISSUED: "already_issued";
+    readonly ORG_IDENTITY_INCOMPLETE: "org_identity_incomplete";
+    readonly ZERO_QUANTITY: "zero_quantity";
+};
+type InvoiceBlocker = (typeof InvoiceBlocker)[keyof typeof InvoiceBlocker];
+declare const managementInvoicePreviewRowSchema: z.ZodObject<{
+    buildingId: z.ZodString;
+    buildingName: z.ZodString;
+    feeModel: z.ZodNullable<z.ZodEnum<{
+        flat: "flat";
+        per_unit: "per_unit";
+        per_sqm: "per_sqm";
+    }>>;
+    quantity: z.ZodString;
+    unitPrice: z.ZodNullable<z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>>;
+    netAmount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+    vatRate: z.ZodNumber;
+    vatAmount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+    grossAmount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+    blocker: z.ZodNullable<z.ZodEnum<{
+        no_fee: "no_fee";
+        building_oib_missing: "building_oib_missing";
+        already_issued: "already_issued";
+        org_identity_incomplete: "org_identity_incomplete";
+        zero_quantity: "zero_quantity";
+    }>>;
+    existingInvoiceId: z.ZodNullable<z.ZodString>;
+}, z.core.$strip>;
+declare const previewManagementInvoicesResponseSchema: z.ZodObject<{
+    orgId: z.ZodString;
+    period: z.ZodString;
+    identityComplete: z.ZodBoolean;
+    missingIdentityFields: z.ZodArray<z.ZodString>;
+    rows: z.ZodArray<z.ZodObject<{
+        buildingId: z.ZodString;
+        buildingName: z.ZodString;
+        feeModel: z.ZodNullable<z.ZodEnum<{
+            flat: "flat";
+            per_unit: "per_unit";
+            per_sqm: "per_sqm";
+        }>>;
+        quantity: z.ZodString;
+        unitPrice: z.ZodNullable<z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>>;
+        netAmount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+        vatRate: z.ZodNumber;
+        vatAmount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+        grossAmount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+        blocker: z.ZodNullable<z.ZodEnum<{
+            no_fee: "no_fee";
+            building_oib_missing: "building_oib_missing";
+            already_issued: "already_issued";
+            org_identity_incomplete: "org_identity_incomplete";
+            zero_quantity: "zero_quantity";
+        }>>;
+        existingInvoiceId: z.ZodNullable<z.ZodString>;
+    }, z.core.$strip>>;
+    issuableCount: z.ZodNumber;
+    totalGross: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+}, z.core.$strip>;
+type PreviewManagementInvoicesResponse = z.infer<typeof previewManagementInvoicesResponseSchema>;
+type ManagementInvoicePreviewRow = z.infer<typeof managementInvoicePreviewRowSchema>;
+declare const issueManagementInvoicesSchema: z.ZodObject<{
+    period: z.ZodString;
+    buildingIds: z.ZodArray<z.ZodString>;
+    sendEmail: z.ZodOptional<z.ZodBoolean>;
+}, z.core.$strip>;
+type IssueManagementInvoicesSchema = z.infer<typeof issueManagementInvoicesSchema>;
+declare const issueManagementInvoicesResponseSchema: z.ZodObject<{
+    issued: z.ZodArray<z.ZodObject<{
+        id: z.ZodString;
+        orgId: z.ZodString;
+        buildingId: z.ZodString;
+        buildingName: z.ZodString;
+        invoiceNumber: z.ZodString;
+        year: z.ZodNumber;
+        period: z.ZodString;
+        issuedAt: z.ZodString;
+        issueDate: z.ZodString;
+        dueDate: z.ZodString;
+        feeModel: z.ZodEnum<{
+            flat: "flat";
+            per_unit: "per_unit";
+            per_sqm: "per_sqm";
+        }>;
+        quantity: z.ZodString;
+        unitPrice: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+        netAmount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+        vatRate: z.ZodNumber;
+        vatAmount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+        grossAmount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+        currency: z.ZodString;
+        model: z.ZodString;
+        reference: z.ZodString;
+        supplierName: z.ZodString;
+        supplierOib: z.ZodNullable<z.ZodString>;
+        supplierAddress: z.ZodNullable<z.ZodString>;
+        supplierIban: z.ZodString;
+        customerName: z.ZodString;
+        customerOib: z.ZodNullable<z.ZodString>;
+        customerAddress: z.ZodNullable<z.ZodString>;
+        description: z.ZodString;
+        status: z.ZodEnum<{
+            cancelled: "cancelled";
+            issued: "issued";
+            paid: "paid";
+        }>;
+        isOverdue: z.ZodBoolean;
+        paidAt: z.ZodNullable<z.ZodString>;
+        cancelledAt: z.ZodNullable<z.ZodString>;
+        cancelReason: z.ZodNullable<z.ZodString>;
+        fileId: z.ZodNullable<z.ZodString>;
+        emailSentAt: z.ZodNullable<z.ZodString>;
+        eposlovanjeId: z.ZodNullable<z.ZodNumber>;
+        eposlovanjeStatus: z.ZodNullable<z.ZodNumber>;
+        sentToEposlovanjeAt: z.ZodNullable<z.ZodString>;
+        canMarkPaid: z.ZodBoolean;
+        canCancel: z.ZodBoolean;
+        canSendEracun: z.ZodBoolean;
+    }, z.core.$strip>>;
+    skipped: z.ZodArray<z.ZodObject<{
+        buildingId: z.ZodString;
+        buildingName: z.ZodString;
+        reason: z.ZodString;
+    }, z.core.$strip>>;
+}, z.core.$strip>;
+type IssueManagementInvoicesResponse = z.infer<typeof issueManagementInvoicesResponseSchema>;
+declare const markManagementInvoicePaidSchema: z.ZodObject<{
+    paidAt: z.ZodOptional<z.ZodString>;
+    recordExpense: z.ZodOptional<z.ZodBoolean>;
+}, z.core.$strip>;
+type MarkManagementInvoicePaidSchema = z.infer<typeof markManagementInvoicePaidSchema>;
+declare const cancelManagementInvoiceSchema: z.ZodObject<{
+    reason: z.ZodString;
+}, z.core.$strip>;
+type CancelManagementInvoiceSchema = z.infer<typeof cancelManagementInvoiceSchema>;
+/** Building-side list (reps / co-owners see the invoices addressed to their building). */
+declare const buildingManagementInvoicesResponseSchema: z.ZodObject<{
+    buildingId: z.ZodString;
+    orgName: z.ZodNullable<z.ZodString>;
+    rows: z.ZodArray<z.ZodObject<{
+        id: z.ZodString;
+        orgId: z.ZodString;
+        buildingId: z.ZodString;
+        buildingName: z.ZodString;
+        invoiceNumber: z.ZodString;
+        year: z.ZodNumber;
+        period: z.ZodString;
+        issuedAt: z.ZodString;
+        issueDate: z.ZodString;
+        dueDate: z.ZodString;
+        feeModel: z.ZodEnum<{
+            flat: "flat";
+            per_unit: "per_unit";
+            per_sqm: "per_sqm";
+        }>;
+        quantity: z.ZodString;
+        unitPrice: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+        netAmount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+        vatRate: z.ZodNumber;
+        vatAmount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+        grossAmount: z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>;
+        currency: z.ZodString;
+        model: z.ZodString;
+        reference: z.ZodString;
+        supplierName: z.ZodString;
+        supplierOib: z.ZodNullable<z.ZodString>;
+        supplierAddress: z.ZodNullable<z.ZodString>;
+        supplierIban: z.ZodString;
+        customerName: z.ZodString;
+        customerOib: z.ZodNullable<z.ZodString>;
+        customerAddress: z.ZodNullable<z.ZodString>;
+        description: z.ZodString;
+        status: z.ZodEnum<{
+            cancelled: "cancelled";
+            issued: "issued";
+            paid: "paid";
+        }>;
+        isOverdue: z.ZodBoolean;
+        paidAt: z.ZodNullable<z.ZodString>;
+        cancelledAt: z.ZodNullable<z.ZodString>;
+        cancelReason: z.ZodNullable<z.ZodString>;
+        fileId: z.ZodNullable<z.ZodString>;
+        emailSentAt: z.ZodNullable<z.ZodString>;
+        eposlovanjeId: z.ZodNullable<z.ZodNumber>;
+        eposlovanjeStatus: z.ZodNullable<z.ZodNumber>;
+        sentToEposlovanjeAt: z.ZodNullable<z.ZodString>;
+        canMarkPaid: z.ZodBoolean;
+        canCancel: z.ZodBoolean;
+        canSendEracun: z.ZodBoolean;
+    }, z.core.$strip>>;
+}, z.core.$strip>;
+type BuildingManagementInvoicesResponse = z.infer<typeof buildingManagementInvoicesResponseSchema>;
+
 /**
  * Org-level AI building import: upload the founding documents
  * (međuvlasnički ugovor, ZK izvadak, upravitelj tables) for a building
@@ -1251,7 +1597,42 @@ declare const createOrganizationSchema: z.ZodObject<{
 /**
  * Update organization request schema (all fields optional)
  */
+/**
+ * Supplier identity a management firm needs before it can issue invoices
+ * (naknada upravitelja) through Flatie. All optional — an org without them
+ * simply cannot issue; `INVOICE_ORG_IDENTITY_INCOMPLETE` names what is missing.
+ */
+declare const organizationInvoicingIdentitySchema: z.ZodObject<{
+    street: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    postalCode: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    city: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    country: z.ZodOptional<z.ZodString>;
+    iban: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    isVatPayer: z.ZodOptional<z.ZodBoolean>;
+    vatId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    courtRegister: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    invoiceBusinessUnitCode: z.ZodOptional<z.ZodString>;
+    invoiceDeviceCode: z.ZodOptional<z.ZodString>;
+    invoiceDueDays: z.ZodOptional<z.ZodNumber>;
+    invoiceFooter: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    eposlovanjeApiKey: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    autoIssueInvoices: z.ZodOptional<z.ZodBoolean>;
+}, z.core.$strip>;
 declare const updateOrganizationSchema: z.ZodObject<{
+    street: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    postalCode: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    city: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    country: z.ZodOptional<z.ZodString>;
+    iban: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    isVatPayer: z.ZodOptional<z.ZodBoolean>;
+    vatId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    courtRegister: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    invoiceBusinessUnitCode: z.ZodOptional<z.ZodString>;
+    invoiceDeviceCode: z.ZodOptional<z.ZodString>;
+    invoiceDueDays: z.ZodOptional<z.ZodNumber>;
+    invoiceFooter: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    eposlovanjeApiKey: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    autoIssueInvoices: z.ZodOptional<z.ZodBoolean>;
     name: z.ZodOptional<z.ZodString>;
     contactEmail: z.ZodOptional<z.ZodString>;
     contactPhone: z.ZodOptional<z.ZodString>;
@@ -1293,13 +1674,18 @@ declare const inviteOrgMemberSchema: z.ZodObject<{
     }>;
     message: z.ZodOptional<z.ZodString>;
 }, z.core.$strip>;
-/**
- * Assign a building to an organization with optional contract window
- */
 declare const assignOrgBuildingSchema: z.ZodObject<{
     buildingId: z.ZodString;
     contractStart: z.ZodOptional<z.ZodString>;
     contractEnd: z.ZodOptional<z.ZodString>;
+    feeModel: z.ZodOptional<z.ZodNullable<z.ZodEnum<{
+        flat: "flat";
+        per_unit: "per_unit";
+        per_sqm: "per_sqm";
+    }>>>;
+    feeAmount: z.ZodOptional<z.ZodNullable<z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>>>;
+    feeVatRate: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
+    feeNote: z.ZodOptional<z.ZodNullable<z.ZodString>>;
 }, z.core.$strip>;
 /**
  * Assign a member to a building within the organization
@@ -1355,6 +1741,14 @@ declare const getOrgMembersQuerySchema: z.ZodObject<{
 declare const updateOrgBuildingContractSchema: z.ZodObject<{
     contractStart: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     contractEnd: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    feeModel: z.ZodOptional<z.ZodNullable<z.ZodEnum<{
+        flat: "flat";
+        per_unit: "per_unit";
+        per_sqm: "per_sqm";
+    }>>>;
+    feeAmount: z.ZodOptional<z.ZodNullable<z.ZodPipe<z.ZodPipe<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>, z.ZodTransform<string, string | number>>, z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>>>>;
+    feeVatRate: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
+    feeNote: z.ZodOptional<z.ZodNullable<z.ZodString>>;
 }, z.core.$strip>;
 /**
  * Organization invitation lifecycle states. Stored as text (uppercase,
@@ -1717,8 +2111,8 @@ declare const myPricuvaOwnerSchema: z.ZodObject<{
     interestToDate: z.ZodNumber;
     status: z.ZodEnum<{
         open: "open";
-        not_configured: "not_configured";
         paid: "paid";
+        not_configured: "not_configured";
         in_arrears: "in_arrears";
         credit: "credit";
     }>;
@@ -1785,8 +2179,8 @@ declare const myPricuvaResponseSchema: z.ZodObject<{
         interestToDate: z.ZodNumber;
         status: z.ZodEnum<{
             open: "open";
-            not_configured: "not_configured";
             paid: "paid";
+            not_configured: "not_configured";
             in_arrears: "in_arrears";
             credit: "credit";
         }>;
@@ -5394,4 +5788,4 @@ declare const PrioritySchema: z.ZodEnum<{
     urgent: "urgent";
 }>;
 
-export { ARCHIVE_TYPES, AUDIT_DENIAL_TARGET_TYPE, type AddOrgMemberSchema, type AiUsageResponse, type ApiError, type ApiErrorResponse, ApprovalStatusSchema, type ApproveFailureReportSchema, type ApproveNoticeSchema, type ArchiveType, type ArchivedItem, type AssignOrgBuildingSchema, type AssignOrgMemberBuildingSchema, type AssignOwnerInput, type AuditLogResponse, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUG_REPORT_LIMITS, BUG_REPORT_STATUSES, BUILDING_ARCHIVE_TYPES, BUILDING_LIMITS, BUILDING_TYPES, type BugReportResponse, type BugReportStatus, type BuildingArchiveType, type BuildingDetailResponse, type BuildingFundsLedgerResponse, type BuildingFundsLedgerRow, type BuildingOwnerAssignment, type BuildingResponse, type BuildingSettingsResponse, type BusinessPartnerResponse, CHAT_LIMITS, type CamtImportResponse, type ChatMessageResponse, type CommentResponse, CommonStatusSchema, type ConversationLastMessage, type ConversationParticipant, type ConversationResponse, ConversationType, type ConversationsListResponse, type CopyFaqsSchema, type CopyTransactionCategoriesSchema, type CreateBoardCardSchema, type CreateBoardColumnSchema, type CreateBoardSchema, type CreateBugReportSchema, type CreateBuildingSchema, type CreateBusinessPartnerInput, type CreateConversationSchema, type CreateDocumentSchema, type CreateDsarEventSchema, type CreateDsarRequestSchema, type CreateEmailThreadRequestPayload, type CreateEntityLinkRequest, type CreateFailureReportSchema, type CreateFaqSchema, type CreateIncomeSchema, type CreateInterestRateSchema, type CreateNoticeSchema, type CreateOrgBroadcastSchema, type CreateOrganizationSchema, type CreateOwnerInput, type CreatePlatformSubscriptionSchema, type CreateTransactionCategorySchema, type CreateUnitInput, type CursorQuerySchema, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, type DeleteEntityLinkQuery, type DocumentFile, type DocumentLinkedRecord, type DocumentResponse, type DsarErasureSchema, type DsarEventResponse, type DsarRequestResponse, type DunningCandidate, type DunningCandidatesResponse, type DunningCase, type DunningCaseDetailResponse, type DunningCasesQuery, type DunningCasesResponse, DunningHoldReason, type DunningNotice, type DunningNoticesQuery, type DunningNoticesResponse, type DunningSettingsSnapshot, type DunningSummary, EMAIL_LIMITS, ENTITY_LINK_TYPES, type EmailAttachment, type EmailMessage, type EmailThread, type EmailThreadDetail, type EmailUnreadCountResponse, type EnterpriseRequestResponse, type EntityLinkCountsResponse, type EntityLinkMetadata, type EntityLinkReference, type EntityLinksResponse, type EventResponse, FAILURE_REPORT_LIMITS, FAQ_LIMITS, type FailureReportEventSchema, type FailureReportResponse, FailureStatusSchema, type FaqResponse, type FeatureFlagsResponse, type GetAuditLogsQuerySchema, type GetDsarRequestsQuerySchema, type GetEnterpriseRequestsQuerySchema, type GetEntityLinkCountsQuery, type GetEntityLinksQuery, type GetOrgBuildingsQuerySchema, type GetOrgMembersQuerySchema, type GetPlatformSubscriptionsQuerySchema, type GetTransactionCategoriesQuerySchema, type IdCardVerificationStatus, type InterestRate, type InterestRatesResponse, type InviteOrgMemberSchema, type InviteOwnerInput, type IssueDunningNoticesResponse, type IssueDunningNoticesSchema, type JoinBuildingWithOtpSchema, LINKABLE_ENTITY_TYPES, type ListArchivedResponse, type ListBugReportsResponse, type MapPricuvaRefResponse, type MapPricuvaRefSchema, type MessageResponse, type MessagesListResponse, type MoveBoardCardSchema, type MyPricuvaOwner, type MyPricuvaResponse, type MyPricuvaSlipQuery, MyPricuvaStatus, NOTICE_LIMITS, type NoticeEventSchema, type NoticeResponse, ORGANIZATION_LIMITS, type OrgAiImportBuilding, type OrgAiImportCommitResponse, type OrgAiImportCommitSchema, type OrgAiImportExtractResponse, type OrgBroadcastResponse, type OrgBuildingFundsRow, type OrgFundsOverviewResponse, type OrgInvitationResponse, OrgInvitationStatus, type OrgStatementImportResponse, type OrgStatementImportResult, type OwnerAccountCharge, type OwnerAccountPayment, type OwnerAccountResponse, type OwnerAccountUnit, type OwnerResponse, type PaginatedBuildingsResponse, type PaginatedDocumentsResponse, type PaginatedEmailThreadsResponse, type PaginatedEventsResponse, type PaginatedFailureReportsResponse, type PaginatedNoticesResponse, type PaginatedPollsResponse, type PaginatedUnitsResponse, type PaymentSlip, type PermissionsResponseSchema, type PlatformFeatureFlag, type PlatformFeatureFlagsResponse, type PlatformSubscriptionResponse, type PollEligibleVoter, type PollEligibleVotersResponse, type PollResponse, type PollResults, type PollVotersResponse, type PostPricuvaChargesResponse, type PricuvaDeliveriesResponse, PricuvaDeliveryChannel, type PricuvaDeliveryRow, PricuvaDeliveryStatus, type PricuvaOpeningBalanceRow, type PricuvaOpeningBalancesResponse, PrioritySchema, type PublicOrgInvitation, REP_RECENT_ACTIVITY_TYPES, type RecordDsarRectificationSchema, type RejectIdCardVerificationSchema, type ReorderBoardColumnsSchema, type ReorderFaqsSchema, type RepBuildingActivity, type RepBuildingItem, type RepDashboardSummaryResponse, type RepRecentActivity, type RepUserBuilding, type ReplyEmailThreadRequestPayload, type RevenueMetricsResponse, type SearchUsersQuerySchema, type SendMessageSchema, type SetDsarRestrictionSchema, type SubmitIdCardVerificationSchema, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, type Unit, type UnitKind, type UnmatchedPricuvaRefsResponse, type UnreadCountResponse, type UpdateBoardCardSchema, type UpdateBoardColumnSchema, type UpdateBoardSchema, type UpdateBugReportSchema, type UpdateBuildingSchema, type UpdateBuildingSettingsSchema, type UpdateBusinessPartnerInput, type UpdateConversationSchema, type UpdateDocumentSchema, type UpdateDsarRequestSchema, type UpdateDunningCaseSchema, type UpdateEnterpriseRequestSchema, type UpdateExpenseSchema, type UpdateFailureReportSchema, type UpdateFaqSchema, type UpdateIncomeSchema, type UpdateNoticeSchema, type UpdateOrgBuildingContractSchema, type UpdateOrgMemberRoleSchema, type UpdateOrganizationSchema, type UpdateOwnerInput, type UpdatePlatformFeatureRequestPayload, type UpdatePlatformSubscriptionSchema, type UpdateTransactionCategorySchema, type UpdateUnitInput, type UpdateUserBuildingRoleSchema, type UpsertPricuvaOpeningBalancesSchema, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, auditLogResponseSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, booleanish, bugReportResponseSchema, bugReportStatusSchema, buildingArchiveTypeSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingOwnerAssignmentSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBugReportSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createDsarEventSchema, createDsarRequestSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createInterestRateSchema, createNoticeSchema, createOrgBroadcastSchema, createOrganizationSchema, createOwnerSchema, createPlatformSubscriptionSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, dsarErasureSchema, dsarEventResponseSchema, dsarRequestResponseSchema, dunningCandidateSchema, dunningCandidatesQuerySchema, dunningCandidatesResponseSchema, dunningCaseDetailResponseSchema, dunningCaseSchema, dunningCaseStatusSchema, dunningCasesQuerySchema, dunningCasesResponseSchema, dunningLevelSchema, dunningNoticeSchema, dunningNoticesQuerySchema, dunningNoticesResponseSchema, dunningSettingsSnapshotSchema, dunningSummarySchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, emailUnreadCountResponseSchema, enterpriseRequestResponseSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventResponseSchema, failureReportEventSchema, failureReportEventWithDateOrderSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, featureFlagsResponseSchema, forgotPasswordSchema, getAuditLogsQuerySchema, getDsarRequestsQuerySchema, getEnterpriseRequestsQuerySchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getPlatformSubscriptionsQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, idCardVerificationStatusSchema, interestRateSchema, interestRatesResponseSchema, inviteOrgMemberSchema, inviteOwnerSchema, issueDunningNoticesResponseSchema, issueDunningNoticesSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, listBugReportsResponseSchema, loginSchema, mapPricuvaRefResponseSchema, mapPricuvaRefSchema, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, myPricuvaOwnerSchema, myPricuvaResponseSchema, myPricuvaSlipQuerySchema, noticeEventSchema, noticeEventWithDateOrderSchema, noticeResponseSchema, optionalDateTimeSchema, orgAiImportAddressCandidateSchema, orgAiImportBuildingSchema, orgAiImportCommitResponseSchema, orgAiImportCommitSchema, orgAiImportExtractResponseSchema, orgAiImportSkippedRowSchema, orgBroadcastResponseSchema, orgBuildingFundsRowSchema, orgFundsOverviewResponseSchema, orgInvitationResponseSchema, orgStatementImportResponseSchema, orgStatementImportResultSchema, ownerAccountChargeSchema, ownerAccountPaymentSchema, ownerAccountQuerySchema, ownerAccountResponseSchema, ownerAccountUnitSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, paymentSlipSchema, permissionFieldsSchema, permissionsResponseSchema, platformFeatureFlagSchema, platformFeatureFlagsResponseSchema, platformSubscriptionResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollVotersResponseSchema, postPricuvaChargesResponseSchema, pricuvaDeliveriesResponseSchema, pricuvaDeliveryRowSchema, pricuvaOpeningBalanceRowSchema, pricuvaOpeningBalancesResponseSchema, priorityOptions, publicOrgInvitationSchema, recordDsarRectificationSchema, registerSchema, rejectIdCardVerificationSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, revenueMetricsResponseSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, setDsarRestrictionSchema, signedMoneyStringSchema, strongPasswordSchema, submitIdCardVerificationSchema, unitKindSchema, unitSchema, unmatchedPricuvaRefRowSchema, unmatchedPricuvaRefsResponseSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBugReportSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateDsarRequestSchema, updateDunningCaseSchema, updateEnterpriseRequestSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgBuildingContractSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePlatformFeatureRequestSchema, updatePlatformSubscriptionSchema, updatePollRequestSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, upsertPricuvaOpeningBalancesSchema, userEntitySchema, uuidSchema, verifyOtpSchema, voidDunningNoticeSchema };
+export { ARCHIVE_TYPES, AUDIT_DENIAL_TARGET_TYPE, type AddOrgMemberSchema, type AiUsageResponse, type ApiError, type ApiErrorResponse, ApprovalStatusSchema, type ApproveFailureReportSchema, type ApproveNoticeSchema, type ArchiveType, type ArchivedItem, type AssignOrgBuildingSchema, type AssignOrgMemberBuildingSchema, type AssignOwnerInput, type AuditLogResponse, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUG_REPORT_LIMITS, BUG_REPORT_STATUSES, BUILDING_ARCHIVE_TYPES, BUILDING_LIMITS, BUILDING_TYPES, type BugReportResponse, type BugReportStatus, type BuildingArchiveType, type BuildingDetailResponse, type BuildingFundsLedgerResponse, type BuildingFundsLedgerRow, type BuildingManagementInvoicesResponse, type BuildingOwnerAssignment, type BuildingResponse, type BuildingSettingsResponse, type BusinessPartnerResponse, CHAT_LIMITS, type CamtImportResponse, type CancelManagementInvoiceSchema, type ChatMessageResponse, type CommentResponse, CommonStatusSchema, type ConversationLastMessage, type ConversationParticipant, type ConversationResponse, ConversationType, type ConversationsListResponse, type CopyFaqsSchema, type CopyTransactionCategoriesSchema, type CreateBoardCardSchema, type CreateBoardColumnSchema, type CreateBoardSchema, type CreateBugReportSchema, type CreateBuildingSchema, type CreateBusinessPartnerInput, type CreateConversationSchema, type CreateDocumentSchema, type CreateDsarEventSchema, type CreateDsarRequestSchema, type CreateEmailThreadRequestPayload, type CreateEntityLinkRequest, type CreateFailureReportSchema, type CreateFaqSchema, type CreateIncomeSchema, type CreateInterestRateSchema, type CreateNoticeSchema, type CreateOrgBroadcastSchema, type CreateOrganizationSchema, type CreateOwnerInput, type CreatePlatformSubscriptionSchema, type CreateTransactionCategorySchema, type CreateUnitInput, type CursorQuerySchema, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, type DeleteEntityLinkQuery, type DocumentFile, type DocumentLinkedRecord, type DocumentResponse, type DsarErasureSchema, type DsarEventResponse, type DsarRequestResponse, type DunningCandidate, type DunningCandidatesResponse, type DunningCase, type DunningCaseDetailResponse, type DunningCasesQuery, type DunningCasesResponse, DunningHoldReason, type DunningNotice, type DunningNoticesQuery, type DunningNoticesResponse, type DunningSettingsSnapshot, type DunningSummary, EMAIL_LIMITS, ENTITY_LINK_TYPES, type EmailAttachment, type EmailMessage, type EmailThread, type EmailThreadDetail, type EmailUnreadCountResponse, type EnterpriseRequestResponse, type EntityLinkCountsResponse, type EntityLinkMetadata, type EntityLinkReference, type EntityLinksResponse, type EventResponse, FAILURE_REPORT_LIMITS, FAQ_LIMITS, type FailureReportEventSchema, type FailureReportResponse, FailureStatusSchema, type FaqResponse, type FeatureFlagsResponse, type GetAuditLogsQuerySchema, type GetDsarRequestsQuerySchema, type GetEnterpriseRequestsQuerySchema, type GetEntityLinkCountsQuery, type GetEntityLinksQuery, type GetOrgBuildingsQuerySchema, type GetOrgMembersQuerySchema, type GetPlatformSubscriptionsQuerySchema, type GetTransactionCategoriesQuerySchema, type IdCardVerificationStatus, type InterestRate, type InterestRatesResponse, type InviteOrgMemberSchema, type InviteOwnerInput, InvoiceBlocker, type IssueDunningNoticesResponse, type IssueDunningNoticesSchema, type IssueManagementInvoicesResponse, type IssueManagementInvoicesSchema, type JoinBuildingWithOtpSchema, LINKABLE_ENTITY_TYPES, type ListArchivedResponse, type ListBugReportsResponse, type ManagementInvoice, type ManagementInvoiceListQuery, type ManagementInvoicePreviewRow, type ManagementInvoiceSummary, type MapPricuvaRefResponse, type MapPricuvaRefSchema, type MarkManagementInvoicePaidSchema, type MessageResponse, type MessagesListResponse, type MoveBoardCardSchema, type MyPricuvaOwner, type MyPricuvaResponse, type MyPricuvaSlipQuery, MyPricuvaStatus, NOTICE_LIMITS, type NoticeEventSchema, type NoticeResponse, ORGANIZATION_LIMITS, type OrgAiImportBuilding, type OrgAiImportCommitResponse, type OrgAiImportCommitSchema, type OrgAiImportExtractResponse, type OrgBroadcastResponse, type OrgBuildingFundsRow, type OrgFundsOverviewResponse, type OrgInvitationResponse, OrgInvitationStatus, type OrgStatementImportResponse, type OrgStatementImportResult, type OwnerAccountCharge, type OwnerAccountPayment, type OwnerAccountResponse, type OwnerAccountUnit, type OwnerResponse, type PaginatedBuildingsResponse, type PaginatedDocumentsResponse, type PaginatedEmailThreadsResponse, type PaginatedEventsResponse, type PaginatedFailureReportsResponse, type PaginatedNoticesResponse, type PaginatedPollsResponse, type PaginatedUnitsResponse, type PaymentSlip, type PermissionsResponseSchema, type PlatformFeatureFlag, type PlatformFeatureFlagsResponse, type PlatformSubscriptionResponse, type PollEligibleVoter, type PollEligibleVotersResponse, type PollResponse, type PollResults, type PollVotersResponse, type PostPricuvaChargesResponse, type PreviewManagementInvoicesResponse, type PreviewManagementInvoicesSchema, type PricuvaDeliveriesResponse, PricuvaDeliveryChannel, type PricuvaDeliveryRow, PricuvaDeliveryStatus, type PricuvaOpeningBalanceRow, type PricuvaOpeningBalancesResponse, PrioritySchema, type PublicOrgInvitation, REP_RECENT_ACTIVITY_TYPES, type RecordDsarRectificationSchema, type RejectIdCardVerificationSchema, type ReorderBoardColumnsSchema, type ReorderFaqsSchema, type RepBuildingActivity, type RepBuildingItem, type RepDashboardSummaryResponse, type RepRecentActivity, type RepUserBuilding, type ReplyEmailThreadRequestPayload, type RevenueMetricsResponse, type SearchUsersQuerySchema, type SendMessageSchema, type SetDsarRestrictionSchema, type SubmitIdCardVerificationSchema, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, type Unit, type UnitKind, type UnmatchedPricuvaRefsResponse, type UnreadCountResponse, type UpdateBoardCardSchema, type UpdateBoardColumnSchema, type UpdateBoardSchema, type UpdateBugReportSchema, type UpdateBuildingSchema, type UpdateBuildingSettingsSchema, type UpdateBusinessPartnerInput, type UpdateConversationSchema, type UpdateDocumentSchema, type UpdateDsarRequestSchema, type UpdateDunningCaseSchema, type UpdateEnterpriseRequestSchema, type UpdateExpenseSchema, type UpdateFailureReportSchema, type UpdateFaqSchema, type UpdateIncomeSchema, type UpdateNoticeSchema, type UpdateOrgBuildingContractSchema, type UpdateOrgMemberRoleSchema, type UpdateOrganizationSchema, type UpdateOwnerInput, type UpdatePlatformFeatureRequestPayload, type UpdatePlatformSubscriptionSchema, type UpdateTransactionCategorySchema, type UpdateUnitInput, type UpdateUserBuildingRoleSchema, type UpsertPricuvaOpeningBalancesSchema, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, auditLogResponseSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, booleanish, bugReportResponseSchema, bugReportStatusSchema, buildingArchiveTypeSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingManagementInvoicesResponseSchema, buildingOwnerAssignmentSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, cancelManagementInvoiceSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBugReportSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createDsarEventSchema, createDsarRequestSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createInterestRateSchema, createNoticeSchema, createOrgBroadcastSchema, createOrganizationSchema, createOwnerSchema, createPlatformSubscriptionSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, dsarErasureSchema, dsarEventResponseSchema, dsarRequestResponseSchema, dunningCandidateSchema, dunningCandidatesQuerySchema, dunningCandidatesResponseSchema, dunningCaseDetailResponseSchema, dunningCaseSchema, dunningCaseStatusSchema, dunningCasesQuerySchema, dunningCasesResponseSchema, dunningLevelSchema, dunningNoticeSchema, dunningNoticesQuerySchema, dunningNoticesResponseSchema, dunningSettingsSnapshotSchema, dunningSummarySchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, emailUnreadCountResponseSchema, enterpriseRequestResponseSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventResponseSchema, failureReportEventSchema, failureReportEventWithDateOrderSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, featureFlagsResponseSchema, feeModelSchema, forgotPasswordSchema, getAuditLogsQuerySchema, getDsarRequestsQuerySchema, getEnterpriseRequestsQuerySchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getPlatformSubscriptionsQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, idCardVerificationStatusSchema, interestRateSchema, interestRatesResponseSchema, inviteOrgMemberSchema, inviteOwnerSchema, issueDunningNoticesResponseSchema, issueDunningNoticesSchema, issueManagementInvoicesResponseSchema, issueManagementInvoicesSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, listBugReportsResponseSchema, loginSchema, managementInvoiceListQuerySchema, managementInvoiceListResponseSchema, managementInvoicePreviewRowSchema, managementInvoiceSchema, managementInvoiceStatusSchema, managementInvoiceSummarySchema, mapPricuvaRefResponseSchema, mapPricuvaRefSchema, markManagementInvoicePaidSchema, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, myPricuvaOwnerSchema, myPricuvaResponseSchema, myPricuvaSlipQuerySchema, noticeEventSchema, noticeEventWithDateOrderSchema, noticeResponseSchema, optionalDateTimeSchema, orgAiImportAddressCandidateSchema, orgAiImportBuildingSchema, orgAiImportCommitResponseSchema, orgAiImportCommitSchema, orgAiImportExtractResponseSchema, orgAiImportSkippedRowSchema, orgBroadcastResponseSchema, orgBuildingFundsRowSchema, orgFundsOverviewResponseSchema, orgInvitationResponseSchema, orgStatementImportResponseSchema, orgStatementImportResultSchema, organizationInvoicingIdentitySchema, ownerAccountChargeSchema, ownerAccountPaymentSchema, ownerAccountQuerySchema, ownerAccountResponseSchema, ownerAccountUnitSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, paymentSlipSchema, permissionFieldsSchema, permissionsResponseSchema, platformFeatureFlagSchema, platformFeatureFlagsResponseSchema, platformSubscriptionResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollVotersResponseSchema, postPricuvaChargesResponseSchema, previewManagementInvoicesResponseSchema, previewManagementInvoicesSchema, pricuvaDeliveriesResponseSchema, pricuvaDeliveryRowSchema, pricuvaOpeningBalanceRowSchema, pricuvaOpeningBalancesResponseSchema, priorityOptions, publicOrgInvitationSchema, recordDsarRectificationSchema, registerSchema, rejectIdCardVerificationSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, revenueMetricsResponseSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, setDsarRestrictionSchema, signedMoneyStringSchema, strongPasswordSchema, submitIdCardVerificationSchema, unitKindSchema, unitSchema, unmatchedPricuvaRefRowSchema, unmatchedPricuvaRefsResponseSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBugReportSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateDsarRequestSchema, updateDunningCaseSchema, updateEnterpriseRequestSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgBuildingContractSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePlatformFeatureRequestSchema, updatePlatformSubscriptionSchema, updatePollRequestSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, upsertPricuvaOpeningBalancesSchema, userEntitySchema, uuidSchema, verifyOtpSchema, voidDunningNoticeSchema };

@@ -193,6 +193,21 @@ var JoinRequestStatus = {
   REJECTED: "rejected"
 };
 
+// src/enums/management-invoice.enum.ts
+var FeeModel = {
+  /** `feeAmount` × billable units (apartments + commercial units). */
+  PER_UNIT: "per_unit",
+  /** `feeAmount` × Σ unit area (m²). */
+  PER_SQM: "per_sqm",
+  /** `feeAmount` per building per month. */
+  FLAT: "flat"
+};
+var ManagementInvoiceStatus = {
+  ISSUED: "issued",
+  PAID: "paid",
+  CANCELLED: "cancelled"
+};
+
 // src/enums/notification.enum.ts
 var NotificationType = {
   NOTICE_CREATED: "notice_created",
@@ -219,6 +234,7 @@ var NotificationType = {
   PAYMENT_DUE: "payment_due",
   PAYMENT_RECEIVED: "payment_received",
   DUNNING_NOTICE_ISSUED: "dunning_notice_issued",
+  MANAGEMENT_INVOICE_ISSUED: "management_invoice_issued",
   BUILDING_JOIN_REQUEST_RECEIVED: "building_join_request_received",
   BUILDING_JOIN_REQUEST_APPROVED: "building_join_request_approved",
   BUILDING_JOIN_REQUEST_REJECTED: "building_join_request_rejected",
@@ -292,6 +308,7 @@ var NOTIFICATION_TYPE_CATEGORY = {
   [NotificationType.PAYMENT_DUE]: NotificationCategory.FINANCIAL,
   [NotificationType.PAYMENT_RECEIVED]: NotificationCategory.FINANCIAL,
   [NotificationType.DUNNING_NOTICE_ISSUED]: NotificationCategory.FINANCIAL,
+  [NotificationType.MANAGEMENT_INVOICE_ISSUED]: NotificationCategory.FINANCIAL,
   [NotificationType.CHAT_MESSAGE]: NotificationCategory.CHAT,
   [NotificationType.EMAIL_RECEIVED]: NotificationCategory.BUILDING_EMAIL,
   [NotificationType.BUILDING_JOIN_REQUEST_RECEIVED]: NotificationCategory.SYSTEM,
@@ -469,6 +486,9 @@ var Permission = {
   ORG_MANAGE_PARTNERS: "org:manage_partners",
   // Publish one notice to many/all managed buildings at once.
   ORG_BROADCAST: "org:broadcast",
+  // Naknada upravitelja — issuing / reading the firm's fee invoices to its buildings.
+  ORG_VIEW_INVOICING: "org:view_invoicing",
+  ORG_MANAGE_INVOICING: "org:manage_invoicing",
   // Platform (global scope)
   PLATFORM_APPROVE_BUILDINGS: "platform:approve_buildings",
   PLATFORM_MANAGE_USERS: "platform:manage_users",
@@ -758,6 +778,6 @@ function deriveVotingStrength(user) {
   return VotingStrength.NONE;
 }
 
-export { APPROVE_PERMISSIONS, ApprovalStatus, BUILDING_ROLE_RANK, BoardVisibility, BuildingOtpExpiry, BuildingRole, BuildingStatus, BuildingType, CO_OWNER_VISIBLE_SYSTEM_TYPES, CommonStatus, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DUNNING_CLOSED_STATUSES, DevicePlatform, DsarRequestStatus, DsarRequestType, DunningCaseStatus, DunningLevel, EnterpriseRequestStatus, EntityLinkType, FailureFundingSource, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FileCategory, Frequency, FundsSource, IdentityVerificationMethod, JoinRequestStatus, LinkableEntityType, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_ROLE_RANK, OrgRole, OrgStatus, OrgType, PLATFORM_FEATURES, PLATFORM_FEATURE_META, PLATFORM_ROLE_RANK, POLL_CANNOT_VOTE_REASON_KEY, Permission, PlatformFeature, PlatformRole, PollCannotVoteReason, PollStatus, PollType, PollVoteStatus, PricuvaRefMode, Priority, RESIDENT_VISIBLE_SYSTEM_TYPES, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, VotingStrength, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, deriveVotingStrength, domainPermissions, getBuildingFeatureDefault, methodToTier };
-//# sourceMappingURL=chunk-HC7CBODS.js.map
-//# sourceMappingURL=chunk-HC7CBODS.js.map
+export { APPROVE_PERMISSIONS, ApprovalStatus, BUILDING_ROLE_RANK, BoardVisibility, BuildingOtpExpiry, BuildingRole, BuildingStatus, BuildingType, CO_OWNER_VISIBLE_SYSTEM_TYPES, CommonStatus, DSAR_CLOSED_STATUSES, DSAR_MAX_EXTENSION_DAYS, DSAR_RETENTION_YEARS, DSAR_SLA_DAYS, DUNNING_CLOSED_STATUSES, DevicePlatform, DsarRequestStatus, DsarRequestType, DunningCaseStatus, DunningLevel, EnterpriseRequestStatus, EntityLinkType, FailureFundingSource, FailureLocationType, FailureStatus, FailureType, FailureUnitType, FeeModel, FileCategory, Frequency, FundsSource, IdentityVerificationMethod, JoinRequestStatus, LinkableEntityType, ManagementInvoiceStatus, NOTIFICATION_TYPE_CATEGORY, NotificationCategory, NotificationChannel, NotificationDeliveryStatus, NotificationType, ORG_ROLE_RANK, OrgRole, OrgStatus, OrgType, PLATFORM_FEATURES, PLATFORM_FEATURE_META, PLATFORM_ROLE_RANK, POLL_CANNOT_VOTE_REASON_KEY, Permission, PlatformFeature, PlatformRole, PollCannotVoteReason, PollStatus, PollType, PollVoteStatus, PricuvaRefMode, Priority, RESIDENT_VISIBLE_SYSTEM_TYPES, SCOPED_DOMAINS, SCOPED_PERMISSIONS, TransactionCategory, TransactionSource, TransactionType, UNIMPLEMENTED_NOTIFICATION_TYPES, UnitType, VerificationTier, VotingStrength, WASTE_SUBTYPE_NOTIFICATION_MAP, canAssignOrgRole, canAssignPlatformRole, canAssignRole, deriveVotingStrength, domainPermissions, getBuildingFeatureDefault, methodToTier };
+//# sourceMappingURL=chunk-367LF2PU.js.map
+//# sourceMappingURL=chunk-367LF2PU.js.map

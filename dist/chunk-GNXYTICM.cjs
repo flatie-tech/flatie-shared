@@ -1,6 +1,6 @@
 'use strict';
 
-var chunk6YLWH72I_cjs = require('./chunk-6YLWH72I.cjs');
+var chunkN53GQVG7_cjs = require('./chunk-N53GQVG7.cjs');
 
 // src/constants/defaults.ts
 var DEFAULT_PAGINATION_LIMIT = 10;
@@ -21,35 +21,35 @@ var ENTITY_LINK_TYPE_META = {
 
 // src/constants/entity-link-rules.ts
 var RELATED_TO_LINKABLE_TYPES = [
-  chunk6YLWH72I_cjs.LinkableEntityType.NOTICE,
-  chunk6YLWH72I_cjs.LinkableEntityType.EVENT,
-  chunk6YLWH72I_cjs.LinkableEntityType.POLL,
-  chunk6YLWH72I_cjs.LinkableEntityType.FAILURE_REPORT,
-  chunk6YLWH72I_cjs.LinkableEntityType.FILE,
-  chunk6YLWH72I_cjs.LinkableEntityType.BOARD_CARD
+  chunkN53GQVG7_cjs.LinkableEntityType.NOTICE,
+  chunkN53GQVG7_cjs.LinkableEntityType.EVENT,
+  chunkN53GQVG7_cjs.LinkableEntityType.POLL,
+  chunkN53GQVG7_cjs.LinkableEntityType.FAILURE_REPORT,
+  chunkN53GQVG7_cjs.LinkableEntityType.FILE,
+  chunkN53GQVG7_cjs.LinkableEntityType.BOARD_CARD
 ];
 var ALLOWED_ENTITY_LINKS = [
   {
-    source: chunk6YLWH72I_cjs.LinkableEntityType.NOTICE,
-    target: chunk6YLWH72I_cjs.LinkableEntityType.EVENT,
-    linkType: chunk6YLWH72I_cjs.EntityLinkType.SCHEDULE
+    source: chunkN53GQVG7_cjs.LinkableEntityType.NOTICE,
+    target: chunkN53GQVG7_cjs.LinkableEntityType.EVENT,
+    linkType: chunkN53GQVG7_cjs.EntityLinkType.SCHEDULE
   },
   {
-    source: chunk6YLWH72I_cjs.LinkableEntityType.FAILURE_REPORT,
-    target: chunk6YLWH72I_cjs.LinkableEntityType.EVENT,
-    linkType: chunk6YLWH72I_cjs.EntityLinkType.SCHEDULE
+    source: chunkN53GQVG7_cjs.LinkableEntityType.FAILURE_REPORT,
+    target: chunkN53GQVG7_cjs.LinkableEntityType.EVENT,
+    linkType: chunkN53GQVG7_cjs.EntityLinkType.SCHEDULE
   },
   {
-    source: chunk6YLWH72I_cjs.LinkableEntityType.EXPENSE_TRANSACTION,
-    target: chunk6YLWH72I_cjs.LinkableEntityType.FAILURE_REPORT,
-    linkType: chunk6YLWH72I_cjs.EntityLinkType.EXPENSE_FOR
+    source: chunkN53GQVG7_cjs.LinkableEntityType.EXPENSE_TRANSACTION,
+    target: chunkN53GQVG7_cjs.LinkableEntityType.FAILURE_REPORT,
+    linkType: chunkN53GQVG7_cjs.EntityLinkType.EXPENSE_FOR
   },
   {
-    source: chunk6YLWH72I_cjs.LinkableEntityType.EXPENSE_TRANSACTION,
-    target: chunk6YLWH72I_cjs.LinkableEntityType.POLL,
-    linkType: chunk6YLWH72I_cjs.EntityLinkType.BASED_ON
+    source: chunkN53GQVG7_cjs.LinkableEntityType.EXPENSE_TRANSACTION,
+    target: chunkN53GQVG7_cjs.LinkableEntityType.POLL,
+    linkType: chunkN53GQVG7_cjs.EntityLinkType.BASED_ON
   },
-  { source: "*", target: "*", linkType: chunk6YLWH72I_cjs.EntityLinkType.RELATED_TO }
+  { source: "*", target: "*", linkType: chunkN53GQVG7_cjs.EntityLinkType.RELATED_TO }
 ];
 function isEntityLinkAllowed(source, target, linkType) {
   return ALLOWED_ENTITY_LINKS.some((rule) => {
@@ -63,44 +63,44 @@ function isEntityLinkAllowed(source, target, linkType) {
 // src/constants/notification-topics.ts
 var NOTIFICATION_TOPICS = [
   // ── Notices ──────────────────────────────────────────────────────────────
-  { id: "notice_new", kind: "single", types: [chunk6YLWH72I_cjs.NotificationType.NOTICE_CREATED] },
+  { id: "notice_new", kind: "single", types: [chunkN53GQVG7_cjs.NotificationType.NOTICE_CREATED] },
   {
     id: "notice_decision",
     kind: "merged",
-    types: [chunk6YLWH72I_cjs.NotificationType.NOTICE_APPROVED, chunk6YLWH72I_cjs.NotificationType.NOTICE_REJECTED]
+    types: [chunkN53GQVG7_cjs.NotificationType.NOTICE_APPROVED, chunkN53GQVG7_cjs.NotificationType.NOTICE_REJECTED]
   },
   // ── Polls ────────────────────────────────────────────────────────────────
-  { id: "poll_new", kind: "single", types: [chunk6YLWH72I_cjs.NotificationType.POLL_CREATED] },
+  { id: "poll_new", kind: "single", types: [chunkN53GQVG7_cjs.NotificationType.POLL_CREATED] },
   {
     id: "poll_deadline",
     kind: "timing",
-    types: [chunk6YLWH72I_cjs.NotificationType.POLL_DEADLINE_24H, chunk6YLWH72I_cjs.NotificationType.POLL_DEADLINE_1H]
+    types: [chunkN53GQVG7_cjs.NotificationType.POLL_DEADLINE_24H, chunkN53GQVG7_cjs.NotificationType.POLL_DEADLINE_1H]
   },
-  { id: "poll_results", kind: "single", types: [chunk6YLWH72I_cjs.NotificationType.POLL_FINALIZED] },
+  { id: "poll_results", kind: "single", types: [chunkN53GQVG7_cjs.NotificationType.POLL_FINALIZED] },
   {
     id: "ballot_review_pending",
     kind: "single",
-    types: [chunk6YLWH72I_cjs.NotificationType.POLL_VOTE_SIGNATURE_PENDING]
+    types: [chunkN53GQVG7_cjs.NotificationType.POLL_VOTE_SIGNATURE_PENDING]
   },
   {
     id: "ballot_decision",
     kind: "merged",
     types: [
-      chunk6YLWH72I_cjs.NotificationType.POLL_VOTE_SIGNATURE_APPROVED,
-      chunk6YLWH72I_cjs.NotificationType.POLL_VOTE_SIGNATURE_REJECTED
+      chunkN53GQVG7_cjs.NotificationType.POLL_VOTE_SIGNATURE_APPROVED,
+      chunkN53GQVG7_cjs.NotificationType.POLL_VOTE_SIGNATURE_REJECTED
     ]
   },
   // ── Events ───────────────────────────────────────────────────────────────
-  { id: "event_new", kind: "single", types: [chunk6YLWH72I_cjs.NotificationType.EVENT_CREATED] },
+  { id: "event_new", kind: "single", types: [chunkN53GQVG7_cjs.NotificationType.EVENT_CREATED] },
   {
     id: "event_reminder",
     kind: "timing",
-    types: [chunk6YLWH72I_cjs.NotificationType.EVENT_REMINDER_24H, chunk6YLWH72I_cjs.NotificationType.EVENT_REMINDER_1H]
+    types: [chunkN53GQVG7_cjs.NotificationType.EVENT_REMINDER_24H, chunkN53GQVG7_cjs.NotificationType.EVENT_REMINDER_1H]
   },
   {
     id: "event_changes",
     kind: "merged",
-    types: [chunk6YLWH72I_cjs.NotificationType.EVENT_UPDATED, chunk6YLWH72I_cjs.NotificationType.EVENT_CANCELLED]
+    types: [chunkN53GQVG7_cjs.NotificationType.EVENT_UPDATED, chunkN53GQVG7_cjs.NotificationType.EVENT_CANCELLED]
   },
   // ── Waste ────────────────────────────────────────────────────────────────
   // Which fractions a building collects is building configuration, not a
@@ -109,79 +109,84 @@ var NOTIFICATION_TOPICS = [
     id: "waste_collection",
     kind: "merged",
     types: [
-      chunk6YLWH72I_cjs.NotificationType.WASTE_REMINDER_MIXED,
-      chunk6YLWH72I_cjs.NotificationType.WASTE_REMINDER_BIO,
-      chunk6YLWH72I_cjs.NotificationType.WASTE_REMINDER_PLASTIC_METAL,
-      chunk6YLWH72I_cjs.NotificationType.WASTE_REMINDER_PAPER_CARDBOARD
+      chunkN53GQVG7_cjs.NotificationType.WASTE_REMINDER_MIXED,
+      chunkN53GQVG7_cjs.NotificationType.WASTE_REMINDER_BIO,
+      chunkN53GQVG7_cjs.NotificationType.WASTE_REMINDER_PLASTIC_METAL,
+      chunkN53GQVG7_cjs.NotificationType.WASTE_REMINDER_PAPER_CARDBOARD
     ]
   },
   // ── Maintenance ──────────────────────────────────────────────────────────
   {
     id: "failure_report_new",
     kind: "single",
-    types: [chunk6YLWH72I_cjs.NotificationType.FAILURE_REPORT_CREATED]
+    types: [chunkN53GQVG7_cjs.NotificationType.FAILURE_REPORT_CREATED]
   },
   {
     id: "failure_report_progress",
     kind: "merged",
     types: [
-      chunk6YLWH72I_cjs.NotificationType.FAILURE_REPORT_STATUS_CHANGED,
-      chunk6YLWH72I_cjs.NotificationType.FAILURE_REPORT_RESOLVED
+      chunkN53GQVG7_cjs.NotificationType.FAILURE_REPORT_STATUS_CHANGED,
+      chunkN53GQVG7_cjs.NotificationType.FAILURE_REPORT_RESOLVED
     ]
   },
   {
     id: "failure_report_decision",
     kind: "merged",
-    types: [chunk6YLWH72I_cjs.NotificationType.FAILURE_REPORT_APPROVED, chunk6YLWH72I_cjs.NotificationType.FAILURE_REPORT_DECLINED]
+    types: [chunkN53GQVG7_cjs.NotificationType.FAILURE_REPORT_APPROVED, chunkN53GQVG7_cjs.NotificationType.FAILURE_REPORT_DECLINED]
   },
   // ── Finance ──────────────────────────────────────────────────────────────
   {
     id: "pricuva_dunning",
     kind: "single",
-    types: [chunk6YLWH72I_cjs.NotificationType.DUNNING_NOTICE_ISSUED]
+    types: [chunkN53GQVG7_cjs.NotificationType.DUNNING_NOTICE_ISSUED]
+  },
+  {
+    id: "management_invoice",
+    kind: "single",
+    types: [chunkN53GQVG7_cjs.NotificationType.MANAGEMENT_INVOICE_ISSUED]
   },
   // ── Chat / mailbox ───────────────────────────────────────────────────────
-  { id: "chat_new_message", kind: "single", types: [chunk6YLWH72I_cjs.NotificationType.CHAT_MESSAGE] },
-  { id: "mailbox_new_message", kind: "single", types: [chunk6YLWH72I_cjs.NotificationType.EMAIL_RECEIVED] },
+  { id: "chat_new_message", kind: "single", types: [chunkN53GQVG7_cjs.NotificationType.CHAT_MESSAGE] },
+  { id: "mailbox_new_message", kind: "single", types: [chunkN53GQVG7_cjs.NotificationType.EMAIL_RECEIVED] },
   // ── Membership ───────────────────────────────────────────────────────────
   {
     id: "member_joined",
     kind: "single",
-    types: [chunk6YLWH72I_cjs.NotificationType.BUILDING_MEMBER_JOINED]
+    types: [chunkN53GQVG7_cjs.NotificationType.BUILDING_MEMBER_JOINED]
   },
   {
     id: "join_request_decision",
     kind: "merged",
     types: [
-      chunk6YLWH72I_cjs.NotificationType.BUILDING_JOIN_REQUEST_APPROVED,
-      chunk6YLWH72I_cjs.NotificationType.BUILDING_JOIN_REQUEST_REJECTED
+      chunkN53GQVG7_cjs.NotificationType.BUILDING_JOIN_REQUEST_APPROVED,
+      chunkN53GQVG7_cjs.NotificationType.BUILDING_JOIN_REQUEST_REJECTED
     ]
   },
   {
     id: "join_request_received",
     kind: "single",
-    types: [chunk6YLWH72I_cjs.NotificationType.BUILDING_JOIN_REQUEST_RECEIVED]
+    types: [chunkN53GQVG7_cjs.NotificationType.BUILDING_JOIN_REQUEST_RECEIVED]
   },
   // ── Building lifecycle (managerial) ──────────────────────────────────────
   {
     id: "building_pending",
     kind: "single",
-    types: [chunk6YLWH72I_cjs.NotificationType.BUILDING_PENDING_APPROVAL]
+    types: [chunkN53GQVG7_cjs.NotificationType.BUILDING_PENDING_APPROVAL]
   },
   {
     id: "building_decision",
     kind: "merged",
-    types: [chunk6YLWH72I_cjs.NotificationType.BUILDING_APPROVED, chunk6YLWH72I_cjs.NotificationType.BUILDING_REJECTED]
+    types: [chunkN53GQVG7_cjs.NotificationType.BUILDING_APPROVED, chunkN53GQVG7_cjs.NotificationType.BUILDING_REJECTED]
   }
 ];
 var ALWAYS_ON_NOTIFICATION_TYPES = /* @__PURE__ */ new Set([
-  chunk6YLWH72I_cjs.NotificationType.BUILDING_ROLE_CHANGED,
-  chunk6YLWH72I_cjs.NotificationType.OWNER_RECORD_LINKED
+  chunkN53GQVG7_cjs.NotificationType.BUILDING_ROLE_CHANGED,
+  chunkN53GQVG7_cjs.NotificationType.OWNER_RECORD_LINKED
 ]);
 var ORG_SCOPED_NOTIFICATION_TYPES = /* @__PURE__ */ new Set([
-  chunk6YLWH72I_cjs.NotificationType.ORG_MEMBER_ADDED,
-  chunk6YLWH72I_cjs.NotificationType.ORG_MEMBER_REMOVED,
-  chunk6YLWH72I_cjs.NotificationType.ORG_MEMBER_ROLE_CHANGED
+  chunkN53GQVG7_cjs.NotificationType.ORG_MEMBER_ADDED,
+  chunkN53GQVG7_cjs.NotificationType.ORG_MEMBER_REMOVED,
+  chunkN53GQVG7_cjs.NotificationType.ORG_MEMBER_ROLE_CHANGED
 ]);
 var TOPIC_BY_TYPE = new Map(
   NOTIFICATION_TOPICS.flatMap((topic) => topic.types.map((t) => [t, topic]))
@@ -190,18 +195,18 @@ function getNotificationTopic(type) {
   return TOPIC_BY_TYPE.get(type) ?? null;
 }
 function getUngroupedNotificationTypes() {
-  return Object.values(chunk6YLWH72I_cjs.NotificationType).filter(
-    (t) => !chunk6YLWH72I_cjs.UNIMPLEMENTED_NOTIFICATION_TYPES.has(t) && !ALWAYS_ON_NOTIFICATION_TYPES.has(t) && !ORG_SCOPED_NOTIFICATION_TYPES.has(t) && !TOPIC_BY_TYPE.has(t)
+  return Object.values(chunkN53GQVG7_cjs.NotificationType).filter(
+    (t) => !chunkN53GQVG7_cjs.UNIMPLEMENTED_NOTIFICATION_TYPES.has(t) && !ALWAYS_ON_NOTIFICATION_TYPES.has(t) && !ORG_SCOPED_NOTIFICATION_TYPES.has(t) && !TOPIC_BY_TYPE.has(t)
   );
 }
 var MANAGERIAL_NOTIFICATION_TYPES = /* @__PURE__ */ new Set([
-  chunk6YLWH72I_cjs.NotificationType.BUILDING_JOIN_REQUEST_RECEIVED,
-  chunk6YLWH72I_cjs.NotificationType.POLL_VOTE_SIGNATURE_PENDING,
-  chunk6YLWH72I_cjs.NotificationType.FAILURE_REPORT_CREATED,
-  chunk6YLWH72I_cjs.NotificationType.BUILDING_PENDING_APPROVAL,
-  chunk6YLWH72I_cjs.NotificationType.BUILDING_APPROVED,
-  chunk6YLWH72I_cjs.NotificationType.BUILDING_REJECTED,
-  chunk6YLWH72I_cjs.NotificationType.EMAIL_RECEIVED
+  chunkN53GQVG7_cjs.NotificationType.BUILDING_JOIN_REQUEST_RECEIVED,
+  chunkN53GQVG7_cjs.NotificationType.POLL_VOTE_SIGNATURE_PENDING,
+  chunkN53GQVG7_cjs.NotificationType.FAILURE_REPORT_CREATED,
+  chunkN53GQVG7_cjs.NotificationType.BUILDING_PENDING_APPROVAL,
+  chunkN53GQVG7_cjs.NotificationType.BUILDING_APPROVED,
+  chunkN53GQVG7_cjs.NotificationType.BUILDING_REJECTED,
+  chunkN53GQVG7_cjs.NotificationType.EMAIL_RECEIVED
 ]);
 
 // src/constants/notification-preference-state.ts
@@ -294,7 +299,10 @@ var organizationKeys = {
   list: (filters = {}) => [...organizationKeys.lists(), { ...filters }],
   details: () => [...organizationKeys.all, "detail"],
   detail: (id) => [...organizationKeys.details(), id],
-  quotas: (id) => [...organizationKeys.all, "quotas", id]
+  quotas: (id) => [...organizationKeys.all, "quotas", id],
+  invoices: (id, filters = {}) => [...organizationKeys.all, "invoices", id, { ...filters }],
+  invoicesSummary: (id) => [...organizationKeys.all, "invoices-summary", id],
+  invoicePreview: (id, period) => [...organizationKeys.all, "invoice-preview", id, period]
 };
 var buildingKeys = {
   all: ["building"],
@@ -386,6 +394,10 @@ var dunningKeys = {
   case: (buildingId, caseId) => [...dunningKeys.building(buildingId), "case", caseId],
   notices: (buildingId, filters = {}) => [...dunningKeys.building(buildingId), "notices", { ...filters }],
   ownerAccount: (buildingId, ownerId, asOf) => [...dunningKeys.building(buildingId), "owner-account", ownerId, asOf ?? "today"]
+};
+var managementInvoiceKeys = {
+  all: ["management-invoices"],
+  building: (buildingId) => [...managementInvoiceKeys.all, "building", buildingId]
 };
 var interestRateKeys = {
   all: ["interest-rates"]
@@ -654,16 +666,16 @@ var featureFlagKeys = {
 // src/constants/role-permissions.ts
 var unique = (arr) => [...new Set(arr)];
 var ALL_READS = [
-  ...chunk6YLWH72I_cjs.domainPermissions("building", "read"),
-  ...chunk6YLWH72I_cjs.domainPermissions("user", "read"),
-  ...chunk6YLWH72I_cjs.domainPermissions("notice", "read"),
-  ...chunk6YLWH72I_cjs.domainPermissions("event", "read"),
-  ...chunk6YLWH72I_cjs.domainPermissions("poll", "read"),
-  ...chunk6YLWH72I_cjs.domainPermissions("failure_report", "read"),
-  ...chunk6YLWH72I_cjs.domainPermissions("financial", "read"),
-  ...chunk6YLWH72I_cjs.domainPermissions("document", "read"),
-  ...chunk6YLWH72I_cjs.domainPermissions("unit", "read"),
-  ...chunk6YLWH72I_cjs.domainPermissions("apartment", "read"),
+  ...chunkN53GQVG7_cjs.domainPermissions("building", "read"),
+  ...chunkN53GQVG7_cjs.domainPermissions("user", "read"),
+  ...chunkN53GQVG7_cjs.domainPermissions("notice", "read"),
+  ...chunkN53GQVG7_cjs.domainPermissions("event", "read"),
+  ...chunkN53GQVG7_cjs.domainPermissions("poll", "read"),
+  ...chunkN53GQVG7_cjs.domainPermissions("failure_report", "read"),
+  ...chunkN53GQVG7_cjs.domainPermissions("financial", "read"),
+  ...chunkN53GQVG7_cjs.domainPermissions("document", "read"),
+  ...chunkN53GQVG7_cjs.domainPermissions("unit", "read"),
+  ...chunkN53GQVG7_cjs.domainPermissions("apartment", "read"),
   // deprecated alias of unit:read
   "house_rules:read",
   "faq:read",
@@ -673,22 +685,22 @@ var OWNER_ONLY_READS = ["financial:read", "board_card:read"];
 var RESIDENT_PERMISSIONS = [
   // ALL_READS minus owner-only reads (fund balances, work board).
   ...ALL_READS.filter((p) => !OWNER_ONLY_READS.includes(p)),
-  ...chunk6YLWH72I_cjs.domainPermissions("notice", "own"),
-  ...chunk6YLWH72I_cjs.domainPermissions("event", "own"),
-  ...chunk6YLWH72I_cjs.domainPermissions("poll", "own"),
+  ...chunkN53GQVG7_cjs.domainPermissions("notice", "own"),
+  ...chunkN53GQVG7_cjs.domainPermissions("event", "own"),
+  ...chunkN53GQVG7_cjs.domainPermissions("poll", "own"),
   "poll:vote",
-  ...chunk6YLWH72I_cjs.domainPermissions("failure_report", "own"),
-  ...chunk6YLWH72I_cjs.domainPermissions("document", "own"),
+  ...chunkN53GQVG7_cjs.domainPermissions("failure_report", "own"),
+  ...chunkN53GQVG7_cjs.domainPermissions("document", "own"),
   "user:delete:own"
 ];
 var CO_OWNER_PERMISSIONS = [
   ...ALL_READS,
-  ...chunk6YLWH72I_cjs.domainPermissions("notice", "own"),
-  ...chunk6YLWH72I_cjs.domainPermissions("event", "own"),
-  ...chunk6YLWH72I_cjs.domainPermissions("poll", "own"),
+  ...chunkN53GQVG7_cjs.domainPermissions("notice", "own"),
+  ...chunkN53GQVG7_cjs.domainPermissions("event", "own"),
+  ...chunkN53GQVG7_cjs.domainPermissions("poll", "own"),
   "poll:vote",
-  ...chunk6YLWH72I_cjs.domainPermissions("failure_report", "own"),
-  ...chunk6YLWH72I_cjs.domainPermissions("document", "own"),
+  ...chunkN53GQVG7_cjs.domainPermissions("failure_report", "own"),
+  ...chunkN53GQVG7_cjs.domainPermissions("document", "own"),
   // NOTE: building_email:view deliberately NOT granted — the building mailbox
   // (manager correspondence) is management-only (decision 2026-07-21); the
   // grant moved to REPRESENTATIVE_PERMISSIONS.
@@ -697,11 +709,11 @@ var CO_OWNER_PERMISSIONS = [
 var OWNERSHIP_DERIVED_PERMISSIONS = unique([...OWNER_ONLY_READS]);
 var REPRESENTATIVE_PERMISSIONS = [
   ...CO_OWNER_PERMISSIONS,
-  ...chunk6YLWH72I_cjs.domainPermissions("notice", "manage"),
-  ...chunk6YLWH72I_cjs.domainPermissions("event", "manage"),
-  ...chunk6YLWH72I_cjs.domainPermissions("poll", "manage"),
-  ...chunk6YLWH72I_cjs.domainPermissions("failure_report", "manage"),
-  ...chunk6YLWH72I_cjs.domainPermissions("document", "manage"),
+  ...chunkN53GQVG7_cjs.domainPermissions("notice", "manage"),
+  ...chunkN53GQVG7_cjs.domainPermissions("event", "manage"),
+  ...chunkN53GQVG7_cjs.domainPermissions("poll", "manage"),
+  ...chunkN53GQVG7_cjs.domainPermissions("failure_report", "manage"),
+  ...chunkN53GQVG7_cjs.domainPermissions("document", "manage"),
   "notice:approve",
   "notice:pin",
   "failure_report:approve",
@@ -760,10 +772,10 @@ var ORG_ADMIN_BUILDING_PERMISSIONS = [
 var SUPERVISOR_BUILDING_PERMISSIONS = [...ORG_ADMIN_BUILDING_PERMISSIONS];
 var REFERENT_BUILDING_PERMISSIONS = [
   ...ALL_READS,
-  ...chunk6YLWH72I_cjs.domainPermissions("notice", "own"),
-  ...chunk6YLWH72I_cjs.domainPermissions("event", "own"),
-  ...chunk6YLWH72I_cjs.domainPermissions("failure_report", "own"),
-  ...chunk6YLWH72I_cjs.domainPermissions("document", "own")
+  ...chunkN53GQVG7_cjs.domainPermissions("notice", "own"),
+  ...chunkN53GQVG7_cjs.domainPermissions("event", "own"),
+  ...chunkN53GQVG7_cjs.domainPermissions("failure_report", "own"),
+  ...chunkN53GQVG7_cjs.domainPermissions("document", "own")
 ];
 var OPERATIVE_BUILDING_PERMISSIONS = [...ALL_READS, "failure_report:update:own"];
 var ORG_ADMIN_ORG_PERMISSIONS = [
@@ -774,31 +786,34 @@ var ORG_ADMIN_ORG_PERMISSIONS = [
   "org:view_buildings",
   "org:view_partners",
   "org:manage_partners",
-  "org:broadcast"
+  "org:broadcast",
+  "org:view_invoicing",
+  "org:manage_invoicing"
 ];
 var SUPERVISOR_ORG_PERMISSIONS = [
   "org:view_buildings",
   "org:assign_referents",
   "org:view_partners",
   "org:manage_partners",
-  "org:broadcast"
+  "org:broadcast",
+  "org:view_invoicing"
 ];
 var REFERENT_ORG_PERMISSIONS = ["org:view_buildings", "org:view_partners"];
 var OPERATIVE_ORG_PERMISSIONS = ["org:view_buildings", "org:view_partners"];
 var BUILDING_ROLE_PERMISSIONS = {
-  [chunk6YLWH72I_cjs.BuildingRole.RESIDENT]: unique(RESIDENT_PERMISSIONS),
-  [chunk6YLWH72I_cjs.BuildingRole.CO_OWNER]: unique(CO_OWNER_PERMISSIONS),
-  [chunk6YLWH72I_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: unique(REPRESENTATIVE_PERMISSIONS),
-  [chunk6YLWH72I_cjs.BuildingRole.OWNER_REPRESENTATIVE]: unique(REPRESENTATIVE_PERMISSIONS)
+  [chunkN53GQVG7_cjs.BuildingRole.RESIDENT]: unique(RESIDENT_PERMISSIONS),
+  [chunkN53GQVG7_cjs.BuildingRole.CO_OWNER]: unique(CO_OWNER_PERMISSIONS),
+  [chunkN53GQVG7_cjs.BuildingRole.DEPUTY_REPRESENTATIVE]: unique(REPRESENTATIVE_PERMISSIONS),
+  [chunkN53GQVG7_cjs.BuildingRole.OWNER_REPRESENTATIVE]: unique(REPRESENTATIVE_PERMISSIONS)
 };
 var ORG_ROLE_PERMISSIONS = {
-  [chunk6YLWH72I_cjs.OrgRole.ORG_ADMIN]: unique([...ORG_ADMIN_BUILDING_PERMISSIONS, ...ORG_ADMIN_ORG_PERMISSIONS]),
-  [chunk6YLWH72I_cjs.OrgRole.SUPERVISOR]: unique([...SUPERVISOR_BUILDING_PERMISSIONS, ...SUPERVISOR_ORG_PERMISSIONS]),
-  [chunk6YLWH72I_cjs.OrgRole.REFERENT]: unique([...REFERENT_BUILDING_PERMISSIONS, ...REFERENT_ORG_PERMISSIONS]),
-  [chunk6YLWH72I_cjs.OrgRole.OPERATIVE]: unique([...OPERATIVE_BUILDING_PERMISSIONS, ...OPERATIVE_ORG_PERMISSIONS])
+  [chunkN53GQVG7_cjs.OrgRole.ORG_ADMIN]: unique([...ORG_ADMIN_BUILDING_PERMISSIONS, ...ORG_ADMIN_ORG_PERMISSIONS]),
+  [chunkN53GQVG7_cjs.OrgRole.SUPERVISOR]: unique([...SUPERVISOR_BUILDING_PERMISSIONS, ...SUPERVISOR_ORG_PERMISSIONS]),
+  [chunkN53GQVG7_cjs.OrgRole.REFERENT]: unique([...REFERENT_BUILDING_PERMISSIONS, ...REFERENT_ORG_PERMISSIONS]),
+  [chunkN53GQVG7_cjs.OrgRole.OPERATIVE]: unique([...OPERATIVE_BUILDING_PERMISSIONS, ...OPERATIVE_ORG_PERMISSIONS])
 };
 var PLATFORM_ROLE_PERMISSIONS = {
-  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_ADMIN]: [
+  [chunkN53GQVG7_cjs.PlatformRole.PLATFORM_ADMIN]: [
     "platform:approve_buildings",
     "platform:manage_users",
     "platform:manage_orgs",
@@ -817,7 +832,7 @@ var PLATFORM_ROLE_PERMISSIONS = {
     "system:delete_user",
     "system:create_organization"
   ],
-  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_MODERATOR]: [
+  [chunkN53GQVG7_cjs.PlatformRole.PLATFORM_MODERATOR]: [
     "platform:approve_buildings",
     "platform:manage_users",
     "platform:manage_orgs",
@@ -825,7 +840,7 @@ var PLATFORM_ROLE_PERMISSIONS = {
     "platform:view_analytics",
     "platform:moderate_content"
   ],
-  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_SUPPORT]: [
+  [chunkN53GQVG7_cjs.PlatformRole.PLATFORM_SUPPORT]: [
     "platform:approve_buildings",
     "platform:view_orgs",
     "platform:view_analytics"
@@ -834,11 +849,11 @@ var PLATFORM_ROLE_PERMISSIONS = {
     // action should never be visible to everyone on the internet. Removed
     // 2026-08-04; MODERATOR and ADMIN retain it.
   ],
-  [chunk6YLWH72I_cjs.PlatformRole.PLATFORM_OPERATIVE]: ["platform:view_analytics"]
+  [chunkN53GQVG7_cjs.PlatformRole.PLATFORM_OPERATIVE]: ["platform:view_analytics"]
 };
-var ALL_PERMISSIONS = unique(Object.values(chunk6YLWH72I_cjs.Permission));
-var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[chunk6YLWH72I_cjs.OrgRole.ORG_ADMIN];
-var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[chunk6YLWH72I_cjs.PlatformRole.PLATFORM_ADMIN];
+var ALL_PERMISSIONS = unique(Object.values(chunkN53GQVG7_cjs.Permission));
+var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[chunkN53GQVG7_cjs.OrgRole.ORG_ADMIN];
+var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[chunkN53GQVG7_cjs.PlatformRole.PLATFORM_ADMIN];
 
 exports.ADMIN_ORG_PERMISSIONS = ADMIN_ORG_PERMISSIONS;
 exports.ADMIN_PLATFORM_PERMISSIONS = ADMIN_PLATFORM_PERMISSIONS;
@@ -892,6 +907,7 @@ exports.incomeKeys = incomeKeys;
 exports.interestRateKeys = interestRateKeys;
 exports.isEntityLinkAllowed = isEntityLinkAllowed;
 exports.layoutKeys = layoutKeys;
+exports.managementInvoiceKeys = managementInvoiceKeys;
 exports.noticeKeys = noticeKeys;
 exports.notificationKeys = notificationKeys;
 exports.organizationKeys = organizationKeys;
@@ -912,5 +928,5 @@ exports.transactionCategoryKeys = transactionCategoryKeys;
 exports.unitSearchKeys = unitSearchKeys;
 exports.userKeys = userKeys;
 exports.widgetKeys = widgetKeys;
-//# sourceMappingURL=chunk-MX43ALFT.cjs.map
-//# sourceMappingURL=chunk-MX43ALFT.cjs.map
+//# sourceMappingURL=chunk-GNXYTICM.cjs.map
+//# sourceMappingURL=chunk-GNXYTICM.cjs.map

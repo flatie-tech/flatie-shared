@@ -164,6 +164,9 @@ export const Permission = {
   ORG_MANAGE_PARTNERS: 'org:manage_partners',
   // Publish one notice to many/all managed buildings at once.
   ORG_BROADCAST: 'org:broadcast',
+  // Naknada upravitelja — issuing / reading the firm's fee invoices to its buildings.
+  ORG_VIEW_INVOICING: 'org:view_invoicing',
+  ORG_MANAGE_INVOICING: 'org:manage_invoicing',
 
   // Platform (global scope)
   PLATFORM_APPROVE_BUILDINGS: 'platform:approve_buildings',

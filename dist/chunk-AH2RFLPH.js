@@ -1,4 +1,4 @@
-import { LinkableEntityType, EntityLinkType, NotificationType, domainPermissions, BuildingRole, OrgRole, PlatformRole, Permission, UNIMPLEMENTED_NOTIFICATION_TYPES } from './chunk-HC7CBODS.js';
+import { LinkableEntityType, EntityLinkType, NotificationType, domainPermissions, BuildingRole, OrgRole, PlatformRole, Permission, UNIMPLEMENTED_NOTIFICATION_TYPES } from './chunk-367LF2PU.js';
 
 // src/constants/defaults.ts
 var DEFAULT_PAGINATION_LIMIT = 10;
@@ -137,6 +137,11 @@ var NOTIFICATION_TOPICS = [
     id: "pricuva_dunning",
     kind: "single",
     types: [NotificationType.DUNNING_NOTICE_ISSUED]
+  },
+  {
+    id: "management_invoice",
+    kind: "single",
+    types: [NotificationType.MANAGEMENT_INVOICE_ISSUED]
   },
   // ── Chat / mailbox ───────────────────────────────────────────────────────
   { id: "chat_new_message", kind: "single", types: [NotificationType.CHAT_MESSAGE] },
@@ -292,7 +297,10 @@ var organizationKeys = {
   list: (filters = {}) => [...organizationKeys.lists(), { ...filters }],
   details: () => [...organizationKeys.all, "detail"],
   detail: (id) => [...organizationKeys.details(), id],
-  quotas: (id) => [...organizationKeys.all, "quotas", id]
+  quotas: (id) => [...organizationKeys.all, "quotas", id],
+  invoices: (id, filters = {}) => [...organizationKeys.all, "invoices", id, { ...filters }],
+  invoicesSummary: (id) => [...organizationKeys.all, "invoices-summary", id],
+  invoicePreview: (id, period) => [...organizationKeys.all, "invoice-preview", id, period]
 };
 var buildingKeys = {
   all: ["building"],
@@ -384,6 +392,10 @@ var dunningKeys = {
   case: (buildingId, caseId) => [...dunningKeys.building(buildingId), "case", caseId],
   notices: (buildingId, filters = {}) => [...dunningKeys.building(buildingId), "notices", { ...filters }],
   ownerAccount: (buildingId, ownerId, asOf) => [...dunningKeys.building(buildingId), "owner-account", ownerId, asOf ?? "today"]
+};
+var managementInvoiceKeys = {
+  all: ["management-invoices"],
+  building: (buildingId) => [...managementInvoiceKeys.all, "building", buildingId]
 };
 var interestRateKeys = {
   all: ["interest-rates"]
@@ -772,14 +784,17 @@ var ORG_ADMIN_ORG_PERMISSIONS = [
   "org:view_buildings",
   "org:view_partners",
   "org:manage_partners",
-  "org:broadcast"
+  "org:broadcast",
+  "org:view_invoicing",
+  "org:manage_invoicing"
 ];
 var SUPERVISOR_ORG_PERMISSIONS = [
   "org:view_buildings",
   "org:assign_referents",
   "org:view_partners",
   "org:manage_partners",
-  "org:broadcast"
+  "org:broadcast",
+  "org:view_invoicing"
 ];
 var REFERENT_ORG_PERMISSIONS = ["org:view_buildings", "org:view_partners"];
 var OPERATIVE_ORG_PERMISSIONS = ["org:view_buildings", "org:view_partners"];
@@ -838,6 +853,6 @@ var ALL_PERMISSIONS = unique(Object.values(Permission));
 var ADMIN_ORG_PERMISSIONS = ORG_ROLE_PERMISSIONS[OrgRole.ORG_ADMIN];
 var ADMIN_PLATFORM_PERMISSIONS = PLATFORM_ROLE_PERMISSIONS[PlatformRole.PLATFORM_ADMIN];
 
-export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, ALWAYS_ON_NOTIFICATION_TYPES, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, ENTITY_LINK_TYPE_META, MANAGERIAL_NOTIFICATION_TYPES, MAX_PAGINATION_LIMIT, NOTIFICATION_TOPICS, ORG_ROLE_PERMISSIONS, ORG_SCOPED_NOTIFICATION_TYPES, OWNERSHIP_DERIVED_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, SELECTABLE_CHANNELS, STANDARD_UNIT_PRICE_CENTS, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, auditLogKeys, blogKeys, boardKeys, buildLeadTimeWrites, buildTopicStates, buildTopicWrites, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, dsarKeys, dunningKeys, enterpriseRequestKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, featureFlagKeys, fundsKeys, garageKeys, getLeadTime, getNotificationTopic, getUngroupedNotificationTypes, incomeKeys, interestRateKeys, isEntityLinkAllowed, layoutKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, platformFeatureKeys, platformSubscriptionKeys, pollKeys, pricuvaKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, toggleChannel, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };
-//# sourceMappingURL=chunk-FU3UKQKC.js.map
-//# sourceMappingURL=chunk-FU3UKQKC.js.map
+export { ADMIN_ORG_PERMISSIONS, ADMIN_PLATFORM_PERMISSIONS, ALLOWED_ENTITY_LINKS, ALL_PERMISSIONS, ALWAYS_ON_NOTIFICATION_TYPES, BUILDING_ROLE_PERMISSIONS, CHAT_CONVERSATIONS_POLL_MS, DEFAULT_PAGINATION_LIMIT, ENTITY_LINK_TYPE_META, MANAGERIAL_NOTIFICATION_TYPES, MAX_PAGINATION_LIMIT, NOTIFICATION_TOPICS, ORG_ROLE_PERMISSIONS, ORG_SCOPED_NOTIFICATION_TYPES, OWNERSHIP_DERIVED_PERMISSIONS, PLATFORM_ROLE_PERMISSIONS, RELATED_TO_LINKABLE_TYPES, SELECTABLE_CHANNELS, STANDARD_UNIT_PRICE_CENTS, adminBuildingKeys, adminKeys, aiUsageKeys, apartmentKeys, auditLogKeys, blogKeys, boardKeys, buildLeadTimeWrites, buildTopicStates, buildTopicWrites, buildingEmailKeys, buildingKeys, businessPartnerKeys, chatKeys, dashboardSummaryKeys, documentKeys, dsarKeys, dunningKeys, enterpriseRequestKeys, entityLinkKeys, eventKeys, failureReportKeys, faqKeys, featureFlagKeys, fundsKeys, garageKeys, getLeadTime, getNotificationTopic, getUngroupedNotificationTypes, incomeKeys, interestRateKeys, isEntityLinkAllowed, layoutKeys, managementInvoiceKeys, noticeKeys, notificationKeys, organizationKeys, ownerKeys, permissionKeys, platformBuildingKeys, platformFeatureKeys, platformSubscriptionKeys, pollKeys, pricuvaKeys, queryKeys, recentKeys, recurringTemplateKeys, spotlightKeys, storageUnitKeys, toggleChannel, transactionCategoryKeys, unitSearchKeys, userKeys, widgetKeys };
+//# sourceMappingURL=chunk-AH2RFLPH.js.map
+//# sourceMappingURL=chunk-AH2RFLPH.js.map

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { N as NotificationType } from './notification.enum-C1IHyJHj.js';
+import { N as NotificationType } from './notification.enum-PAMm0M-t.js';
 
 /**
  * Recursively strips the `[k: string]: unknown` index signature that
@@ -260,6 +260,19 @@ declare const notificationDataSchemaByType: {
         amount: z.ZodOptional<z.ZodString>;
         deadline: z.ZodOptional<z.ZodString>;
         buildingName: z.ZodOptional<z.ZodString>;
+    }, z.core.$strip>;
+    readonly management_invoice_issued: z.ZodObject<{
+        entityType: z.ZodOptional<z.ZodString>;
+        entityId: z.ZodOptional<z.ZodString>;
+        actorId: z.ZodOptional<z.ZodString>;
+        actorName: z.ZodOptional<z.ZodString>;
+        actionUrl: z.ZodOptional<z.ZodString>;
+        invoiceId: z.ZodOptional<z.ZodString>;
+        invoiceNumber: z.ZodOptional<z.ZodString>;
+        orgName: z.ZodOptional<z.ZodString>;
+        buildingName: z.ZodOptional<z.ZodString>;
+        amount: z.ZodOptional<z.ZodString>;
+        dueDate: z.ZodOptional<z.ZodString>;
     }, z.core.$strip>;
     readonly building_join_request_received: z.ZodObject<{
         entityType: z.ZodOptional<z.ZodString>;
@@ -669,6 +682,7 @@ declare const notificationResponseSchema: z.ZodObject<{
         payment_due: "payment_due";
         payment_received: "payment_received";
         dunning_notice_issued: "dunning_notice_issued";
+        management_invoice_issued: "management_invoice_issued";
         building_join_request_received: "building_join_request_received";
         building_join_request_approved: "building_join_request_approved";
         building_join_request_rejected: "building_join_request_rejected";

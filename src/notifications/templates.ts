@@ -395,6 +395,23 @@ export const NOTIFICATION_TEMPLATES: Record<NotificationType, LocalizedNotificat
       de: 'Wird an einen Miteigentümer gesendet, wenn der Verwalter eine Mahnung wegen Rücklagenrückstand ausstellt',
     },
   },
+  [NotificationType.MANAGEMENT_INVOICE_ISSUED]: {
+    title: {
+      hr: 'Račun upravitelja',
+      en: 'Manager’s invoice',
+      de: 'Rechnung des Verwalters',
+    },
+    body: {
+      hr: '{{orgName}} je izdao račun br. {{invoiceNumber}} za {{buildingName}} na iznos od {{amount}}, dospijeće {{dueDate}}.',
+      en: '{{orgName}} issued invoice no. {{invoiceNumber}} to {{buildingName}} for {{amount}}, due {{dueDate}}.',
+      de: '{{orgName}} hat für {{buildingName}} die Rechnung Nr. {{invoiceNumber}} über {{amount}} ausgestellt, fällig am {{dueDate}}.',
+    },
+    description: {
+      hr: 'Šalje se predstavnicima kada upravitelj izda mjesečni račun za naknadu upravljanja',
+      en: 'Sent to representatives when the management firm issues its monthly fee invoice',
+      de: 'Wird an Vertreter gesendet, wenn der Verwalter seine monatliche Gebührenrechnung ausstellt',
+    },
+  },
   [NotificationType.PAYMENT_RECEIVED]: {
     title: { hr: 'Uplata primljena', en: 'Payment Received', de: 'Zahlung erhalten' },
     body: {

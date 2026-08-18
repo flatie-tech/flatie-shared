@@ -40,6 +40,11 @@ export const organizationKeys = {
   details: () => [...organizationKeys.all, 'detail'] as const,
   detail: (id: string) => [...organizationKeys.details(), id] as const,
   quotas: (id: string) => [...organizationKeys.all, 'quotas', id] as const,
+  invoices: (id: string, filters: Record<string, unknown> = {}) =>
+    [...organizationKeys.all, 'invoices', id, { ...filters }] as const,
+  invoicesSummary: (id: string) => [...organizationKeys.all, 'invoices-summary', id] as const,
+  invoicePreview: (id: string, period: string) =>
+    [...organizationKeys.all, 'invoice-preview', id, period] as const,
 };
 
 export const buildingKeys = {
@@ -161,6 +166,11 @@ export const dunningKeys = {
     [...dunningKeys.building(buildingId), 'notices', { ...filters }] as const,
   ownerAccount: (buildingId: string, ownerId: string, asOf?: string) =>
     [...dunningKeys.building(buildingId), 'owner-account', ownerId, asOf ?? 'today'] as const,
+};
+
+export const managementInvoiceKeys = {
+  all: ['management-invoices'] as const,
+  building: (buildingId: string) => [...managementInvoiceKeys.all, 'building', buildingId] as const,
 };
 
 export const interestRateKeys = {

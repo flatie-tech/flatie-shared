@@ -1,7 +1,9 @@
 import { z } from 'zod';
+import { FeeModel } from '../../enums/management-invoice.enum';
 import { OrgType } from '../../enums/org-type.enum';
 import { OrgRole } from '../../enums/role.enum';
 import { uuidSchema } from '../base.schema';
+import { moneyStringSchema } from '../money.schema';
 import { NOTICE_LIMITS } from './notice.schema';
 
 /**
@@ -54,7 +56,76 @@ export const createOrganizationSchema = z.object({
 /**
  * Update organization request schema (all fields optional)
  */
-export const updateOrganizationSchema = z.object({
+
+/**
+ * Supplier identity a management firm needs before it can issue invoices
+ * (naknada upravitelja) through Flatie. All optional — an org without them
+ * simply cannot issue; `INVOICE_ORG_IDENTITY_INCOMPLETE` names what is missing.
+ */
+export const organizationInvoicingIdentitySchema = z.object({
+  street: z.string().trim().max(200).nullable().optional().describe('Street + number.'),
+  postalCode: z.string().trim().max(10).nullable().optional(),
+  city: z.string().trim().max(100).nullable().optional(),
+  country: z.string().trim().length(2).optional().describe('ISO 3166-1 alpha-2, default HR.'),
+  iban: z
+    .string()
+    .trim()
+    .regex(/^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/, 'IBAN must be uppercase, no spaces')
+    .nullable()
+    .optional()
+    .describe('Account the fee is paid to (payee IBAN on the HUB3 slip).'),
+  isVatPayer: z.boolean().optional().describe('In the PDV system → 25 % VAT on the fee.'),
+  vatId: z.string().trim().max(20).nullable().optional().describe('e.g. HR12345678901'),
+  courtRegister: z
+    .string()
+    .trim()
+    .max(200)
+    .nullable()
+    .optional()
+    .describe('Registration court + MBS, printed in the invoice footer.'),
+  invoiceBusinessUnitCode: z
+    .string()
+    .trim()
+    .max(20)
+    .optional()
+    .describe(
+      'Oznaka poslovnog prostora in the invoice number ({seq}/{bu}/{device}). Default "1".',
+    ),
+  invoiceDeviceCode: z
+    .string()
+    .trim()
+    .max(20)
+    .optional()
+    .describe('Oznaka naplatnog uređaja. Default "1".'),
+  invoiceDueDays: z
+    .number()
+    .int()
+    .min(1)
+    .max(90)
+    .optional()
+    .describe('Payment term, days from issue.'),
+  invoiceFooter: z.string().trim().max(500).nullable().optional(),
+  eposlovanjeApiKey: z
+    .string()
+    .trim()
+    .min(8)
+    .max(200)
+    .nullable()
+    .optional()
+    .describe(
+      'ePoslovanje.hr API key for sending eRačun on the org’s behalf. Write-only; null clears.',
+    ),
+  autoIssueInvoices: z
+    .boolean()
+    .optional()
+    .describe('Issue fee invoices automatically on the 1st for the previous month.'),
+});
+
+export type OrganizationInvoicingIdentitySchema = z.infer<
+  typeof organizationInvoicingIdentitySchema
+>;
+
+export const updateOrganizationSchema = organizationInvoicingIdentitySchema.extend({
   name: z
     .string()
     .min(ORGANIZATION_LIMITS.NAME_MIN)
@@ -103,7 +174,36 @@ export const inviteOrgMemberSchema = z.object({
 /**
  * Assign a building to an organization with optional contract window
  */
+
+/** Contract fee fields shared by assign + update. */
+const contractFeeFields = {
+  feeModel: z
+    .enum([FeeModel.PER_UNIT, FeeModel.PER_SQM, FeeModel.FLAT])
+    .nullable()
+    .optional()
+    .describe('How the monthly fee is priced; null = no fee configured.'),
+  feeAmount: moneyStringSchema
+    .nullable()
+    .optional()
+    .describe('EUR excl. VAT — per unit, per m² or flat per month depending on feeModel.'),
+  feeVatRate: z
+    .number()
+    .min(0)
+    .max(30)
+    .nullable()
+    .optional()
+    .describe('VAT % applied on the fee (25 for VAT payers, 0 otherwise). Defaults from the org.'),
+  feeNote: z
+    .string()
+    .trim()
+    .max(300)
+    .nullable()
+    .optional()
+    .describe('Printed on the invoice line.'),
+};
+
 export const assignOrgBuildingSchema = z.object({
+  ...contractFeeFields,
   buildingId: uuidSchema.describe('UUID of the building to assign to this organization.'),
   contractStart: z
     .string()
@@ -200,6 +300,7 @@ export const getOrgMembersQuerySchema = z.object({
  * Update the contract window on an existing org↔building assignment.
  */
 export const updateOrgBuildingContractSchema = z.object({
+  ...contractFeeFields,
   contractStart: z
     .string()
     .nullable()
