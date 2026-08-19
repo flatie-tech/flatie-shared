@@ -1,5 +1,11 @@
 # @flatie/shared
 
+## 0.126.0
+
+### Changes
+
+- feat(finance): dunning ladder + zatezne kamate, co-owner my-pričuva slip, management-fee invoicing (org identity, contract fee, invoices, eRačun), org-wide uplatnice + opomene, org:view/manage_invoicing permissions, dunning/management-invoice notifications
+
 ## 0.125.1
 
 ### Changes
