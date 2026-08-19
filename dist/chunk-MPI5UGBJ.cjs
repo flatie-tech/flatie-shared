@@ -1021,6 +1021,78 @@ var orgAiImportCommitResponseSchema = zod.z.object({
     "Extracted rows that failed validation and were left out \u2014 fix them on the building afterwards."
   )
 }).meta({ id: "OrgAiImportCommitResponse" });
+var OrgUplatniceBlocker = {
+  /** `monthlyFeePerSqm` not set — every slip would price at 0. */
+  NO_FEE_RATE: "no_fee_rate",
+  NO_IBAN: "no_iban",
+  NO_OIB: "no_oib",
+  /** `billingBuildingCode` missing — first HR01 reference segment. */
+  NO_BILLING_CODE: "no_billing_code",
+  /** Configured, but no unit/owner carries a payment reference yet. */
+  NO_PAYERS: "no_payers"
+};
+var orgUplatniceBuildingRowSchema = zod.z.object({
+  buildingId: uuidSchema,
+  buildingName: zod.z.string(),
+  blocker: zod.z.enum(OrgUplatniceBlocker).nullable(),
+  /** Slips the generator would produce for this period. 0 when blocked. */
+  payersCount: zod.z.number().int(),
+  /** Σ slip amounts, EUR. */
+  expectedTotal: zod.z.number(),
+  /** Distinct payers with a `sent` e-mail row for the period. */
+  emailedCount: zod.z.number().int(),
+  /** Distinct payers with a `download` row for the period. */
+  generatedCount: zod.z.number().int(),
+  failedCount: zod.z.number().int(),
+  /** Payers with no delivery row for the period by either channel. */
+  unbilledCount: zod.z.number().int(),
+  lastEmailedAt: zod.z.string().nullable(),
+  lastGeneratedAt: zod.z.string().nullable()
+}).meta({ id: "OrgUplatniceBuildingRow" });
+var orgUplatniceOverviewResponseSchema = zod.z.object({
+  orgId: uuidSchema,
+  period: zod.z.string().regex(/^\d{4}-\d{2}$/),
+  rows: zod.z.array(orgUplatniceBuildingRowSchema),
+  readyCount: zod.z.number().int().describe("Buildings with no blocker."),
+  payersTotal: zod.z.number().int(),
+  expectedTotal: zod.z.number(),
+  emailedTotal: zod.z.number().int(),
+  unbilledTotal: zod.z.number().int()
+}).meta({ id: "OrgUplatniceOverviewResponse" });
+var orgUplatniceQuerySchema = zod.z.object({
+  period: zod.z.string().regex(/^\d{4}-\d{2}$/).optional().describe("YYYY-MM; defaults to the current month."),
+  /** Comma-separated building ids for the ZIP variant; omitted = every ready building. */
+  buildingIds: zod.z.string().optional()
+});
+var sendOrgUplatniceSchema = zod.z.object({
+  period: zod.z.string().regex(/^\d{4}-\d{2}$/),
+  /** Omitted = every ready, visible building. */
+  buildingIds: zod.z.array(uuidSchema).max(500).optional()
+});
+var OrgUplatniceSendStatus = {
+  DONE: "done",
+  SKIPPED: "skipped"
+};
+var orgUplatniceSendResultSchema = zod.z.object({
+  buildingId: uuidSchema,
+  buildingName: zod.z.string(),
+  status: zod.z.enum(OrgUplatniceSendStatus),
+  /** Blocker code or a free-text failure when `skipped`. */
+  reason: zod.z.string().nullable(),
+  total: zod.z.number().int(),
+  sent: zod.z.number().int(),
+  skipped: zod.z.number().int(),
+  failed: zod.z.number().int()
+}).meta({ id: "OrgUplatniceSendResult" });
+var sendOrgUplatniceResponseSchema = zod.z.object({
+  period: zod.z.string(),
+  results: zod.z.array(orgUplatniceSendResultSchema),
+  buildingsDone: zod.z.number().int(),
+  buildingsSkipped: zod.z.number().int(),
+  sent: zod.z.number().int(),
+  skipped: zod.z.number().int(),
+  failed: zod.z.number().int()
+}).meta({ id: "SendOrgUplatniceResponse" });
 var NOTICE_LIMITS = {
   TITLE_MIN: 1,
   TITLE_MAX: 100,
@@ -3686,6 +3758,8 @@ exports.MyPricuvaStatus = MyPricuvaStatus;
 exports.NOTICE_LIMITS = NOTICE_LIMITS;
 exports.ORGANIZATION_LIMITS = ORGANIZATION_LIMITS;
 exports.OrgInvitationStatus = OrgInvitationStatus;
+exports.OrgUplatniceBlocker = OrgUplatniceBlocker;
+exports.OrgUplatniceSendStatus = OrgUplatniceSendStatus;
 exports.POLL_LIMITS = POLL_LIMITS;
 exports.POLL_TYPES = POLL_TYPES;
 exports.PricuvaDeliveryChannel = PricuvaDeliveryChannel;
@@ -3881,6 +3955,10 @@ exports.orgFundsOverviewResponseSchema = orgFundsOverviewResponseSchema;
 exports.orgInvitationResponseSchema = orgInvitationResponseSchema;
 exports.orgStatementImportResponseSchema = orgStatementImportResponseSchema;
 exports.orgStatementImportResultSchema = orgStatementImportResultSchema;
+exports.orgUplatniceBuildingRowSchema = orgUplatniceBuildingRowSchema;
+exports.orgUplatniceOverviewResponseSchema = orgUplatniceOverviewResponseSchema;
+exports.orgUplatniceQuerySchema = orgUplatniceQuerySchema;
+exports.orgUplatniceSendResultSchema = orgUplatniceSendResultSchema;
 exports.organizationInvoicingIdentitySchema = organizationInvoicingIdentitySchema;
 exports.ownerAccountChargeSchema = ownerAccountChargeSchema;
 exports.ownerAccountPaymentSchema = ownerAccountPaymentSchema;
@@ -3942,6 +4020,8 @@ exports.revenueMetricsResponseSchema = revenueMetricsResponseSchema;
 exports.roleTypeSchema = roleTypeSchema;
 exports.searchUsersQuerySchema = searchUsersQuerySchema;
 exports.sendMessageSchema = sendMessageSchema;
+exports.sendOrgUplatniceResponseSchema = sendOrgUplatniceResponseSchema;
+exports.sendOrgUplatniceSchema = sendOrgUplatniceSchema;
 exports.setDsarRestrictionSchema = setDsarRestrictionSchema;
 exports.signedMoneyStringSchema = signedMoneyStringSchema;
 exports.strongPasswordSchema = strongPasswordSchema;
@@ -3991,5 +4071,5 @@ exports.verifyOtpSchema = verifyOtpSchema;
 exports.voidDunningNoticeSchema = voidDunningNoticeSchema;
 exports.votePollSchema = votePollSchema;
 exports.voteWithIdCardSchema = voteWithIdCardSchema;
-//# sourceMappingURL=chunk-EXJBT4OY.cjs.map
-//# sourceMappingURL=chunk-EXJBT4OY.cjs.map
+//# sourceMappingURL=chunk-MPI5UGBJ.cjs.map
+//# sourceMappingURL=chunk-MPI5UGBJ.cjs.map

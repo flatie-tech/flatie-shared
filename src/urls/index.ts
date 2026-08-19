@@ -332,6 +332,10 @@ export const API_ROUTES = {
     // Org-wide bank statement import: one FINA/PBZ file carries the whole
     // portfolio; statements route to buildings by IBAN.
     STATEMENT_IMPORT: (orgId: string) => `/organizations/${orgId}/statement-imports`,
+    // Org-wide pričuva uplatnice: overview per building, send all, ZIP all.
+    UPLATNICE: (orgId: string) => `/organizations/${orgId}/pricuva/uplatnice`,
+    UPLATNICE_SEND: (orgId: string) => `/organizations/${orgId}/pricuva/uplatnice/send`,
+    UPLATNICE_ZIP: (orgId: string) => `/organizations/${orgId}/pricuva/uplatnice.zip`,
     // Naknada upravitelja — the firm's fee invoices to its buildings.
     INVOICES: (orgId: string) => `/organizations/${orgId}/invoices`,
     INVOICES_SUMMARY: (orgId: string) => `/organizations/${orgId}/invoices/summary`,

@@ -180,6 +180,25 @@ export {
   orgAiImportExtractResponseSchema,
   orgAiImportSkippedRowSchema,
 } from './org-ai-import.schema';
+// Org-wide pričuva uplatnice (send all / download all across the portfolio)
+export type {
+  OrgUplatniceBuildingRow,
+  OrgUplatniceOverviewResponse,
+  OrgUplatniceQuery,
+  OrgUplatniceSendResult,
+  SendOrgUplatnice,
+  SendOrgUplatniceResponse,
+} from './org-uplatnice.schema';
+export {
+  OrgUplatniceBlocker,
+  OrgUplatniceSendStatus,
+  orgUplatniceBuildingRowSchema,
+  orgUplatniceOverviewResponseSchema,
+  orgUplatniceQuerySchema,
+  orgUplatniceSendResultSchema,
+  sendOrgUplatniceResponseSchema,
+  sendOrgUplatniceSchema,
+} from './org-uplatnice.schema';
 // Organization schemas
 export type {
   AddOrgMemberSchema,
