@@ -190,6 +190,7 @@ export type {
   GetOrgBuildingsQuerySchema,
   GetOrgMembersQuerySchema,
   InviteOrgMemberSchema,
+  OrganizationInvoicingIdentitySchema,
   OrgBroadcastResponse,
   OrgInvitationResponse,
   PublicOrgInvitation,
