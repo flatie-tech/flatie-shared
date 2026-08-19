@@ -180,6 +180,26 @@ export {
   orgAiImportExtractResponseSchema,
   orgAiImportSkippedRowSchema,
 } from './org-ai-import.schema';
+// Org-wide pričuva collections (opomene across the portfolio)
+export type {
+  IssueOrgDunning,
+  IssueOrgDunningResponse,
+  OrgDunningBuildingRow,
+  OrgDunningIssueResult,
+  OrgDunningOverviewResponse,
+  OrgDunningQuery,
+  OrgDunningZipQuery,
+} from './org-dunning.schema';
+export {
+  issueOrgDunningResponseSchema,
+  issueOrgDunningSchema,
+  OrgDunningIssueStatus,
+  orgDunningBuildingRowSchema,
+  orgDunningIssueResultSchema,
+  orgDunningOverviewResponseSchema,
+  orgDunningQuerySchema,
+  orgDunningZipQuerySchema,
+} from './org-dunning.schema';
 // Org-wide pričuva uplatnice (send all / download all across the portfolio)
 export type {
   OrgUplatniceBuildingRow,

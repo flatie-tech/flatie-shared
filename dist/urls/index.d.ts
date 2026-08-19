@@ -216,6 +216,9 @@ declare const API_ROUTES: {
         readonly UPLATNICE: (orgId: string) => string;
         readonly UPLATNICE_SEND: (orgId: string) => string;
         readonly UPLATNICE_ZIP: (orgId: string) => string;
+        readonly DUNNING: (orgId: string) => string;
+        readonly DUNNING_ISSUE: (orgId: string) => string;
+        readonly DUNNING_ZIP: (orgId: string) => string;
         readonly INVOICES: (orgId: string) => string;
         readonly INVOICES_SUMMARY: (orgId: string) => string;
         readonly INVOICES_PREVIEW: (orgId: string) => string;

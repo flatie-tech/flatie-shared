@@ -1019,6 +1019,80 @@ var orgAiImportCommitResponseSchema = z.object({
     "Extracted rows that failed validation and were left out \u2014 fix them on the building afterwards."
   )
 }).meta({ id: "OrgAiImportCommitResponse" });
+var isoDateSchema4 = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be YYYY-MM-DD.");
+var channelSchema = z.enum([PricuvaDeliveryChannel.EMAIL, PricuvaDeliveryChannel.DOWNLOAD]);
+var orgDunningBuildingRowSchema = z.object({
+  buildingId: uuidSchema,
+  buildingName: z.string(),
+  /** Building-level switch (`building_settings.dunning_enabled`). */
+  dunningEnabled: z.boolean(),
+  trackingActive: z.boolean(),
+  totalOverdue: z.number().describe("\u03A3 positive owner balances, EUR."),
+  debtors: z.number().int(),
+  /** Owners the ladder would send an opomena to now (level split). */
+  readyReminder: z.number().int(),
+  readyFinal: z.number().int(),
+  /** Ready owners the register shows were never billed — blocked without override. */
+  readyNeverBilled: z.number().int(),
+  openCases: z.number().int(),
+  inEnforcement: z.number().int(),
+  lastNoticeAt: z.string().nullable()
+}).meta({ id: "OrgDunningBuildingRow" });
+var orgDunningOverviewResponseSchema = z.object({
+  orgId: uuidSchema,
+  asOf: isoDateSchema4,
+  rows: z.array(orgDunningBuildingRowSchema),
+  totalOverdue: z.number(),
+  debtors: z.number().int(),
+  ready: z.number().int().describe("\u03A3 readyReminder + readyFinal, override-free."),
+  readyNeverBilled: z.number().int(),
+  openCases: z.number().int(),
+  inEnforcement: z.number().int(),
+  buildingsEnabled: z.number().int()
+}).meta({ id: "OrgDunningOverviewResponse" });
+var orgDunningQuerySchema = z.object({
+  asOf: isoDateSchema4.optional().describe("Balance/interest cut-off; defaults to today.")
+});
+var issueOrgDunningSchema = z.object({
+  /** Omitted = every visible building with dunning enabled and ready owners. */
+  buildingIds: z.array(uuidSchema).max(500).optional(),
+  channel: channelSchema,
+  asOfDate: isoDateSchema4.optional(),
+  overrideNeverBilled: z.boolean().optional(),
+  note: z.string().trim().max(500).optional()
+});
+var OrgDunningIssueStatus = { DONE: "done", SKIPPED: "skipped" };
+var orgDunningIssueResultSchema = z.object({
+  buildingId: uuidSchema,
+  buildingName: z.string(),
+  status: z.enum(OrgDunningIssueStatus),
+  /** `dunning_disabled | nothing_ready | <error message>` when skipped. */
+  reason: z.string().nullable(),
+  /** The building's notice batch — key for the ZIP. Null when skipped. */
+  batchId: uuidSchema.nullable(),
+  issued: z.number().int(),
+  issuedReminder: z.number().int(),
+  issuedFinal: z.number().int(),
+  /** Owners the per-building issuer skipped (no e-mail, never billed, …). */
+  skipped: z.number().int(),
+  totalAmount: z.number()
+}).meta({ id: "OrgDunningIssueResult" });
+var issueOrgDunningResponseSchema = z.object({
+  asOf: isoDateSchema4,
+  channel: channelSchema,
+  results: z.array(orgDunningIssueResultSchema),
+  buildingsDone: z.number().int(),
+  buildingsSkipped: z.number().int(),
+  issued: z.number().int(),
+  skipped: z.number().int(),
+  totalAmount: z.number(),
+  /** Comma-joinable list for `DUNNING_ZIP?batchIds=`; empty for the e-mail channel. */
+  batchIds: z.array(uuidSchema)
+}).meta({ id: "IssueOrgDunningResponse" });
+var orgDunningZipQuerySchema = z.object({
+  /** Comma-separated batch ids returned by the issue call. */
+  batchIds: z.string().min(1)
+});
 var OrgUplatniceBlocker = {
   /** `monthlyFeePerSqm` not set — every slip would price at 0. */
   NO_FEE_RATE: "no_fee_rate",
@@ -1316,7 +1390,7 @@ var postPricuvaChargesResponseSchema = z.object({
   chargesPosted: z.number().int().describe("Total charge rows written across those periods.")
 }).meta({ id: "PostPricuvaChargesResponse" });
 var periodSchema3 = z.string().regex(/^\d{4}-\d{2}$/);
-var isoDateSchema4 = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
+var isoDateSchema5 = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 var MyPricuvaStatus = {
   /** Charges are not configured / tracking is off — nothing to pay through Flatie yet. */
   NOT_CONFIGURED: "not_configured",
@@ -1336,7 +1410,7 @@ var paymentSlipSchema = z.object({
   reference: z.string().describe("Poziv na broj (without the model)."),
   amount: z.number(),
   description: z.string(),
-  dueDate: isoDateSchema4.nullable(),
+  dueDate: isoDateSchema5.nullable(),
   barcodePng: z.string().describe("Base64 PNG of the PDF417 barcode.")
 }).meta({ id: "PaymentSlip" });
 var myPricuvaOwnerSchema = z.object({
@@ -1370,7 +1444,7 @@ var myPricuvaOwnerSchema = z.object({
       id: uuidSchema,
       level: z.enum([DunningLevel.REMINDER, DunningLevel.FINAL_NOTICE]),
       issuedAt: z.string(),
-      deadlineDate: isoDateSchema4,
+      deadlineDate: isoDateSchema5,
       totalAmount: z.number()
     })
   ),
@@ -3725,6 +3799,6 @@ var repDashboardSummaryResponseSchema = z.looseObject({
   pendingSignatureVotes: z.number().nullable().optional().describe("Printed-signature votes awaiting representative review (rep scope only).")
 }).describe("Payload of `GET /representatives/dashboard/summary`.");
 
-export { ARCHIVE_TYPES, AUDIT_DENIAL_TARGET_TYPE, ApprovalStatusSchema, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUG_REPORT_LIMITS, BUG_REPORT_STATUSES, BUILDING_ARCHIVE_TYPES, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, ConversationType, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, DunningHoldReason, EMAIL_LIMITS, ENTITY_LINK_TYPES, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, InvoiceBlocker, LINKABLE_ENTITY_TYPES, MyPricuvaStatus, NOTICE_LIMITS, ORGANIZATION_LIMITS, OrgInvitationStatus, OrgUplatniceBlocker, OrgUplatniceSendStatus, POLL_LIMITS, POLL_TYPES, PricuvaDeliveryChannel, PricuvaDeliveryStatus, PrioritySchema, RECURRENCE_TYPES, REP_RECENT_ACTIVITY_TYPES, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, auditLogResponseSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, booleanish, bugReportResponseSchema, bugReportStatusSchema, buildingArchiveTypeSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingManagementInvoicesResponseSchema, buildingOwnerAssignmentSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, cancelManagementInvoiceSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBugReportSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createDsarEventSchema, createDsarRequestSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createEventSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createInterestRateSchema, createNoticeSchema, createOrgBroadcastSchema, createOrganizationSchema, createOwnerSchema, createPlatformSubscriptionSchema, createPollSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, dsarErasureSchema, dsarEventResponseSchema, dsarRequestResponseSchema, dunningCandidateSchema, dunningCandidatesQuerySchema, dunningCandidatesResponseSchema, dunningCaseDetailResponseSchema, dunningCaseSchema, dunningCaseStatusSchema, dunningCasesQuerySchema, dunningCasesResponseSchema, dunningLevelSchema, dunningNoticeSchema, dunningNoticesQuerySchema, dunningNoticesResponseSchema, dunningSettingsSnapshotSchema, dunningSummarySchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, emailUnreadCountResponseSchema, enterpriseRequestResponseSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportEventWithDateOrderSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, featureFlagsResponseSchema, feeModelSchema, finalizePollSchema, forgotPasswordSchema, getAuditLogsQuerySchema, getDsarRequestsQuerySchema, getEnterpriseRequestsQuerySchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getNotificationDataSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getPlatformSubscriptionsQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, idCardVerificationStatusSchema, interestRateSchema, interestRatesResponseSchema, inviteOrgMemberSchema, inviteOwnerSchema, issueDunningNoticesResponseSchema, issueDunningNoticesSchema, issueManagementInvoicesResponseSchema, issueManagementInvoicesSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, listBugReportsResponseSchema, loginSchema, managementInvoiceListQuerySchema, managementInvoiceListResponseSchema, managementInvoicePreviewRowSchema, managementInvoiceSchema, managementInvoiceStatusSchema, managementInvoiceSummarySchema, mapPricuvaRefResponseSchema, mapPricuvaRefSchema, markManagementInvoicePaidSchema, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, myPricuvaOwnerSchema, myPricuvaResponseSchema, myPricuvaSlipQuerySchema, noticeEventSchema, noticeEventWithDateOrderSchema, noticeResponseSchema, notificationDataSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgAiImportAddressCandidateSchema, orgAiImportBuildingSchema, orgAiImportCommitResponseSchema, orgAiImportCommitSchema, orgAiImportExtractResponseSchema, orgAiImportSkippedRowSchema, orgBroadcastResponseSchema, orgBuildingFundsRowSchema, orgFundsOverviewResponseSchema, orgInvitationResponseSchema, orgStatementImportResponseSchema, orgStatementImportResultSchema, orgUplatniceBuildingRowSchema, orgUplatniceOverviewResponseSchema, orgUplatniceQuerySchema, orgUplatniceSendResultSchema, organizationInvoicingIdentitySchema, ownerAccountChargeSchema, ownerAccountPaymentSchema, ownerAccountQuerySchema, ownerAccountResponseSchema, ownerAccountUnitSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, paymentSlipSchema, permissionFieldsSchema, permissionsResponseSchema, platformFeatureFlagSchema, platformFeatureFlagsResponseSchema, platformSubscriptionResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, postPricuvaChargesResponseSchema, previewManagementInvoicesResponseSchema, previewManagementInvoicesSchema, pricuvaDeliveriesResponseSchema, pricuvaDeliveryRowSchema, pricuvaOpeningBalanceRowSchema, pricuvaOpeningBalancesResponseSchema, priorityOptions, publicOrgInvitationSchema, recordDsarRectificationSchema, recordOfflineVotesSchema, recurrenceTypeSchema, registerSchema, rejectIdCardVerificationSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, revenueMetricsResponseSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, sendOrgUplatniceResponseSchema, sendOrgUplatniceSchema, setDsarRestrictionSchema, signedMoneyStringSchema, strongPasswordSchema, submitIdCardVerificationSchema, timeSchema, unitKindSchema, unitSchema, unmatchedPricuvaRefRowSchema, unmatchedPricuvaRefsResponseSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBugReportSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateDsarRequestSchema, updateDunningCaseSchema, updateEnterpriseRequestSchema, updateEventSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgBuildingContractSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePlatformFeatureRequestSchema, updatePlatformSubscriptionSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, upsertPricuvaOpeningBalancesSchema, userEntitySchema, uuidSchema, verifyOtpSchema, voidDunningNoticeSchema, votePollSchema, voteWithIdCardSchema };
-//# sourceMappingURL=chunk-7MN333FY.js.map
-//# sourceMappingURL=chunk-7MN333FY.js.map
+export { ARCHIVE_TYPES, AUDIT_DENIAL_TARGET_TYPE, ApprovalStatusSchema, BOARD_CARD_LIMITS, BOARD_COLUMN_LIMITS, BOARD_LIMITS, BUG_REPORT_LIMITS, BUG_REPORT_STATUSES, BUILDING_ARCHIVE_TYPES, BUILDING_LIMITS, BUILDING_TYPES, CHAT_LIMITS, CommonStatusSchema, ConversationType, DOCUMENT_LIMITS, DOCUMENT_SOURCE_TYPES, DunningHoldReason, EMAIL_LIMITS, ENTITY_LINK_TYPES, EVENT_COLORS, EVENT_TYPES, EVENT_TYPE_COLOR_MAP, FAILURE_REPORT_LIMITS, FAQ_LIMITS, FailureStatusSchema, InvoiceBlocker, LINKABLE_ENTITY_TYPES, MyPricuvaStatus, NOTICE_LIMITS, ORGANIZATION_LIMITS, OrgDunningIssueStatus, OrgInvitationStatus, OrgUplatniceBlocker, OrgUplatniceSendStatus, POLL_LIMITS, POLL_TYPES, PricuvaDeliveryChannel, PricuvaDeliveryStatus, PrioritySchema, RECURRENCE_TYPES, REP_RECENT_ACTIVITY_TYPES, TRANSACTION_CATEGORY_LIMITS, UNIT_KINDS, addOrgMemberSchema, aiChatMessageSchema, aiChatRequestSchema, aiUsageResponseSchema, apiErrorResponseSchema, apiErrorSchema, approvalStatusOptions, approveFailureReportSchema, approveNoticeSchema, archiveTypeSchema, archivedItemSchema, assignOrgBuildingSchema, assignOrgMemberBuildingSchema, assignOwnerSchema, auditLogResponseSchema, baseEntitySchema, boardCardChecklistItemSchema, boardCardEventSchema, booleanish, bugReportResponseSchema, bugReportStatusSchema, buildingArchiveTypeSchema, buildingDetailResponseSchema, buildingEntitySchema, buildingFundsLedgerResponseSchema, buildingFundsLedgerRowSchema, buildingManagementInvoicesResponseSchema, buildingOwnerAssignmentSchema, buildingResponseSchema, buildingSettingsResponseSchema, buildingTypeSchema, buildingUserEntitySchema, businessPartnerResponseSchema, camtImportResponseSchema, cancelManagementInvoiceSchema, certiliaUserinfoSchema, chatMessageResponseSchema, commentResponseSchema, commonStatusOptions, conversationLastMessageSchema, conversationParticipantSchema, conversationResponseSchema, conversationsListResponseSchema, copyFaqsSchema, copyTransactionCategoriesSchema, createBoardCardSchema, createBoardColumnSchema, createBoardSchema, createBugReportSchema, createBuildingSchema, createBusinessPartnerSchema, createConversationSchema, createDocumentSchema, createDsarEventSchema, createDsarRequestSchema, createEmailThreadRequestSchema, createEntityLinkRequestSchema, createEventSchema, createExpenseSchema, createFailureReportSchema, createFaqSchema, createIncomeSchema, createInterestRateSchema, createNoticeSchema, createOrgBroadcastSchema, createOrganizationSchema, createOwnerSchema, createPlatformSubscriptionSchema, createPollSchema, createTransactionCategorySchema, createUnitSchema, cursorQuerySchema, dateRangeParamsSchema, dateRangeWithValidationSchema, dateTimeSchema, deleteEntityLinkQuerySchema, deleteEntityLinkRequestSchema, documentFileSchema, documentLinkedRecordSchema, documentResponseSchema, dsarErasureSchema, dsarEventResponseSchema, dsarRequestResponseSchema, dunningCandidateSchema, dunningCandidatesQuerySchema, dunningCandidatesResponseSchema, dunningCaseDetailResponseSchema, dunningCaseSchema, dunningCaseStatusSchema, dunningCasesQuerySchema, dunningCasesResponseSchema, dunningLevelSchema, dunningNoticeSchema, dunningNoticesQuerySchema, dunningNoticesResponseSchema, dunningSettingsSnapshotSchema, dunningSummarySchema, emailAttachmentSchema, emailMessageSchema, emailSchema, emailThreadDetailSchema, emailThreadSchema, emailUnreadCountResponseSchema, enterpriseRequestResponseSchema, entityLinkCountsResponseSchema, entityLinkEndpointSchema, entityLinkMetadataSchema, entityLinkReferenceSchema, entityLinkTypeSchema, entityLinksResponseSchema, eventColorSchema, eventResponseSchema, eventTypeSchema, failureReportEventSchema, failureReportEventWithDateOrderSchema, failureReportResponseSchema, failureStatusOptions, faqResponseSchema, featureFlagsResponseSchema, feeModelSchema, finalizePollSchema, forgotPasswordSchema, getAuditLogsQuerySchema, getDsarRequestsQuerySchema, getEnterpriseRequestsQuerySchema, getEntityLinkCountsQuerySchema, getEntityLinksQuerySchema, getNotificationDataSchema, getOrgBuildingsQuerySchema, getOrgMembersQuerySchema, getPlatformSubscriptionsQuerySchema, getRepBuildingsParamsSchema, getRepUsersParamsSchema, getTransactionCategoriesQuerySchema, idCardVerificationStatusSchema, interestRateSchema, interestRatesResponseSchema, inviteOrgMemberSchema, inviteOwnerSchema, issueDunningNoticesResponseSchema, issueDunningNoticesSchema, issueManagementInvoicesResponseSchema, issueManagementInvoicesSchema, issueOrgDunningResponseSchema, issueOrgDunningSchema, joinBuildingWithOtpSchema, linkableEntityTypeSchema, listArchivedResponseSchema, listBugReportsResponseSchema, loginSchema, managementInvoiceListQuerySchema, managementInvoiceListResponseSchema, managementInvoicePreviewRowSchema, managementInvoiceSchema, managementInvoiceStatusSchema, managementInvoiceSummarySchema, mapPricuvaRefResponseSchema, mapPricuvaRefSchema, markManagementInvoicePaidSchema, messageResponseSchema, messagesListResponseSchema, moneyStringSchema, moveBoardCardSchema, multipartArray, multipartBoolean, myPricuvaOwnerSchema, myPricuvaResponseSchema, myPricuvaSlipQuerySchema, noticeEventSchema, noticeEventWithDateOrderSchema, noticeResponseSchema, notificationDataSchema, notificationPreferenceCategorySchema, notificationPreferenceItemSchema, notificationResponseSchema, optionalDateTimeSchema, orgAiImportAddressCandidateSchema, orgAiImportBuildingSchema, orgAiImportCommitResponseSchema, orgAiImportCommitSchema, orgAiImportExtractResponseSchema, orgAiImportSkippedRowSchema, orgBroadcastResponseSchema, orgBuildingFundsRowSchema, orgDunningBuildingRowSchema, orgDunningIssueResultSchema, orgDunningOverviewResponseSchema, orgDunningQuerySchema, orgDunningZipQuerySchema, orgFundsOverviewResponseSchema, orgInvitationResponseSchema, orgStatementImportResponseSchema, orgStatementImportResultSchema, orgUplatniceBuildingRowSchema, orgUplatniceOverviewResponseSchema, orgUplatniceQuerySchema, orgUplatniceSendResultSchema, organizationInvoicingIdentitySchema, ownerAccountChargeSchema, ownerAccountPaymentSchema, ownerAccountQuerySchema, ownerAccountResponseSchema, ownerAccountUnitSchema, ownerResponseSchema, paginatedBuildingsResponseSchema, paginatedDocumentsResponseSchema, paginatedEmailThreadsResponseSchema, paginatedEventsResponseSchema, paginatedFailureReportsResponseSchema, paginatedNoticesResponseSchema, paginatedPollsResponseSchema, paginatedRepBuildingsResponseSchema, paginatedRepUsersResponseSchema, paginatedResponseSchema, paginatedUnitsResponseSchema, paginationParamsSchema, passwordSchema, paymentSlipSchema, permissionFieldsSchema, permissionsResponseSchema, platformFeatureFlagSchema, platformFeatureFlagsResponseSchema, platformSubscriptionResponseSchema, pollEligibleVoterSchema, pollEligibleVotersResponseSchema, pollResponseSchema, pollResultsSchema, pollTypeSchema, pollVotersResponseSchema, postPricuvaChargesResponseSchema, previewManagementInvoicesResponseSchema, previewManagementInvoicesSchema, pricuvaDeliveriesResponseSchema, pricuvaDeliveryRowSchema, pricuvaOpeningBalanceRowSchema, pricuvaOpeningBalancesResponseSchema, priorityOptions, publicOrgInvitationSchema, recordDsarRectificationSchema, recordOfflineVotesSchema, recurrenceTypeSchema, registerSchema, rejectIdCardVerificationSchema, reorderBoardColumnsSchema, reorderFaqsSchema, repBuildingActivitySchema, repBuildingItemSchema, repDashboardSummaryResponseSchema, repRecentActivitySchema, repRecentActivityTypeSchema, repUserBuildingSchema, repUserItemSchema, replyEmailThreadRequestSchema, resetPasswordSchema, revenueMetricsResponseSchema, roleTypeSchema, searchUsersQuerySchema, sendMessageSchema, sendOrgUplatniceResponseSchema, sendOrgUplatniceSchema, setDsarRestrictionSchema, signedMoneyStringSchema, strongPasswordSchema, submitIdCardVerificationSchema, timeSchema, unitKindSchema, unitSchema, unmatchedPricuvaRefRowSchema, unmatchedPricuvaRefsResponseSchema, unreadCountResponseSchema, updateBoardCardSchema, updateBoardColumnSchema, updateBoardSchema, updateBugReportSchema, updateBuildingSchema, updateBuildingSettingsSchema, updateBusinessPartnerSchema, updateConversationSchema, updateDocumentSchema, updateDsarRequestSchema, updateDunningCaseSchema, updateEnterpriseRequestSchema, updateEventSchema, updateExpenseSchema, updateFailureReportRequestSchema, updateFailureReportSchema, updateFaqSchema, updateIncomeSchema, updateNoticeRequestSchema, updateNoticeSchema, updateOrgBuildingContractSchema, updateOrgMemberRoleSchema, updateOrganizationSchema, updateOwnerSchema, updatePasswordSchema, updatePlatformFeatureRequestSchema, updatePlatformSubscriptionSchema, updatePollRequestSchema, updatePollSchema, updateTransactionCategorySchema, updateUnitSchema, updateUserBuildingRoleSchema, upsertPricuvaOpeningBalancesSchema, userEntitySchema, uuidSchema, verifyOtpSchema, voidDunningNoticeSchema, votePollSchema, voteWithIdCardSchema };
+//# sourceMappingURL=chunk-II4VD2N3.js.map
+//# sourceMappingURL=chunk-II4VD2N3.js.map

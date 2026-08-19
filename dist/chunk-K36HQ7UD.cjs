@@ -1021,6 +1021,80 @@ var orgAiImportCommitResponseSchema = zod.z.object({
     "Extracted rows that failed validation and were left out \u2014 fix them on the building afterwards."
   )
 }).meta({ id: "OrgAiImportCommitResponse" });
+var isoDateSchema4 = zod.z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be YYYY-MM-DD.");
+var channelSchema = zod.z.enum([PricuvaDeliveryChannel.EMAIL, PricuvaDeliveryChannel.DOWNLOAD]);
+var orgDunningBuildingRowSchema = zod.z.object({
+  buildingId: uuidSchema,
+  buildingName: zod.z.string(),
+  /** Building-level switch (`building_settings.dunning_enabled`). */
+  dunningEnabled: zod.z.boolean(),
+  trackingActive: zod.z.boolean(),
+  totalOverdue: zod.z.number().describe("\u03A3 positive owner balances, EUR."),
+  debtors: zod.z.number().int(),
+  /** Owners the ladder would send an opomena to now (level split). */
+  readyReminder: zod.z.number().int(),
+  readyFinal: zod.z.number().int(),
+  /** Ready owners the register shows were never billed — blocked without override. */
+  readyNeverBilled: zod.z.number().int(),
+  openCases: zod.z.number().int(),
+  inEnforcement: zod.z.number().int(),
+  lastNoticeAt: zod.z.string().nullable()
+}).meta({ id: "OrgDunningBuildingRow" });
+var orgDunningOverviewResponseSchema = zod.z.object({
+  orgId: uuidSchema,
+  asOf: isoDateSchema4,
+  rows: zod.z.array(orgDunningBuildingRowSchema),
+  totalOverdue: zod.z.number(),
+  debtors: zod.z.number().int(),
+  ready: zod.z.number().int().describe("\u03A3 readyReminder + readyFinal, override-free."),
+  readyNeverBilled: zod.z.number().int(),
+  openCases: zod.z.number().int(),
+  inEnforcement: zod.z.number().int(),
+  buildingsEnabled: zod.z.number().int()
+}).meta({ id: "OrgDunningOverviewResponse" });
+var orgDunningQuerySchema = zod.z.object({
+  asOf: isoDateSchema4.optional().describe("Balance/interest cut-off; defaults to today.")
+});
+var issueOrgDunningSchema = zod.z.object({
+  /** Omitted = every visible building with dunning enabled and ready owners. */
+  buildingIds: zod.z.array(uuidSchema).max(500).optional(),
+  channel: channelSchema,
+  asOfDate: isoDateSchema4.optional(),
+  overrideNeverBilled: zod.z.boolean().optional(),
+  note: zod.z.string().trim().max(500).optional()
+});
+var OrgDunningIssueStatus = { DONE: "done", SKIPPED: "skipped" };
+var orgDunningIssueResultSchema = zod.z.object({
+  buildingId: uuidSchema,
+  buildingName: zod.z.string(),
+  status: zod.z.enum(OrgDunningIssueStatus),
+  /** `dunning_disabled | nothing_ready | <error message>` when skipped. */
+  reason: zod.z.string().nullable(),
+  /** The building's notice batch — key for the ZIP. Null when skipped. */
+  batchId: uuidSchema.nullable(),
+  issued: zod.z.number().int(),
+  issuedReminder: zod.z.number().int(),
+  issuedFinal: zod.z.number().int(),
+  /** Owners the per-building issuer skipped (no e-mail, never billed, …). */
+  skipped: zod.z.number().int(),
+  totalAmount: zod.z.number()
+}).meta({ id: "OrgDunningIssueResult" });
+var issueOrgDunningResponseSchema = zod.z.object({
+  asOf: isoDateSchema4,
+  channel: channelSchema,
+  results: zod.z.array(orgDunningIssueResultSchema),
+  buildingsDone: zod.z.number().int(),
+  buildingsSkipped: zod.z.number().int(),
+  issued: zod.z.number().int(),
+  skipped: zod.z.number().int(),
+  totalAmount: zod.z.number(),
+  /** Comma-joinable list for `DUNNING_ZIP?batchIds=`; empty for the e-mail channel. */
+  batchIds: zod.z.array(uuidSchema)
+}).meta({ id: "IssueOrgDunningResponse" });
+var orgDunningZipQuerySchema = zod.z.object({
+  /** Comma-separated batch ids returned by the issue call. */
+  batchIds: zod.z.string().min(1)
+});
 var OrgUplatniceBlocker = {
   /** `monthlyFeePerSqm` not set — every slip would price at 0. */
   NO_FEE_RATE: "no_fee_rate",
@@ -1318,7 +1392,7 @@ var postPricuvaChargesResponseSchema = zod.z.object({
   chargesPosted: zod.z.number().int().describe("Total charge rows written across those periods.")
 }).meta({ id: "PostPricuvaChargesResponse" });
 var periodSchema3 = zod.z.string().regex(/^\d{4}-\d{2}$/);
-var isoDateSchema4 = zod.z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
+var isoDateSchema5 = zod.z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 var MyPricuvaStatus = {
   /** Charges are not configured / tracking is off — nothing to pay through Flatie yet. */
   NOT_CONFIGURED: "not_configured",
@@ -1338,7 +1412,7 @@ var paymentSlipSchema = zod.z.object({
   reference: zod.z.string().describe("Poziv na broj (without the model)."),
   amount: zod.z.number(),
   description: zod.z.string(),
-  dueDate: isoDateSchema4.nullable(),
+  dueDate: isoDateSchema5.nullable(),
   barcodePng: zod.z.string().describe("Base64 PNG of the PDF417 barcode.")
 }).meta({ id: "PaymentSlip" });
 var myPricuvaOwnerSchema = zod.z.object({
@@ -1372,7 +1446,7 @@ var myPricuvaOwnerSchema = zod.z.object({
       id: uuidSchema,
       level: zod.z.enum([chunkN53GQVG7_cjs.DunningLevel.REMINDER, chunkN53GQVG7_cjs.DunningLevel.FINAL_NOTICE]),
       issuedAt: zod.z.string(),
-      deadlineDate: isoDateSchema4,
+      deadlineDate: isoDateSchema5,
       totalAmount: zod.z.number()
     })
   ),
@@ -3757,6 +3831,7 @@ exports.LINKABLE_ENTITY_TYPES = LINKABLE_ENTITY_TYPES;
 exports.MyPricuvaStatus = MyPricuvaStatus;
 exports.NOTICE_LIMITS = NOTICE_LIMITS;
 exports.ORGANIZATION_LIMITS = ORGANIZATION_LIMITS;
+exports.OrgDunningIssueStatus = OrgDunningIssueStatus;
 exports.OrgInvitationStatus = OrgInvitationStatus;
 exports.OrgUplatniceBlocker = OrgUplatniceBlocker;
 exports.OrgUplatniceSendStatus = OrgUplatniceSendStatus;
@@ -3912,6 +3987,8 @@ exports.issueDunningNoticesResponseSchema = issueDunningNoticesResponseSchema;
 exports.issueDunningNoticesSchema = issueDunningNoticesSchema;
 exports.issueManagementInvoicesResponseSchema = issueManagementInvoicesResponseSchema;
 exports.issueManagementInvoicesSchema = issueManagementInvoicesSchema;
+exports.issueOrgDunningResponseSchema = issueOrgDunningResponseSchema;
+exports.issueOrgDunningSchema = issueOrgDunningSchema;
 exports.joinBuildingWithOtpSchema = joinBuildingWithOtpSchema;
 exports.linkableEntityTypeSchema = linkableEntityTypeSchema;
 exports.listArchivedResponseSchema = listArchivedResponseSchema;
@@ -3951,6 +4028,11 @@ exports.orgAiImportExtractResponseSchema = orgAiImportExtractResponseSchema;
 exports.orgAiImportSkippedRowSchema = orgAiImportSkippedRowSchema;
 exports.orgBroadcastResponseSchema = orgBroadcastResponseSchema;
 exports.orgBuildingFundsRowSchema = orgBuildingFundsRowSchema;
+exports.orgDunningBuildingRowSchema = orgDunningBuildingRowSchema;
+exports.orgDunningIssueResultSchema = orgDunningIssueResultSchema;
+exports.orgDunningOverviewResponseSchema = orgDunningOverviewResponseSchema;
+exports.orgDunningQuerySchema = orgDunningQuerySchema;
+exports.orgDunningZipQuerySchema = orgDunningZipQuerySchema;
 exports.orgFundsOverviewResponseSchema = orgFundsOverviewResponseSchema;
 exports.orgInvitationResponseSchema = orgInvitationResponseSchema;
 exports.orgStatementImportResponseSchema = orgStatementImportResponseSchema;
@@ -4071,5 +4153,5 @@ exports.verifyOtpSchema = verifyOtpSchema;
 exports.voidDunningNoticeSchema = voidDunningNoticeSchema;
 exports.votePollSchema = votePollSchema;
 exports.voteWithIdCardSchema = voteWithIdCardSchema;
-//# sourceMappingURL=chunk-MPI5UGBJ.cjs.map
-//# sourceMappingURL=chunk-MPI5UGBJ.cjs.map
+//# sourceMappingURL=chunk-K36HQ7UD.cjs.map
+//# sourceMappingURL=chunk-K36HQ7UD.cjs.map

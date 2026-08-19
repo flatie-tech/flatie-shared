@@ -336,6 +336,10 @@ export const API_ROUTES = {
     UPLATNICE: (orgId: string) => `/organizations/${orgId}/pricuva/uplatnice`,
     UPLATNICE_SEND: (orgId: string) => `/organizations/${orgId}/pricuva/uplatnice/send`,
     UPLATNICE_ZIP: (orgId: string) => `/organizations/${orgId}/pricuva/uplatnice.zip`,
+    // Org-wide pričuva collections: overview per building, issue all, ZIP of batches.
+    DUNNING: (orgId: string) => `/organizations/${orgId}/dunning`,
+    DUNNING_ISSUE: (orgId: string) => `/organizations/${orgId}/dunning/notices`,
+    DUNNING_ZIP: (orgId: string) => `/organizations/${orgId}/dunning/notices.zip`,
     // Naknada upravitelja — the firm's fee invoices to its buildings.
     INVOICES: (orgId: string) => `/organizations/${orgId}/invoices`,
     INVOICES_SUMMARY: (orgId: string) => `/organizations/${orgId}/invoices/summary`,

@@ -251,6 +251,10 @@ var API_ROUTES = {
     UPLATNICE: (orgId) => `/organizations/${orgId}/pricuva/uplatnice`,
     UPLATNICE_SEND: (orgId) => `/organizations/${orgId}/pricuva/uplatnice/send`,
     UPLATNICE_ZIP: (orgId) => `/organizations/${orgId}/pricuva/uplatnice.zip`,
+    // Org-wide pričuva collections: overview per building, issue all, ZIP of batches.
+    DUNNING: (orgId) => `/organizations/${orgId}/dunning`,
+    DUNNING_ISSUE: (orgId) => `/organizations/${orgId}/dunning/notices`,
+    DUNNING_ZIP: (orgId) => `/organizations/${orgId}/dunning/notices.zip`,
     // Naknada upravitelja — the firm's fee invoices to its buildings.
     INVOICES: (orgId) => `/organizations/${orgId}/invoices`,
     INVOICES_SUMMARY: (orgId) => `/organizations/${orgId}/invoices/summary`,
@@ -359,5 +363,5 @@ var API_ROUTES = {
 };
 
 exports.API_ROUTES = API_ROUTES;
-//# sourceMappingURL=chunk-UBKEB3Y5.cjs.map
-//# sourceMappingURL=chunk-UBKEB3Y5.cjs.map
+//# sourceMappingURL=chunk-L2IZS32R.cjs.map
+//# sourceMappingURL=chunk-L2IZS32R.cjs.map
